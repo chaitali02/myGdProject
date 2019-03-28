@@ -268,8 +268,20 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         displayName: 'Submitted By',
         name: 'createdBy.ref.name',
         cellClass: 'text-center',
-        maxWidth:140,
+        maxWidth:100,
         headerCellClass: 'text-center'
+      },
+      {
+        displayName: 'Submitted Time',
+        name: 'submittedTime',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 190,
+        sort: {
+          direction: uiGridConstants.ASC,
+         // priority: 0,
+        },
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div title={{row.entity.submittedTime}}>{{row.entity.submittedTime}}</div></div>'
       },
       {
         displayName: 'Start Time',
@@ -298,6 +310,14 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         headerCellClass: 'text-center',
         maxWidth: 110,
         cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.duration}}</div></div>'
+      },
+      {
+        displayName: 'Run Mode',
+        name: 'runMode',
+        cellClass: 'text-center',
+        headerCellClass: 'text-center',
+        maxWidth: 110,
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.runMode}}</div></div>'
       }
     ]
   };
