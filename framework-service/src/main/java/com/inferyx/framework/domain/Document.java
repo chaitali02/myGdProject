@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.inferyx.framework.enums.Alignment;
 import com.inferyx.framework.enums.Layout;
 
 /**
@@ -41,6 +42,8 @@ public class Document {
 	private String orgName;
 	private String orgAddress;
 	private String orgLogo;
+	private Alignment logoAlignment;
+	private Alignment titleAlignment;
 	
 	/**
 	 * @Ganesh
@@ -400,5 +403,41 @@ public class Document {
 	 */
 	public void setOrgLogo(String orgLogo) {
 		this.orgLogo = orgLogo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the logoAlignment
+	 */
+	public Alignment getLogoAlignment() {
+		return logoAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param logoAlignment the logoAlignment to set
+	 */
+	public void setLogoAlignment(Alignment logoAlignment) {
+		this.logoAlignment = logoAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the titleAlignment
+	 */
+	public Alignment getTitleAlignment() {
+		return titleAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param titleAlignment the titleAlignment to set
+	 */
+	public void setTitleAlignment(Alignment titleAlignment) {
+		this.titleAlignment = titleAlignment;
 	}
 }

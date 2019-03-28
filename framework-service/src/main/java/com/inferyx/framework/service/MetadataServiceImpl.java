@@ -294,6 +294,7 @@ public class MetadataServiceImpl {
 		query.fields().include("published");
 		query.fields().include("appInfo");
 		query.fields().include("statusList");
+		query.fields().include("runMode");
 		if(metaType.equals(MetaType.reportExec)){
 			query.fields().include("numRows");
 			query.fields().include("sizeMB");
@@ -363,46 +364,64 @@ public class MetadataServiceImpl {
 				execObject = (DagExec) metaObject;
 			    execStatus = (List<Status>) execObject.getStatusList();
 				baseEntityStatus.setExecCreated(execObject.getExecCreated());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.ruleExec.toString())) {
 				RuleExec execObject =new RuleExec();
 				execObject = (RuleExec) metaObject;
 				execStatus =  (List<Status>)execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.rulegroupExec.toString())) {
 				 RuleGroupExec execObject = new RuleGroupExec();
 				execObject = (RuleGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.profileExec.toString())) {
 				 ProfileExec execObject = new ProfileExec();
 				execObject = (ProfileExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
+				
 			}
 			else if (type.equalsIgnoreCase(MetaType.profilegroupExec.toString())) {
 				 ProfileGroupExec execObject = new ProfileGroupExec();
 				execObject = (ProfileGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.dqExec.toString())) {
 				 DataQualExec execObject = new DataQualExec();
 				execObject = (DataQualExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.dqgroupExec.toString())) {
 				 DataQualGroupExec execObject = new DataQualGroupExec();
 				execObject = (DataQualGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.vizExec.toString())){
 				VizExec execObject = new VizExec();
 				execObject = (VizExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.loadExec.toString())){
 				LoadExec execObject = new LoadExec();
 				execObject = (LoadExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			/*else if(type.equalsIgnoreCase(MetaType.modelExec.toString())){
 				ModelExec execObject = new ModelExec();
@@ -413,44 +432,61 @@ public class MetadataServiceImpl {
 				MapExec execObject = new MapExec();
 				execObject = (MapExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}else if(type.equalsIgnoreCase(MetaType.session.toString())){
 				Session sessionObject = new Session();
 				sessionObject = (Session) metaObject;
-				execStatus = (List<Status>) sessionObject.getStatusList();	
+				execStatus = (List<Status>) sessionObject.getStatusList();
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.trainExec.toString())){
 				TrainExec execObject = new TrainExec();
 				execObject = (TrainExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.predictExec.toString())){
 				PredictExec execObject = new PredictExec();
 				execObject = (PredictExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.simulateExec.toString())){
 				SimulateExec execObject = new SimulateExec();
 				execObject = (SimulateExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.reconExec.toString())){
 				ReconExec execObject = new ReconExec();
 				execObject = (ReconExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.recongroupExec.toString())){
 				ReconGroupExec execObject = new ReconGroupExec();
 				execObject = (ReconGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} else if(type.equalsIgnoreCase(MetaType.operatorExec.toString())){
 				OperatorExec operatorExec = new OperatorExec();
 				operatorExec = (OperatorExec) metaObject;
-				execStatus = (List<Status>) operatorExec.getStatusList();	
+				execStatus = (List<Status>) operatorExec.getStatusList();
+				baseEntityStatus.setRunMode(operatorExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.graphExec.toString())){
 				GraphExec graphExec = new GraphExec();
 				graphExec = (GraphExec) metaObject;
-				execStatus = (List<Status>) graphExec.getStatusList();	
+				execStatus = (List<Status>) graphExec.getStatusList();
+				baseEntityStatus.setRunMode(graphExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.reportExec.toString())){
 				ReportExec reportExec = new ReportExec();
@@ -458,37 +494,51 @@ public class MetadataServiceImpl {
 				execStatus = (List<Status>) reportExec.getStatusList();
 				baseEntityStatus.setNumRows(reportExec.getNumRows());
 				baseEntityStatus.setSizeMB(reportExec.getSizeMB());
+				baseEntityStatus.setRunMode(reportExec.getRunMode());
+
 				
 			}
 			else if(type.equalsIgnoreCase(MetaType.batchExec.toString())){
 				BatchExec batchExec = new BatchExec();
 				batchExec = (BatchExec) metaObject;
 				execStatus = (List<Status>) batchExec.getStatusList();	
+				baseEntityStatus.setRunMode(batchExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.ingestExec.toString())){
 				IngestExec ingestExec = new IngestExec();
 				ingestExec = (IngestExec) metaObject;
-				execStatus = (List<Status>) ingestExec.getStatusList();	
+				execStatus = (List<Status>) ingestExec.getStatusList();
+				baseEntityStatus.setRunMode(ingestExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.ingestgroupExec.toString())){
 				IngestGroupExec execObject = new IngestGroupExec();
 				execObject = (IngestGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.uploadExec.toString())){
 				UploadExec execObject = new UploadExec();
 				execObject = (UploadExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.processExec.toString())){
 				ProcessExec execObject = new ProcessExec();
 				execObject = (ProcessExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.dashboardExec.toString())){
 				DashboardExec execObject = new DashboardExec();
 				execObject = (DashboardExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 				
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			

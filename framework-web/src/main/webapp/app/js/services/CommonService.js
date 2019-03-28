@@ -614,11 +614,12 @@
           result.createdBy = response[i].createdBy;
           result.createdOn = response[i].createdOn;
           result.active = response[i].active;
-          
+          result.submittedTime="-NA-";          
           result.startTime="-NA-";
           result.endTime="-NA-";
           result.duration="-NA-";
           result.execCreated= response[i].execCreated;
+          result.runMode= response[i].runMode !=null ?response[i].runMode :"-NA-";
           if(type =="reportExec" ){
             result.numRows=response[i].numRows;
             if(response[i].sizeMB!=null){
@@ -634,16 +635,17 @@
           if(response[i].status !=null && response[i].status.length > 0){
             for(var j=0;j<response[i].status.length;j++){
               if(response[i].status[j].stage == "PENDING"){
-                result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+                result.submittedTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
                 break;
               }
             }
-            // for(var j=0;j<response[i].statusList.length;j++){
-            // 	if(response[i].statusList[j].stage == "RUNNING"){
-            // 		result.RUNNINGTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
-            // 		break;
-            // 	}
-            // }
+            for(var j=0;j<response[i].status.length;j++){
+            	if(response[i].status[j].stage == "RUNNING"){
+            		result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+            		break;
+            	}
+            }
+
             if(response[i].status[len].stage == "COMPLETED" || response[i].status[len].stage == "ABORTED"){
               result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
               var date1 = new Date(result.startTime)

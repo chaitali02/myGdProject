@@ -162,6 +162,7 @@ import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
+import com.inferyx.framework.domain.Address;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -5542,6 +5543,31 @@ public class CommonServiceImpl<T> {
 		MetaIdentifier orgInfoMI = application.getOrgInfo().getRef();
 		return (Organization) getOneByUuidAndVersion(orgInfoMI.getUuid(), orgInfoMI.getVersion(),
 				orgInfoMI.getType().toString(), "N");
+	}
+
+	/**
+	 * @param address
+	 * @return
+	 */
+	public String getOrganizationAddr(List<Address> address) {
+		if(address != null && !address.isEmpty()) {
+			StringBuffer addressBuff = new StringBuffer();
+			int i = 1;
+			for(Address address2 : address) {
+				addressBuff.append("Address "+i).append(": ");
+				addressBuff.append(address2.getAddressLine1());
+				addressBuff.append(address2.getAddressLine2());
+				addressBuff.append(address2.getCity());
+				addressBuff.append(address2.getState());
+				addressBuff.append(address2.getCountry());
+				addressBuff.append(" - ").append(address2.getZipcode());
+				addressBuff.append(".");
+				i++;
+			}
+			return addressBuff.toString();
+		} else {
+			return "";
+		}
 	}
 
 }

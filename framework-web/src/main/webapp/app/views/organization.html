@@ -217,6 +217,29 @@
                     </div>
                   </div>
                 </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Logo</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">
+                    <div class="col-md-5 col-sm-5 col-xs-12">
+                      <div class="input-group" style="background-color: #f3f3f3;
+                      border: 2px dashed #b3b3b3;
+                      color: #c3c3c3;
+                      padding: 0px 0px 0px 6px;
+                      opacity: 1;margin: 0px;">
+                          <label class="input-group-btn" style="width:auto;font-size:15px;"> Click to Choose Log
+                              <span class="btn btn-outline">
+                                &hellip; <input id="org_log" onchange="readLogoURL(this);" type="file" ng-model="file" accept="image/jpeg,image/x-png" style="display:none">
+                              </span>
+                          </label>
+                      </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
+                      <img width="35px"  title ="Log" height="35px" class="log-preview"  ng-src="avatars/{{organizationData.logoPath}}" onerror="this.src='avatars/default-logo.png'" src="" alt="Logo"/>
+                    </div>
+                  </div>
+                </div>
+               
+                
                 <div class="form-group" style="padding-top: 10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a ng-click="close()" class="btn btn-primary">Cancel</a>

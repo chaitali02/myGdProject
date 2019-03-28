@@ -12,6 +12,8 @@ package com.inferyx.framework.domain;
 
 import java.util.List;
 
+import com.inferyx.framework.enums.RunMode;
+
 public class BaseEntityStatus extends BaseEntity{
 
 	List<Status> status;
@@ -19,7 +21,8 @@ public class BaseEntityStatus extends BaseEntity{
 	private String execCreated;
 	private long numRows;
 	private double sizeMB;
-	
+	protected RunMode runMode;
+
 	
 	
 	public String getExecCreated() {
@@ -81,4 +84,13 @@ public class BaseEntityStatus extends BaseEntity{
 	public void setSizeMB(double sizeMB) {
 		this.sizeMB = sizeMB;
 	}
+	
+	public RunMode getRunMode() {
+		return runMode;
+	}
+
+	public void setRunMode(RunMode runMode) {
+		this.runMode = runMode;
+	}
+
 }

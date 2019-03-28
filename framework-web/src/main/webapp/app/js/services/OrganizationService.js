@@ -25,7 +25,6 @@ AdminModule.factory('OrganizationFactory', function ($http, $location) {
         var url = $location.absUrl().split("app")[0]
         return $http({
             url: url + "common/submit?action=edit&type=organization&upd_tag=" + upd_tag,
-
             headers: {
                 'Accept': '*/*',
                 'content-Type': "application/json",
@@ -44,13 +43,41 @@ AdminModule.factory('OrganizationFactory', function ($http, $location) {
             method: "GET"
         }).then(function (response) { return response })
     }
-
+    factory.uploadLogo = function (url, data) {
+        var fullUrl = $location.absUrl().split("app")[0] + url
+        return $http({
+          url: fullUrl,
+          headers: {
+            'Accept': '*/*',
+            'content-Type': undefined,
+          },
+          method: "POST",
+          transformRequest: angular.identity,
+          data: data,
+        }).success(function (response) { return response })
+      }
    
     return factory;
 });
 
 AdminModule.service('OrganizationSerivce', function ($q, sortFactory, OrganizationFactory) {
-
+    
+    this.uploadLogo = function (uuid, data, fileName,type) {
+        var url = "metadata/uploadOrgLogo?action=edit&type=" + type + "&fileName=" + fileName+"&uuid="+uuid;
+        var deferred = $q.defer();
+        OrganizationFactory.uploadLogo(url, data).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+        var onSuccess = function (response) {
+          deferred.resolve({
+            data: response
+          });
+        }
+        var onError = function (response) {
+            deferred.reject({
+                data: response
+            })
+        }
+        return deferred.promise;
+      }
     this.getAllVersionByUuid = function (uuid, type) {
         var deferred = $q.defer();
         OrganizationFactory.findAllVersionByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
