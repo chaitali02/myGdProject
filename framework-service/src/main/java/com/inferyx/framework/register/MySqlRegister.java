@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Registry;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.PersistMode;
@@ -73,7 +74,7 @@ public class MySqlRegister {
     LoadServiceImpl loadServiceImpl;
 	@Autowired
 	private IDatapodDao iDatapodDao;
-
+      
 	public List<Registry> registerDB(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 
 		Datasource datasource = null;
@@ -90,7 +91,7 @@ public class MySqlRegister {
 			ConnectionHolder conHolder = connector.getConnectionByDatasource(datasource);//connector.getConnection();	
 			Connection con = ((Statement) conHolder.getStmtObject()).getConnection();
 			DatabaseMetaData dbMetadata = con.getMetaData();
-
+			
 			for (int i = 0; i < registryList.size(); i++) {
 				try {
 					String tableName = registryList.get(i).getName();
@@ -110,6 +111,7 @@ public class MySqlRegister {
 					}
 					datapod.setName(tableName);
 					ResultSet rs = dbMetadata.getColumns(null, null, tableName, null);
+					
 					for(int j = 0; rs.next(); j++) {
 						logger.info("Column Name: " + rs.getString("COLUMN_NAME")+"\t Type: " + getconvertedDataType(rs.getString("TYPE_NAME")));
 						Attribute attr = new Attribute();
@@ -130,6 +132,12 @@ public class MySqlRegister {
 						attrList.add(attr);
 					}
 					
+					ResultSetHolder resultSetHolder=(ResultSetHolder) mySqlExecutor.executeSqlByDatasource("select count(*) from " + tableName, datasource, null);
+					ResultSet resultSet=resultSetHolder.getResultSet();
+					int count = 0;
+					while (resultSet.next()) {
+						count = resultSet.getInt(1);
+					}
 					rs.close();
 					datapod.setAttributes(attrList);
 					datapod.setDatasource(datastoreMeta);
@@ -147,7 +155,7 @@ public class MySqlRegister {
 					datastore.setName(datapod.getName());
 					datastore.setDesc(datapod.getDesc());
 					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
-					datastore.setNumRows(0);
+					datastore.setNumRows(count);
 					datastore.setCreatedBy(datapod.getCreatedBy());
 					holder.setRef(datastoreRef);
 					datastore.setMetaId(holder);
@@ -176,6 +184,7 @@ public class MySqlRegister {
 					MetaIdentifierHolder execId = new MetaIdentifierHolder(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
 					datastore.setExecId(execId);
 					commonServiceImpl.save(MetaType.datastore.toString(), datastore);
+					
 					dpList.add(datapod);
 				} catch (Exception e) {
 					iDatapodDao.delete(datapod);

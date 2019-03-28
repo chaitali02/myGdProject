@@ -842,5 +842,16 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return new ObjectMapper().writeValueAsString(metadataServiceImpl.getAppConfigByCurrentApp());
 	}
-	
+
+	@RequestMapping(value = "/uploadOrgLogo", method = RequestMethod.POST)
+	public @ResponseBody String uploadOrgLogo(@RequestParam("file") MultipartFile multiPartFile,
+			@RequestParam("fileName") String filename, @RequestParam(value = "uuid", required = false) String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+
+		return metadataServiceImpl.uploadOrgLogo(multiPartFile, filename, uuid, type);
+	}
+
 }
