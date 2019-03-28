@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Lov;
@@ -844,12 +845,11 @@ public class MetadataController {
 	}
 
 	@RequestMapping(value = "/uploadOrgLogo", method = RequestMethod.POST)
-	public @ResponseBody String uploadOrgLogo(@RequestParam("file") MultipartFile multiPartFile,
+	public @ResponseBody FileRefHolder uploadOrgLogo(@RequestParam("file") MultipartFile multiPartFile,
 			@RequestParam("fileName") String filename, @RequestParam(value = "uuid", required = false) String uuid,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+			throws Exception {
 
 		return metadataServiceImpl.uploadOrgLogo(multiPartFile, filename, uuid, type);
 	}

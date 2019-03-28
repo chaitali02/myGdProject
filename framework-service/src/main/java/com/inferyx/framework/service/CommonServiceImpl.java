@@ -512,6 +512,9 @@ public class CommonServiceImpl<T> {
 	private IAttributeDomainDao iAttributeDomainDao;	
 	@Autowired
 	private PropertiesFactoryBean frameworkProperties;
+	@Autowired
+	UploadServiceImpl uploadServiceImpl;
+	
 	
 	
 	public IngestServiceImpl getIngestServiceImpl() {
@@ -4647,9 +4650,7 @@ public class CommonServiceImpl<T> {
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
 			String type, String uuid, String version, String action, String dataSourceUuid)
-			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
-			NullPointerException {
+			throws Exception {
 		String directoryPathByDataSource = null;
 		if (dataSourceUuid != null) {
 			Datasource datasource = (Datasource) getOneByUuidAndVersion(dataSourceUuid, null,
@@ -4659,12 +4660,17 @@ public class CommonServiceImpl<T> {
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
-				UploadExec uploadExec = new UploadExec();
+		/*		UploadExec uploadExec = new UploadExec();
 				uploadExec.setBaseEntity();
 				Status status = new Status(Status.Stage.PENDING, new Date());
 				List<Status> statusList = new ArrayList<>();
 				statusList.add(status);
-				uploadExec.setStatusList(statusList);
+				uploadExec.setStatusList(statusList);*/
+				
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(type), version, uuid),
+						null);
+				UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
+
 				FileType type1 = Helper.getFileType(fileType);
 				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
 				String originalFileName = multipartFile.getOriginalFilename();
@@ -4711,19 +4717,17 @@ public class CommonServiceImpl<T> {
 							(message != null) ? message : "Requested " + originalFileName + " file not found!!");
 
 				} else {
-					status = new Status(Status.Stage.RUNNING, new Date());
-					statusList.add(status);
-					uploadExec.setStatusList(statusList);
+					uploadExec.setName(filename1);
+					uploadExec.setLocation(location);
+					uploadExec.setFileName(originalFileName);
+					uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
 					multipartFile.transferTo(dest);
 
 				}
 
-				uploadExec.setName(filename1);
-				uploadExec.setLocation(location);
-				uploadExec.setFileName(originalFileName);
-				status = new Status(Status.Stage.COMPLETED, new Date());
-				statusList.add(status);
-				uploadExec.setStatusList(statusList);
+			
+				uploadExec = (UploadExec) setMetaStatus(uploadExec, MetaType.uploadExec,
+						Status.Stage.COMPLETED);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
 					// ObjectMapper mapper = new ObjectMapper();

@@ -337,7 +337,7 @@ public class CommonController<T> {
 											   @RequestParam(value = "version", required = false) String version,
 											   @RequestParam(value = "dataSourceUuid", required = false) String dataSourceUuid,
 											   @RequestParam(value = "action", required = false) String action)
-											throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+											throws Exception {
 		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action,dataSourceUuid);
 		
 		return result;

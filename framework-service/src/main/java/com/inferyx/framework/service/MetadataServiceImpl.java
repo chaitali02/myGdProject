@@ -18,7 +18,9 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -78,7 +80,9 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -115,6 +119,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -151,6 +156,8 @@ public class MetadataServiceImpl {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
+	@Autowired
+	UploadServiceImpl uploadServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 //	private static final String GET = "get";
@@ -2358,17 +2365,10 @@ public class MetadataServiceImpl {
 		}
 		return Helper.getPropertyValue(configName);
 	}
-	
-	public String uploadOrgLogo(MultipartFile multiPartFile, String fileName, String uuid, String type)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, FileNotFoundException, ParseException, IOException, JSONException {
-		Status status = new Status(Status.Stage.PENDING, new Date());
-		List<Status> statusList = new ArrayList<>();
-		statusList.add(status);
-		UploadExec uploadExec = new UploadExec();
-		uploadExec.setBaseEntity();
 
-		String filePath = null;
+	public FileRefHolder uploadOrgLogo(MultipartFile multiPartFile, String fileName, String uuid, String type)
+			throws Exception {
+		FileRefHolder fileRefHolder = new FileRefHolder();
 		String originalFileName = multiPartFile.getOriginalFilename();
 		String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 		String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
@@ -2377,39 +2377,60 @@ public class MetadataServiceImpl {
 			fileName_Uuid = uuid + "." + fileExtention;
 
 		} else {
-			fileName_Uuid = Helper.getImageCustomNameByExtension(fileExtention);
+			uuid = Helper.getNextUUID();
+			fileName_Uuid = uuid + "." + fileExtention;
 
 		}
 		String directoryPath = Helper.getPropertyValue("framework.image.logo.Path");
+		MetaIdentifier metaIdentifier = new MetaIdentifier(MetaType.organization, uuid, Helper.getVersion());
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(metaIdentifier);
+		UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
 
-		String location = directoryPath + "/" + fileName_Uuid;
-		File dest = new File(location);
+		String locationServer = directoryPath + "/" + fileName_Uuid;
+		String locationUi = "src/main/webapp/app/avatars/" + "/" + fileName_Uuid;
+		File destServer = new File(locationServer);
+		File destUi = new File(locationUi);
+
 		if (uuid != null && !uuid.isEmpty()) {
-			status = new Status(Status.Stage.RUNNING, new Date());
-			statusList.add(status);
-			uploadExec.setStatusList(statusList);
-			multiPartFile.transferTo(dest);
+
 			uploadExec.setName(filename1);
-			uploadExec.setLocation(location);
+			uploadExec.setLocation(locationServer);
 			uploadExec.setFileName(originalFileName);
-			status = new Status(Status.Stage.COMPLETED, new Date());
-			statusList.add(status);
-			uploadExec.setStatusList(statusList);
+			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.RUNNING);
+			File convFile = new File(locationUi);
+		    convFile.createNewFile(); 
+		    FileOutputStream fos = new FileOutputStream(convFile); 
+		    fos.write(multiPartFile.getBytes());
+		    fos.close(); 
+			multiPartFile.transferTo(destServer);
+			
+
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.COMPLETED);
 
 		} else {
-			status = new Status(Status.Stage.RUNNING, new Date());
-			statusList.add(status);
-			uploadExec.setStatusList(statusList);
-			multiPartFile.transferTo(dest);
-			uploadExec.setName(filename1);
-			uploadExec.setLocation(location);
-			uploadExec.setFileName(originalFileName);
-			status = new Status(Status.Stage.COMPLETED, new Date());
-			statusList.add(status);
-			uploadExec.setStatusList(statusList);
-		}
 
-		return fileName_Uuid;
+			uploadExec.setName(filename1);
+			uploadExec.setLocation(locationServer);
+			uploadExec.setFileName(originalFileName);
+			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.RUNNING);
+			File convFile = new File(locationUi);
+		    convFile.createNewFile(); 
+		    FileOutputStream fos = new FileOutputStream(convFile); 
+		    fos.write(multiPartFile.getBytes());
+		    fos.close(); 
+			multiPartFile.transferTo(destServer);
+
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.COMPLETED);
+		}
+		fileRefHolder.setRef(metaIdentifier);
+		fileRefHolder.setFileName(fileName_Uuid);
+		return fileRefHolder;
 	}
-	
+
 }
