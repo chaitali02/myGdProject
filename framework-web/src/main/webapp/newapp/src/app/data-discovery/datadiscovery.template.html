@@ -16,7 +16,7 @@
           </a>
           <div class="col-lg-2 col-md-2 col-sm-2" style="float:right">
             <select class="form-control" [(ngModel)]="optiondata">
-              <option *ngFor="let c of optionsort" [ngValue]="optiondata">{{c.caption}}</option>
+              <option *ngFor="let c of optionsort" [ngValue]="c.name">{{c.caption}}</option>
             </select>
           </div>
           <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
@@ -33,9 +33,9 @@
             <div class="bounce3"></div>
           </div>
         </div>
-        <div *ngIf="!isEditInprogess">
+        <div *ngIf="!isEditInprogess && !isEditError">
           <div class="row">
-            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" *ngFor="let datadiscovry of locations | filter : searchText | orderBy : [optiondata.name]">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" *ngFor="let datadiscovry of locations | filter : searchText | orderBy : [optiondata]">
               <div class="cardshadow" style="height:152px;">
                 <a (click)="onShowDetail($event, datadiscovry)">
                   <div class="dashboard-stat2" style="height:150px;">

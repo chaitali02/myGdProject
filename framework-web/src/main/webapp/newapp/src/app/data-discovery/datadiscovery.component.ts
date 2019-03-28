@@ -6,7 +6,7 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { AppMetadata } from '../app.metadata';
 import { FilterPipeDD } from './pipes/search-pipe';
 import { OrderBy } from './pipes/orderBy';
-
+import { FilterMetaPipe } from '../metadata-navigator/pipes/search-pipe';
 import { DatadiscoveryService } from './datadiscovery.service';
 
 import { DataDiscovery } from './data-discovery';
@@ -31,6 +31,7 @@ export class DataDiscoveryComponent {
   colorclassarray: any[];
   isEditInprogess : boolean;
   isEditError : boolean;
+  isInProgress: boolean;
   constructor(private http: Http, private _service: DatadiscoveryService, private datePipe: DatePipe, public metaconfig: AppMetadata, public router: Router, private route: ActivatedRoute) {
     this.isEditInprogess = false;
     this.isEditError = false;
@@ -41,13 +42,13 @@ export class DataDiscoveryComponent {
     }
     ]
     this.colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"];
-    this.optiondata = { 'caption': 'Name A-Z', name: 'title' };
     this.optionsort = [
       { 'caption': 'Name A-Z', name: 'title' },
       { 'caption': 'Name Z-A', name: '-title' },
       { 'caption': 'Date Asc', name: 'lastUpdatedOn' },
       { 'caption': 'Date Desc', name: '-lastUpdatedOn' },
     ];
+    this.optiondata = this.optionsort[0].name;
   }
   ngOnInit() {
     this.isEditInprogess = true;
@@ -88,10 +89,10 @@ export class DataDiscoveryComponent {
       count++;
     }
     this.totalItems = count;
+    console.log(JSON.stringify(this.locations_temp));
     this.getResults(this.locations_temp);
-
-
   }
+
   getResults(data: any) {
     if (this.totalItems > 0) {
       let to = (((this.currentPage - 1) * (10)) + 1);
@@ -107,6 +108,7 @@ export class DataDiscoveryComponent {
     var limit = (10 * this.currentPage);
     var offset = ((this.currentPage - 1) * 10)
     this.locations = data.slice(offset, limit);
+    
     this.isEditInprogess = false;
 
     // setTimeout(() => {
@@ -140,7 +142,8 @@ export class DataDiscoveryComponent {
     console.log('Number items per page: ' + event.itemsPerPage);
   }
 
-  refersh() {debugger
+  refersh() {
+    this.isEditInprogess = true;
     this._service.getDatapodStats().subscribe(
       response => { this.OnSuccesAllMeta(response) },
       error => console.log('Error :: ' + error)

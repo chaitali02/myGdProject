@@ -23,5 +23,4 @@ export class DatadiscoveryService {
         map(response => { return <any[]>response.json(); }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
-
 }
