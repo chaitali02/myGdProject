@@ -154,7 +154,7 @@ public class MySqlRegister {
 					MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 					datastore.setName(datapod.getName());
 					datastore.setDesc(datapod.getDesc());
-					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setPersistMode(PersistMode.DISK_ONLY.toString());
 					datastore.setNumRows(count);
 					datastore.setCreatedBy(datapod.getCreatedBy());
 					holder.setRef(datastoreRef);

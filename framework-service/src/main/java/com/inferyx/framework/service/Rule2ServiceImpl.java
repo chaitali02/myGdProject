@@ -531,7 +531,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getSummaryResult().getRef().getUuid(),
 					ruleExec.getSummaryResult().getRef().getVersion());
 
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null,runMode);
 			
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
@@ -1089,7 +1089,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getSummaryResult().getRef().getUuid(),
 					ruleExec.getSummaryResult().getRef().getVersion());
 
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null,runMode);
 			
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
@@ -1298,7 +1298,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
 
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order, ruleExec.getVersion());
+					offset, limit, sortBy, order, ruleExec.getVersion(),runMode);
 //			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
 //
 //			String tableName = getTableName(detailsDpDs, detailsDp, ruleExec, runMode);
@@ -1376,7 +1376,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
             data=dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order,ruleExec.getVersion());
+					offset, limit, sortBy, order,ruleExec.getVersion(),runMode);
 			return data;
 //			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
 //

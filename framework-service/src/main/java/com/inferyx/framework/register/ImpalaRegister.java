@@ -151,7 +151,7 @@ public class ImpalaRegister extends DataSourceRegister {
 					rsHolder.getResultSet().next();
 					datastore.setNumRows(rsHolder.getResultSet().getInt(1));
 					datastore.setCreatedBy(datapod.getCreatedBy());
-					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setPersistMode(PersistMode.DISK_ONLY.toString());
 					holder.setRef(datastoreRef);
 					datastore.setMetaId(holder);
 					

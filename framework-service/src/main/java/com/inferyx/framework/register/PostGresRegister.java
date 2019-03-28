@@ -145,7 +145,7 @@ public class PostGresRegister {
 					MetaIdentifier datastoreRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 					datastore.setName(datapod.getName());
 					datastore.setDesc(datapod.getDesc());
-					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setPersistMode(PersistMode.DISK_ONLY.toString());
 					datastore.setNumRows(0);
 					datastore.setCreatedBy(datapod.getCreatedBy());
 					holder.setRef(datastoreRef);

@@ -288,7 +288,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			filePathList.add(datastore.getLocation());
 			sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
 		}
-		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null);
+		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null,runMode);
 	}
 	
 	public boolean createPDF() {
@@ -1026,7 +1026,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> data = null;
 		try {
-			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null,runMode);	
 		}catch (Exception e) {
 			e.printStackTrace();
 			try {
