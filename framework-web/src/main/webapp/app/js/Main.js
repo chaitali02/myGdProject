@@ -263,7 +263,7 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
     }
 
     $scope.$on('isTabAvailable',function(e,previousState,newStage){
-        debugger
+
         var indexOfTab = isTabAvailable(previousState);
         if (indexOfTab > -1) {
             $timeout(function () {
