@@ -264,7 +264,7 @@ public class PDFUtil {
 			PDPageContentStream contentStream = new PDPageContentStream(pdfDoc, pdPage, AppendMode.APPEND, true);
 			
 			//drawing organization logo
-			final float imgWidth = 70.0f;
+			final float imgWidth = 30.0f;
 			final float imgHeight = 30.0f;
 			final float imgXPos = getAlignmentPosition(document.getLogoAlignment().toString(), pageWidth, imgWidth, margin);
 			final float imgYPos = pdPage.getMediaBox().getHeight() - 10.5f - imgHeight;
