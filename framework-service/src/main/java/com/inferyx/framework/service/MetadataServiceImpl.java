@@ -16,6 +16,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.limi
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +55,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -2355,4 +2358,58 @@ public class MetadataServiceImpl {
 		}
 		return Helper.getPropertyValue(configName);
 	}
+	
+	public String uploadOrgLogo(MultipartFile multiPartFile, String fileName, String uuid, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, FileNotFoundException, ParseException, IOException, JSONException {
+		Status status = new Status(Status.Stage.PENDING, new Date());
+		List<Status> statusList = new ArrayList<>();
+		statusList.add(status);
+		UploadExec uploadExec = new UploadExec();
+		uploadExec.setBaseEntity();
+
+		String filePath = null;
+		String originalFileName = multiPartFile.getOriginalFilename();
+		String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+		String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+		String fileName_Uuid;
+		if (uuid != null && !uuid.isEmpty()) {
+			fileName_Uuid = uuid + "." + fileExtention;
+
+		} else {
+			fileName_Uuid = Helper.getImageCustomNameByExtension(fileExtention);
+
+		}
+		String directoryPath = Helper.getPropertyValue("framework.image.logo.Path");
+
+		String location = directoryPath + "/" + fileName_Uuid;
+		File dest = new File(location);
+		if (uuid != null && !uuid.isEmpty()) {
+			status = new Status(Status.Stage.RUNNING, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			multiPartFile.transferTo(dest);
+			uploadExec.setName(filename1);
+			uploadExec.setLocation(location);
+			uploadExec.setFileName(originalFileName);
+			status = new Status(Status.Stage.COMPLETED, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+
+		} else {
+			status = new Status(Status.Stage.RUNNING, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+			multiPartFile.transferTo(dest);
+			uploadExec.setName(filename1);
+			uploadExec.setLocation(location);
+			uploadExec.setFileName(originalFileName);
+			status = new Status(Status.Stage.COMPLETED, new Date());
+			statusList.add(status);
+			uploadExec.setStatusList(statusList);
+		}
+
+		return fileName_Uuid;
+	}
+	
 }

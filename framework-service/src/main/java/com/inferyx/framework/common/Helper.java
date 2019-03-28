@@ -777,6 +777,10 @@ public class Helper {
 	public static String getFileCustomNameByFileType(FileType fileType, String extension,String type) {
 		return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 	}
+	public static String getImageCustomNameByExtension(String extension) {
+		return Helper.getNextUUID()+"."+extension;
+	}
+	
 	public static FileType getFileType(String fileType) {
 		if(fileType != null)
 			switch (fileType.toLowerCase()) {
