@@ -363,6 +363,7 @@ public class MetadataServiceImpl {
 				DagExec execObject = new DagExec();
 				execObject = (DagExec) metaObject;
 			    execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
 				baseEntityStatus.setExecCreated(execObject.getExecCreated());
 
 			}

@@ -5509,6 +5509,10 @@ public class CommonServiceImpl<T> {
 		return helper.getExecutorContext(getDatasourceByApp().getType());
 	}
 
+	public ExecContext getExecContext() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getExecutorContext(getDatasourceByApp().getType());
+	}
+	
 	public StorageContext getStorageContext(DataStore datastore) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (datastore.getMetaId().getRef().getType().equals(MetaType.datapod)) {
 			Datapod datapod = (Datapod) getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());

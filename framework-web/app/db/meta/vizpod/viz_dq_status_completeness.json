@@ -1,6 +1,6 @@
 {
   "uuid": "d3d2cec5-8f75-498e-9f40-349f8143324d",
-  "version": "1552418992",
+  "version": "1553796289",
   "name": "viz_dq_status_completeness",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Mar 12 15:29:52 EDT 2019",
+  "createdOn": "Thu Mar 28 14:04:49 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -39,22 +39,9 @@
     },
     "value": null
   },
-  "type": "pie-chart",
+  "type": "score-card",
   "limit": 0,
-  "keys": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "check_pass"
-    }
-  ],
+  "keys": [],
   "dimension": [],
   "detailAttr": [
     {
@@ -139,7 +126,7 @@
       "attributeId": 6,
       "function": null,
       "value": null,
-      "attributeName": "attribute_id"
+      "attributeName": "check_type"
     },
     {
       "ref": {
@@ -151,7 +138,7 @@
       "attributeId": 7,
       "function": null,
       "value": null,
-      "attributeName": "attribute_name"
+      "attributeName": "check_pass_count"
     },
     {
       "ref": {
@@ -163,7 +150,7 @@
       "attributeId": 8,
       "function": null,
       "value": null,
-      "attributeName": "attribute_value"
+      "attributeName": "check_fail_count"
     },
     {
       "ref": {
@@ -175,7 +162,7 @@
       "attributeId": 9,
       "function": null,
       "value": null,
-      "attributeName": "rowkey_name"
+      "attributeName": "score"
     },
     {
       "ref": {
@@ -187,42 +174,6 @@
       "attributeId": 10,
       "function": null,
       "value": null,
-      "attributeName": "rowkey_value"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "check_type"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "check_pass"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
       "attributeName": "dimension"
     },
     {
@@ -232,7 +183,7 @@
         "version": null,
         "name": "ds_rule_dashboard_completeness"
       },
-      "attributeId": 14,
+      "attributeId": 11,
       "function": null,
       "value": null,
       "attributeName": "version"
@@ -248,12 +199,13 @@
         "version": null,
         "name": "ds_rule_dashboard_completeness"
       },
-      "attributeId": 11,
-      "function": "COUNT",
+      "attributeId": 9,
+      "function": "AVG",
       "value": null,
-      "attributeName": "check_type"
+      "attributeName": "score"
     }
   ],
   "sortBy": [],
-  "sortOrder": null
+  "sortOrder": null,
+  "colorPalette": null
 }

@@ -1,6 +1,6 @@
 {
   "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-  "version": "1552418625",
+  "version": "1553795910",
   "name": "ds_rule_dashboard_accuracy",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Mar 12 15:23:45 EDT 2019",
+  "createdOn": "Thu Mar 28 13:58:30 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,9 +32,9 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+      "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
       "version": null,
-      "name": "dq_rule_dashboard"
+      "name": "dq_result_summary_dashboard"
     },
     "value": null
   },
@@ -47,11 +47,11 @@
         {
           "ref": {
             "type": "datapod",
-            "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+            "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
             "version": null,
-            "name": "dq_rule_dashboard"
+            "name": "dq_result_summary_dashboard"
           },
-          "attributeId": 13,
+          "attributeId": 10,
           "value": null,
           "attributeName": "dimension",
           "attributeType": null
@@ -80,9 +80,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "0",
@@ -100,9 +100,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "1",
@@ -120,9 +120,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "2",
@@ -140,9 +140,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "3",
@@ -160,9 +160,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "4",
@@ -180,9 +180,9 @@
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "5",
@@ -195,18 +195,18 @@
     {
       "attrSourceId": "6",
       "attrDisplaySeq": "6",
-      "attrSourceName": "attribute_id",
+      "attrSourceName": "check_type",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "attribute_id",
+        "attrName": "check_type",
         "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
@@ -215,19 +215,19 @@
     {
       "attrSourceId": "7",
       "attrDisplaySeq": "7",
-      "attrSourceName": "attribute_name",
+      "attrSourceName": "check_pass_count",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "attribute_name",
-        "attrType": "VARCHAR",
+        "attrName": "check_pass_count",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
@@ -235,19 +235,19 @@
     {
       "attrSourceId": "8",
       "attrDisplaySeq": "8",
-      "attrSourceName": "attribute_value",
+      "attrSourceName": "check_fail_count",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "attribute_value",
-        "attrType": "VARCHAR",
+        "attrName": "check_fail_count",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
@@ -255,19 +255,19 @@
     {
       "attrSourceId": "9",
       "attrDisplaySeq": "9",
-      "attrSourceName": "rowkey_name",
+      "attrSourceName": "score",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "rowkey_name",
-        "attrType": "VARCHAR",
+        "attrName": "score",
+        "attrType": "DECIMAL",
         "attrUnitType": null,
         "function": null
       }
@@ -275,18 +275,18 @@
     {
       "attrSourceId": "10",
       "attrDisplaySeq": "10",
-      "attrSourceName": "rowkey_value",
+      "attrSourceName": "dimension",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "rowkey_value",
+        "attrName": "dimension",
         "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
@@ -295,77 +295,17 @@
     {
       "attrSourceId": "11",
       "attrDisplaySeq": "11",
-      "attrSourceName": "check_type",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-          "version": null,
-          "name": "dq_rule_dashboard"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "check_type",
-        "attrType": "VARCHAR",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "12",
-      "attrDisplaySeq": "12",
-      "attrSourceName": "check_pass",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-          "version": null,
-          "name": "dq_rule_dashboard"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "check_pass",
-        "attrType": "VARCHAR",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "13",
-      "attrDisplaySeq": "13",
-      "attrSourceName": "dimension",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-          "version": null,
-          "name": "dq_rule_dashboard"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "dimension",
-        "attrType": "VARCHAR",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "14",
-      "attrDisplaySeq": "14",
       "attrSourceName": "version",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+          "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
           "version": null,
-          "name": "dq_rule_dashboard"
+          "name": "dq_result_summary_dashboard"
         },
         "value": null,
-        "attrId": "14",
+        "attrId": "11",
         "attrName": "version",
         "attrType": "INTEGER",
         "attrUnitType": null,

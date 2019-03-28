@@ -49,6 +49,7 @@ import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ImputeOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
@@ -434,14 +435,22 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
 			
 			Datapod target = null;
-			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod))
+			StorageContext storageContext = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod)) {
 				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
 						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+				storageContext = commonServiceImpl.getStorageContext(targetHolder.getRef());
+			}
+			else
+				storageContext = StorageContext.FILE;
+
+			ExecContext execContext = commonServiceImpl.getExecContext();
+			IExecutor exec = execFactory.getExecutor(execContext.toString());
 			
 			String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
 			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 			Datasource sourceDS = commonServiceImpl.getDatasourceByObject(predict);
-			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
+//			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 
 			String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 			String filePath = String.format("/%s/%s/%s", predict.getUuid(), predict.getVersion(), predictExec.getVersion());
@@ -699,7 +708,8 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
+							commonServiceImpl.getPersistMode(storageContext),runMode);	
+//							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
 					
 					List<String> tempTableList = new ArrayList<>();
 					tempTableList.add((tableName+"_pred_data"));
@@ -719,6 +729,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					//getting data from source
 					String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
 					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);					
+					count = rsHolder.getCountRows();
 
 					//finding impute values of attribute
 					LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_pred_data"));
@@ -739,7 +750,6 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 //					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
 					
 					exec.registerDataFrameAsTable(rsHolder, tableName+"_pred_assembled_data");
-					
 					
 					String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
 					Object trainedModel = null;
@@ -780,12 +790,12 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
 //					}
 						//generating datastore for datapod
-						count = rsHolder.getCountRows();
+//						count = rsHolder.getCountRows();
 						modelServiceImpl.createDatastore(filePathUrl, predict.getName(), 
 								new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
 								new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 								predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
+								commonServiceImpl.getPersistMode(storageContext), runMode);		
 					} else {
 						//writing into file
 						logger.info("Read dataframes : ");
@@ -823,7 +833,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);
+					commonServiceImpl.getPersistMode(storageContext), runMode);
 			logger.info("After create Datastore");
 
 			predictExec.setLocation(filePathUrl);

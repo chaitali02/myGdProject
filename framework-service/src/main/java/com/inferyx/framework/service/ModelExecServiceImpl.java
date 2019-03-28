@@ -462,8 +462,12 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
 					predictExec.getResult().getRef().getUuid(), predictExec.getResult().getRef().getVersion(),
 					MetaType.datastore.toString());
+
+			ExecContext execContext = commonServiceImpl.getExecContext();
+			IExecutor exec = execFactory.getExecutor(execContext.toString());
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
+//			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			
 			String targetTable = null;
 			Datasource targetDS = null;

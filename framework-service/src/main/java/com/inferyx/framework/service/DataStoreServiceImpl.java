@@ -1261,7 +1261,7 @@ public class DataStoreServiceImpl {
 			}*/
 			
 			if (dataStore.getMetaId().getRef().getType().equals(MetaType.datapod)
-					&& commonServiceImpl.checkTypeVersion(dataStore.getMetaId().getRef().getUuid())==true)
+					&& commonServiceImpl.checkTypeVersion(dataStore.getMetaId().getRef().getUuid()))
 				customCondition.append(" WHERE version = " + execVersion);
 			else
 				customCondition.append(" WHERE 1=1 ");
