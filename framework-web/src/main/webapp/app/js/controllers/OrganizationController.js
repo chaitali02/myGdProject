@@ -177,7 +177,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		var onGetUploadLogo = function (response) {
 			orgJson.uuid=response.ref.uuid;
 			orgJson.version=response.ref.version
-			orgJson.logoPath=response.fileName;
+			orgJson.logoName=response.fileName;
 			$scope.submitCall(orgJson,upd_tag);
 		}
 		var onError = function (response) {
