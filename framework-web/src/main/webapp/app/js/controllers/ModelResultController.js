@@ -264,6 +264,13 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
     $scope.restartExec = function (row, status) {
         $scope.execDetail=row;
         $scope.msg ="Restart";
+        if(row.runMode =="BATCH"){
+            notify.type = 'info',
+            notify.title = 'Info',
+            notify.content ="Please restart using batch module";
+            $scope.$emit('notify', notify); 
+            return false;
+          }
         $('#confModal').modal({
           backdrop: 'static',
           keyboard: false
