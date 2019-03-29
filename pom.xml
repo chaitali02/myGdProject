@@ -683,6 +683,13 @@
 		    <artifactId>boxable</artifactId>
 		    <version>1.5</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+		<dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk</artifactId>
+		    <version>1.11.527</version>
+		</dependency>
+				
 				
 		
 	</dependencies>
