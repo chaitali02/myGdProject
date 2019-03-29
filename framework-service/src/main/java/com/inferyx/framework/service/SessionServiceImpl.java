@@ -85,69 +85,16 @@ public class SessionServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(SessionServiceImpl.class);
 	
-	/*
-	 * public HttpSession getSession(HttpServletRequest request) { HttpSession
-	 * session = request.getSession(); return session; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*public Session findLatest() {
-		return resolveName(iSessionDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
 	
-	/********************** UNUSED **********************/
-	/*public Session findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iSessionDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Session findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findOneById(appUuid, id);
-		}
-		return iSessionDao.findOne(id);
-	}*/
 
 	
 	public Session getSessionByUser(String userUUID) {
 		return iSessionDao.findSessionByUser(userUUID, new Sort(Sort.Direction.DESC, "version"));
 	}
 
-	/********************** UNUSED **********************/
-	/*public List<Session> findAllVersion(String datapodName) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findAllVersion(appUuid, datapodName);
-		}
-		return iSessionDao.findAllVersion(datapodName);
-	}*/
-
 	public Session findSessionByStatus(String status) {
 		return iSessionDao.findSessionByStatus(status);
 	}
-
-	/*
-	 * public Session loginUser(String userId) {
-	 * 
-	 * List<User> userList=iUserDao.findAll(); List<String> userIDS=new
-	 * ArrayList<String>(); for(User user:userList) { String ids=user.getId();
-	 * userIDS.add(ids); } User userDO = iUserDao.findOne(userId);
-	 * if(userIDS.contains(userId)) { Session
-	 * createdSession=createUserSession(userDO.getUuid()); Session
-	 * session=iSessionDao.findLatestByUuid(createdSession.getUuid(),new
-	 * Sort(Sort.Direction.DESC, "version")); List<Status> statusList = new
-	 * ArrayList<Status>(); Status status = new Status(Status.Stage.login, new
-	 * Date()); statusList.add(status); session.setStatus(statusList); return
-	 * session; } else return null; }
-	 */
 
 	public Boolean validateUser(String userName, String password) throws IOException, JSONException, ParseException, ServletException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		// Check if its a valid user
@@ -375,30 +322,7 @@ public class SessionServiceImpl {
 	    return ipAddress;
 	}
 	
-	/********************** UNUSED **********************/
-	/*public List<Session> findAllLatestActive() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Aggregation sessionAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Session> sessionResults = mongoTemplate.aggregate(sessionAggr, "session", Session.class);
-		List<Session> sessionList = sessionResults.getMappedResults();
-
-		// Fetch the session details for each id
-		List<Session> result = new ArrayList<Session>();
-		for (Session s : sessionList) {
-			Session sessionLatest;
-			if (appUuid != null) {
-				sessionLatest = iSessionDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				sessionLatest = iSessionDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			if (sessionLatest != null) {
-				result.add(sessionLatest);
-			}
-		}
-		return result;
-	}*/
+	
 	public Session findSessionBySessionId(String sessionId) {
 		String sId = sessionId.replace("\"", "");
 		Session session = iSessionDao.findSessionBySessionId(sId);

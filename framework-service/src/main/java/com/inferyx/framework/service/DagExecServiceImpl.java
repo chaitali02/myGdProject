@@ -111,16 +111,6 @@ public class DagExecServiceImpl {
  
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
-	/********************** UNUSED **********************/
-	/*public DagExec findLatest() {
-		DagExec dagexec=null;
-		if(iDagExec.findLatest(new Sort(Sort.Direction.DESC, "version"))!=null){
-			dagexec=resolveName(iDagExec.findLatest(new Sort(Sort.Direction.DESC, "version")));
-		}
-		return dagexec ;
-	}*/
-	
-	
 	MetaIdentifierHolder location = new MetaIdentifierHolder();
 	static final Logger logger = Logger.getLogger(DagExecServiceImpl.class);
 	
@@ -133,11 +123,6 @@ public class DagExecServiceImpl {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iDagExec.findOneByDatapod(appUuid, datapodUUID);
 	}
-
-	/*
-	 * public List<DagExec> findDagExecByDag(String dagUUID) { return
-	 * iDagExec.findOneByDag(dagUUID); }
-	 */
 
 	public List<DagExec> findDagExecByDag(String dagUUID) throws JsonProcessingException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -153,19 +138,7 @@ public class DagExecServiceImpl {
 		}
 		return DagExec;
 	}
-
-
-	/********************** UNUSED **********************/
-	/*public DagExec findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDagExec.findOneById(appUuid, id);
-		} else
-			return iDagExec.findOne(id);
-	}*/
 	
-
 	public String kill(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		String returnStr = null;
 		if (StringUtils.isBlank(stageId)) {
@@ -304,28 +277,6 @@ public class DagExecServiceImpl {
 		}
 	}
 	
-//	public void kill (String uuid, String version) {
-//		MetaIdentifier dagExecIdentifier = new MetaIdentifier(MetaType.dagExec, uuid, version);
-//		DagExec dagExec = (DagExec) daoRegister.getRefObject(dagExecIdentifier);
-//		if (dagExec == null) {
-//			logger.info("RuleExec not found. Exiting...");
-//			return;
-//		}
-//		if (!Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
-//			logger.info("Latest Status is not in RUNNING. Exiting...");
-//		}
-//		try {
-//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
-//			FutureTask futureTask = (FutureTask) taskThreadMap.get("Rule_" + dagExec.getUuid());
-//			futureTask.cancel(true);
-//			taskThreadMap.remove("Rule_" + dagExec.getUuid());
-//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
-//		} catch (Exception e) {
-//			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);			
-//			e.printStackTrace();
-//		}
-//	}
-	
 	public BaseEntity setTaskPause(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
@@ -373,34 +324,7 @@ public class DagExecServiceImpl {
 		return btchServ.fetchAllTaskThread();
 	}
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException 
-	 * @throws ParseException 
-	 * @throws JSONException **********************/
-	/*public List<DagExec> findAllLatestActive() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Aggregation dagExecAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<DagExec> dagExecResults = mongoTemplate.aggregate(dagExecAggr, "dagexec", DagExec.class);
-		List<DagExec> dagExecList = dagExecResults.getMappedResults();
-
-		// Fetch the dagexec details for each id
-		List<DagExec> result = new ArrayList<DagExec>();
-		for (DagExec s : dagExecList) {
-			DagExec dagExecLatest;
-			if (appUuid != null) {
-				dagExecLatest = iDagExec.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				dagExecLatest = iDagExec.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			if (dagExecLatest != null) {
-				result.add(dagExecLatest);
-			}
-		}
-		return result;
-	}
-	*/
+	
 	public void setStageKILLED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		//DagExec dagexec  = iDagExec.findOneByUuidAndVersion(appUuid, uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
@@ -880,15 +804,6 @@ public class DagExecServiceImpl {
 		statusList.add(status);
 	}
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException 
-	 * @throws ParseException 
-	 * @throws JSONException **********************/
-	/*public DagExec getOneByUuidAndVersion(String uuid, String version) {
-
-		return iDagExec.findOneByUuidAndVersion(uuid, version);
-	}*/
-
 	public void setTaskStatus(String uuid, String version, String stageId, String taskId, com.inferyx.framework.domain.Status.Stage status ) throws JsonProcessingException, JSONException, ParseException {
 		{
 			//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
@@ -1106,101 +1021,7 @@ public class DagExecServiceImpl {
 		return Status.Stage.COMPLETED.toString();
 	}
 	
-	/*public String checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) {
-		DagExec dagexec;
-		boolean isDependencyCOMPLETED = false;
-		
-		if (securityServiceImpl.getAppInfo() != null) {
-			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			dagexec = iDagExec.findOneByUuidAndVersion(appUuid, Uuid, version);
-		} else {
-			dagexec = iDagExec.findOneByUuidAndVersion(Uuid, version);
-		}
-		// Dag dag = (Dag) daoRegister.getRefObject(dagexec.getDag());
-		List<StageExec> listStageExecs = DagExecUtil.castToStageExecList(dagexec.getStages());
-
-		HashMap stageStatus = new HashMap();
-		HashMap taskStatus = new HashMap();
-
-		List<String> stageDependsOn = new ArrayList<String>();
-		List<String> taskDependsOn = new ArrayList<String>();
-		for (StageExec stageExec : listStageExecs) {
-			List<Status> statusList = stageExec.getStatusList();
-			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-			if (checkStatusCOMPLETED(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "COMPLETED");
-			} else if (checkStatusKILLED(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "KILLED");
-			}  else if (checkStatusFAILED(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "FAILED");
-			} else {
-				stageStatus.put(stageExec.getStageId().toString(), "NotCOMPLETED");
-			}
-
-			if (stageExec.getStageId().equals(stageId)) {
-				stageDependsOn = stage.getDependsOn();
-			}
-
-			List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
-			for (TaskExec taskExec : taskExecList) {
-				List<Status> taskStatusList = taskExec.getStatusList();
-				String taskKey = stageExec.getStageId() + "_" + taskExec.getTaskId();
-				if (checkStatusCOMPLETED(taskStatusList)) {
-					taskStatus.put(taskKey, "COMPLETED");
-				} else if (checkStatusKILLED(taskStatusList)) {
-					taskStatus.put(taskKey, "KILLED");
-				}  else if (checkStatusFAILED(taskStatusList)) {
-					taskStatus.put(taskKey, "FAILED");
-				} else {
-					taskStatus.put(taskKey, "NotCOMPLETED");
-				}
-				if (stageExec.getStageId().equals(stageId)
-						&& taskExec.getTaskId().equals(taskId)) {
-					Task task = DagExecUtil.getTaskFromStage(stage, taskId);
-					taskDependsOn = task.getDependsOn();// whether to have
-														// dependsOn in DAGExec
-				}
-			}
-		}
-
-		if (stageDependsOn.size() == 0 && taskDependsOn.size() == 0) {
-			// There is no dependency, so execute this stage task
-			return "COMPLETED";
-		}
-
-		for (String stageDepId : stageDependsOn) {
-			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase("COMPLETED")) {
-				isDependencyCOMPLETED = true;
-			} else if (value.equalsIgnoreCase("KILLED")) {
-				return "KILLED";
-			} else if (value.equalsIgnoreCase("FAILED")) {
-				return "FAILED";
-			} else {
-				// Stage not complete. return false
-				return "NotCOMPLETED";
-			}
-		}
-		for (String taskDepId : taskDependsOn) {
-			String value = (String) taskStatus.get(stageId + "_" + taskDepId);
-			if (value.equalsIgnoreCase("COMPLETED")) {
-				isDependencyCOMPLETED = true;
-			} else if (value.equalsIgnoreCase("KILLED")) {
-				return "KILLED";
-			} else if (value.equalsIgnoreCase("FAILED")) {
-				return "FAILED";
-			} else {
-				// Task not complete. return false
-				return "NotCOMPLETED";
-			}
-		}
-		if (isDependencyCOMPLETED) {
-			return "COMPLETED";
-		} else {
-			return "NotCOMPLETED";
-		}
-	}
-*/	
+	
 	public String checkStageDepStatus(Dag dag, String Uuid, String version, String stageId) throws JsonProcessingException {
 		boolean isDependencyCOMPLETED = false;
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
@@ -1256,84 +1077,7 @@ public class DagExecServiceImpl {
 		}
 
 	}
-	
-/*	public boolean checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) {
-		boolean isDependencyCOMPLETED = false;
-		DagExec dagexec;
 
-		if (securityServiceImpl.getAppInfo() != null) {
-			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			dagexec = iDagExec.findOneByUuidAndVersion(appUuid, Uuid, version);
-		} else {
-			dagexec = iDagExec.findOneByUuidAndVersion(Uuid, version);
-		}
-		// Dag dag = (Dag) daoRegister.getRefObject(dagexec.getDag());
-		List<StageExec> listStageExecs = DagExecUtil.castToStageExecList(dagexec.getStages());
-
-		HashMap stageStatus = new HashMap();
-		HashMap taskStatus = new HashMap();
-
-		List<String> stageDependsOn = new ArrayList<String>();
-		List<String> taskDependsOn = new ArrayList<String>();
-
-		for (StageExec stageExec : listStageExecs) {
-			List<Status> statusList = stageExec.getStatusList();
-			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-			if (checkStatusCOMPLETED(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "COMPLETED");
-			} else {
-				stageStatus.put(stageExec.getStageId().toString(), "NotCOMPLETED");
-			}
-
-			if (stageExec.getStageId().equals(stageId)) {
-				stageDependsOn = stage.getDependsOn();
-			}
-
-			List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
-			for (TaskExec taskExec : taskExecList) {
-				List<Status> taskStatusList = taskExec.getStatusList();
-				String taskKey = stageExec.getStageId() + "_" + taskExec.getTaskId();
-				if (checkStatusCOMPLETED(taskStatusList)) {
-					taskStatus.put(taskKey, "COMPLETED");
-				} else {
-					taskStatus.put(taskKey, "NotCOMPLETED");
-				}
-				if (stageExec.getStageId().equals(stageId)
-						&& taskExec.getTaskId().equals(taskId)) {
-					Task task = DagExecUtil.getTaskFromStage(stage, taskId);
-					taskDependsOn = task.getDependsOn();// whether to have
-														// dependsOn in DAGExec
-				}
-			}
-		}
-
-		if (stageDependsOn.size() == 0 && taskDependsOn.size() == 0) {
-			// There is no dependency, so execute this stage task
-			return true;
-		}
-
-		for (String stageDepId : stageDependsOn) {
-			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase("COMPLETED")) {
-				isDependencyCOMPLETED = true;
-			} else {
-				// Stage not complete. return false
-				return false;
-			}
-		}
-		for (String taskDepId : taskDependsOn) {
-			String value = (String) taskStatus.get(stageId + "_" + taskDepId);
-			if (value.equalsIgnoreCase("COMPLETED")) {
-				isDependencyCOMPLETED = true;
-			} else {
-				// Task not complete. return false
-				return false;
-			}
-		}
-
-		return isDependencyCOMPLETED;
-	}
-*/
 	public List<DagExec> findDagExecStatus(String uuid, String version) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("uuid").is(uuid).andOperator(Criteria.where("version").is(version)));
@@ -1377,187 +1121,6 @@ public class DagExecServiceImpl {
 		}
 		return dagTasksObj;
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Map<String, Object>> getTaskResults(String dagExecUUID, String dagExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		OrderKey dagExeckey = new OrderKey();
-		List<Map<String, Object>> data = new ArrayList<>();
-		dagExeckey.setUUID(dagExecUUID);
-		dagExeckey.setVersion(dagExecVersion);
-		// Bhanu - JIRA FW-3 - Remove cache
-		// DagExec dagExec = ((Loader)loader).getCachDagExec().get(dagExeckey);
-		//DagExec dagExec = findOneByUuidAndVersion(dagExecUUID, dagExecVersion);
-		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVersion, MetaType.dagExec.toString());
-
-		// String filePath =
-		// dagExec.getStages().get(0).getTasks().get(0).getOutput();
-		// String tableName = Helpers.generateTableName(filePath);
-
-		// Datastore implementation
-
-		String dataStoreUUID = null;
-		String dataStoreVersion = null;
-		for (int i = 0; i < dagExec.getStages().size(); i++) {
-			for (int j = 0; j < dagExec.getStages().get(i).getTasks().size(); j++) {
-				location = ((TaskExec)dagExec.getStages().get(i).getTasks().get(j)).getResult();
-				dataStoreUUID = location.getRef().getUuid();
-				dataStoreVersion = location.getRef().getVersion();
-				// dataStore =
-				// dataStoreServiceImpl.findOneByUuidAndVersion(locUUID,
-				// locVer.toString());
-			}
-		}
-		logger.info(
-				"Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
-
-		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
-
-		//DataFrame df = sqlContext.sql(String.format("select * from %s", tableName));
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		data = exec.executeAndFetch(String.format("select * from %s", tableName), null);
-//		DataFrame df = rsHolder.getDataFrame();
-//		Row[] rows = df.head(20);
-//		String[] columns = df.columns();
-//		for (Row row : rows) {
-//			Map<String, Object> object = new HashMap<String, Object>(columns.length);
-//			for (String column : columns) {
-//				object.put(column, row.getAs(column));
-//			}
-//			data.add(object);
-//		}
-		return data;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Map<String, Object>> getTaskResults(String dagExecUUID, String dagExecVersion, String stageId,
-			String taskId, String format, String download, HttpServletResponse response, int rowLimit) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		OrderKey dagExeckey = new OrderKey();
-		List<Map<String, Object>> data = new ArrayList<>();
-		dagExeckey.setUUID(dagExecUUID);
-		dagExeckey.setVersion(dagExecVersion);
-		//DagExec dagExec = findOneByUuidAndVersion(dagExecUUID, dagExecVersion);
-		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVersion, MetaType.dagExec.toString());
-
-		// String filePath =
-		// dagExec.getStages().get(Integer.parseInt(stageId)).getTasks().get(Integer.parseInt(taskId)).getOutput();
-		// String tableName = Helpers.generateTableName(filePath);
-
-		// datastore implementation
-		String dataStoreUUID = null;
-		String dataStoreVersion = null;
-
-		location = ((TaskExec)dagExec.getStages().get(Integer.parseInt(stageId)).getTasks().get(Integer.parseInt(taskId)))
-				.getResult();
-		dataStoreUUID = location.getRef().getUuid();
-		dataStoreVersion = location.getRef().getVersion();
-
-		logger.info("Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
-
-		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
-		//DataFrame df = sqlContext.sql(String.format("select * from %s", tableName));
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		ResultSetHolder rsHolder = exec.executeSql(String.format("select * from %s", tableName));
-		DataFrame df = rsHolder.getDataFrame();
-		if (download.equalsIgnoreCase("n")) {
-
-			Row[] rows = df.head(500);
-			String[] columns = df.columns();
-			for (Row row : rows) {
-				Map<String, Object> object = new HashMap<String, Object>(columns.length);
-				for (String column : columns) {
-					object.put(column, row.getAs(column));
-				}
-				data.add(object);
-			}
-		}
-		if (download.equalsIgnoreCase("y") && format.equalsIgnoreCase("excel")) {
-			response.setContentType("application/xml charset=utf-16");
-			response.setHeader("Content-type", "application/xml");
-			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet(MetaType.datapod.toString());
-			ArrayList<String> al = null;
-			ArrayList<ArrayList<String>> arlist = new ArrayList<ArrayList<String>>();
-//			
-//			 * DataStore dds = findDataStoreByMeta(uuid, version); String dtn =
-//			 * getTableName(ds.getUuid(), dds.getVersion()); System.out.println(
-//			 * "Datastore - Table name:"+dtn);
-//			 
-			// DataFrame df = sqlContext.sql("select * from "+tn);
-			Row[] drows = df.head(rowLimit);
-			// System.out.println("Rows"+df.count());
-			String[] dcolumns = df.columns();
-			try {
-				al = new ArrayList<>();
-				for (String column : dcolumns) {
-					al.add(column);
-				}
-				arlist.add(al);
-				for (Row row : drows) {
-					al = new ArrayList<>();
-					for (int i = 0; i < dcolumns.length; i++) {
-						al.add(String.valueOf(row.get(i)));
-
-						for (int k = 0; k < arlist.size(); k++) {
-							ArrayList<String> ardata = (ArrayList<String>) arlist.get(k);
-							HSSFRow hssfRow = sheet.createRow((short) k);
-
-							for (int p = 0; p < ardata.size(); p++) {
-								HSSFCell cell = hssfRow.createCell((short) p);
-								cell.setCellValue(ardata.get(p).toString());
-							}
-						}
-					}
-					arlist.add(al);
-
-				}
-				response.addHeader("Content-Disposition", "attachment; filename=Dag.xlsx");
-				ServletOutputStream sos = response.getOutputStream();
-				workbook.write(sos);
-				sos.write(workbook.getBytes());
-				sos.close();
-			}
-			catch (IOException e1) {
-				e1.printStackTrace();
-				logger.info("exception caught while download file");
-			}
-		}
-		return data;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public String getTableName(String dagExecUUID, String dagExecVersion, String stageId, String taskId) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		OrderKey dagExecKey = new OrderKey();
-		dagExecKey.setUUID(dagExecUUID);
-		dagExecKey.setVersion(dagExecVersion);
-		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
-		DagExec dagExec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVersion, MetaType.dagExec.toString());
-		// String filePath =
-		// dagExec.getStages().get(Integer.parseInt(stageId)).getTasks().get(Integer.parseInt(taskId)).getOutput();
-		// String tableName = Helpers.generateTableName(filePath);
-
-		// datastore implementation
-		String dataStoreUUID = null;
-		String dataStoreVersion = null;
-		location = ((TaskExec)dagExec.getStages().get(Integer.parseInt(stageId)).getTasks().get(Integer.parseInt(taskId)))
-				.getResult();
-		dataStoreUUID = location.getRef().getUuid();
-		dataStoreVersion = location.getRef().getVersion();
-
-		
-		 * location =
-		 * dagExec.getStages().get(Integer.parseInt(stageId)).getTaskExecs().get
-		 * (Integer.parseInt(taskId)).getResult(); dataStoreUUID
-		 * =location.getRef().getUuid(); dataStoreVersion =
-		 * location.getRef().getVersion();
-		 
-
-		logger.info("Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
-		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
-		return tableName;
-	}*/
-
 	
 	public DagStatusHolder getStatusByDagExec(String dagExecUuid) throws JsonProcessingException {
 		//DagExec dagExec = findLatestByUuid(dagExecUuid);

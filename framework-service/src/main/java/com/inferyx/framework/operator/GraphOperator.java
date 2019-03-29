@@ -265,29 +265,6 @@ public class GraphOperator implements IOperator {
 		return nodeSql;
 	}
 
-	/********************** UNUSED **********************/
-//	/**
-//	 * 
-//	 * @param datapod
-//	 * @param indvTask
-//	 * @param datapodList
-//	 * @param dagExec
-//	 * @param otherParams
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	protected String getTableName(Datapod datapod, 
-//			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
-//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-//		} else {
-//			try {
-//				return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			} catch(Exception e) {
-//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
-//			}
-//		}
-//	}
 	
 	/**
 	 * 

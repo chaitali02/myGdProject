@@ -65,37 +65,5 @@ public class GroupServiceImpl {
     
     static final Logger logger = Logger.getLogger(GroupServiceImpl.class);
 
-	/********************** UNUSED **********************/	
-    /*public Group findLatest() {
-		return resolveName(iUserGroupDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Group findLatestByUuid(String uuid){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iUserGroupDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iUserGroupDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Group findOneById(String id){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-		return iUserGroupDao.findOneById(appUuid,id);
-		}
-		else
-			return iUserGroupDao.findOne(id);
-	}*/
-
-	
-	/*public List<Group> findAllVersion(String datapodName){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iUserGroupDao.findAllVersion(appUuid,datapodName);
-	}*/
 
 }

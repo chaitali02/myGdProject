@@ -63,62 +63,6 @@ public class ActivityServiceImpl {
 	static final Logger logger = Logger.getLogger(ActivityServiceImpl.class);
 
 
-	/********************** UNUSED **********************/
-	/*public Activity findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iActivityDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iActivityDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Activity findLatest() {
-		return resolveName(iActivityDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-	
-	/********************** UNUSED **********************/
-	/*public Activity findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iActivityDao.findOne(id);
-		} else
-			return iActivityDao.findOneById(appUuid, id);
-	}*/
-
-
-	
-
-		
-	/********************** UNUSED **********************/
-	/*public List<Activity> findAllLatestActive() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-
-		Aggregation activityAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Activity> activityResults = mongoTemplate.aggregate(activityAggr, "activity",
-				Activity.class);
-		List<Activity> activityList = activityResults.getMappedResults();
-
-		// Fetch the activity details for each id
-		List<Activity> result = new ArrayList<Activity>();
-		for (Activity a : activityList) {
-			Activity activityLatest;
-			if (appUuid != null) {
-				activityLatest = iActivityDao.findOneByUuidAndVersion(appUuid, a.getId(), a.getVersion());
-			} else {
-				activityLatest = iActivityDao.findOneByUuidAndVersion(a.getId(), a.getVersion());
-			}
-			if(activityLatest != null)
-			{
-			result.add(activityLatest);
-			}
-		}
-		return result;
-	}*/
 
 	public List<Activity> findActivityByUser(String UserUUID) throws JsonProcessingException {
 		List<Activity> activity = iActivityDao.findActivityByUser(UserUUID, new Sort(Sort.Direction.DESC, "version"));

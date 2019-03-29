@@ -90,11 +90,6 @@ public class DatasetServiceImpl {
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
 	
-	/********************** UNUSED **********************/
-	/*public Dataset findLatest() {
-		return resolveName(iDatasetDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
 		//logger.info(" Start datasetSample ");
@@ -202,121 +197,7 @@ public class DatasetServiceImpl {
 		DataSet datasetDet = save(dataset);
 		return datasetDet;
 	}
-	/*public Dataset update(Dataset dataset) throws IOException {
-		dataset.exportBaseProperty();
-		Dataset datasetDet = iDatasetDao.save(dataset);
-		registerService.createGraph();
-		return datasetDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public boolean isExists(String id) {
-		return iDatasetDao.exists(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAllLatestActive() {
-		Aggregation datasetAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Dataset> datasetResults = mongoTemplate.aggregate(datasetAggr, "dataset", Dataset.class);
-		List<Dataset> datasetList = datasetResults.getMappedResults();
-
-		// Fetch the dataset details for each id
-		List<Dataset> result = new ArrayList<Dataset>();
-		for (Dataset d : datasetList) {
-			Dataset datasetLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(appUuid, d.getId(), d.getVersion());
-			} else {
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-			}
-			if (datasetLatest != null) {
-				result.add(datasetLatest);
-			}
-		}
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Dataset dataset = iDatasetDao.findOneById(appUuid, Id);
-		dataset.setActive("N");
-		iDatasetDao.save(dataset);
-//		String ID = dataset.getId();
-//		iDatasetDao.delete(ID);
-//		dataset.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dataset findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		System.out.print(id);
-		if (appUuid != null) {
-			logger.info("get" + iDatasetDao.findOneById(appUuid, id));
-			return iDatasetDao.findOneById(appUuid, id);
-		} else
-			return iDatasetDao.findOne(id);
-	}*/
-
-	/*
-	 * public Dataset createDataset(DatasetView datasetHolder) { //create
-	 * relation for map Relation relation = new Relation();
-	 * relation.setRelationInfo(datasetHolder.getRelationInfo());
-	 * relation.setDependsOn(datasetHolder.getDependsOn());
-	 * relation.setName(datasetHolder.getRelationName());
-	 * relation.setTags(datasetHolder.getRelationTags());
-	 * relation.setDesc(datasetHolder.getRelationDesc());
-	 * relation.setActive(datasetHolder.getRelationActive());
-	 * relationServiceImpl.Save(relation);
-	 * 
-	 * //create relation meta for map MetaIdentifierHolder relatiPAUSEer = new
-	 * MetaIdentifierHolder(); MetaIdentifier relationMeta = new
-	 * MetaIdentifier(MetaType.relation,relation.getUuid(),relation.getVersion()
-	 * ); relatiPAUSEer.setRef(relationMeta);
-	 * 
-	 * //create map for dataset Map map = new Map();
-	 * map.setAttributeMap(datasetHolder.getAttributeList());
-	 * map.setName(datasetHolder.getMapName()); map.setSource(relatiPAUSEer);
-	 * map.setTarget(datasetHolder.getTargetDatapod());
-	 * map.setTags(datasetHolder.getMapTags());
-	 * map.setDesc(datasetHolder.getMapDesc());
-	 * map.setActive(datasetHolder.getMapActive()); mapServiceImpl.Save(map);
-	 * 
-	 * //create mapInfo for dataset MetaIdentifierHolder mapHolder = new
-	 * MetaIdentifierHolder(); MetaIdentifier mapMeta = new
-	 * MetaIdentifier(MetaType.map,map.getUuid(),map.getVersion());
-	 * mapHolder.setRef(mapMeta);
-	 * 
-	 * //create filter for dataset Filter filter = new Filter();
-	 * filter.setDependsOn(relatiPAUSEer);
-	 * filter.setDesc(datasetHolder.getFilterDesc());
-	 * filter.setTags(datasetHolder.getFilterTags());
-	 * filter.setActive(datasetHolder.getFilterActive());
-	 * filter.setName(datasetHolder.getFilterName());
-	 * filter.setFilterInfo(datasetHolder.getFilterInfo());
-	 * filterServiceImpl.Save(filter);
-	 * 
-	 * //create filterInfo for dataset List<MetaIdentifierHolder> filterList =
-	 * new ArrayList<MetaIdentifierHolder>(); MetaIdentifierHolder filterHolder
-	 * = new MetaIdentifierHolder(); MetaIdentifier filterMeta = new
-	 * MetaIdentifier(MetaType.filter,filter.getUuid(),filter.getVersion());
-	 * filterHolder.setRef(filterMeta); filterList.add(filterHolder);
-	 * 
-	 * //create dataset Dataset dataset = new Dataset();
-	 * dataset.setFilterInfo(filterList);
-	 * dataset.setGroupBy(datasetHolder.getGroupBy());
-	 * dataset.setDependsOn(mapHolder);
-	 * dataset.setTags(datasetHolder.getDatasetTags());
-	 * dataset.setDesc(datasetHolder.getDatasetDesc());
-	 * dataset.setActive(datasetHolder.getDatasetActive()); Save(dataset);
-	 * return dataset; }
-	 */
-
+	
 	public String getAttributeSql(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {

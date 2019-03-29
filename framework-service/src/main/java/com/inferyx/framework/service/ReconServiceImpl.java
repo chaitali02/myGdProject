@@ -184,12 +184,6 @@ public class ReconServiceImpl extends RuleTemplate {
 		execute(reconUuid, reconVersion, null, reconExec, reconGroupExec, null, execParams, runMode);
 		return reconExec;
 	}
-
-	/********************** UNUSED **********************/
-//	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//	}
-
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
 		MetaIdentifier mi = new MetaIdentifier();
@@ -414,10 +408,4 @@ public class ReconServiceImpl extends RuleTemplate {
 		return ExecObjList;
 	}
 	
-	/*@Override
-	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		MetaIdentifier datapodRef = ((Recon)baseRule).getSourceAttr().getRef();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
-		return commonServiceImpl.getDatasourceByDatapod(datapod);
-	}*/
 }

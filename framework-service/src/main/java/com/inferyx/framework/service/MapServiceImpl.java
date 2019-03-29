@@ -102,95 +102,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	
 	java.util.Map<String, String> requestMap = new HashMap<String, String>();
 
-	/********************** UNUSED **********************/
-	/*public Map findLatest() {
-		return resolveName(iMapDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findOneById(appUuid, id);
-		} else
-			return iMapDao.findOne(id);
-	}*/
-	/********************** UNUSED **********************/
-	/*public Map getOneByUuidAndVersion(String uuid, String version) {
-
-		return iMapDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iMapDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public boolean isExists(String id) {
-		return iMapDao.exists(id);
-	}*/
-
 	
-
-	
-
-	/********************** UNUSED **********************/
-	/*public List<Map> findAllLatestActive() {
-		Aggregation mapAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Map> mapResults = mongoTemplate.aggregate(mapAggr, "map", Map.class);
-		List<Map> mapList = mapResults.getMappedResults();
-
-		// Fetch the load details for each id
-		List<Map> result = new ArrayList<Map>();
-		for (Map m : mapList) {
-			Map mapLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				mapLatest = iMapDao.findOneByUuidAndVersion(appUuid, m.getId(), m.getVersion());
-			} else {
-				mapLatest = iMapDao.findOneByUuidAndVersion(m.getId(), m.getVersion());
-			}
-			if (mapLatest != null) {
-				result.add(mapLatest);
-			}
-		}
-		return result;
-	}*/
-
-
-	/********************** UNUSED **********************/
-//	/**
-//	 * 
-//	 * @param datapod
-//	 * @param indvTask
-//	 * @param datapodList
-//	 * @param dagExec
-//	 * @param otherParams
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	protected String getTableName(Datapod datapod, 
-//			HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
-//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-//		} else {
-//			try {
-//				return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			} catch(Exception e) {
-//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
-//			}
-//		}
-//	}
 
 	// If Map is dependent on datapod
 	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
@@ -314,58 +226,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			}
 		}
 	
-	/**
-	 * Get datapods with version from dimension
-	 * 
-	 * @param dimensionList
-	 * @return
-	 */
-	/********************** UNUSED **********************/
-	/*private java.util.Map<String, List<MetaIdentifier>> getDimensionDefinedTables(
-			List<AttributeRefHolder> dimensionList) {
-		List<AttributeRefHolder> filteredDimensionList = null;
-		java.util.Map<String, List<MetaIdentifier>> datapodMap = null;
-		List<MetaIdentifier> datapodList = null;
 
-		if (dimensionList == null || dimensionList.size() <= 0) {
-			System.out.println("No dimensions. Aborting getDimensionDefinedTables");
-			return null;
-		}
-
-		// Filtering dimensions - START
-		filteredDimensionList = new ArrayList<>();
-		for (AttributeRefHolder dimension : dimensionList) {
-			if (dimension.getRef().getType().equals(MetaType.datapod)) {
-				filteredDimensionList.add(dimension);
-			}
-		} // Filtering dimensions - END
-
-		// Fetch dataStore list by dimensions
-		List<DataStore> dataStoreList = dataStoreServiceImpl.getDataStoreByDim(null, filteredDimensionList);
-
-		// Get datapod and its versions from dataStoreList - START
-		datapodMap = new HashMap<>();
-		for (DataStore dataStore : dataStoreList) {
-			if (datapodMap.containsKey(dataStore.getMetaId().getRef().getUuid())) {
-				datapodMap.get(dataStore.getMetaId().getRef().getUuid()).add(dataStore.getMetaId().getRef());
-			} else {
-				datapodList = new ArrayList<>();
-				datapodList.add(dataStore.getMetaId().getRef());
-				datapodMap.put(dataStore.getMetaId().getRef().getUuid(), datapodList);
-			}
-		} // Get datapod and its versions from dataStoreList - END
-		return datapodMap;
-	}// END - Get dimension defined tables
-*/	
-		/********************** UNUSED **********************/
-	/*protected MetaType getSourceType(Map map) {
-		if (map == null || map.getSource() == null || map.getSource().getRef() == null) {
-			return null;
-		}
-		return map.getSource().getRef().getType();
-	}*/
-	
-		
 	/**
 	 * 
 	 * @param execParams
@@ -599,64 +460,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return mapExec;
 	}
 
-	/********************** UNUSED 
-	 * @throws Exception **********************/
-	/*public StringBuilder generateSql(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
-			ExecParams execParams, HashMap<String, String> otherParams) throws Exception {
-
-		java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
-				.convertRefKeyListToMap(execParams.getRefKeyList());
-		Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-		String operatorType = indvTask.getOperators().get(0).getOperatorType();
-		HashMap<String, Object> operatorParams = indvTask.getOperators().get(0).getOperatorParams();
-		
-		// Create mapExec
-		MapExec mapExec = new MapExec();
-		mapExec.setBaseEntity();
-		
-		ref = TaskParser.populateRefVersion(ref, refKeyMap);
-
-		Map map = (Map) daoRegister.getRefObject(ref);
-
-		StringBuilder builder = new StringBuilder();
-		//List<AttributeRefHolder> filterInfo = indvTask.getOperators().get(0).getFilterInfo();
-		// Get Filter info from execParams and append in FilterInfo - START
-		if (execParams != null && execParams.getFilterInfo() != null && execParams.getFilterInfo().size() > 0) {
-			if (filterInfo == null) {
-				filterInfo = execParams.getFilterInfo();
-			} else {
-				filterInfo.addAll(execParams.getFilterInfo());
-			}
-		}
-		// Get Filter info from execParams and append in FilterInfo - END
-		parseDPNames(dagExec, indvTask, map, datapodList, refKeyMap, otherParams);
-		
-		// Include dagexec version in $DAGEXEC_VERSION
-		otherParams.put($DAGEXEC_VERSION, dagExec.getVersion());
-
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		if (operatorType == null || operatorType.equals(MetaType.map.toString())
-				|| operatorType.equals(MetaType.matrixmult.toString())) {
-			builder.append(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet));
-		} else {
-			otherParams.put("operatorType", operatorType);
-			builder.append(mapIterOperator.generateSql(map, refKeyMap, otherParams, operatorParams, execParams, usedRefKeySet));
-		}
-		// Include filterSql
-		String finalSql = builder.toString();
-		// Include $DAGEXEC_VERSION
-		finalSql = finalSql.replaceAll($DAGEXEC_VERSION, dagExec.getVersion());
-		builder = new StringBuilder().append(finalSql);
-		mapExec.setExec(finalSql);
-		mapExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-		mapExecServiceImpl.save(mapExec);
-		MetaIdentifier mapExecIdentifier = new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion());
-		indvExecTask.getOperators().get(0).getOperatorInfo().setRef(mapExecIdentifier);
-		
-		return builder;
-	}// End method
-*/	
 	public MapExec executeSql(MapExec mapExec, OrderKey datapodKey, RunMode runMode) throws Exception {
 		//String sql = null;
 		if(mapExec == null)	{

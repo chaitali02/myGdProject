@@ -53,56 +53,6 @@ public class DimensionServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(DimensionServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Dimension findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDimensionDao.findOneById(appUuid,id);
-		}
-		return iDimensionDao.findOne(id);
-	}*/
-
-
 	
-
-	/********************** UNUSED **********************/
-	/*public List<Dimension> findAllLatestActive() {	   
-	   Aggregation dimensionAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Dimension> dimensionResults = mongoTemplate.aggregate(dimensionAggr,"dimension", Dimension.class);	   
-	   List<Dimension> dimensionList = dimensionResults.getMappedResults();
-
-	   // Fetch the dimension details for each id
-	   List<Dimension> result=new  ArrayList<Dimension>();
-	   for(Dimension d : dimensionList)
-	   {   
-		   Dimension dimensionLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				dimensionLatest = iDimensionDao.findOneByUuidAndVersion(appUuid,d.getId(), d.getVersion());
-			}
-			else
-			{
-				dimensionLatest = iDimensionDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-			}
-			if(dimensionLatest != null)
-			{
-			result.add(dimensionLatest);
-			}
-	   }
-	   return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dimension findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDimensionDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDimensionDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
 	
 }

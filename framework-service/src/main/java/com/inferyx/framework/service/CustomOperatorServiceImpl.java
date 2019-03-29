@@ -200,11 +200,6 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String appUuid = commonServiceImpl.getApp().getUuid();
 
-//			MetaIdentifierHolder paramListHolder = operator.getParamList();
-//			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(
-//					paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(),
-//					paramListHolder.getRef().getType().toString());
-//			List<Param> params = paramList.getParams();
 			if (execParams != null) {
 				List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 				for (ParamListHolder holder : paramListInfo) {

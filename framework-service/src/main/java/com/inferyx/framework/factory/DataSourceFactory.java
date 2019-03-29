@@ -70,20 +70,6 @@ public class DataSourceFactory {
 	private PostGresReader postGresReader;
 
 
-	/********************** UNUSED **********************/
-//	public DataSourceRegister getDSRegister(String registerType) {
-//		switch (registerType) {
-//		case "hive":
-//			return hiveRegister;
-//		case "csv":
-//			return csvRegister;
-//		/*
-//		 * case "impala": return impalaRegister;
-//		 */
-//		default:
-//			return csvRegister;
-//		}
-//	}
 
 	public IReader getDatapodReader(Datapod dp) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		String dataSourceUUID = dp.getDatasource().getRef().getUuid();

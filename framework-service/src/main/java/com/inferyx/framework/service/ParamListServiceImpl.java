@@ -51,66 +51,7 @@ public class ParamListServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ParamListServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public ParamList findLatest() {
-		return resolveName(iParamListDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-	
-	/********************** UNUSED **********************/
-	/*public ParamList findOneById(String id){
-		return iParamListDao.findOne(id);
-	}*/
-	
 
-	/********************** UNUSED **********************/
-	/*public List<ParamList> findAllLatestActive() 	
-	{ 
-		Aggregation appAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<ParamList> appResults = mongoTemplate.aggregate(appAggr, "paramlist", ParamList.class);	   
-	   List<ParamList> appList = appResults.getMappedResults();
-
-	   // Fetch the application details for each id
-	   List<ParamList> result=new  ArrayList<ParamList>();
-	   for(ParamList a : appList)
-	   {   		     
-		   ParamList appLatest = iParamListDao.findOneByUuidAndVersion(a.getId(), a.getVersion());  		   
-		   result.add(appLatest);
-	   }
-	   return result;
-	}*/
-
-	
-
-	/********************** UNUSED **********************/
-	/*public List<ParamListHolder> getParamListHolder(ParamSetHolder paramSetHolder){
-		ParamList paramList= null; 
-		if(null != paramSetHolder.getRef() && null != paramSetHolder.getRef().getVersion()){
-			paramList= iParamListDao.findOneByUuidAndVersion(paramSetHolder.getRef().getUuid(), paramSetHolder.getRef().getVersion());
-		} else {
-			paramList = iParamListDao.findLatestByUuid(paramSetHolder.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-		}
-		List<ParamListHolder> paramListHolderList = null;
-		if(null != paramList){
-//			for(ParamInfo paramInfo:paramList.getParamInfo()){
-//				if(paramSetHolder.getParamSetId().equalsIgnoreCase(paramInfo.getParamSetId())){
-//					paramListHolderList = paramInfo.getParamSetVal();
-//					break;
-//				}
-//			}
-		}
-		return paramListHolderList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public String getParamName(ParamHolder paramHolder) {
-		ParamList paramList = iParamListDao.findOneByUuidAndVersion(paramHolder.getRef().getUuid(), paramHolder.getRef().getVersion());
-		for(int j=0;j<paramList.getParams().size();j++){
-			if (paramHolder.getParamId().equals(paramList.getParams().get(j).getParamId())) {
-				return paramList.getParams().get(j).getParamName();
-			}
-		}
-		return null;
-	}*/
 	
 	public String sql(Integer paramId, ParamList paramList) {
 		List<Param> list = paramList.getParams();

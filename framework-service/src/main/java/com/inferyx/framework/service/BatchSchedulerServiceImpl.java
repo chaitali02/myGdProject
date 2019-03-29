@@ -171,47 +171,8 @@ public class BatchSchedulerServiceImpl {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
 		Date tempCurrDate = new Date();
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
-//		Calendar cal = Calendar.getInstance();
-//		cal.setTime(currDate);
-//		
-//		int month = cal.get(Calendar.MONTH);
-//		System.out.println("Month now : " + month);
-//	
-//		System.out.println("cal.getActualMinimum(Calendar.MONTH) : " + cal.getActualMinimum(Calendar.MONTH));
-//		cal.set(Calendar.MONTH, cal.getActualMinimum(Calendar.MONTH));
-//		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
-//		Date firstDayOfTheYear = cal.getTime();
-//		System.out.println("First day of the year : " + firstDayOfTheYear);
-//		firstDayOfTheYear.setHours(startDate.getHours());
-//		firstDayOfTheYear.setMinutes(startDate.getMinutes());
-//		firstDayOfTheYear.setSeconds(startDate.getSeconds());
-//		
-//		cal.set(Calendar.MONTH, cal.getActualMaximum(Calendar.MONTH));
-//		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMaximum(Calendar.DAY_OF_YEAR));
-//		Date lastDayOfTheYear = cal.getTime();
-//		System.out.println("Last day of the year : " + lastDayOfTheYear);
-//		lastDayOfTheYear.setHours(startDate.getHours());
-//		lastDayOfTheYear.setMinutes(startDate.getMinutes());
-//		lastDayOfTheYear.setSeconds(startDate.getSeconds());
-		
+
 		Date nextRunTime = null;
-//		for(String quarter : frequencyDetail) {
-//			Date date = DateUtils.addMonths(firstDayOfTheYear, 3*(Integer.parseInt(quarter)-1));
-//			Date lastDayOfQuarter = DateUtils.addMonths(lastDayOfTheYear, -(12-3*(Integer.parseInt(quarter))));
-//			System.out.println("First day of the quarter : " + date);
-//			System.out.println("Last day of the quarter : " + lastDayOfQuarter);
-//			System.out.println("End date : " + endDate);
-//			int currentQuarter = getQuarter(currDate);
-//			if(frequencyDetail.contains(currentQuarter+"")) {
-//				currDate.setHours(startDate.getHours());
-//				currDate.setMinutes(startDate.getMinutes());
-//				currDate.setSeconds(startDate.getSeconds());
-//			}
-//			if(date.compareTo(currDate) >= 0) {
-//				nextRunTime = date;
-//				break;
-//			}
-//		}
 
 		currDate.setHours(startDate.getHours());
 		currDate.setMinutes(startDate.getMinutes());
@@ -440,20 +401,6 @@ public class BatchSchedulerServiceImpl {
 	public Date getNextBatchExecTime() throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
 		Date currDate = simpleDateFormat.parse(new Date().toString());
 
-//		Criteria criteria = new Criteria();
-//		List<Criteria> criteriaList = new ArrayList<Criteria>();		
-//		criteriaList.add(where("nextRunTime").gte(currDate));
-//		Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
-//		Aggregation scheduleAggr = newAggregation(match(criteria2), group("uuid").max("version").as("version"));
-//		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-//		List<Schedule> schedulerList = scheduleAggrResults.getMappedResults();		
-//		Set<Date> dateSet = new TreeSet<>();
-//		for(Schedule schedule : schedulerList) {
-//			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
-//			dateSet.add(schedule2.getNextRunTime());
-//		}		
-//		return !dateSet.isEmpty() ? dateSet.toArray(new Date[dateSet.size()])[0] : null;
-		
 		MatchOperation filterSchedule = match(new Criteria("nextRunTime").gte(currDate));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
 		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "nextRunTime"));
@@ -466,7 +413,6 @@ public class BatchSchedulerServiceImpl {
 	}
 	
 	public List<Schedule> getCurrentSchedules(Date currentTriggerTime, Date lastExecutionTime) throws ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
-//		Date currDate = simpleDateFormat.parse(new Date().toString());
 		
 		if(lastExecutionTime == null) {
 			lastExecutionTime = currentTriggerTime; 
@@ -486,31 +432,7 @@ public class BatchSchedulerServiceImpl {
 			Schedule schedule2 = (Schedule) commonServiceImpl.getLatestByUuid(schedule.getId(), MetaType.schedule.toString(), "N");
 			schedules.add(schedule2);
 		}
-//		List<Schedule> schedules = new ArrayList<>();
-//		for(Schedule schedule : scheduleAggrResult.getMappedResults()) {
-//		Schedule resolvedSchedule = getSchedule(schedule.getId(), schedule.getVersion(), schedule.getNextRunTime());
-//		if(resolvedSchedule != null)
-//			schedules.add(resolvedSchedule);
-//		}
-		
-//		MatchOperation scheduleFilter = null;
-//		if(lastExecutionTime != null) {
-//			scheduleFilter = match(new Criteria("nextRunTime").gt(lastExecutionTime).andOperator(new Criteria("nextRunTime").lte(currDate)));
-//		} else {
-//			scheduleFilter = match(new Criteria("nextRunTime").gte(currentTriggerTime).andOperator(new Criteria("nextRunTime").lte(currDate)));
-//		}
-//		
-//		GroupOperation schedulerGroupByUuid = group("uuid").max("version").as("version").max("nextRunTime").as("nextRunTime");
-//		SortOperation schedulerSortDirection = sort(new Sort(Direction.ASC, "nextRunTime"));
-//		Aggregation aggregateOnSchedule = newAggregation(scheduleFilter, schedulerGroupByUuid, schedulerSortDirection);
-//		AggregationResults<Schedule> scheduleAggrResult = mongoTemplate.aggregate(aggregateOnSchedule, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-//		
-//		List<Schedule> schedules = new ArrayList<>();
-//		for(Schedule schedule : scheduleAggrResult.getMappedResults()) {
-//			Schedule resolvedSchedule = getSchedule(schedule.getId(), schedule.getVersion(), schedule.getNextRunTime());
-//			if(resolvedSchedule != null)
-//				schedules.add(resolvedSchedule);
-//		}
+
 		return schedules;
 	}
 	

@@ -52,67 +52,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	
 	static final Logger logger = Logger.getLogger(ProfileGroupExecServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec findLatest() {
-		ProfileGroupExec profilegroupexec=null;
-		if(iProfileGroupExecDao.findLatest(new Sort(Sort.Direction.DESC, "version"))!=null){
-			profilegroupexec=resolveName(iProfileGroupExecDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-		}
-		return profilegroupexec ;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iProfileGroupExecDao.findOneById(appUuid,id);
-		}
-		return iProfileGroupExecDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec findLatestByUuid(String ProfileGroupExecUUID) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iProfileGroupExecDao.findLatestByUuid(ProfileGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iProfileGroupExecDao.findLatestByUuid(appUuid,ProfileGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));		
-	}*/
-
-	
-	
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllLatestActive() 	
-	{	   
-	   Aggregation profileGroupExecAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<ProfileGroupExec> profileGroupExecResults = mongoTemplate.aggregate(profileGroupExecAggr,"profilegroupexec", ProfileGroupExec.class);	   
-	   List<ProfileGroupExec> profileGroupExecList = profileGroupExecResults.getMappedResults();
-
-	   // Fetch the ProfileGroupExec details for each id
-	   List<ProfileGroupExec> result=new  ArrayList<ProfileGroupExec>();
-	   for(ProfileGroupExec r : profileGroupExecList)
-	   {   
-		   ProfileGroupExec ProfileGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(appUuid,r.getId(), r.getVersion());
-			}
-			else
-			{
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-			}
-			if(ProfileGroupExecLatest != null)
-			{
-			result.add(ProfileGroupExecLatest);
-			}
-	   }
-	   return result;
-	}*/
-
-
 	public List<ProfileGroupExec> resolveName(List<ProfileGroupExec> ProfileGroupExec) throws JsonProcessingException {
 		List<ProfileGroupExec> ProfileGroupExecList = new ArrayList<>();
 		for(ProfileGroupExec profileGroupE : ProfileGroupExec)
@@ -152,36 +91,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return mi;
 	}
 	
-	/**
-	 * Kill group
-	 * @param uuid
-	 * @param version
-	 */
-	/*public void kill (String uuid, String version) {
-		MetaIdentifier profileGroupExecIdentifier = new MetaIdentifier(MetaType.profilegroupExec, uuid, version);
-		ProfileGroupExec profileGroupExec = (ProfileGroupExec) daoRegister.getRefObject(profileGroupExecIdentifier);
-		if (profileGroupExec == null) {
-			logger.info("Nothing to kill. Aborting ... ");
-			return;
-		}
-		
-		if (!Helper.getLatestStatus(profileGroupExec.getStatus()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
-			logger.info(" Status is not RUNNING. So aborting ... ");
-		}
-		try {
-			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.TERMINATING);
-			for (MetaIdentifierHolder profileExecHolder : profileGroupExec.getProfileExecList()) {
-				ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecHolder.getRef());
-				if (profileExec == null) {
-					continue;
-				}
-				profileExecServiceImpl.kill (profileExec.getUuid(), profileExec.getVersion());
-			}
-			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.KILLED);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
 	
 	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.profilegroupExec, MetaType.profileExec);

@@ -254,52 +254,7 @@ public class DagParser {
 
 	}
 	
-	
 
-	/*public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
-		if (dagExec == null) {
-			logger.error("Nothing to parse. Aborting parseDagExec");
-			return null;
-		}
-		ExecParams execParams = dagExec.getExecParams();
-		List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
-		List<String> datapodList = new ArrayList<String>();
-		// Get the dag - START
-		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dagExec.getDependsOn().getUuid(), dagExec.getDependsOn().getVersion());
-		//Dag dag = (Dag) daoRegister.getRefObject(dagRef);
-		// Get the dag - END
-		for (StageExec indvDagExecStg : dagExecStgs) {
-
-			List<TaskExec> dagExecTasks = DagExecUtil.castToTaskExecList(indvDagExecStg.getTasks());
-			Stage stage = DagExecUtil.getStageFromDag(dag, indvDagExecStg.getStageId());
-			if (indvDagExecStg != null && indvDagExecStg.getStatusList() != null && indvDagExecStg.getStatusList().contains(Status.Stage.Inactive)) {
-				continue;	// If inactive stage then move to next stage (don't consider inactive stage)
-			}
-			for (TaskExec indvExecTask : dagExecTasks) {
-				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
-				MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().getRef();
-				
-				TaskParser taskParser = taskParserFactory.getTaskParser(ref.getType());
-				StringBuilder builder = taskParser.parseTask(dagExec, stage, indvExecTask, datapodList, execParams, new HashMap<String, String>(), null, RunMode.BATCH);
-				
-				if (builder == null) {
-					continue;
-				}
-				
-				// Set Exec attr
-				logger.info(builder.toString());
-
-				// Set Stage and Task status
-				List<Status> statusList = new ArrayList<Status>();
-				Status status = new Status(Status.Stage.PENDING, new Date());
-				statusList.add(status);
-				indvExecTask.setStatusList(statusList);
-
-			}
-		}
-		return dagExec;
-	}
-*/
 	public OrderKey getLatestMetaKey(Set<OrderKey> keySet, OrderKey key) {
 		if (key.getVersion() != null) {
 			logger.info(String.format("getLatestMetaKey: existing %s  %s", key.getUUID(), key.getVersion()));

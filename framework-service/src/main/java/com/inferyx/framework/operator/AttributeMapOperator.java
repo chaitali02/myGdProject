@@ -107,16 +107,6 @@ public class AttributeMapOperator {
 		return builder.toString();
 	}
 
-//	private boolean allItemsNull(DefValue defValue) {
-//		if (defValue == null) {
-//			return true;
-//		}
-//		if (defValue.getRef() == null && defValue.getAttributeId() == null && defValue.getAttributeName() == null
-//				&& defValue.getValue() == null) {
-//			return true;
-//		}
-//		return false;
-//	}
 
 	private boolean getTypeInRef(MetaIdentifier ref, MetaType type) {
 		if (ref == null || ref.getType() == null) {

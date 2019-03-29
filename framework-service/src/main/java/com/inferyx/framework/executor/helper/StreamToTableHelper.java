@@ -62,54 +62,6 @@ public class StreamToTableHelper<T, K> implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-//	public void help(JavaInputDStream<ConsumerRecord<T, K>> stream, StreamInput<T, K>  streamInput) throws IOException {
-//		StructType schema = (StructType) inputMap.get("SCHEMA");
-//		IConnector connector = (IConnector) inputMap.get("CONNECTOR");
-//		ConnectionHolder conHolder = connector.getConnection();
-//		SparkSession session = (SparkSession) conHolder.getStmtObject();
-////		SQLContext sqlContext = session.sqlContext();
-//		SaveMode saveMode = (SaveMode) inputMap.get("SAVEMODE");
-//		String url = (String) inputMap.get("URL");
-//		String tableName = (String) inputMap.get("TABLE_NAME");
-//		Properties connectionProperties = (Properties) inputMap.get("CONN_PROPS");
-//		stream.foreachRDD(new VoidFunction<JavaRDD<ConsumerRecord<T, K>>>() {
-//
-//			@Override
-//			public void call(JavaRDD<ConsumerRecord<T, K>> rdd) throws Exception {
-//				Broadcast<SparkSession> broadcastSession = rdd.context().broadcast(session, ClassManifestFactory.fromClass(SparkSession.class));
-//				rdd.foreachPartition(new VoidFunction<Iterator<ConsumerRecord<T, K>>>() {
-//					@Override
-//					public void call(Iterator<ConsumerRecord<T, K>> consumerRecords) {
-//						List<Row> rowsList = new ArrayList<>();
-//						consumerRecords.forEachRemaining(new Consumer<ConsumerRecord<T, K>>() {
-//
-//							@Override
-//							public void accept(ConsumerRecord<T, K> t) {
-//								System.out.println("RECEIVED >>>> "+ t.key() + ":" + t.value() + ":" + t.topic() + ":" + t.partition() + ":" + t.offset() + ":" + t.timestamp() );
-//								// Save in hive
-//								Row row = RowFactory.create(t.key(), t.value(), t.topic(), t.partition(), t.offset(), t.timestamp());
-//								rowsList.add(row);
-//							}
-//						});
-//						// Create dataframe
-//						Dataset<Row> df = broadcastSession.getValue().createDataFrame(rowsList, schema);
-//						System.out.println("Hive writing starts for this partition >>>>>>>>>>>>>>>>>>>> ");
-////						df.printSchema();
-////						df.show(false);
-//						df.write().mode(saveMode).insertInto(tableName);
-//						System.out.println("Hive writing ends for this partition >>>>>>>>>>>>>>>>>>>> ");
-////						df.write().mode(saveMode).jdbc(url, tableName, connectionProperties);
-////						OffsetRange o = offsetRanges[TaskContext.get().partitionId()];
-////						System.out.println("RECEIVED >>> " +
-////								o.topic() + " " + o.partition() + " " + o.fromOffset() + " " + o.untilOffset());
-//						
-//					}
-//				});
-//			}
-//		});
-//
-//	}
-
 	public void help(JavaInputDStream<ConsumerRecord<T, K>> stream, StreamInput<T, K>  streamInput) throws IOException {
 		Map<String, Object> runParams = streamInput.getRunParams();
 		StructType schema = (StructType) runParams.get("SCHEMA");

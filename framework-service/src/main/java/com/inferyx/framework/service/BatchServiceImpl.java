@@ -158,26 +158,6 @@ public class BatchServiceImpl {
 		
 		return batchExec;
 	}
-
-	/********************** UNUSED **********************/
-/*	public BatchExec execute(String batchUuid, String batchVersion, BatchExec batchExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
-		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
-		List<MetaIdentifierHolder> execList = new ArrayList<>();
-		for(MetaIdentifierHolder metaMI : batch.getMetaList()) {
-			switch(metaMI.getRef().getType()) {
-				case dag : execList.add(dagServiceImpl.submitDag(metaMI.getRef().getUuid(), metaMI.getRef().getVersion(), execParams, type, runMode));
-					break;
-			default:
-				break;
-			}
-			
-		}
-		
-		batchExec.setExecList(execList);
-		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
-		batchExec = checkBatchStatus(batchExec);
-		return batchExec;
-	}*/
 	
 	public BatchExec checkBatchStatus(BatchExec batchExec) throws Exception {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchExec.getDependsOn().getRef().getUuid(), batchExec.getDependsOn().getRef().getVersion(), batchExec.getDependsOn().getRef().getType().toString());

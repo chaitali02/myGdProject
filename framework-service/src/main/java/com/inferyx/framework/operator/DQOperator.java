@@ -248,20 +248,7 @@ public class DQOperator implements IParsable {
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 	
-//	public String generateResFilteredSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
-//			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
-//		String resultSql = generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-//										otherParams, runMode);
-//		logger.info("Inside generateResFilteredSql : PasFailCheck : " + dataQual.getPassFailCheck());
-//		if (StringUtils.isBlank(dataQual.getPassFailCheck()) || dataQual.getPassFailCheck().equalsIgnoreCase(ALL_A)) {
-//			return resultSql;
-//		}
-//		
-//		StringBuilder resultSqlBuilder = new StringBuilder(SELECT);
-//		resultSqlBuilder = resultSqlBuilder.append(MULTIPLY_BY).append(FROM).append(BRACKET_OPEN).append(resultSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
-//		resultSqlBuilder = resultSqlBuilder.append(WHERE_1_1).append(AND).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTE).append(dataQual.getPassFailCheck()).append(SINGLE_QUOTE);
-//		return resultSqlBuilder.toString();
-//	}
+
 	
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag) throws Exception {
@@ -297,21 +284,6 @@ public class DQOperator implements IParsable {
 		}
 		return null;
 	}
-
-	/********************** UNUSED **********************/
-//	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
-//			throws Exception {
-//		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
-//		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
-//			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-//					dagExec.getVersion());
-//		} else if (otherParams!=null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-//		}
-//		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
-//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-//				runMode);
-//	}
 
 	private String generateSelect(DataQual dq, DataQualExec dataQualExec, String tableName, String attributeName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -1074,32 +1046,7 @@ public class DQOperator implements IParsable {
 				.append(thresholdLimit).append(COMMA)
 				.append(thresholdInd).toString();
 	}
-	
-//	public String generateSummarySql3 (String summarySql2) {
-//		StringBuilder sql = new StringBuilder(SELECT)
-//											.append(RULEUUID).append(COMMA)
-//											.append(RULEVERSION).append(COMMA)
-//											.append(RULENAME).append(COMMA)
-//											.append(DATAPODUUID).append(COMMA)
-//				  							.append(DATAPODVERSION).append(COMMA)
-//				  							.append(DATAPOD_NAME).append(COMMA);
-//		sql = sql.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(ALL_CHECK_PASS).append(COMMA)
-//						.append(COUNT).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
-//						.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
-//						.append(VERSION).append(FROM).append(BRACKET_OPEN)
-//						.append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
-//		sql = sql.append(GROUP_BY)
-//					.append(RULEUUID).append(COMMA)
-//					.append(RULEVERSION).append(COMMA)
-//					.append(RULENAME).append(COMMA)
-//					.append(DATAPODUUID).append(COMMA)
-//					.append(DATAPODVERSION).append(COMMA)
-//					.append(DATAPOD_NAME).append(COMMA)
-//					.append(VERSION);
-//		
-//		return sql.toString();
-//	}
-	
+
 	
 	public String generateSummarySql2 (String summarySql1) {
 		StringBuilder sql = new StringBuilder(SELECT)

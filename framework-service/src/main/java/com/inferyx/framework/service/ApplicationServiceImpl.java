@@ -52,34 +52,7 @@ public class ApplicationServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ApplicationServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Application findLatest() {
-		return resolveName(iApplicationDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Application findOneById(String id){
-		return iApplicationDao.findOne(id);
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public List<Application> findAllLatestActive() 	
-	{ 
-		Aggregation appAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Application> appResults = mongoTemplate.aggregate(appAggr,"application", Application.class);	   
-	   List<Application> appList = appResults.getMappedResults();
-
-	   // Fetch the application details for each id
-	   List<Application> result=new  ArrayList<Application>();
-	   for(Application a : appList)
-	   {   		     
-		   Application appLatest = iApplicationDao.findOneByUuidAndVersion(a.getId(), a.getVersion());  		   
-		   result.add(appLatest);
-	   }
-	   return result;
-	}*/
-
+	
 
 	
 }

@@ -71,85 +71,13 @@ public class RelationServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(RelationServiceImpl.class);
 
-	
-	/********************** UNUSED **********************/
-	/*public Relation findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iRelationDao.findOneById(appUuid, id);
-		} else
-			return iRelationDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Relation getOneByUuidAndVersion(String uuid, String version) {
-
-		return iRelationDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Relation findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iRelationDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iRelationDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/*public Relation update(Relation relation) throws IOException {
-		relation.exportBaseProperty();
-		Relation relationDet=iRelationDao.save(relation);
-		registerService.createGraph();
-		return relationDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public boolean isExists(String id) {
-		return iRelationDao.exists(id);
-	}*/
-
-
 	public List<Relation> findRelationByDatapod(String datapodUUID) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		List<Relation> relationList = iRelationDao.findRelationByDatapod(appUuid, datapodUUID);
 		return relationList;
 	}
 
-	/********************** UNUSED **********************/
-	/*public List<Relation> test(String param1) {
-		return iRelationDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Relation> findAllLatestActive() {
-		Aggregation relationAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Relation> relationResults = mongoTemplate.aggregate(relationAggr, "relation",
-				Relation.class);
-		List<Relation> relationList = relationResults.getMappedResults();
-
-		// Fetch the relation details for each id
-		List<Relation> result = new ArrayList<Relation>();
-		for (Relation r : relationList) {
-			Relation relationLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				relationLatest = iRelationDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
-			} else {
-				relationLatest = iRelationDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-			}
-
-			if(relationLatest != null)
-			{
-			result.add(relationLatest);
-			}
-		}
-		return result;
-	}*/
+	
 
 	public List<Datapod> findDatapodByRelation(String relationUuid,String version) throws JSONException, JsonProcessingException {
 		List<String> datapodUuid = new ArrayList<String>();
@@ -230,25 +158,5 @@ public class RelationServiceImpl {
 			throw new RuntimeException(message != null ? message : "No data found for relation "+relation.getName()+".");
 		}
 	}
-
-
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Relation relation) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Relation relNew = new Relation();
-		relNew.setName(relation.getName()+"_copy");
-		relNew.setActive(relation.getActive());
-		relNew.setDependsOn(relation.getDependsOn());
-		relNew.setDesc(relation.getDesc());
-		relNew.setRelationInfo(relation.getRelationInfo());
-		relNew.setTags(relation.getTags());
-		save(relNew);
-		ref.setType(MetaType.relation);
-		ref.setUuid(relNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
 
 }

@@ -194,19 +194,6 @@ public class MySqlExecutor implements IExecutor {
 		return rsHolder;
 	}
 	
-	/*@Override
-	public ResultSetHolder persistFile(Datapod datapod, String filePath, DataFrame df ) {
-		try {
-			String saveMode = "append";
-			System.out.println("************************MySQL");
-			IWriter datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-			datapodWriter.write(df, filePath, datapod, saveMode);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}*/
 	public void registerDatapod(String filePath, String tableName, String clientContext) {
 		// TODO Auto-generated method stub
 		
@@ -578,12 +565,6 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
-//	@Override
-//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
-//		return sparkExecutor.predict2(trainedModel, targetDp, filePathUrl, tableName, fieldArray, trainName, label, datasource, clientContext);
-//	}
 
 	@Override
 	public Object loadTrainedModel(Class<?> modelClass, String location)

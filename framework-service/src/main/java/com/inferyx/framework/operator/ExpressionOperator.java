@@ -60,57 +60,6 @@ public class ExpressionOperator {
 	
 	private final String COMMA = ", ";
 
-	/********************** UNUSED **********************/
-/*	public String generateSql(List<AttributeRefHolder> filterIdentifierList,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet,
-			ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		StringBuilder builder = new StringBuilder();
-		if (filterIdentifierList == null || filterIdentifierList.size() <= 0) {
-			return "";
-		}
-		// Append Filter(s)
-		for (int i = 0; i < filterIdentifierList.size(); i++) {
-			AttributeRefHolder filterIdentifier = filterIdentifierList.get(i);
-			// Determine type of ref. If type is filter then parse filter. If
-			// type is datapod then append a clause where column = value
-			switch (filterIdentifier.getRef().getType()) {
-			case filter:
-				OrderKey filterKey = filterIdentifier.getRef().getKey();
-				Filter filter = null;
-				if (null == filterKey.getVersion()) {
-					filter = daoRegister.getFilterDao().findLatestByUuid(filterKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					filter = daoRegister.getFilterDao().findOneByUuidAndVersion(filterKey.getUUID(),
-							filterKey.getVersion());
-				}
-				builder.append(" AND (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),
-						filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams)).append(")");
-				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
-				usedRefKeySet.add(filterRef);
-				break;
-			case datapod:
-				OrderKey datapodKey = filterIdentifier.getRef().getKey();
-				Datapod datapod = null;
-				if (null == datapodKey.getVersion()) {
-					datapod = daoRegister.getDatapodDao().findLatestByUuid(datapodKey.getUUID(),
-							new Sort(Sort.Direction.DESC, "version"));
-				} else {
-					datapod = daoRegister.getDatapodDao().findOneByUuidAndVersion(datapodKey.getUUID(),
-							datapodKey.getVersion());
-				}
-				builder.append(" AND (").append(generateDatapodFilterSql(datapod, filterIdentifier.getAttrId(),
-						filterIdentifier.getValue())).append(")");
-				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
-				usedRefKeySet.add(datapodRef);
-				break;
-			default:
-				builder.append("");
-				break;
-			}// End switch
-		}
-		return builder.toString();
-	}*/
 
 	/**
 	 * Generate select query with expression with filter

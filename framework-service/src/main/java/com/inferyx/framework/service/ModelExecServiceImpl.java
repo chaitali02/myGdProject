@@ -88,96 +88,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 	static final Logger logger = Logger.getLogger(ModelExecServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec findLatest() { ModelExec modelexec=null;
-	 * if(iModelExecDao.findLatest(new Sort(Sort.Direction.DESC, "version"))!=null){
-	 * modelexec=resolveName(iModelExecDao.findLatest(new Sort(Sort.Direction.DESC,
-	 * "version"))); } return modelexec ; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec findOneById(String id) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { return iModelExecDao.findOneById(appUuid,id); } return
-	 * iModelExecDao.findOne(id); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec findLatestByUuid(String modelExecUUID) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid ==
-	 * null) { return iModelExecDao.findLatestByUuid(modelExecUUID,new
-	 * Sort(Sort.Direction.DESC, "version")); } return
-	 * iModelExecDao.findLatestByUuid(appUuid,modelExecUUID,new
-	 * Sort(Sort.Direction.DESC, "version")); }
-	 */
-
-	
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec findAllByUuid(String uuid) { String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); return
-	 * iModelExecDao.findAllByUuid(appUuid,uuid);
-	 * 
-	 * }
-	 */
-
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> findAllLatestActive() { Aggregation modelExecAggr =
-	 * newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where(
-	 * "name").ne(null)),group("uuid").max("version").as("version"));
-	 * AggregationResults<ModelExec> modelExecResults =
-	 * mongoTemplate.aggregate(modelExecAggr,"modelexec", ModelExec.class);
-	 * List<ModelExec> modelExecList = modelExecResults.getMappedResults();
-	 * 
-	 * // Fetch the DataQualExec details for each id List<ModelExec> result=new
-	 * ArrayList<ModelExec>(); for(ModelExec r : modelExecList) { ModelExec
-	 * modelExecLatest; String appUuid = (securityServiceImpl.getAppInfo() != null
-	 * && securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { modelExecLatest =
-	 * iModelExecDao.findOneByUuidAndVersion(appUuid,r.getId(), r.getVersion()); }
-	 * else { modelExecLatest = iModelExecDao.findOneByUuidAndVersion(r.getId(),
-	 * r.getVersion()); } if(modelExecLatest != null) { result.add(modelExecLatest);
-	 * } } return result; }
-	 */
-
-
-
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec getAsOf(String uuid, String asOf) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid !=
-	 * null) { return iModelExecDao.findAsOf(appUuid, uuid, asOf,new
-	 * Sort(Sort.Direction.DESC, "version")); } else return
-	 * iModelExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	 * }
-	 */
-
-
-		/********************** UNUSED **********************/
-	/*public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
-		 String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid(); 
-		// ModelExec modelExec = iModelExecDao.findOneByUuidAndVersion(appUuid,
-		// execUuid, execVersion);
-		ModelExec modelExec = (ModelExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.modelExec.toString());
-		MetaIdentifier mi = new MetaIdentifier();
-		mi.setType(MetaType.model);
-		mi.setUuid(modelExec.getDependsOn().getRef().getUuid());
-		mi.setVersion(modelExec.getDependsOn().getRef().getVersion());
-		return mi;
-	}*/
 
 	public String[] getAttributeNames(Model model) throws JsonProcessingException {
 		model = modelServiceImpl.resolveName(model);
@@ -219,51 +129,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		return listStr.toArray(new String[listStr.size()]);
 	}
 
-	/********************** UNUSED **********************/
-	/*
-	 * public String getLabelName(Model model) throws JsonProcessingException{ model
-	 * = modelServiceImpl.resolveName(model); AttributeRefHolder attrSource =
-	 * model.getLabel(); return attrSource.getAttrName(); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<String> getModelResults(String execUuid, String execVersion)
-	 * throws Exception { // /*String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); //ModelExec modelExec =
-	 * iModelExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
-	 * ModelExec modelExec = (ModelExec)
-	 * commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-	 * MetaType.modelExec.toString()); //Model model =
-	 * iModelDao.findOneByUuidAndVersion(modelExec.getDependsOn().getRef().getUuid()
-	 * , modelExec.getDependsOn().getRef().getVersion()); Model model = (Model)
-	 * commonServiceImpl.getOneByUuidAndVersion(modelExec.getDependsOn().getRef().
-	 * getUuid(), modelExec.getDependsOn().getRef().getVersion(),
-	 * MetaType.model.toString()); //Datapod datapod =
-	 * datapodServiceImpl.findOneByUuidAndVersion(model.getSource().getRef().getUuid
-	 * (), model.getSource().getRef().getVersion()); Datapod datapod = (Datapod)
-	 * commonServiceImpl.getOneByUuidAndVersion(model.getSource().getRef().getUuid()
-	 * , model.getSource().getRef().getVersion(), MetaType.datapod.toString());
-	 * if(null == datapod){ //datapod =
-	 * datapodServiceImpl.findLatestByUuid(model.getSource().getRef().getUuid());
-	 * datapod = (Datapod)
-	 * commonServiceImpl.getLatestByUuid(model.getSource().getRef().getUuid(),
-	 * MetaType.datapod.toString()); } // /*Dataset<Row> df =
-	 * dataFrameService.getDataFrameByDataStore(modelExec.getResult().getRef().
-	 * getUuid(), modelExec.getResult().getRef().getVersion(), // datapod);
-	 * 
-	 * DataStore datastore = (DataStore)
-	 * commonServiceImpl.getOneByUuidAndVersion(modelExec.getResult().getRef().
-	 * getUuid(), modelExec.getResult().getRef().getVersion(),
-	 * MetaType.datastore.toString()); Datasource datasource =
-	 * commonServiceImpl.getDatasourceByApp(); IExecutor exec =
-	 * execFactory.getExecutor(datasource.getType()); List<String> strList =
-	 * exec.fetchModelResults(datastore, datapod,
-	 * securityServiceImpl.getAppInfo().getRef().getUuid()); // /*df.printSchema();
-	 * // List<String> strList = new ArrayList<>(); // // for(Row
-	 * row:df.javaRDD().collect()){ // strList.add(row.toString()); // } return
-	 * strList; }
-	 */
+	
 
 	public String getModelScript(String modelUuid, String modelVersion) throws Exception {
 
@@ -343,31 +209,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		return result;
 
 	}
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> getModelExecByModel(String modelUuid, String
-	 * modelVersion) {
-	 * 
-	 * Query query = new Query(); query.fields().include("uuid");
-	 * query.fields().include("version"); query.fields().include("name");
-	 * query.fields().include("statusList"); query.fields().include("dependsOn");
-	 * query.fields().include("result"); query.fields().include("createdOn");
-	 * query.fields().include("active"); query.fields().include("appInfo");
-	 * query.fields().include("createdBy");
-	 * 
-	 * try { if(modelUuid != null && !StringUtils.isBlank(modelUuid))
-	 * query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
-	 * query.addCriteria(Criteria.where("statusList.stage").is("COMPLETED"));
-	 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.
-	 * getApp().getUuid())); query.addCriteria(Criteria.where("active").is("Y"));
-	 * query.with(new Sort(Sort.Direction.DESC, "version")); } catch
-	 * (JsonProcessingException | IllegalAccessException | IllegalArgumentException
-	 * | InvocationTargetException | NoSuchMethodException | SecurityException |
-	 * NullPointerException | ParseException e) { e.printStackTrace(); }
-	 * List<ModelExec> execList = mongoTemplate.find(query, ModelExec.class); return
-	 * execList; }
-	 */
 	
 	public Algorithm getAlgorithmByTrainExec(String trainExecUUID, String trainExecVersion)
 			throws JsonProcessingException {
@@ -383,8 +224,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(),
 				model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 	}
-
-	
 
 	public TrainExec getLatestTrainExecByModel(String modelUuid, String modelVersion) throws Exception {
 
