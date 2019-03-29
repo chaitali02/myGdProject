@@ -1216,7 +1216,7 @@ public class DataStoreServiceImpl {
 	}*/
 
 	public List<Map<String, Object>> getResultByDatastore(String datastoreUuid, String datastoreVersion,
-			String requestId, int offset, int limit, String sortBy, String order, String execVersion)
+			String requestId, int offset, int limit, String sortBy, String order, String execVersion, RunMode runMode)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<Map<String, Object>> data = null;
@@ -1226,11 +1226,14 @@ public class DataStoreServiceImpl {
 					MetaType.datastore.toString());
 			execVersion=dataStore.getExecId().getRef().getVersion();
 			StringBuilder orderBy = new StringBuilder();
-			RunMode runMode = Helper.getExecutionMode(dataStore.getRunMode());
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			ExecContext execContext = null;
-			IExecutor exec = null;
-			String appUuid = null;
+//			RunMode runMode = Helper.getExecutionMode(dataStore.getRunMode());
+
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+
+			ExecContext execContext = commonServiceImpl.getExecContext(runMode);
+			IExecutor exec = execFactory.getExecutor(execContext.toString());			
+			StorageContext storageContext = commonServiceImpl.getStorageContext(dataStore);
+			
 //			if (runMode.equals(RunMode.ONLINE)) {
 //				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
 //						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
@@ -1241,9 +1244,9 @@ public class DataStoreServiceImpl {
 //				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
 //			}
 
-			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());			
-			exec = execFactory.getExecutor(execContext.toString());
-			appUuid = commonServiceImpl.getApp().getUuid();
+//			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());			
+//			exec = execFactory.getExecutor(execContext.toString());
+			String appUuid = commonServiceImpl.getApp().getUuid();
 
 			boolean requestIdExistFlag = false;
 //			String tableName = getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
@@ -1256,12 +1259,18 @@ public class DataStoreServiceImpl {
 			} else {
 				customCondition.append(" WHERE 1=1 ");
 			}*/
-			customCondition.append(" WHERE version = " + execVersion);
-
+			
+			if (dataStore.getMetaId().getRef().getType().equals(MetaType.datapod)
+					&& commonServiceImpl.checkTypeVersion(dataStore.getMetaId().getRef().getUuid()))
+				customCondition.append(" WHERE version = " + execVersion);
+			else
+				customCondition.append(" WHERE 1=1 ");
+			
 			StringBuilder limitBuilder = new StringBuilder(" ");
 			if (limit > 0) {
-				if (!datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-						limitBuilder.append(" LIMIT " + limit);
+//				if (!datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+				if (!storageContext.equals(StorageContext.ORACLE)) {
+					limitBuilder.append(" LIMIT " + limit);
 				}
 				else {
 						limitBuilder.append(" AND ROWNUM < " + limit);					

@@ -571,29 +571,30 @@
             "length" : null,
             "attrUnitType" : null
         }, 
-         {
+        {
             "attributeId" : 39,
             "displaySeq" : 39,
-            "name" : "blank_pass_count",
+            "name" : "blankspace_pass_count",
             "type" : "string",
-            "desc" : "blank_pass_count",
+            "desc" : "blankspace_pass_count",
             "expression" : null,
             "key" : "",
             "partition" : "N",
-            "dispName" : "blank_pass_count",
+            "dispName" : "blankspace_pass_count",
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, {
+        }, 
+        {
             "attributeId" : 40,
             "displaySeq" : 40,
-            "name" : "blank_fail_count",
+            "name" : "blankspace_fail_count",
             "type" : "string",
-            "desc" : "blank_fail_count",
+            "desc" : "blankspace_fail_count",
             "expression" : null,
             "key" : "",
             "partition" : "N",
-            "dispName" : "blank_fail_count",
+            "dispName" : "blankspace_fail_count",
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
@@ -601,13 +602,13 @@
         {
             "attributeId" : 41,
             "displaySeq" : 41,
-            "name" : "blank_score",
+            "name" : "blankspace_score",
             "type" : "string",
-            "desc" : "blank_score",
+            "desc" : "blankspace_score",
             "expression" : null,
             "key" : "",
             "partition" : "N",
-            "dispName" : "blank_score",
+            "dispName" : "blankspace_score",
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null

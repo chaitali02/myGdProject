@@ -5509,11 +5509,25 @@ public class CommonServiceImpl<T> {
 		return helper.getExecutorContext(getDatasourceByApp().getType());
 	}
 
+	public ExecContext getExecContext() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getExecutorContext(getDatasourceByApp().getType());
+	}
+	
+	public StorageContext getStorageContext(DataStore datastore) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if (datastore.getMetaId().getRef().getType().equals(MetaType.datapod)) {
+			Datapod datapod = (Datapod) getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
+			Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+			return helper.getStorageContext(datasource.getType());
+		}
+		return StorageContext.FILE;
+	}
+	
 	public StorageContext getStorageContext(MetaIdentifier datapodKey) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datapod datapod = (Datapod) getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), datapodKey.getType().toString());
 		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 		return helper.getStorageContext(datasource.getType());
 	}
+
 	public StorageContext getStorageContext(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 		return helper.getStorageContext(datasource.getType());
@@ -5568,4 +5582,23 @@ public class CommonServiceImpl<T> {
 		}
 	}
 
+	
+	public Boolean checkTypeVersion(String uuid) throws JsonProcessingException {
+		Datapod datapod = (Datapod) getOneByUuidAndVersion(uuid, null, MetaType.datapod.toString());
+		List<Attribute> attributes = datapod.getAttributes();
+		Boolean flag = false;
+		/*
+		 * attributes.stream().forEach(attr -> { if
+		 * (attr.getName().equalsIgnoreCase("version")) { flag=true; } else {
+		 * flag=false; } });
+		 */
+		for (Attribute attr : attributes) {
+			if (attr.getName().equalsIgnoreCase("version"))
+				return true;
+			else
+				flag = false;
+		}
+
+		return flag;
+	}
 }

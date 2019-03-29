@@ -149,7 +149,7 @@ public class OracleRegister {
 					datastore.setCreatedBy(datapod.getCreatedBy());
 					holder.setRef(datastoreRef);
 					datastore.setMetaId(holder);
-					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setPersistMode(PersistMode.DISK_ONLY.toString());
 					datastore.setBaseEntity();
 					
 					//Creating load & loadExec

@@ -57,10 +57,12 @@ public class DatastoreController {
 												@RequestParam(value="order", required=false) String order, 
 												@RequestParam(value="requestId", required=false) String requestId,
 												@RequestParam(value = "type", required = false) String type,
-												@RequestParam(value = "action", required = false) String action) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
+												@RequestParam(value = "action", required = false) String action,
+												@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
 		limit = offset+limit;
 		offset = offset+1;
-		return dataStoreServiceImpl.getResultByDatastore(datastoreUuid, datastoreVersion, requestId, offset, limit, sortBy, order, null);
+		RunMode runMode = Helper.getExecutionMode(mode);		
+		return dataStoreServiceImpl.getResultByDatastore(datastoreUuid, datastoreVersion, requestId, offset, limit, sortBy, order, null,runMode);
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
@@ -70,7 +72,7 @@ public class DatastoreController {
 			@RequestParam(value = "rows", defaultValue = "1000") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response,
 			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);

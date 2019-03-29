@@ -123,7 +123,7 @@ public class DQOperator implements IParsable {
 	private String DUP_PASS_COUNT = "dup_pass_count";
 	private String CUSTOM_PASS_COUNT = "custom_pass_count";
 	private String DOMAIN_PASS_COUNT = "domain_pass_count";
-	private String BLANK_PASS_COUNT = "blank_pass_count";
+	private String BLANK_PASS_COUNT = "blankspace_pass_count";
 	private String EXPRESSION_PASS_COUNT = "expression_pass_count";
 	private String CASE_PASS_COUNT = "case_pass_count";
 
@@ -152,7 +152,7 @@ public class DQOperator implements IParsable {
 	private String DUP_FAIL_COUNT = "dup_fail_count";
 	private String CUSTOM_FAIL_COUNT = "custom_fail_count";
 	private String DOMAIN_FAIL_COUNT = "domain_fail_count";
-	private String BLANK_FAIL_COUNT = "blank_fail_count";
+	private String BLANK_FAIL_COUNT = "blankspace_fail_count";
 	private String EXPRESSION_FAIL_COUNT = "expression_fail_count";
 	private String CASE_FAIL_COUNT = "case_fail_count";
 	
@@ -162,11 +162,11 @@ public class DQOperator implements IParsable {
 	private String DATATYPE_SCORE = "dataType_score";
 	private String FORMAT_SCORE = "format_score";
 	private String LENGTH_SCORE = "length_score";
-	private String REFINT_SCORE = "refIntegrity_score";
+	private String REFINT_SCORE = "refint_score";
 	private String DUP_SCORE = "dup_score";
 	private String CUSTOM_SCORE = "custom_score";
 	private String DOMAIN_SCORE = "domain_score";
-	private String BLANK_SPACE_SCORE = "blank_score";
+	private String BLANK_SPACE_SCORE = "blankspace_score";
 	private String EXPRESSION_SCORE = "expression_score";
 	private String ALL_SCORE = "all_score";
 	private String CASE_SCORE = "case_score";

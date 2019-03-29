@@ -62,6 +62,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ImputeOperator;
 
@@ -738,7 +739,6 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			Datasource trainSrcDatasource = commonServiceImpl.getDatasourceByObject(train);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			
-			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Map<String, Object> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
@@ -749,6 +749,18 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 //						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
 //						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 //			}
+			
+			MetaIdentifierHolder targetHolder = train.getTrainLocation();			
+			Datapod target = null;
+			StorageContext storageContext = null;
+			if (targetHolder.getRef().getType() != null && targetHolder.getRef().getType().equals(MetaType.datapod)) {
+				target = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(),
+						targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
+				storageContext = commonServiceImpl.getStorageContext(targetHolder.getRef());
+			}
+			else
+				storageContext = StorageContext.FILE;
+			
 			boolean isSuccess = false;
 			Object result = null;
 			String[] fieldArray = modelExecServiceImpl.getMappedFeatureNames(train);
@@ -783,7 +795,10 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 				trainOtherParam.put("vectorFields", vectorFields);
 				
 				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
-				exec = execFactory.getExecutor(datasource.getType());
+
+				ExecContext execContext = commonServiceImpl.getExecContext();
+				IExecutor exec = execFactory.getExecutor(execContext.toString());				
+//				exec = execFactory.getExecutor(datasource.getType());
 
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
@@ -901,20 +916,20 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 							, testLocationTableName, testLPathFilePathUrl
 							, trainLocationDP, trainLocationDS, trainLocationTableName, trainLPathFilePathUrl);
 					if(testLocationDP !=null) {
-						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.setRunMode(runMode);
 						dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 							new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-							trainResult.getValidationSet(), null, null);
+							trainResult.getValidationSet(), commonServiceImpl.getPersistMode(storageContext), null);
 					 }
 					if(trainLocationDP !=null && train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
-						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.setRunMode(runMode);
 						dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 							new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-							trainResult.getTrainingSet(), null, null);
+							trainResult.getTrainingSet(), commonServiceImpl.getPersistMode(storageContext), null);
 					 }
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
@@ -935,21 +950,21 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 											, trainLocationDP, trainLocationDS, trainLocationTableName
 											, trainLPathFilePathUrl, algoclass);
 									if(testLocationDP !=null) {
-										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.setRunMode(runMode);
 										dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 										new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-										trainResult.getValidationSet(), null, null);
+										trainResult.getValidationSet(), commonServiceImpl.getPersistMode(storageContext), null);
 									}
 									
 									if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
-										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.setRunMode(runMode);
 										dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 											new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 											new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 											trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-											trainResult.getTrainingSet(), null, null);
+											trainResult.getTrainingSet(), commonServiceImpl.getPersistMode(storageContext), null);
 									 }
 								}
 							}
@@ -968,20 +983,20 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 										, trainLocationDP, trainLocationDS, trainLocationTableName
 										, trainLPathFilePathUrl, algoclass);
 								if(testLocationDP != null) {
-									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.setRunMode(runMode);
 									dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 									new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 									new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 									trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-									trainResult.getValidationSet(), null, null);
+									trainResult.getValidationSet(), commonServiceImpl.getPersistMode(storageContext), null);
 								}
 								if(trainLocationDP != null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
-									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.setRunMode(runMode);
 									dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 										new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
-										trainResult.getTrainingSet(), null, null);
+										trainResult.getTrainingSet(), commonServiceImpl.getPersistMode(storageContext), null);
 								 }
 							}
 							
@@ -1122,11 +1137,12 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 				}
 				commonServiceImpl.save(MetaType.trainresult.toString(), trainResult);
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
-				dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+				dataStoreServiceImpl.setRunMode(runMode);
 				dataStoreServiceImpl.create(filePathUrl, trainName,
 						new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()),
 						new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-						trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef);
+						trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), resultRef,
+						trainResult.getTrainingSet(), commonServiceImpl.getPersistMode(storageContext), null);
 				trainExec.setResult(resultRef);
 				if (result != null)
 					isSuccess = true;
@@ -1138,7 +1154,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 				// Save the data as csv
 				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
 				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
-				exec = execFactory.getExecutor(datasource.getType());
+				IExecutor exec = execFactory.getExecutor(datasource.getType());
 				exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
 				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
 				List<String> argList = Arrays.asList(paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
