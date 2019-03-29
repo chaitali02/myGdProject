@@ -215,6 +215,5 @@ public class MySqlRegister {
 		default:
 			return datatype;
 		}
-
 	}
 }
