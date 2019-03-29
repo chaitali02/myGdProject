@@ -1525,3 +1525,6 @@ transition: right 1m
    .chartBox:hover  .chartIcon {
     display:block !important;
    }
+   .chartBox:hover  .chartTitle {
+     width: 40% !important;
+   }
