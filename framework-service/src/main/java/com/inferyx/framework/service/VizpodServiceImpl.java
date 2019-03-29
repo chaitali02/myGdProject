@@ -365,6 +365,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion, MetaType.vizpod.toString(), "Y");
 			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpod.getVersion())));
 			vizExec.setName(vizpod.getName());
+			vizExec.setRunMode(runMode);
 			vizExec.setAppInfo(vizpod.getAppInfo());
 			vizExec.setBaseEntity();
 		}
