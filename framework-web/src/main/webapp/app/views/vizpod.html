@@ -284,7 +284,7 @@
 										</label>
 										<div class="col-md-6">
 											<select class="form-control" data-ng-model="vizpodtype" ng-options="r for r in vizpodTypes  | orderBy:orderByValue" ng-disabled="{{mode}}"
-											 required="">
+											 required="" data-ng-change="onChangeChartType()">
 											</select>
 										</div>
 									</div>

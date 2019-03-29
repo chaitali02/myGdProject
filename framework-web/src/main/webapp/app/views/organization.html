@@ -217,7 +217,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Logo</label>
                   <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">
                     <div class="col-md-5 col-sm-5 col-xs-12">
@@ -235,6 +235,23 @@
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
                       <img width="35px"  title ="Log" height="35px" class="log-preview"  ng-src="avatars/{{organizationData.logoPath}}" onerror="this.src='avatars/default-logo.png'" src="" alt="Logo"/>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Logo</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">
+                    <div class="col-md-5 col-sm-5 col-xs-12">
+                      <div  id="avatar-preview-wrapper" style="text-align:left">
+                        <img width="45px"  title ="Log" height="45px" class="log-preview"  ng-src="avatars/{{organizationData.logoPath}}" onerror="this.src='avatars/default-logo.png'" src="" alt="Logo"/>
+                        <div class="input-group" id="avatar-change-btn" style="width:80px;margin-top:-41px;margin-left:0;text-align:left">
+                        <label class="input-group-btn">
+                            <span class="btn btn-outline" style="width:0px;">
+                              Change &hellip; <input id="org_log" onchange="readLogoURL(this);" type="file" ng-model="file" accept="image/jpeg,image/x-png" style="display:none">
+                            </span>
+                        </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

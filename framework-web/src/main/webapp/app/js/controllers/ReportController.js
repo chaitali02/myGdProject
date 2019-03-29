@@ -2747,7 +2747,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		var url = $location.absUrl().split("app")[0];
 		$http({
 			method: 'GET',
-			url: url + "report/downloadReport?action=view&uuid=" + uuid + "&version=" + version + "&rows=-1&format=EXCEL",
+			url: url + "report/downloadReport?action=view&uuid=" + uuid + "&version=" + version,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();
