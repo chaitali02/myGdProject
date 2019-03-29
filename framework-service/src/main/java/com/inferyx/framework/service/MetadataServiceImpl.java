@@ -83,6 +83,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileRefHolder;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -2209,9 +2210,7 @@ public class MetadataServiceImpl {
 		File destServer = new File(locationServer);
 		File destUi = new File(locationUi);
 
-		if (uuid != null && !uuid.isEmpty()) {
-
-			uploadExec.setName(filename1);
+            uploadExec.setName(filename1);
 			uploadExec.setLocation(locationServer);
 			uploadExec.setFileName(originalFileName);
 			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
@@ -2228,27 +2227,42 @@ public class MetadataServiceImpl {
 			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
 					Status.Stage.COMPLETED);
 
-		} else {
-
-			uploadExec.setName(filename1);
-			uploadExec.setLocation(locationServer);
-			uploadExec.setFileName(originalFileName);
-			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
-			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
-					Status.Stage.RUNNING);
-			File convFile = new File(locationUi);
-		    convFile.createNewFile(); 
-		    FileOutputStream fos = new FileOutputStream(convFile); 
-		    fos.write(multiPartFile.getBytes());
-		    fos.close(); 
-			multiPartFile.transferTo(destServer);
-
-			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
-					Status.Stage.COMPLETED);
-		}
+		
 		fileRefHolder.setRef(metaIdentifier);
 		fileRefHolder.setFileName(fileName_Uuid);
 		return fileRefHolder;
+	}
+	
+	
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+		String uploadFileName = file.getOriginalFilename();
+		FileType type = Helper.getFileType(fileType);
+		String fileLocation = null;
+		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String metaUuid = null;
+		String metaVersion = null;
+		if(fileName == null) {
+			fileName = Helper.getFileCustomNameByFileType(type, extension);
+			String splits[] = fileName.split("_");
+			metaUuid = splits[0];
+			metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+		} 
+		
+		fileLocation = directoryLocation+"/" + fileName;
+		
+		File scriptFile = new File(fileLocation);
+		file.transferTo(scriptFile);
+		if(metaType==null)
+		{
+			metaType="model";
+		}
+		UploadExec uploadExec=new UploadExec();
+		uploadExec.setFileName(uploadFileName);
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(fileLocation);
+		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		return fileName;
 	}
 
 }
