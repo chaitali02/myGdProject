@@ -2722,7 +2722,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
     $scope.getDownload = function (data) {
 		notify.type = 'success',
 		notify.title = 'Success',
-		notify.content = 'Report Download Submitted'
+		notify.content = 'Report Download Successfully'
 		
 		$scope.execDetail=data;
 		$scope.msgDetail={};
@@ -2841,7 +2841,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			if(response ==true){
 				notify.type = 'success',
 				notify.title = 'Success',
-				notify.content = 'Email Sent Successfully '
+				notify.content = 'Report Emailed Successfully'
 				$scope.$emit('notify', notify);
 			}else{
 				notify.type = 'error',
