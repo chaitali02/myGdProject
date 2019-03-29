@@ -130,6 +130,8 @@ public class DashboardServiceImpl extends RuleTemplate {
 		dashboardExec.setName(dashboard.getName());
 		dashboardExec.setAppInfo(dashboard.getAppInfo());
 		dashboardExec.setExecParams(execParams);
+		dashboardExec.setRunMode(runMode);
+
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.PENDING);

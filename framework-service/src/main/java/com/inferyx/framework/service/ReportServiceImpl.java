@@ -106,6 +106,7 @@ public class ReportServiceImpl extends RuleTemplate {
 				reportExec = new ReportExec();
 				reportExec.setDependsOn(dependsOn);
 				reportExec.setBaseEntity();
+				reportExec.setRunMode(runMode);
 			}
 			
 			reportExec.setExecParams(execParams);
