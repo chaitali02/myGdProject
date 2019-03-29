@@ -104,7 +104,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.pagination = {
 		currentPage: 1,
 		pageSize: 10,
-		paginationPageSizes: [10, 25, 50, 75, 100],
+		paginationPageSizes: [5,10, 25, 50, 75, 100],
 		maxSize: 5,
 	}
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
@@ -515,6 +515,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.gridOptionsDatapod.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+		debugger;
 	};
 
 	$scope.getGridStyle = function () {
@@ -664,6 +665,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
+			$scope.pagination.pageSize=5;
 			var columnDefs=[];
 			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
 				var attribute = {};
@@ -677,9 +679,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			},10);
 			$scope.counter = 0;
 			$scope.originalData = response;
-			if ($scope.originalData.length > 0) {
+			$scope.gridOptions.data=[];
+			
 				$scope.gridOptions.data=$scope.getResults($scope.originalData);
-			}
+			
 			$scope.spinner = false;
 
 		}
@@ -815,7 +818,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
-			console.log(data.attributes)
+			//console.log(data.attributes)
+			$scope.pagination.pageSize=10;
+
 			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
 				attribute.name =data.attributes[j].name;
