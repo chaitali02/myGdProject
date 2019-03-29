@@ -181,6 +181,14 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		}
 	}
 
+	$scope.onChangeChartType=function(){
+		debugger
+		if(["score-card","form-card"].indexOf($scope.vizpodtype) !=-1 ){
+			$scope.keylist=[];
+			$scope.grouplist=[];
+		}
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -382,8 +390,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			}
 		}
 		else {
-			console.log($scope.valuelist.length)
-			debugger
+			//console.log($scope.valuelist.length)
 			if($scope.vizpodtype =="form-card" && $scope.valuelist.length < 5){
 				if (type == "formula" || type == "expression") {
 					if ($scope.indexOfBySingleValue($scope.valuelist, data) == -1 && isEnable == false) {
@@ -651,6 +658,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.grouplist = [];
 		$scope.vizpoddata={};
 		$scope.vizpoddata.locked="N";
+		$scope.vizpoddata.limit=-1;
 	}//End Else
 
 	$scope.loadProfiles = function (query) {

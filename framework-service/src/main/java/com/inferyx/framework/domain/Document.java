@@ -41,7 +41,7 @@ public class Document {
 	private String fileName;
 	private String orgName;
 	private String orgAddress;
-	private String orgLogo;
+	private String orgLogoName;
 	private Alignment logoAlignment;
 	private Alignment titleAlignment;
 	
@@ -390,19 +390,19 @@ public class Document {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the orgLogo
+	 * @return the orgLogoName
 	 */
-	public String getOrgLogo() {
-		return orgLogo;
+	public String getOrgLogoName() {
+		return orgLogoName;
 	}
 
 	/**
 	 * @Ganesh
 	 *
-	 * @param orgLogo the orgLogo to set
+	 * @param orgLogoName the orgLogoName to set
 	 */
-	public void setOrgLogo(String orgLogo) {
-		this.orgLogo = orgLogo;
+	public void setOrgLogoName(String orgLogoName) {
+		this.orgLogoName = orgLogoName;
 	}
 
 	/**

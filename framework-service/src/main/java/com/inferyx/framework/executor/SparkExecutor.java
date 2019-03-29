@@ -15,7 +15,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -4510,4 +4515,16 @@ public class SparkExecutor<T> implements IExecutor {
 		} // if SparkSession
 		return data;
 	}
+	
+//	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) throws SQLException {
+//		ResultSet rs = rsHolder.getResultSet();
+//		ResultSetMetaData rsMetaData = rs.getMetaData();
+//		rsMetaData.get
+//		for(int j = 0; rs.next(); j++) {
+//			String colName = rs.getString("COLUMN_NAME");
+//			rs.getString("TYPE_NAME");
+//		}
+//		
+//		return rsHolder;
+//	}
 }

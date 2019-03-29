@@ -5566,9 +5566,8 @@ public class CommonServiceImpl<T> {
 	public String getOrganizationAddr(List<Address> address) {
 		if(address != null && !address.isEmpty()) {
 			StringBuffer addressBuff = new StringBuffer();
-			int i = 1;
-			for(Address address2 : address) {
-				addressBuff.append("Address "+i).append(": ");
+			if(address != null && !address.isEmpty()) {
+				Address address2 = address.get(0);
 				addressBuff.append(address2.getAddressLine1());
 				addressBuff.append(address2.getAddressLine2());
 				addressBuff.append(address2.getCity());
@@ -5576,7 +5575,6 @@ public class CommonServiceImpl<T> {
 				addressBuff.append(address2.getCountry());
 				addressBuff.append(" - ").append(address2.getZipcode());
 				addressBuff.append(".");
-				i++;
 			}
 			return addressBuff.toString();
 		} else {

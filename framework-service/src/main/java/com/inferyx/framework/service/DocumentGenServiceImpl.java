@@ -62,15 +62,17 @@ public class DocumentGenServiceImpl {
 						
 			createFilePathIfNotExists(filePathUrl, document.getFileName());
 			
-			String logoDefaultPath = metadataServiceImpl.getConfigValueByName("framework.image.logo.Path");
-			logoDefaultPath = logoDefaultPath.endsWith("/") ? logoDefaultPath : logoDefaultPath.concat("/");
-			String logoRelativePath = document.getOrgLogo();
-			if(logoRelativePath.startsWith("/")) {
-				logoRelativePath = logoRelativePath.substring(1);
-			} 
-			
-			String logoAbsolutePath = logoDefaultPath.concat(logoRelativePath);
-			document.setOrgLogo(logoAbsolutePath);
+			if(!StringUtils.isBlank(document.getOrgLogoName())) {
+				String logoDefaultPath = metadataServiceImpl.getConfigValueByName("framework.image.logo.Path");
+				logoDefaultPath = logoDefaultPath.endsWith("/") ? logoDefaultPath : logoDefaultPath.concat("/");
+				String logoRelativePath = document.getOrgLogoName();
+				if(logoRelativePath.startsWith("/")) {
+					logoRelativePath = logoRelativePath.substring(1);
+				} 
+				
+				String logoAbsolutePath = logoDefaultPath.concat(logoRelativePath);
+				document.setOrgLogoName(logoAbsolutePath);
+			}
 			
 			PDDocument doc = pdfUtil.createPDF(document);
 			
