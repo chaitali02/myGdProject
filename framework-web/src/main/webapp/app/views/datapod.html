@@ -175,7 +175,7 @@
               <h3 style="font-size:14px;color:red">{{datamessage}}</h3>
             </div>
 
-            <div ng-show="!isDataInpogress ">
+            <div ng-if="!isDataInpogress ">
               <div class="row">
                 <div class="col-md-6 col-sm-6">
                   <div class="dataTables_length" id="sample_1_length">
@@ -190,7 +190,7 @@
                   <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                     <label>Search:</label>
                     <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()"
-                      ng-model="searchtext" aria-controls="datastoredatatable">
+                      ng-model="$parent.searchtext" aria-controls="datastoredatatable">
                   </div>
                 </div>
               </div>
