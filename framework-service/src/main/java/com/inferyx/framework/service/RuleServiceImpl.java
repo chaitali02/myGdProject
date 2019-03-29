@@ -127,22 +127,7 @@ public class RuleServiceImpl extends RuleTemplate {
 
 	static final Logger logger = Logger.getLogger(RuleServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*
-	 * public Rule findLatest() { return resolveName(iRuleDao.findLatest(new
-	 * Sort(Sort.Direction.DESC, "version"))); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Rule findOneById(String id) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid ==
-	 * null) { return iRuleDao.findOneById(appUuid, id); } return
-	 * iRuleDao.findOne(id); }
-	 */
-
+	
 	public Rule resolveName(Rule rule) throws JsonProcessingException {
 		String createdByRefUuid = rule.getCreatedBy().getRef().getUuid();
 		// User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
@@ -151,71 +136,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		return rule;
 	}
 
-	/********************** UNUSED **********************/
-	/*
-	 * public Rule update(Rule rule) { rule.setBaseEntity(); return
-	 * iRuleDao.save(rule); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public boolean isExists(String id) { return iRuleDao.exists(id); }
-	 */
-
 	
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> test(String param1) { return iRuleDao.test(param1); }
-	 */
-
-	
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> findAllLatestActive() { Aggregation ruleAggr =
-	 * newAggregation(match(Criteria.where("active").is("Y")),
-	 * match(Criteria.where("name").ne(null)),
-	 * group("uuid").max("version").as("version")); AggregationResults<Rule>
-	 * ruleResults = mongoTemplate.aggregate(ruleAggr, "rule", Rule.class);
-	 * List<Rule> ruleList = ruleResults.getMappedResults();
-	 * 
-	 * // Fetch the rule details for each id List<Rule> result = new
-	 * ArrayList<Rule>(); for (Rule r : ruleList) { Rule ruleLatest; String appUuid
-	 * = (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid !=
-	 * null) { ruleLatest = iRuleDao.findOneByUuidAndVersion(appUuid, r.getId(),
-	 * r.getVersion()); } else { ruleLatest =
-	 * iRuleDao.findOneByUuidAndVersion(r.getId(), r.getVersion()); }
-	 * 
-	 * result.add(ruleLatest); } return result; }
-	 */
-
-
-	/*
-	 * public List<MetaIdentifier> execute(String ruleUUID, String ruleVersion,
-	 * ExecParams execParams, RuleExec ruleExec, RuleGroupExec ruleGroupExec,
-	 * List<FutureTask> taskList, ThreadPoolTaskExecutor metaExecutor) {
-	 * List<MetaIdentifier> ruleExecMetaList = new ArrayList<>();
-	 * MetaIdentifierHolder ruleExecMeta = new MetaIdentifierHolder();
-	 * MetaIdentifier ruleExecInfo = new MetaIdentifier(MetaType.rule, ruleUUID,
-	 * ruleVersion); ruleExecMeta.setRef(ruleExecInfo); RuleExec ruleExec = new
-	 * RuleExec(); ruleExec.setDependsOn(ruleExecMeta); ruleExec.setBaseEntity(); if
-	 * (execParams != null && execParams.getParamInfo() != null &&
-	 * !execParams.getParamInfo().isEmpty()) { for (ParamSetHolder paramSetHolder :
-	 * execParams.getParamInfo()) { execParams.setParamSetHolder(paramSetHolder);
-	 * //List<ParamListHolder> paramListHolder =
-	 * paramSetServiceImpl.getParamListHolder(paramSetHolder); ruleExec =
-	 * create(ruleUUID, ruleVersion, null, execParams, ruleExec); ruleExec =
-	 * execute(ruleUUID, ruleVersion, ruleExec, null, taskList, metaExecutor);
-	 * ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
-	 * ruleExec.getVersion()); ruleExecMetaList.add(ruleExecInfo); } } else {
-	 * ruleExec = create(ruleUUID, ruleVersion, null, null, ruleExec); ruleExec =
-	 * execute(ruleUUID, ruleVersion, ruleExec, null, taskList, metaExecutor);
-	 * ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
-	 * ruleExec.getVersion()); ruleExecMetaList.add(ruleExecInfo); } return
-	 * ruleExecMetaList; }
-	 */
-
 	public String getAttributeName(Rule rule, String attributeId) {
 		List<AttributeSource> sourceAttrs = rule.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
@@ -398,45 +319,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		return ruleExec;
 	}
 
-	/*
-	 * public RuleExec execute(String ruleUUID, String ruleVersion, RuleExec
-	 * ruleExec, RuleGroupExec ruleGroupExec, List<FutureTask> taskList,
-	 * ThreadPoolTaskExecutor executorService) {
-	 * 
-	 * //Fetch the Rule object Rule rule = null; if
-	 * (StringUtils.isBlank(ruleVersion)) { rule =
-	 * iRuleDao.findLatestByUuid(ruleUUID, new Sort(Sort.Direction.DESC,
-	 * "version")); ruleVersion = rule.getVersion(); } else { rule =
-	 * iRuleDao.findOneByUuidAndVersion(ruleUUID, ruleVersion); }
-	 * 
-	 * Authentication authentication =
-	 * SecurityContextHolder.getContext().getAuthentication();
-	 * 
-	 * RunRuleServiceImpl runRuleServiceImpl = new RunRuleServiceImpl();
-	 * runRuleServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
-	 * runRuleServiceImpl.setHdfsInfo(hdfsInfo);
-	 * runRuleServiceImpl.setBaseRule(rule);
-	 * runRuleServiceImpl.setBaseGroupExec(ruleGroupExec);
-	 * runRuleServiceImpl.setExecFactory(execFactory);
-	 * runRuleServiceImpl.setBaseRuleExec(ruleExec);
-	 * runRuleServiceImpl.setCommonServiceImpl(commonServiceImpl);
-	 * runRuleServiceImpl.setName(MetaType.ruleExec+"_"+ruleExec.getUuid()+"_"+
-	 * ruleExec.getVersion());
-	 * 
-	 * if (executorService == null) { runRuleServiceImpl.execute(); } else {
-	 * FutureTask<TaskHolder> futureTask = new
-	 * FutureTask<TaskHolder>(runRuleServiceImpl);
-	 * executorService.execute(futureTask); taskList.add(futureTask);
-	 * taskThreadMap.put(MetaType.ruleExec+"_"+ruleExec.getUuid()+"_"+ruleExec.
-	 * getVersion(), futureTask); logger.info(" taskThreadMap : " + taskThreadMap);
-	 * }
-	 * 
-	 * return ruleExec; }
-	 */
-	
-	
-	
-	
+
 	
 	public List<Map<String, Object>> getRuleResults(String ruleExecUUID, String ruleExecVersion, int offset, int limit,
 			String sortBy, String order, String requestId, RunMode runMode) throws Exception {

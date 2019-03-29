@@ -58,68 +58,6 @@ public class FunctionOperator {
 		this.runMode = runMode;
 	}
 
-//	public String generateSql(Function function, java.util.Map<String, MetaIdentifier> refKeyMap,
-//			HashMap<String, String> otherParams)
-//			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-//			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//
-//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-//
-//		List<FunctionInfo> list = function.getFunctionInfo();
-//		String functionName = "";
-//		for (FunctionInfo fun : list) {
-//			if (datasource.getType().equalsIgnoreCase(fun.getType())) {
-//				if(runMode != null && runMode.equals(RunMode.BATCH) && datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()) && fun.getName().equalsIgnoreCase("reflect")) {
-//					functionName = "uuid()";
-//					break;
-//				}else
-//					functionName = fun.getName();
-//                
-//				List<ParamInfoHolder> paramInfoHolderList = fun.getParamInfoHolder();
-//				if (paramInfoHolderList != null && paramInfoHolderList.size() > 0) { // paramInfoHolderList.length()<=0
-//					functionName += "(";
-//
-//					if (paramInfoHolderList.size() == 1) {
-//						ParamInfoHolder functionInfo =paramInfoHolderList.get(0);
-//						String concatName = "";
-//						if (functionInfo.getParamType().equalsIgnoreCase(MetaType.function.toString())) {
-//							concatName = functionInfo.getParamName().concat("()");															
-//						}else {
-//							concatName = functionInfo.getParamName();
-//						}
-//						functionName = functionName.concat(concatName);	
-//						functionName += ")";						
-//					} else {
-//						int count = paramInfoHolderList.size();
-//						for (ParamInfoHolder functionInfo : paramInfoHolderList) {
-//							String concatName = "";
-//							if (functionInfo.getParamType().equalsIgnoreCase(MetaType.function.toString())) {
-//								concatName = functionInfo.getParamName().concat("()");								
-//							} else {
-//								concatName = functionInfo.getParamName();								
-//							}
-//							functionName = functionName.concat(concatName);
-//							count--;
-//							if (count == 0) {
-//								break;
-//							} else
-//								functionName += ",";
-//						}
-//						functionName += ")";
-//					}
-//				} else {
-//					if(function.getInputReq().equalsIgnoreCase("N")) {
-//						functionName += "";
-//					}
-//				}
-//				break;
-//			}else {
-//				if(datasource.getType().equalsIgnoreCase(MetaType.file.toString()) && fun.getName().contains("rand"))
-//					functionName = fun.getName();
-//			}
-//		}
-//		return functionName;
-//	}
 	
 	public String generateSql(Function function, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Datasource datasource)

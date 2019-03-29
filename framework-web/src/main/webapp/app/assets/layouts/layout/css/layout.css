@@ -2392,7 +2392,8 @@ Page Quick Sidebar
 .quick-nav ul {
   position: relative;
   z-index: 10103;
-  padding: 60px 0 0;
+  padding: 0px 0 0;
+  margin-top: -42px;
   visibility: hidden;
   webkit-transition: visibility 0.3s;
   -moz-transition: visibility 0.3s;

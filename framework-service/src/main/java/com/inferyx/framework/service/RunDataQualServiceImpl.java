@@ -39,37 +39,6 @@ public class RunDataQualServiceImpl extends RunBaseRuleService {
 				baseRuleExec.getVersion());
 	}
 
-	/********************** UNUSED **********************/
-//	/**
-//	 * Create table name
-//	 * @param baseGroupExec
-//	 * @param baseRule
-//	 * @param baseRuleExec
-//	 * @param datapodKey
-//	 * @return
-//	 * @throws JsonProcessingException 
-//	 */
-//	@Override
-//	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, ExecContext execContext, RunMode runMode) throws JsonProcessingException {
-//		if(datapodKey.getType().equals(MetaType.rule)) {
-//			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
-//
-//		}
-//	    else if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) && execContext.equals(ExecContext.FILE) 
-//				/*|| execContext.equals(ExecContext.livy_spark)*/) {
-//			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
-//		}
-//		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), MetaType.datapod.toString());
-//		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
-//		if (/*execContext == null || execContext.equals(ExecContext.spark) ||*/ datasource.getType().equals(ExecContext.FILE.toString()) || runMode.equals(RunMode.ONLINE) /*|| execContext.equals(ExecContext.livy_spark)*/) {
-//			return String.format("%s_%s_%s", datapodKey.getUuid().replace("-", "_"),
-//					datapodKey.getVersion(), baseRuleExec.getVersion());
-//		}
-//		logger.info("datasource.getType() : " + datasource.getType());
-//		if (dp != null) {
-//			return datasource.getDbname() + "." + dp.getName();
-//		} 
-//		return null;
-//	}
+	
 	
 }

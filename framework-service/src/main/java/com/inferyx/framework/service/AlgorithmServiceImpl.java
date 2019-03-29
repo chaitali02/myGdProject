@@ -56,39 +56,5 @@ public class AlgorithmServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(AlgorithmServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Algorithm findLatest() {
-		return resolveName(iAlgorithmDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Algorithm findLatestByUuid(String uuid){
-		return iAlgorithmDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Algorithm findOneById(String id){
-		return iAlgorithmDao.findOne(id);
-	}*/
-
-	
-
-	/********************** UNUSED **********************/
-	/*public List<Algorithm> findAllLatestActive() 	
-	{ 
-		Aggregation appAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Algorithm> appResults = mongoTemplate.aggregate(appAggr, "algorithm", Algorithm.class);	   
-	   List<Algorithm> appList = appResults.getMappedResults();
-
-	   // Fetch the application details for each id
-	   List<Algorithm> result=new  ArrayList<Algorithm>();
-	   for(Algorithm a : appList)
-	   {   		     
-		   Algorithm appLatest = iAlgorithmDao.findOneByUuidAndVersion(a.getId(), a.getVersion());  		   
-		   result.add(appLatest);
-	   }
-	   return result;
-	}*/
-
 	
 }

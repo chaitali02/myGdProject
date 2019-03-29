@@ -174,51 +174,6 @@ public class DagServiceImpl {
 		this.runMode = runMode;
 	}
 
-	
-	/********************** UNUSED **********************/
-	/*public Dag findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid != null) {
-			return iDagDao.findOneById(appUuid, id);
-		}
-		return iDagDao.findOne(id);
-	}*/
-
-	/*
-	 * public Dag update(Dag dag) throws IOException { dag.exportBaseProperty(); Dag
-	 * dagDet = iDagDao.save(dag); registerService.createGraph(); return dagDet; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*public boolean isExists(String id) {
-		return iDagDao.exists(id);
-	}*/
-
-	
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> test(String param1) {
-		return iDagDao.test(param1);
-	}*
-
-	/********************** UNUSED **********************/
-	/*public Dag getOneByUuidAndVersion(String uuid, String version) {
-
-		return iDagDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dag findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid == null) {
-			return iDagDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDagDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	/**
 	 * Overloaded submitDag with input as dagRef
@@ -1097,148 +1052,13 @@ public class DagServiceImpl {
 		dagExec.setStages(DagExecUtil.convertToStageList(dagExecStgs));
 		return dagExec;
 	}
-
-	/********************** UNUSED **********************/
-	/*public OrderKey getLatestMetaKey(Set<OrderKey> keySet, OrderKey key) {
-		if (key.getVersion() != null) {
-			System.out.println(String.format("getLatestMetaKey: existing %s  %s", key.getUUID(), key.getVersion()));
-			return key;
-		}
-		OrderKey latestKey = Helper.getFirstKey(keySet, key.getUUID());
-		System.out.println(String.format("getLatestMetaKey: latest key %s  %s", key.getUUID(), key.getVersion()));
-		return latestKey;
-	}*/
-
-
+	
 	public Dag findDagByDagExec(String dagExecUuid) throws JsonProcessingException {
 		//DagExec dagExec = dagExecServiceImpl.findLatestByUuid(dagExecUuid);
 		DagExec dagExec = (DagExec) commonServiceImpl.getLatestByUuid(dagExecUuid, MetaType.dagExec.toString());
 		return (Dag) commonServiceImpl.getOneByUuidAndVersion(dagExec.getDependsOn().getUuid(), dagExec.getDependsOn().getVersion(), MetaType.dag.toString());
 	}
 
-	/*public Dag setDAGPAUSE(String uuid, String version, String stageId) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		Dag dag = null;
-		if (appUuid != null) {
-			if (StringUtils.isBlank(version))
-				dag = iDagDao.findOneByUuidAndVersion(appUuid, uuid, version);
-			else
-				dag = findLatestByUuid(uuid);
-
-		} else {
-			if (StringUtils.isBlank(version))
-				dag = iDagDao.findOneByUuidAndVersion(uuid, version);
-			else
-				dag = findLatestByUuid(uuid);
-
-		}
-		for (int i = 0; i < dag.getStages().size(); i++) {
-			if (dag.getStages().get(i).getStageId().equals(stageId)) {
-				Status stagePAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
-				List<Status> stageStatusList = dag.getStages().get(i).getStatusList();
-				stageStatusList.remove(stagePAUSEStatus);
-				stageStatusList.add(stagePAUSEStatus);
-				dag.getStages().get(i).setStatusList(stageStatusList);
-				for (int j = 0; j < dag.getStages().get(i).getTasks().size(); j++) {
-					int lastDag = dag.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
-					if (dag.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
-							.equals(Status.Stage.PENDING)) {
-						throw new Exception("Task PENDING.");
-					} else {
-						Status taskPAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
-						List<Status> taskStatusList = dag.getStages().get(i).getTasks().get(j).getStatusList();
-						taskStatusList.remove(taskPAUSEStatus);
-						taskStatusList.add(taskPAUSEStatus);
-						dag.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
-					}
-				}
-			}
-		}
-
-		return iDagDao.save(dag);
-	}
-
-	public Dag setDAGRESUME(String uuid, String version, String stageId) throws Exception {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		Dag dag = null;
-		if (appUuid != null) {
-			if (StringUtils.isBlank(version))
-				dag = iDagDao.findOneByUuidAndVersion(appUuid, uuid, version);
-			else
-				dag = findLatestByUuid(uuid);
-
-		} else {
-			if (StringUtils.isBlank(version))
-				dag = iDagDao.findOneByUuidAndVersion(uuid, version);
-			else
-				dag = findLatestByUuid(uuid);
-
-		}
-		for (int i = 0; i < dag.getStages().size(); i++) {
-			if (dag.getStages().get(i).getStageId().equals(stageId)) {
-				Status stagePAUSEStatus = new Status(Status.Stage.RESUME, new Date());
-				List<Status> stageStatusList = dag.getStages().get(i).getStatusList();
-				stageStatusList.remove(stagePAUSEStatus);
-				stageStatusList.add(stagePAUSEStatus);
-				dag.getStages().get(i).setStatusList(stageStatusList);
-				for (int j = 0; j < dag.getStages().get(i).getTasks().size(); j++) {
-					int lastDag = dag.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
-					if (dag.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
-							.equals(Status.Stage.PENDING)) {
-						throw new Exception("Task PENDING.");
-					} else {
-						Status taskPAUSEStatus = new Status(Status.Stage.RESUME, new Date());
-						List<Status> taskStatusList = dag.getStages().get(i).getTasks().get(j).getStatusList();
-						taskStatusList.remove(taskPAUSEStatus);
-						taskStatusList.add(taskPAUSEStatus);
-						dag.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
-					}
-
-				}
-			}
-		}
-
-		return iDagDao.save(dag);
-	}*/
-
-	/*public String setStatus(String uuid, String version, String stageId, String taskId, String status) throws JsonProcessingException, Exception {
-		if (!StringUtils.isBlank(status)) {
-			if (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(stageId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(dagExecServiceImpl.setStageRESUME(uuid, version, stageId));
-				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(dagExecServiceImpl.setTaskRESUME(uuid, version, stageId, taskId));
-				}
-			}else
-				logger.info("Empty stageId, can not perform the operation.");
-			if (!StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(dagExecServiceImpl.setStageRESUME(uuid, version, stageId));
-				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(dagExecServiceImpl.setStagePAUSE(uuid, version, stageId));
-				}
-			}else
-				logger.info("Empty stageId, can not perform the operation.");
-			if (StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(setDAGRESUME(uuid, version, stageId));
-				}
-				if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){
-					return objectWriter.writeValueAsString(setDAGPAUSE(uuid, version, stageId));
-				}
-			}
-		} else {
-			logger.info("Empty status, can not perform the operation.");
-		}
-		return null;
-
-	}*/
 	
 	public void restart(String dagExecUuid,String dagExecVersion, RunMode runMode) throws Exception{
 		DagExec dagExec=prepareDagExec(dagExecUuid, dagExecVersion,null,MetaType.dagExec.toString());

@@ -189,22 +189,7 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName) {
-		/*try {
-			IConnector connector = connectionFactory.getConnector(ExecContext.POSTGRES.toString());
-			ConnectionHolder conHolder = connector.getConnection();
-			Object obj = conHolder.getStmtObject();
-			SparkSession sparkSession = null;
-			if (obj instanceof SparkSession) {
-				sparkSession = (SparkSession) conHolder.getStmtObject();
-				// sparkSession.registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
-				sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
-				rsHolder.setCountRows(rsHolder.getDataFrame().count());
-			}
-		} catch (NullPointerException e) {
-			throw new RuntimeException("Failed to register Dataframe as Table.");
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to register Dataframe as Table.");
-		}*/
+		
 		return null;
 	}
 
@@ -543,16 +528,6 @@ public class PostGresExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/********************** UNUSED **********************/
-//	@Override
-//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-//			SecurityException, NullPointerException, ParseException, IOException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	@Override
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {

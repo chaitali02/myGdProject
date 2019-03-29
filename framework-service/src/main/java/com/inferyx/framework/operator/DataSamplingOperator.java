@@ -222,24 +222,6 @@ public class DataSamplingOperator implements IOperator, Serializable {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
-//	/**
-//	 * Get appropriate table name
-//	 * @param baseExec
-//	 * @param baseEntity
-//	 * @param datasource
-//	 * @param runMode
-//	 * @return
-//	 */
-//	private String getTableName(BaseExec baseExec, BaseEntity baseEntity, Datasource datasource, RunMode runMode) {
-//		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-//				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-//			return String.format("%s_%s_%s", baseEntity.getUuid().replaceAll("-", "_"), baseEntity.getVersion(), baseExec.getVersion());
-//		} else {
-//			return datasource.getDbname().concat(".").concat(baseEntity.getName());
-//		}
-//	}
-
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.operator.IOperator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
 	 */

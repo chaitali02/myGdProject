@@ -74,65 +74,6 @@ public class ConditionServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ConditionServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Condition findLatestByUuid(String uuid){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iConDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
-		}
-		return iConDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
 	
-	/********************** UNUSED **********************/
-	/*public Condition getOneByUuidAndVersion(String uuid,String version){
-		
-		return iConDao.findOneByUuidAndVersion(uuid,version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Condition findOneById(String id){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iConDao.findOneById(appUuid,id);
-		}
-		else
-			return iConDao.findOne(id);
-			
-	}*/
-
-	
-	/********************** UNUSED **********************/
-	/*public List<Condition> findAllLatestActive() 	
-	{	  
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;		
-	   Aggregation conditionAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Condition> conditionResults = mongoTemplate.aggregate(conditionAggr, "condition", Condition.class);	   
-	   List<Condition> conditionList = conditionResults.getMappedResults();
-
-	   // Fetch the Condition details for each id
-	   List<Condition> result=new  ArrayList<Condition>();
-	   for(Condition s : conditionList)
-	   {   
-		   Condition conditionLatest;
-		   if(appUuid != null)
-		   {
-			   conditionLatest = iConDao.findOneByUuidAndVersion(appUuid,s.getId(),s.getVersion());
-		   }
-		   else
-		   {
-			   conditionLatest = iConDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-		   }	
-		   if(conditionLatest != null)
-		   {
-		   result.add(conditionLatest);
-		   }
-	   }
-	   return result;
-	}
-	*/
-
 	
 }

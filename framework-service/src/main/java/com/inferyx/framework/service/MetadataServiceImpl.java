@@ -83,6 +83,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileRefHolder;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -205,77 +206,6 @@ public class MetadataServiceImpl {
 		return (Meta) commonServiceImpl.getOneById(id, MetaType.meta.toString());
 	}
 
-	/********************** UNUSED **********************/
-	/*public Meta findOneById(String id){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iMetadataDao.findOneById(appUuid,id);
-		}
-		return iMetadataDao.findOne(id);
-	}*/
-
-	
-	/*public Map update(Map map){
-		map.exportBaseProperty(objectState.EDIT.toString());
-		return iMapDao.save(map);
-	}
-	
-	public boolean isExists(String id){
-		return iMapDao.exists(id);
-	}
-	
-	
-	public List<Map> findAllVersion(String datapodName){
-		return iMapDao.findAllVersion(datapodName);
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Meta findOneByUuidAndVersion(String uuid,String version){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iMetadataDao.findOneByUuidAndVersion(appUuid,uuid,version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Meta findLatestByUuid(String uuid){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iMetadataDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iMetadataDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Meta> findAllLatestActive() 	
-	{	   
-	   Aggregation metadataAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Meta> metadataResults = mongoTemplate.aggregate(metadataAggr,"metadata", Meta.class);	   
-	   List<Meta> metadataList = metadataResults.getMappedResults();
-
-	   // Fetch the metadata details for each id
-	   List<Meta> result=new  ArrayList<Meta>();
-	   for(Meta m : metadataList)
-	   {   
-		   Meta metadataLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				metadataLatest = iMetadataDao.findOneByUuidAndVersion(appUuid,m.getId(), m.getVersion());
-			}
-			else
-			{
-				metadataLatest = iMetadataDao.findOneByUuidAndVersion(m.getId(), m.getVersion());
-			}
-			if(metadataLatest != null)
-			{		
-			result.add(metadataLatest);
-			}
-	   }
-	   return result;
-	}*/
-		
 
 	@SuppressWarnings("unchecked")
 	public List<BaseEntityStatus> getBaseEntityStatusByCriteria(String role, String appUuid, String type, String name, String userName, String startDate, String endDate, String tags, String active, String status) throws ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
@@ -561,103 +491,7 @@ public class MetadataServiceImpl {
 		}
 		return baseEntityStatusList;	
 }
-	
-	/*
-	 * @SuppressWarnings({ "unchecked", "rawtypes" }) public List<BaseEntity>
-	 * getBaseEntityByCriteria(String type, String name, String userName, String
-	 * startDate, String endDate, String tags, String active, String uuid, String
-	 * version, String published) throws ParseException, JsonProcessingException,
-	 * IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-	 * NoSuchMethodException, SecurityException, NullPointerException {
-	 * 
-	 * MetaType metaType = Helper.getMetaType(type);
-	 * 
-	 * //Create query Query query = new Query(); query.fields().include("_id");
-	 * query.fields().include("uuid"); query.fields().include("version");
-	 * query.fields().include("name"); query.fields().include("desc");
-	 * query.fields().include("createdBy"); query.fields().include("createdOn");
-	 * query.fields().include("tags"); query.fields().include("active");
-	 * query.fields().include("published"); query.fields().include("appInfo");
-	 * 
-	 * //Apply filter SimpleDateFormat simpleDateFormat = new SimpleDateFormat
-	 * ("EEE MMM dd hh:mm:ss yyyy z");
-	 * 
-	 * //to find String appUuid = (securityServiceImpl.getAppInfo() != null&&
-	 * securityServiceImpl.getAppInfo().getRef() != null)?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-	 * 
-	 * try { if (appUuid != null)
-	 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); if (name
-	 * != null &&!name.isEmpty())
-	 * query.addCriteria(Criteria.where("name").is(name)); if (userName != null &&
-	 * !userName.isEmpty()) { User user = userServiceImpl.findUserByName(userName);
-	 * if(user != null && user.getUuid().equals(getCurrentUser().getUuid())) {
-	 * //logger.info("if part...1.0");
-	 * query.addCriteria(Criteria.where("createdBy.ref.uuid").is(user.getUuid())); }
-	 * else { //logger.info("else part...1.0"); if(user != null)
-	 * query.addCriteria(Criteria.where("_id").ne("1").andOperator(Criteria.where(
-	 * "createdBy.ref.uuid").in(user.getUuid()),Criteria.where("published").in("Y"))
-	 * ); } }else { //logger.info("else part...1.1"); User currentUser =
-	 * getCurrentUser(); if(currentUser != null)
-	 * query.addCriteria(Criteria.where("_id").ne("1").orOperator(Criteria.where(
-	 * "createdBy.ref.uuid").in(currentUser.getUuid()),Criteria.where("published").
-	 * in("Y"))); }
-	 * 
-	 * 
-	 * 
-	 * if ( (startDate != null && !startDate.isEmpty()) && (endDate != null &&
-	 * !endDate.isEmpty()) )
-	 * query.addCriteria(Criteria.where("_id").ne("1").andOperator(Criteria.where(
-	 * "createdOn").gte(simpleDateFormat.parse(startDate)),
-	 * Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate))));
-	 * 
-	 * else if (startDate != null && !startDate.isEmpty())
-	 * query.addCriteria(Criteria.where("createdOn").gte(startDate)); else if
-	 * (endDate != null && !endDate.isEmpty())
-	 * 
-	 * query.addCriteria(Criteria.where("createdOn").lte(endDate)); if (tags != null
-	 * && !tags.isEmpty()) { ArrayList tagList= new
-	 * ArrayList(Arrays.asList(tags.split(",")));
-	 * query.addCriteria(Criteria.where("tags").all(tagList)); } if (active != null
-	 * && !active.isEmpty()) {
-	 * query.addCriteria(Criteria.where("active").is(active)); }
-	 * 
-	 * // else { // query.addCriteria(Criteria.where("active").is("Y")); // }
-	 * 
-	 * if (StringUtils.isNotBlank(uuid)) {
-	 * query.addCriteria(Criteria.where("uuid").is(uuid)); } if
-	 * (StringUtils.isNotBlank(version)) {
-	 * query.addCriteria(Criteria.where("version").is(version)); } if
-	 * (StringUtils.isNotBlank(published)) {
-	 * query.addCriteria(Criteria.where("published").is(published)); }
-	 * query.with(new Sort(Sort.Direction.DESC,"version")); } catch (ParseException
-	 * e1) { // TODO Auto-generated catch block e1.printStackTrace(); return null; }
-	 * 
-	 * List<Object> metaObjectList = new ArrayList<>();
-	 * 
-	 * Class<?> className = Helper.getDomainClass(metaType); if (className == null)
-	 * { return null; } metaObjectList = (List<Object>) mongoTemplate.find(query,
-	 * className);
-	 * 
-	 * List<BaseEntity> baseEntityList = new ArrayList<>();
-	 * 
-	 * 
-	 * for (Object metaObject: metaObjectList) { BaseEntity baseEntity = new
-	 * BaseEntity(); BaseEntity baseEntityTmp = (BaseEntity) metaObject;
-	 * baseEntityTmp = resolveBaseEntity(baseEntityTmp);
-	 * baseEntity.setId(baseEntityTmp.getId());
-	 * baseEntity.setUuid(baseEntityTmp.getUuid());
-	 * baseEntity.setVersion(baseEntityTmp.getVersion());
-	 * baseEntity.setName(baseEntityTmp.getName());
-	 * baseEntity.setDesc(baseEntityTmp.getDesc());
-	 * baseEntity.setCreatedBy(baseEntityTmp.getCreatedBy());
-	 * baseEntity.setCreatedOn(baseEntityTmp.getCreatedOn());
-	 * baseEntity.setTags(baseEntityTmp.getTags());
-	 * baseEntity.setActive(baseEntityTmp.getActive());
-	 * baseEntity.setPublished(baseEntityTmp.getPublished());
-	 * baseEntity.setAppInfo(baseEntityTmp.getAppInfo());
-	 * baseEntityList.add(baseEntity); } return baseEntityList; }
-	 */
+
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<BaseEntity> getBaseEntityByCriteria(String type, String name, String userName, String startDate,
@@ -815,31 +649,6 @@ public class MetadataServiceImpl {
 		}
 		return baseEntityList;
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> getBaseEntity(List<Object> metaObjList) {
-
-		List<BaseEntity> baseEntityList = new ArrayList<>();
-		
-		for (Object metaObject: metaObjList)
-		{
-			BaseEntity baseEntity = (BaseEntity) metaObject;
-			baseEntity.setId(baseEntity.getId());
-			baseEntity.setUuid(baseEntity.getUuid());
-			baseEntity.setVersion(baseEntity.getVersion());
-			baseEntity.setName(baseEntity.getName());
-			baseEntity.setDesc(baseEntity.getDesc());
-			baseEntity.setCreatedBy(baseEntity.getCreatedBy());
-			baseEntity.setCreatedOn(baseEntity.getCreatedOn());
-			baseEntity.setTags(baseEntity.getTags());
-			baseEntity.setActive(baseEntity.getActive());
-			baseEntity.setPublished(baseEntity.getPublished());
-			baseEntity.setAppInfo(baseEntity.getAppInfo());
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-		
-	}*/
 
 	@SuppressWarnings("unchecked")
 	public List<StatusHolder> getGroupExecStatusReflection(String reftype, String uuid, String version) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
@@ -1004,30 +813,7 @@ public class MetadataServiceImpl {
 		return new ObjectMapper().writeValueAsString(MetaType.getMetaExecList());
 	}	
 
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity>  filterPublished(List<BaseEntity> baseEntityList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		List<BaseEntity> newBaseEntityList = new ArrayList<>();
-		User currentUser = getCurrentUser();
-		if(baseEntityList != null)
-			if(currentUser != null) {
-				for(BaseEntity baseEntity : baseEntityList) {
-					if(!StringUtils.isBlank(currentUser.getName())) {
-						if(currentUser.getName().equalsIgnoreCase(baseEntity.getCreatedBy().getRef().getName()))
-							newBaseEntityList.add(baseEntity);
-						if(!currentUser.getName().equalsIgnoreCase(baseEntity.getCreatedBy().getRef().getName())) {
-							if(baseEntity.getPublished().equalsIgnoreCase("Y"))
-								newBaseEntityList.add(baseEntity);
-						}
-					}else {
-						newBaseEntityList.add(baseEntity);
-					}				
-				}
-				return newBaseEntityList;
-			}else
-				return baseEntityList;
-		else
-			return baseEntityList;
-	}*/	
+
 	public User getCurrentUser() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		SessionContext sessionContext = null;
@@ -1297,17 +1083,7 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-//	public List<ParamList> getmaxVersionList(List<ParamList> paramList)
-//	{
-//		HashMap<String,String> Uuid_version = new HashMap<String,String>();
-//		for(ParamList param:paramList) {
-//		Uuid_version.put(param.getVersion(),param.getUuid());
-//		}
-//		
-//		
-//		return paramList;
-//	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<BaseEntity> getParamList(String collectionType,String type,String name, String userName, String startDate,
 			String endDate, String tags, String active, String uuid, String version, String published) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -1570,43 +1346,6 @@ public class MetadataServiceImpl {
 		}
 		return plHolderList;
 	}
-	
-	/********************** UNUSED 
-	 * @param algoClass **********************/
-//	private List<ParamList> getChilds(String parentPLUuid, String parentPLVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//		Query query = new Query();
-//		query.fields().include("uuid");
-//		query.fields().include("version");
-//		query.fields().include("actuve");
-//		query.fields().include("name");
-//		query.fields().include("appInfo");
-//		query.fields().include("createdBy");
-//		query.fields().include("createdOn");
-//		query.fields().include("desc");
-//		query.fields().include("tags");
-//		query.fields().include("published");
-//		query.fields().include("templateFlg");
-//		query.fields().include("templateInfo");
-//		query.fields().include("params");
-//		query.fields().include("paramListType");
-//		
-//		query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
-//		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
-//		
-//		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
-//		
-//		List<ParamList> latestParamList = new ArrayList<>();
-//		Set<String> uuidSet = new HashSet<>();
-//		for(ParamList paramList : paramLists) {
-//			if(!uuidSet.contains(paramList.getUuid())) {
-//				ParamList latestPL = (ParamList) commonServiceImpl.getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
-//				latestParamList.add(latestPL);
-//				uuidSet.add(paramList.getUuid());
-//			}
-//		}
-//		return latestParamList;
-//	}
-	
 
 	public List<ParamMap> getParamMap(ExecParams execParams, String trainUuid, String trainVersion, Object algoClass) throws Exception{
 		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());		
@@ -2076,22 +1815,7 @@ public class MetadataServiceImpl {
 		return baseEntityStatusList;
 	}
 
-	/********************** UNUSED **********************/
-	/*public List<String> getFileDetailsByDatasource(String datasourceUuid) throws JsonProcessingException {
-		Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(datasourceUuid, MetaType.datasource.toString());
-		File folder = new File(datasource.getPath());
-		File[] listOfFiles = folder.listFiles();
-		List<String> fileNameList = new ArrayList<String>();
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
-				fileNameList.add(fileName);
-			} else if (listOfFiles[i].isDirectory()) {
-				logger.info("Directory " + listOfFiles[i].getName());
-			}
-		}		
-		return fileNameList;
-	}*/
+	
 	
 	public List<BaseEntity> getDatapodByDatasource(String datasourceUuid) {		
 		MatchOperation filter = match(new Criteria("datasource.ref.uuid").is(datasourceUuid));
@@ -2486,9 +2210,7 @@ public class MetadataServiceImpl {
 		File destServer = new File(locationServer);
 		File destUi = new File(locationUi);
 
-		if (uuid != null && !uuid.isEmpty()) {
-
-			uploadExec.setName(filename1);
+            uploadExec.setName(filename1);
 			uploadExec.setLocation(locationServer);
 			uploadExec.setFileName(originalFileName);
 			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
@@ -2505,27 +2227,42 @@ public class MetadataServiceImpl {
 			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
 					Status.Stage.COMPLETED);
 
-		} else {
-
-			uploadExec.setName(filename1);
-			uploadExec.setLocation(locationServer);
-			uploadExec.setFileName(originalFileName);
-			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
-			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
-					Status.Stage.RUNNING);
-			File convFile = new File(locationUi);
-		    convFile.createNewFile(); 
-		    FileOutputStream fos = new FileOutputStream(convFile); 
-		    fos.write(multiPartFile.getBytes());
-		    fos.close(); 
-			multiPartFile.transferTo(destServer);
-
-			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
-					Status.Stage.COMPLETED);
-		}
+		
 		fileRefHolder.setRef(metaIdentifier);
 		fileRefHolder.setFileName(fileName_Uuid);
 		return fileRefHolder;
+	}
+	
+	
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+		String uploadFileName = file.getOriginalFilename();
+		FileType type = Helper.getFileType(fileType);
+		String fileLocation = null;
+		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String metaUuid = null;
+		String metaVersion = null;
+		if(fileName == null) {
+			fileName = Helper.getFileCustomNameByFileType(type, extension);
+			String splits[] = fileName.split("_");
+			metaUuid = splits[0];
+			metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
+		} 
+		
+		fileLocation = directoryLocation+"/" + fileName;
+		
+		File scriptFile = new File(fileLocation);
+		file.transferTo(scriptFile);
+		if(metaType==null)
+		{
+			metaType="model";
+		}
+		UploadExec uploadExec=new UploadExec();
+		uploadExec.setFileName(uploadFileName);
+		uploadExec.setBaseEntity();
+		uploadExec.setLocation(fileLocation);
+		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+		return fileName;
 	}
 
 }

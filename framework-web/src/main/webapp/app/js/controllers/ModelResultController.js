@@ -61,6 +61,17 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
 
     };
+
+  $scope.updateStats = function () {
+    CommonService.getMetaStats("trainexec").then(function (response) {
+      if (response.data && response.data.length && response.data.length > 0) {
+        $rootScope.metaStats["trainexec"] = response.data[0];
+      }
+    });
+  }
+
+  $scope.updateStats();
+
     $scope.refresh = function () {
         $scope.searchForm.execname = "";
         //$scope.searchForm.modelTypeObj=""
@@ -253,6 +264,13 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
     $scope.restartExec = function (row, status) {
         $scope.execDetail=row;
         $scope.msg ="Restart";
+        if(row.runMode =="BATCH"){
+            notify.type = 'info',
+            notify.title = 'Info',
+            notify.content ="Please restart using batch module";
+            $scope.$emit('notify', notify); 
+            return false;
+          }
         $('#confModal').modal({
           backdrop: 'static',
           keyboard: false
@@ -708,7 +726,7 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
     $scope.downloadMoldeResult = function () {
         $scope.isDownloadDirective=true;
 		$scope.download.uuid =  $scope.modelDetail.uuid;
-		$scope.download.version = $scope.modelDetailversion;
+		$scope.download.version = $scope.modelDetail.version;
 		$scope.download.type=$stateParams.type;
 		// $('#downloadSample').modal({
 		// 	backdrop: 'static',

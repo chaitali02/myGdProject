@@ -1640,26 +1640,7 @@ public class CommonServiceImpl<T> {
 		String appUuid = getApp().getUuid();
 		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 		List<Attribute> attributes = exec.fetchAttributeList(csvFilePath, parquetDir, false, true, appUuid);
-		/*
-		 * List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath,
-		 * parquetDir, false, true);
-		 */
-		/*
-		 * DataFrame df =
-		 * hiveContext.read().format("com.databricks.spark.csv").option("inferSchema",
-		 * "true") .option("header", "true").load(csvFilePath); df.printSchema();
-		 * StructType st = df.schema(); Seq<StructField> seqFields =
-		 * st.thisCollection(); Iterator<StructField> iter= st.iterator();
-		 * List<Attribute> attributes = new ArrayList<Attribute>(); int i =0;
-		 * while(iter.hasNext()){ StructField sf = iter.next(); Attribute attr = new
-		 * Attribute(); attr.setAttributeId(i++);
-		 * attr.setType(sf.dataType().typeName()); attr.setName(sf.name());
-		 * attr.setDesc(sf.name()); attributes.add(attr);
-		 * 
-		 * }
-		 * 
-		 * logger.info("Length of seq:"+seqFields.length());
-		 */
+		
 		logger.info("Attributes:" + attributes);
 
 		Datapod dp = new Datapod();
@@ -1705,27 +1686,7 @@ public class CommonServiceImpl<T> {
 		String appUuid = getApp().getUuid();
 		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 		List<Attribute> attributes = exec.fetchAttributeList(csvFilePath, parquetDir, false, false, appUuid);
-		/*
-		 * List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath,
-		 * parquetDir, false, false);
-		 */
-
-		/*
-		 * DataFrame df =
-		 * hiveContext.read().format("com.databricks.spark.csv").option("inferSchema",
-		 * "true") .option("header", "true").load(csvFilePath); df.printSchema();
-		 * StructType st = df.schema(); Seq<StructField> seqFields =
-		 * st.thisCollection(); Iterator<StructField> iter= st.iterator();
-		 * List<Attribute> attributes = new ArrayList<Attribute>(); int i =0;
-		 * while(iter.hasNext()){ StructField sf = iter.next(); Attribute attr = new
-		 * Attribute(); attr.setAttributeId(i++);
-		 * attr.setType(sf.dataType().typeName()); attr.setName(sf.name());
-		 * attr.setDesc(sf.name()); attributes.add(attr);
-		 * 
-		 * }
-		 */
-
-		// logger.info("Length of seq:"+seqFields.length());
+		
 		logger.info("Attributes:" + attributes);
 
 		Datapod dp = new Datapod();
@@ -2019,12 +1980,6 @@ public class CommonServiceImpl<T> {
 					paramSet.setParamInfo(paramInfos);
 					object = paramSet;
 				}
-				/*
-				 * if (method.getName().contains("ParamListInfo") &&
-				 * method.getName().startsWith(GET) && (object instanceof ExecParams)) {
-				 * System.out.println(); List<ParamListHolder> paramListInfo =
-				 * (List<ParamListHolder>) method.invoke(object); System.out.println(); }
-				 */
 				if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams))
 						&& method.getName().startsWith(GET)) {
 					if (method.getName().contains("OperatorParams")) {
@@ -2194,17 +2149,6 @@ public class CommonServiceImpl<T> {
 			SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		return getAllByUuid(uuid, type);
 	}
-
-	/*
-	 * public String resolveName(String uuid, String version, MetaType type) throws
-	 * ParseException, java.text.ParseException { List<BaseEntity> baseEntityList =
-	 * null; baseEntityList =
-	 * metadataServiceImpl.getBaseEntityByCriteria(type.toString(), null, null,
-	 * null, null, null, null, uuid, version); if (baseEntityList == null ||
-	 * baseEntityList.isEmpty()) { return null; }
-	 * //logger.info(" Inside resolveName : " + baseEntityList.get(0).getName());
-	 * return baseEntityList.get(0).getName(); }
-	 */
 
 	public String getName(String uuid, String version, MetaType type)
 			throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException,
@@ -2673,16 +2617,7 @@ public class CommonServiceImpl<T> {
 	@SuppressWarnings("unchecked")
 	public T getOneById(String id, String type) throws JsonProcessingException {
 		String appUuid = null;
-		/*
-		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
-		 * (securityServiceImpl.getAppInfo() != null &&
-		 * securityServiceImpl.getAppInfo().getRef() != null) ?
-		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
-		 */
+	
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
 		try {
@@ -2706,16 +2641,7 @@ public class CommonServiceImpl<T> {
 	@SuppressWarnings({ "unchecked", "unused" })
 	public T getOneByUuidAndVersion(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
-		/*
-		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
-		 * (securityServiceImpl.getAppInfo() != null &&
-		 * securityServiceImpl.getAppInfo().getRef() != null) ?
-		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
-		 */
+	
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
 		try {
@@ -2751,16 +2677,7 @@ public class CommonServiceImpl<T> {
 	public T getOneByUuidAndVersion(String uuid, String version, String type, String resolveFlag)
 			throws JsonProcessingException {
 		String appUuid = null;
-		/*
-		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
-		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
-		 * (securityServiceImpl.getAppInfo() != null &&
-		 * securityServiceImpl.getAppInfo().getRef() != null) ?
-		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
-		 */
+		
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
 		try {
@@ -2807,16 +2724,7 @@ public class CommonServiceImpl<T> {
 	public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
 		try {
 			String appUuid = null;
-			/*
-			 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
-			 * (securityServiceImpl.getAppInfo() != null &&
-			 * securityServiceImpl.getAppInfo().getRef() != null) ?
-			 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
-			 */
+			
 			MetaType metaType = Helper.getMetaType(type);
 			Object object = null;
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
@@ -2841,16 +2749,7 @@ public class CommonServiceImpl<T> {
 	public T getLatestByUuid(String uuid, String type, String resolveFlag) throws JsonProcessingException {
 		try {
 			String appUuid = null;
-			/*
-			 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
-			 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
-			 * (securityServiceImpl.getAppInfo() != null &&
-			 * securityServiceImpl.getAppInfo().getRef() != null) ?
-			 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
-			 */
+			
 
 			MetaType metaType = Helper.getMetaType(type);
 			Object object = null;
@@ -2949,15 +2848,11 @@ public class CommonServiceImpl<T> {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, ParseException, JsonProcessingException {
 		String appUuid = null;
-		// if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) &&
-		// !type.equalsIgnoreCase(MetaType.group.toString())
-		// && !type.equalsIgnoreCase(MetaType.role.toString()) &&
-		// !type.equalsIgnoreCase(MetaType.privilege.toString())
-		// && !type.equalsIgnoreCase(MetaType.application.toString()))) {
+		
 		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
-		// }
+		
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if (type == null) {
@@ -2968,23 +2863,16 @@ public class CommonServiceImpl<T> {
 						.getMethod(GET + Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase())))
 						.invoke(this);
 				if (appUuid == null) {
-					// count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
 							null, null, null, null).size();
 
 				}
 
 				else {
-					/*
-					 * Query query = new Query();
-					 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); count =
-					 * mongoTemplate.count(query,
-					 * Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));
-					 */
+					
 
 					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
 							null, null, null, null).size();
-					// count = getAllLatest(mType.toString(), "Y").size();
 				}
 				if (count > 0) {
 					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao,
@@ -3027,11 +2915,7 @@ public class CommonServiceImpl<T> {
 			if (appUuid == null) {
 				count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 			} else {
-				/*
-				 * Query query = new Query();
-				 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); count =
-				 * mongoTemplate.count(query, Helper.getDomainClass(metaType));
-				 */
+				
 				count = metadataServiceImpl
 						.getBaseEntityByCriteria(type, null, null, null, null, null, null, null, null, null).size();
 			}
@@ -3128,12 +3012,7 @@ public class CommonServiceImpl<T> {
 	}
 	
 	private List<Status> setAbortedStatus(List<Status> statusList) {
-		/*
-		 * if (!Helper.getLatestStatus(statusList).equals(new
-		 * Status(Status.Stage.RUNNING, new Date()))) {
-		 * logger.info("Latest Status is not in RUNNING. Exiting..."); return
-		 * statusList; }
-		 */
+		
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) {
 			logger.info("Latest Status is in COMPLETED or KILLED. Exiting...");
@@ -3151,12 +3030,7 @@ public class CommonServiceImpl<T> {
 	}
 
 	private List<Status> setFailedStatus(List<Status> statusList) {
-		/*
-		 * if (!Helper.getLatestStatus(statusList).equals(new
-		 * Status(Status.Stage.RUNNING, new Date()))) {
-		 * logger.info("Latest Status is not in RUNNING. Exiting..."); return
-		 * statusList; }
-		 */
+		
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.ABORTED, new Date()))) {
@@ -3202,60 +3076,7 @@ public class CommonServiceImpl<T> {
 		statusList.add(new Status(Status.Stage.KILLED, new Date()));
 		return statusList;
 	}
-	/**
-	 * Sets status of Meta Exec objects
-	 * 
-	 * @param uuid
-	 * @param version
-	 * @param type
-	 * @param status
-	 * @return
-	 */
-	// public List<Status> setMetaStatus (String uuid, String version, MetaType
-	// metaType, Status.Stage stage) {
-	// Object object = null;
-	// Object iDao = null;
-	// List<Status> statusList = null;
-	// String appUuid = (securityServiceImpl.getAppInfo() != null &&
-	// securityServiceImpl.getAppInfo().getRef() != null)
-	// ? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-	// try {
-	// // Get the object
-	// iDao = this.getClass().getMethod(GET +
-	// Helper.getDaoClass(metaType)).invoke(this);
-	// if (appUuid != null) {
-	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
-	// String.class, String.class).invoke(iDao, appUuid, uuid, version);
-	// } else {
-	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
-	// String.class).invoke(iDao, uuid, version);
-	// }
-	// statusList = (List<Status>)
-	// Helper.getDomainClass(metaType).getMethod(GET+"Status").invoke(object);
-	// } catch(NullPointerException | NoSuchMethodException | IllegalAccessException
-	// | IllegalArgumentException | InvocationTargetException | SecurityException
-	// e){
-	// e.printStackTrace();
-	// }
-	//
-	// switch (stage) {
-	// case PENDING:
-	// statusList = setPENDINGStatus(statusList);
-	// break;
-	// case RUNNING:
-	// statusList = setRUNNINGStatus(statusList);
-	// break;
-	// case FAILED:
-	// statusList = setFailedStatus(statusList);
-	// break;
-	// case COMPLETED:
-	// statusList = setCOMPLETEDStatus(statusList);
-	// break;
-	// default:
-	// break;
-	// }
-	// return statusList;
-	// }
+	
 
 	/**
 	 * Set Meta Status for stage
@@ -3582,15 +3403,6 @@ public class CommonServiceImpl<T> {
 			}
 		}
 	}
-
-	/*
-	 * public String invalidateSession() { String message = null; try{
-	 * SessionCounter.invalidateSessions(); message =
-	 * "Session(s) destroyed successfully."; }catch (NullPointerException e) {
-	 * e.printStackTrace(); return "Can not destroy session(s)."; }catch (Exception
-	 * e) { e.printStackTrace(); return "Can not destroy session(s)."; } return
-	 * message; }
-	 */
 
 	public boolean nonBlockingCompleteTaskThread(List<FutureTask<String>> taskList) {
 		String outputThreadName = null;
@@ -4111,124 +3923,6 @@ public class CommonServiceImpl<T> {
 		return response;
 	}
 
-	/********************** UNUSED **********************/
-//	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
-//			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn, Layout layout) throws Exception {
-//		logger.info("Inside download method....");
-//		
-//		MetaIdentifier dependsOnMI = dependsOn.getRef();
-//		BaseEntity metaObject = (BaseEntity) getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-//		
-//		if(StringUtils.isBlank(format)) {
-//			throw new RuntimeException("Format not provided ...");
-//		}
-//		
-//		format = Helper.mapFileFormat(format);
-//
-//		DownloadExec downloadExec = new DownloadExec();
-//		downloadExec.setBaseEntity();
-//		downloadExec.setDependsOn(dependsOn);
-//		
-//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), metaObject.getUuid(), metaObject.getVersion(), downloadExec.getVersion(), metaObject.getName(), format, true);
-//		String fileName = Helper.getDocumentFileName(metaObject.getName(), downloadExec.getVersion(), format);
-//		
-//		String metObjDirPath = filePathUrl.replaceAll(fileName, "");
-//		
-//		File metObjDocDir = new File(metObjDirPath);
-//		if (!metObjDocDir.exists()) {
-//			metObjDocDir.mkdirs();
-//		}		
-//
-//		downloadExec.setLocation(filePathUrl);
-//		
-//		Workbook workbook = null;
-//		PDDocument doc = null;
-//
-//		Document document = new Document();
-//		document.setLocation(filePathUrl);
-//		document.setHeader("Confidential document");
-//		document.setHeaderAlignment("CENTER");
-//		document.setFooter("All rights reserved");
-//		document.setFooterAlignment("CENTER");
-//		document.setTitle(metaObject.getName());
-//		document.setLayout(layout);
-//		document.setData(results);
-//		document.setMetaObjType(dependsOnMI.getType().toString());
-//		document.setMetExecObject(downloadExec);
-//		document.setDocumentType(format);
-//		document.setName(metaObject.getName());
-//		document.setDescription(!StringUtils.isBlank(metaObject.getDesc()) ? metaObject.getDesc() : "");
-//		document.setParameters("");
-//		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-//		document.setGenerationDate(formatter.format(new Date()));
-//				
-//		File metaObjFile = new File(filePathUrl);
-//		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
-//		
-//		if(!isDocCreated) {
-//			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
-//		}
-//		
-//		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
-//			doc = PDDocument.load(metaObjFile);
-//		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
-//			workbook = 	WorkbookFactory.create(metaObjFile);
-//		}
-//		
-//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
-//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
-//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
-//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
-//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
-//		
-//		save(MetaType.downloadExec.toString(), downloadExec);
-//		
-//		if (response != null) {
-//			try {
-//				ServletOutputStream servletOutputStream = response.getOutputStream();
-//				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
-//					response.setContentType("application/pdf");
-//					response.setHeader("Content-disposition", "attachment");
-//					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
-//							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
-//					doc.save(servletOutputStream);
-//					doc.close();
-//				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
-//					response.setContentType("application/xml");
-//					response.setHeader("Content-disposition", "attachment");
-//					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
-//							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
-//					workbook.write(servletOutputStream);
-//					workbook.close();
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				logger.error("Can not download file.");
-//				response.setStatus(300);
-//				throw new FileNotFoundException("Can not download file.");
-//			}
-//		}
-//
-//		return response;
-//	}
-
-	/*
-	 * public String upload(MultipartFile file, String extension, String fileType,
-	 * String fileName,String uuid,String version,MetaType metaType) throws
-	 * FileNotFoundException, IOException { String uploadFileName =
-	 * file.getOriginalFilename(); FileType type = Helper.getFileType(fileType);
-	 * String fileLocation = null; String directoryLocation =
-	 * Helper.getFileDirectoryByFileType(type); if(fileName == null) { fileName =
-	 * Helper.getFileCustomNameByFileType(type, extension); }
-	 * 
-	 * fileLocation = directoryLocation+"/" + fileName; UploadExec uploadExec=new
-	 * UploadExec(); uploadExec.setFileName(uploadFileName);
-	 * uploadExec.setBaseEntity();
-	 * uploadExec.setLocation(fileLocation+"/"+uploadExec.getUuid()+"_"+uploadExec.
-	 * getVersion()+""); uploadExec.setDependsOn(new MetaIdentifierHolder(new
-	 * MetaIdentifier(metaType,uuid,version))); File scriptFile = new
-	 * File(fileLocation); file.transferTo(scriptFile); return fileName; }
-	 */
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException,
@@ -4983,20 +4677,6 @@ public class CommonServiceImpl<T> {
 		return sourceTableName;
 	}
 	
-//	/**
-//	 * 
-//	 * @param baseExec
-//	 * @param execType
-//	 * @param runMode
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	public String getTableNameForResult(BaseExec baseExec, MetaType execType, RunMode runMode) throws Exception {
-//		// Find datastore 
-//		DataStore datastore = (DataStore) getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), execType.toString(), "N");
-//		return dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
-//	}
-
 	/**
 	 * 
 	 * @param object

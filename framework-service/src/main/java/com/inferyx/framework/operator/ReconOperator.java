@@ -324,34 +324,6 @@ public class ReconOperator {
 		return null;
 	}
 
-	/********************** UNUSED 
-	 * @param runMode TODO
-	 * @throws Exception **********************/
-	/*public Datapod getDatapod(Object object, Recon recon, String attrType) throws JsonProcessingException {
-		Datapod datapod = null;
-		if(object instanceof Relation) {
-			Relation relation = (Relation) object;
-			datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
-		} else if(object instanceof DataSet) {
-			DataSet dataset = (DataSet) object;
-			List<AttributeSource> attributeInfo = dataset.getAttributeInfo();
-			
-			for(AttributeSource attributeSource : attributeInfo) {
-				if(attrType.equalsIgnoreCase("source") && attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getSourceAttr().getAttrId())) {
-					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attributeSource.getSourceAttr().getRef().getUuid(), attributeSource.getSourceAttr().getRef().getVersion(), attributeSource.getSourceAttr().getRef().getType().toString());
-					break;
-				} else if(attrType.equalsIgnoreCase("target") && attributeSource.getAttrSourceId().equalsIgnoreCase(recon.getTargetAttr().getAttrId())) {
-					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attributeSource.getSourceAttr().getRef().getUuid(), attributeSource.getSourceAttr().getRef().getVersion(), attributeSource.getSourceAttr().getRef().getType().toString());
-					break;
-				}				
-			}
-		} else if(object instanceof Rule) {
-			Rule rule = (Rule) object;
-		} else if(object instanceof Datapod) {
-			datapod = (Datapod) object;
-		}
-		return datapod;
-	}*/
 
 	public String generateFilter(String tableName, Recon recon, Object object, List<FilterInfo> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
@@ -398,19 +370,6 @@ public class ReconOperator {
 		return val.toString();
 	}
 
-	/********************** UNUSED **********************/
-//	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
-//			throws Exception {
-//		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
-//			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-//					dagExec.getVersion());
-//		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-//		}
-//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-//				runMode);
-//	}
-	
 	private String caseWrapper(String check, String colName) {
 		StringBuilder caseBuilder = new StringBuilder(CASE_WHEN).append(check).append(THEN).append(colName)
 				.append(BLANK);

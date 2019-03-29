@@ -509,16 +509,6 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
-//	@Override
-//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-//			SecurityException, NullPointerException, ParseException, IOException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 	@Override
 	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		// TODO Auto-generated method stub

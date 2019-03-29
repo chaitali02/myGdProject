@@ -39,11 +39,6 @@ public class BatchTriggerServiceImpl implements Trigger {
 	      this.task = task;
 	}
 	
-/*	public BatchTriggerServiceImpl(TaskScheduler scheduler, Runnable task, BatchSchedulerServiceImpl batchSchedulerServiceImpl) {
-	      this.scheduler = scheduler;
-	      this.task = task;
-	      this.batchSchedulerServiceImpl = batchSchedulerServiceImpl;
-	}*/
 
 	public void setNextExecutionTime(Date nextExecutionTime) throws Exception {
 		logger.info("Setting nextExecutionTime: " + nextExecutionTime);

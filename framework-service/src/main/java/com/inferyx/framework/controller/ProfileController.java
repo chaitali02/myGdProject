@@ -92,7 +92,7 @@ public class ProfileController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		ProfileGroupExec profileGroupExec = profileGroupServiceImpl.create(profileGroupUUID, profileGroupVersion, execParams, null, null, RunMode.ONLINE);
+		ProfileGroupExec profileGroupExec = profileGroupServiceImpl.create(profileGroupUUID, profileGroupVersion, execParams, null, null, null, RunMode.ONLINE);
 		profileGroupExec = (ProfileGroupExec) profileGroupServiceImpl.parse(profileGroupExec.getUuid(), profileGroupExec.getVersion(), null, null, null, null, runMode);
 		return profileGroupServiceImpl.execute(profileGroupUUID, profileGroupVersion, execParams, profileGroupExec, runMode);
 	}
