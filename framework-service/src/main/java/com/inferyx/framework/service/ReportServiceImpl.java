@@ -54,12 +54,14 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Notification;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Alignment;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -266,7 +268,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			filePathList.add(datastore.getLocation());
 			sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
 		}
-		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null);
+		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null,runMode);
 	}
 	
 	public boolean createPDF() {
@@ -587,6 +589,13 @@ public class ReportServiceImpl extends RuleTemplate {
 					document.setParameters(getReportParametrsForDoc(report, reportExec));
 					document.setGenerationDate(report.getCreatedOn());
 					document.setFileName(attachmentName);
+					document.setLogoAlignment(Alignment.RIGHT);
+					document.setTitleAlignment(Alignment.CENTER);
+					
+					Organization organization = commonServiceImpl.getOrgInfoByCurrentApp();
+					document.setOrgName(organization.getName());
+					document.setOrgLogo(organization.getLogoPath());
+					document.setOrgAddress(commonServiceImpl.getOrganizationAddr(organization.getAddress()));
 										
 					boolean isDocCreated = documentGenServiceImpl.createDocument(document);				
 					
@@ -997,7 +1006,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> data = null;
 		try {
-			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null,runMode);	
 		}catch (Exception e) {
 			e.printStackTrace();
 			try {

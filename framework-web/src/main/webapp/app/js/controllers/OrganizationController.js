@@ -36,6 +36,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		$scope.isEdit = true;
 	}
 	$scope.mode = "false";
+	$scope.orgLogChange=false;
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
@@ -148,8 +149,48 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 			mode: 'true'
 		});
 	}
+	window.readLogoURL = function (input) {
+		$scope.orgLogChange=true;
+		$scope.myform.$dirty=true;
+        if (input.files && input.files[0]) {
+            $scope.$apply();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('.log-preview')
+                .attr('src', e.target.result)
+                .show();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+	 
+	$scope.uploadLogo = function (orgJson, upd_tag) {
+        var f = document.getElementById('org_log').files[0];
+        console.log(f.name);
+        var type = f.type.split('/')[1];
+        console.log(type);
+        var fd = new FormData();
+        fd.append('file', f);
+		fd.append('fileName',f.name);
+		OrganizationSerivce.uploadLogo(orgJson.uuid,fd,f.name,"organization")
+		.then(function (response) { onGetUploadLogo(response.data) }, function (response) { onError(response.data) });
+		var onGetUploadLogo = function (response) {
+			orgJson.uuid=response.ref.uuid;
+			orgJson.version=response.ref.version
+			orgJson.logoPath=response.fileName;
+			$scope.submitCall(orgJson,upd_tag);
+		}
+		var onError = function (response) {
+			$scope.dataLoading = false;
+			$scope.iSSubmitEnable = false;
+			notify.type = 'error',
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
+			$scope.$emit('notify', notify);
+		}
 
-
+	}
+	
 	$scope.getAllVersion = function (uuid) {
 		OrganizationSerivce.getAllVersionByUuid(uuid, "organization").then(function (response) { onGetAllVersionByUuid(response.data) });
 		var onGetAllVersionByUuid = function (response) {
@@ -358,7 +399,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		$scope.myform.$dirty = false;
 		$scope.iSSubmitEnable = true;
 		var orgJson = {};
-		orgJson.uuid = $scope.organizationData.uuid
+		orgJson.uuid = $scope.organizationData.uuid || ""
 		orgJson.name = $scope.organizationData.name
 		orgJson.desc = $scope.organizationData.desc
 		orgJson.active = $scope.organizationData.active;
@@ -368,7 +409,6 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 
 		var tagArray = [];
 		var upd_tag = "N";
-		debugger
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
 				tagArray[counttag] = $scope.tags[counttag].text;
@@ -433,6 +473,15 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 
 		orgJson.address = addressArrayTable;
 		console.log(JSON.stringify(orgJson));
+		if($scope.orgLogChange==true){
+			$scope.uploadLogo(orgJson, upd_tag);
+		}
+		else{
+			$scope.submitCall(orgJson, upd_tag);
+	    }
+	}/*End Submit*/
+
+    $scope.submitCall=function(orgJson, upd_tag){
 		OrganizationSerivce.submit(orgJson, 'organization', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
@@ -451,9 +500,7 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
-	}/*End Submit*/
-
-
+	}
 
 
 	$scope.close = function () {

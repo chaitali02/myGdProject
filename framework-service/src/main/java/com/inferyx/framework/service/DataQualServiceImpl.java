@@ -168,10 +168,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
-			List<String> datapodList, DagExec dagExec) throws Exception {
+			List<String> datapodList, DagExec dagExec ,RunMode mode) throws Exception {
 		try {
 			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null,
-					refKeyMap, datapodList, dagExec, null);
+					refKeyMap, datapodList, dagExec, mode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -304,7 +304,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 					dqExec.getResult().getRef().getVersion());
 
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order, dqExec.getVersion());
+					offset, limit, sortBy, order, dqExec.getVersion(),runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -623,7 +623,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 //			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
 
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order, dqExec.getVersion());
+					offset, limit, sortBy, order, dqExec.getVersion(),runMode);
 //			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
 //
 //			String tableName = getTableName(summaryDpDs, summaryDp, dqExec, runMode);
@@ -684,7 +684,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 //			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
 
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order, dqExec.getVersion());
+					offset, limit, sortBy, order, dqExec.getVersion(),runMode);
 //			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
 //
 //			String tableName = getTableName(detailsDpDs, detailsDp, dqExec, runMode);

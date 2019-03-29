@@ -12,9 +12,12 @@ package com.inferyx.framework.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.RunMode;
+
 @Document(collection = "dagexec")
 public class DagExec extends Dag {
 	
+	RunMode runMode; 
 	public DagExec(){} 
 	public DagExec(Dag dag) {
 		super(dag);
@@ -27,6 +30,13 @@ public class DagExec extends Dag {
 	MetaIdentifier dependsOn;
 	
 	private ExecParams execParams;
+
+	public RunMode getRunMode() {
+		return runMode;
+	}
+	public void setRunMode(RunMode runMode) {
+		this.runMode = runMode;
+	}
 	
 	public MetaIdentifier getDependsOn() {
 		return dependsOn;

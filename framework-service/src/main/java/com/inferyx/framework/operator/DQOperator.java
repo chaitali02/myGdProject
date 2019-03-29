@@ -80,6 +80,8 @@ public class DQOperator implements IParsable {
 	private String ON = " ON ";
 	private String DOT = ".";
 	private String IS_NOT_NULL = " IS NOT NULL ";
+	
+	
 	private String NULL_CHECK_PASS = "null_check_pass";
 	private String VALUE_CHECK_PASS = "value_check_pass";
 	private String RANGE_CHECK_PASS = "range_check_pass";
@@ -97,7 +99,7 @@ public class DQOperator implements IParsable {
 	private String CASE_CHECK_PASS = "case_check_pass";
 	
 	private String NULL_CHECK_P = "nullCheck_p";
-	private String VALUE_CHECK_P= "valueCheck_p";
+	private String VALUE_CHECK_P = "valueCheck_p";
 	private String RANGE_CHECK_P = "rangeCheck_p";
 	private String DATATYPE_CHECK_P = "dataTypeCheck_p";
 	private String FORMAT_CHECK_P = "formatCheck_p";
@@ -110,9 +112,23 @@ public class DQOperator implements IParsable {
 	private String EXPRESSION_CHECK_P = "expressionCheck_p";
 	private String ALL_CHECK_P = "allCheck_p";
 	private String CASE_CHECK_P = "caseCheck_p";
-	
+
+	private String NULL_PASS_COUNT = "null_pass_count";
+	private String VALUE_PASS_COUNT = "value_pass_count";
+	private String RANGE_PASS_COUNT = "range_pass_count";
+	private String DATATYPE_PASS_COUNT = "datatype_pass_count";
+	private String FORMAT_PASS_COUNT = "format_pass_count";
+	private String LENGTH_PASS_COUNT = "length_pass_count";
+	private String REFINT_PASS_COUNT = "refint_pass_count";
+	private String DUP_PASS_COUNT = "dup_pass_count";
+	private String CUSTOM_PASS_COUNT = "custom_pass_count";
+	private String DOMAIN_PASS_COUNT = "domain_pass_count";
+	private String BLANK_PASS_COUNT = "blankspace_pass_count";
+	private String EXPRESSION_PASS_COUNT = "expression_pass_count";
+	private String CASE_PASS_COUNT = "case_pass_count";
+
 	private String NULL_CHECK_F = "nullCheck_f";
-	private String VALUE_CHECK_F= "valueCheck_f";
+	private String VALUE_CHECK_F = "valueCheck_f";
 	private String RANGE_CHECK_F = "rangeCheck_f";
 	private String DATATYPE_CHECK_F = "dataTypeCheck_f";
 	private String FORMAT_CHECK_F = "formatCheck_f";
@@ -125,6 +141,35 @@ public class DQOperator implements IParsable {
 	private String EXPRESSION_CHECK_F = "expressionCheck_f";
 	private String ALL_CHECK_F = "allCheck_f";
 	private String CASE_CHECK_F = "caseCheck_f";
+
+	private String NULL_FAIL_COUNT = "null_fail_count";
+	private String VALUE_FAIL_COUNT = "value_fail_count";
+	private String RANGE_FAIL_COUNT = "range_fail_count";
+	private String DATATYPE_FAIL_COUNT = "datatype_fail_count";
+	private String FORMAT_FAIL_COUNT = "format_fail_count";
+	private String LENGTH_FAIL_COUNT = "length_fail_count";
+	private String REFINT_FAIL_COUNT = "refint_fail_count";
+	private String DUP_FAIL_COUNT = "dup_fail_count";
+	private String CUSTOM_FAIL_COUNT = "custom_fail_count";
+	private String DOMAIN_FAIL_COUNT = "domain_fail_count";
+	private String BLANK_FAIL_COUNT = "blankspace_fail_count";
+	private String EXPRESSION_FAIL_COUNT = "expression_fail_count";
+	private String CASE_FAIL_COUNT = "case_fail_count";
+	
+	private String NULL_SCORE = "null_score";
+	private String VALUE_SCORE= "value_score";
+	private String RANGE_SCORE = "range_score";
+	private String DATATYPE_SCORE = "dataType_score";
+	private String FORMAT_SCORE = "format_score";
+	private String LENGTH_SCORE = "length_score";
+	private String REFINT_SCORE = "refint_score";
+	private String DUP_SCORE = "dup_score";
+	private String CUSTOM_SCORE = "custom_score";
+	private String DOMAIN_SCORE = "domain_score";
+	private String BLANK_SPACE_SCORE = "blankspace_score";
+	private String EXPRESSION_SCORE = "expression_score";
+	private String ALL_SCORE = "all_score";
+	private String CASE_SCORE = "case_score";
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
@@ -801,6 +846,60 @@ public class DQOperator implements IParsable {
 				  .append(DATAPODUUID).append(COMMA)
 				  .append(DATAPODVERSION).append(COMMA)
 				  .append(DATAPOD_NAME).append(COMMA)
+				  .append(NULL_PASS_COUNT).append(COMMA)
+				  .append(NULL_FAIL_COUNT).append(COMMA)				  
+				  .append(NULL_SCORE).append(COMMA)
+				  
+				  .append(VALUE_PASS_COUNT).append(COMMA)
+				  .append(VALUE_FAIL_COUNT).append(COMMA)
+				  .append(VALUE_SCORE).append(COMMA)
+
+				  .append(RANGE_PASS_COUNT).append(COMMA)
+				  .append(RANGE_FAIL_COUNT).append(COMMA)
+				  .append(RANGE_SCORE).append(COMMA)
+
+				  .append(DATATYPE_PASS_COUNT).append(COMMA)
+				  .append(DATATYPE_FAIL_COUNT).append(COMMA)
+				  .append(DATATYPE_SCORE).append(COMMA)
+
+				  .append(FORMAT_PASS_COUNT).append(COMMA)
+				  .append(FORMAT_FAIL_COUNT).append(COMMA)
+				  .append(FORMAT_SCORE).append(COMMA)
+
+				  .append(LENGTH_PASS_COUNT).append(COMMA)
+				  .append(LENGTH_FAIL_COUNT).append(COMMA)
+				  .append(LENGTH_SCORE).append(COMMA)
+
+				  .append(REFINT_PASS_COUNT).append(COMMA)
+				  .append(REFINT_FAIL_COUNT).append(COMMA)
+				  .append(REFINT_SCORE).append(COMMA)
+
+				  .append(DUP_PASS_COUNT).append(COMMA)
+				  .append(DUP_FAIL_COUNT).append(COMMA)
+				  .append(DUP_SCORE).append(COMMA)
+
+				  .append(CUSTOM_PASS_COUNT).append(COMMA)
+				  .append(CUSTOM_FAIL_COUNT).append(COMMA)
+				  .append(CUSTOM_SCORE).append(COMMA)
+
+				  .append(DOMAIN_PASS_COUNT).append(COMMA)
+				  .append(DOMAIN_FAIL_COUNT).append(COMMA)
+				  .append(DOMAIN_SCORE).append(COMMA)
+
+				  .append(BLANK_PASS_COUNT).append(COMMA)
+				  .append(BLANK_FAIL_COUNT).append(COMMA)
+				  .append(BLANK_SPACE_SCORE).append(COMMA)
+
+				  .append(EXPRESSION_PASS_COUNT).append(COMMA)
+				  .append(EXPRESSION_FAIL_COUNT).append(COMMA)
+				  .append(EXPRESSION_SCORE).append(COMMA)
+
+				  .append(CASE_PASS_COUNT).append(COMMA)
+				  .append(CASE_FAIL_COUNT).append(COMMA)
+				  .append(CASE_SCORE).append(COMMA)
+
+				  				  
+				  
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(TOTAL_FAIL_COUNT).append(COMMA)
@@ -823,6 +922,75 @@ public class DQOperator implements IParsable {
 				  .append(DATAPODUUID).append(COMMA)
 				  .append(DATAPODVERSION).append(COMMA)
 				  .append(DATAPOD_NAME).append(COMMA)
+				// added count
+				.append(NULL_PASS_COUNT).append(COMMA).append(NULL_FAIL_COUNT).append(COMMA)
+				// ( null_pass_count / total_row_count ) * 100 AS null_score
+				.append(BRACKET_OPEN).append(NULL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(NULL_SCORE).append(COMMA)
+
+				.append(VALUE_PASS_COUNT).append(COMMA).append(VALUE_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(VALUE_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(VALUE_SCORE).append(COMMA)
+
+				.append(RANGE_PASS_COUNT).append(COMMA).append(RANGE_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(RANGE_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(RANGE_SCORE).append(COMMA)
+
+				.append(DATATYPE_PASS_COUNT).append(COMMA).append(DATATYPE_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(DATATYPE_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(DATATYPE_SCORE)
+				.append(COMMA)
+
+				.append(FORMAT_PASS_COUNT).append(COMMA).append(FORMAT_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(FORMAT_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(FORMAT_SCORE).append(COMMA)
+
+				.append(LENGTH_PASS_COUNT).append(COMMA).append(LENGTH_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(LENGTH_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(LENGTH_SCORE).append(COMMA)
+
+				.append(REFINT_PASS_COUNT).append(COMMA).append(REFINT_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(REFINT_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(REFINT_SCORE).append(COMMA)
+
+				.append(DUP_PASS_COUNT).append(COMMA).append(DUP_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(DUP_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(DUP_SCORE).append(COMMA)
+
+				.append(CUSTOM_PASS_COUNT).append(COMMA).append(CUSTOM_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(CUSTOM_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(CUSTOM_SCORE).append(COMMA)
+
+				.append(DOMAIN_PASS_COUNT).append(COMMA).append(DOMAIN_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(DOMAIN_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(DOMAIN_SCORE).append(COMMA)
+
+				.append(BLANK_PASS_COUNT).append(COMMA).append(BLANK_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(BLANK_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(BLANK_SPACE_SCORE)
+				.append(COMMA)
+
+				.append(EXPRESSION_PASS_COUNT).append(COMMA).append(EXPRESSION_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(EXPRESSION_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(EXPRESSION_SCORE)
+				.append(COMMA)
+
+				.append(CASE_PASS_COUNT).append(COMMA).append(CASE_FAIL_COUNT).append(COMMA)
+
+				.append(BRACKET_OPEN).append(CASE_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(CASE_SCORE).append(COMMA)
+
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
@@ -942,7 +1110,34 @@ public class DQOperator implements IParsable {
 				  							.append(DATAPODVERSION).append(COMMA)
 				  							.append(DATAPOD_NAME).append(COMMA);
 
-		sql = sql.append(COUNT).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
+		sql = sql.append(SUM).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(NULL_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(NULL_CHECK_F).append(BRACKET_CLOSE).append(AS).append(NULL_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(VALUE_CHECK_P).append(BRACKET_CLOSE).append(AS).append(VALUE_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(VALUE_CHECK_F).append(BRACKET_CLOSE).append(AS).append(VALUE_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(RANGE_CHECK_P).append(BRACKET_CLOSE).append(AS).append(RANGE_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(RANGE_CHECK_F).append(BRACKET_CLOSE).append(AS).append(RANGE_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DATATYPE_CHECK_P).append(BRACKET_CLOSE).append(AS).append(DATATYPE_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DATATYPE_CHECK_F).append(BRACKET_CLOSE).append(AS).append(DATATYPE_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(FORMAT_CHECK_P).append(BRACKET_CLOSE).append(AS).append(FORMAT_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(FORMAT_CHECK_F).append(BRACKET_CLOSE).append(AS).append(FORMAT_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(LENGTH_CHECK_P).append(BRACKET_CLOSE).append(AS).append(LENGTH_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(LENGTH_CHECK_F).append(BRACKET_CLOSE).append(AS).append(LENGTH_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(REFINT_CHECK_P).append(BRACKET_CLOSE).append(AS).append(REFINT_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(REFINT_CHECK_F).append(BRACKET_CLOSE).append(AS).append(REFINT_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DUP_CHECK_P).append(BRACKET_CLOSE).append(AS).append(DUP_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DUP_CHECK_F).append(BRACKET_CLOSE).append(AS).append(DUP_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(CUSTOM_CHECK_P).append(BRACKET_CLOSE).append(AS).append(CUSTOM_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(CUSTOM_CHECK_F).append(BRACKET_CLOSE).append(AS).append(CUSTOM_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DOMAIN_CHECK_P).append(BRACKET_CLOSE).append(AS).append(DOMAIN_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(DOMAIN_CHECK_F).append(BRACKET_CLOSE).append(AS).append(DOMAIN_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(BLANK_SPACE_CHECK_P).append(BRACKET_CLOSE).append(AS).append(BLANK_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(BLANK_SPACE_CHECK_F).append(BRACKET_CLOSE).append(AS).append(BLANK_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(EXPRESSION_CHECK_P).append(BRACKET_CLOSE).append(AS).append(EXPRESSION_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(EXPRESSION_CHECK_F).append(BRACKET_CLOSE).append(AS).append(EXPRESSION_FAIL_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(CASE_CHECK_P).append(BRACKET_CLOSE).append(AS).append(CASE_PASS_COUNT).append(COMMA)
+				 .append(SUM).append(BRACKET_OPEN).append(CASE_CHECK_F).append(BRACKET_CLOSE).append(AS).append(CASE_FAIL_COUNT).append(COMMA)
+			
+				.append(COUNT).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
 					.append(SUM).append(BRACKET_OPEN).append(CASE_WHEN).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_Y).append("THEN 1 ELSE 0 END").append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
 					.append(VERSION).append(FROM).append(BRACKET_OPEN)
 					.append(summarySql1).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);

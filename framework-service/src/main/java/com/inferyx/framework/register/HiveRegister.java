@@ -139,7 +139,7 @@ public class HiveRegister extends DataSourceRegister {
 					datastore.setDesc(datapod.getDesc());
 					datastore.setNumRows(0);
 					datastore.setCreatedBy(datapod.getCreatedBy());
-					datastore.setPersistMode(PersistMode.MEMORY_ONLY.toString());
+					datastore.setPersistMode(PersistMode.DISK_ONLY.toString());
 					holder.setRef(datastoreRef);
 					datastore.setMetaId(holder);
 					datastore.setBaseEntity();

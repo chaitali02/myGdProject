@@ -1,6 +1,6 @@
 {
   "uuid": "34d74a4a-7f46-4e5e-b6f1-49dac7da818c",
-  "version": "1552426412",
+  "version": "1553795109",
   "name": "Data Quality Summary",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Mar 12 17:33:32 EDT 2019",
+  "createdOn": "Thu Mar 28 13:45:09 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,6 +32,96 @@
   "sectionInfo": [
     {
       "sectionId": null,
+      "name": "Accuracy",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "c374e454-075b-4749-8098-247d2fa688fe",
+          "version": null,
+          "name": "viz_dq_status_accuracy"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Completeness",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "d3d2cec5-8f75-498e-9f40-349f8143324d",
+          "version": null,
+          "name": "viz_dq_status_completeness"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Conformity",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "dfca1a59-3d83-45cc-b244-c844ba1f8eb2",
+          "version": null,
+          "name": "viz_dq_status_conformity"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 3
+    },
+    {
+      "sectionId": null,
+      "name": "Consistency",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "99352746-7b88-4f16-86ba-c9554336409c",
+          "version": null,
+          "name": "viz_dq_status_consistency"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Integrity",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "bcd66760-4cd1-4813-833c-5e3e3d250a4c",
+          "version": null,
+          "name": "viz_dq_status_integrity"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Timeliness",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "7bf6e600-84b6-452e-8a29-6097838218fa",
+          "version": null,
+          "name": "viz_dq_status_timeliness"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 3
+    },
+    {
+      "sectionId": null,
       "name": "Total Checks By Dimension",
       "vizpodInfo": {
         "ref": {
@@ -42,7 +132,7 @@
         },
         "value": null
       },
-      "rowNo": 1,
+      "rowNo": 3,
       "colNo": 1
     },
     {
@@ -57,7 +147,7 @@
         },
         "value": null
       },
-      "rowNo": 1,
+      "rowNo": 3,
       "colNo": 2
     },
     {
@@ -72,7 +162,7 @@
         },
         "value": null
       },
-      "rowNo": 1,
+      "rowNo": 3,
       "colNo": 3
     },
     {
@@ -87,7 +177,7 @@
         },
         "value": null
       },
-      "rowNo": 2,
+      "rowNo": 4,
       "colNo": 1
     },
     {
@@ -102,7 +192,7 @@
         },
         "value": null
       },
-      "rowNo": 2,
+      "rowNo": 4,
       "colNo": 2
     },
     {
@@ -117,7 +207,7 @@
         },
         "value": null
       },
-      "rowNo": 2,
+      "rowNo": 4,
       "colNo": 3
     }
   ],
@@ -126,7 +216,7 @@
       "type": "datapod",
       "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
       "version": null,
-      "name": "dq_rule_dashboard"
+      "name": "dq_result_dashboard"
     },
     "value": null
   },
@@ -136,7 +226,7 @@
         "type": "datapod",
         "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
         "version": null,
-        "name": "dq_rule_dashboard"
+        "name": "dq_result_dashboard"
       },
       "value": null,
       "attrId": "2",
@@ -150,7 +240,7 @@
         "type": "datapod",
         "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
         "version": null,
-        "name": "dq_rule_dashboard"
+        "name": "dq_result_dashboard"
       },
       "value": null,
       "attrId": "5",
@@ -164,7 +254,7 @@
         "type": "datapod",
         "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
         "version": null,
-        "name": "dq_rule_dashboard"
+        "name": "dq_result_dashboard"
       },
       "value": null,
       "attrId": "14",

@@ -1599,17 +1599,17 @@ public class RegisterService {
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode) throws Exception {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString(), "N");
 		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-			return csvRegister.register(uuid, version, registryList, RunMode.ONLINE);
+			return csvRegister.register(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-			return hiveRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+			return hiveRegister.registerDB(uuid, version, registryList, runMode);
 		}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 			return impalaRegister.registerDB(uuid, version, registryList);
 		}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			return mysqlRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			return oracleRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+			return oracleRegister.registerDB(uuid, version, registryList, runMode);
 		} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-			return postGresRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+			return postGresRegister.registerDB(uuid, version, registryList, runMode);
 		}
 		return registryList;
 	}

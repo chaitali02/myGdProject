@@ -254,7 +254,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 			ExecParams execParams,
 			List<String> datapodList, 
 			BaseRuleGroupExec baseGroupExec, 
-			DagExec dagExec,RunMode runmode) throws Exception {
+			DagExec dagExec,RunMode runMode) throws Exception {
 		BaseRuleGroup baseGroup = null;
 		MetaIdentifier ruleGroupExecMeta = null;
 		List<MetaIdentifierHolder> appInfo = null;
@@ -268,6 +268,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 			baseGroupExec.setBaseEntity();
 			appInfo = baseGroup.getAppInfo();
 			baseGroupExec.setAppInfo(appInfo);
+			baseGroupExec.setRunMode(runMode);
 			baseGroupExec.setName(baseGroup.getName());
 			ruleGroupRef = new MetaIdentifierHolder(new MetaIdentifier(groupType, baseGroup.getUuid(), baseGroup.getVersion()));
 			baseGroupExec.setDependsOn(ruleGroupRef);
@@ -329,6 +330,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 					baseRuleExec = metaExecFactory.getRuleExec(ruleExecType);
 					baseRuleExec.setDependsOn(ruleMeta);
 					baseRuleExec.setName(ruleMeta.getRef().getName());
+					baseRuleExec.setRunMode(runMode);					
 					baseRuleExec.setBaseEntity();
 				}
 				
@@ -342,7 +344,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 				ruleExecList.add(baseRuleExec);
 				MetaIdentifierHolder ruleRef = new MetaIdentifierHolder(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));			
 				baseGroupExec.getExecList().add(ruleRef);
-				baseRuleExec = baseRuleService.create(ruleMeta.getRef().getUuid(), ruleMeta.getRef().getVersion(), ruleType, ruleExecType, baseRuleExec, refKeyMap, datapodList, dagExec, null);
+				baseRuleExec = baseRuleService.create(ruleMeta.getRef().getUuid(), ruleMeta.getRef().getVersion(), ruleType, ruleExecType, baseRuleExec, refKeyMap, datapodList, dagExec, runMode);
 			} catch (Exception e) {
 				synchronized (baseGroupExec.getUuid()) {
 					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.FAILED);

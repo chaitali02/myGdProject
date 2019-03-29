@@ -162,6 +162,7 @@ import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
+import com.inferyx.framework.domain.Address;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -512,6 +513,9 @@ public class CommonServiceImpl<T> {
 	private IAttributeDomainDao iAttributeDomainDao;	
 	@Autowired
 	private PropertiesFactoryBean frameworkProperties;
+	@Autowired
+	UploadServiceImpl uploadServiceImpl;
+	
 	
 	
 	public IngestServiceImpl getIngestServiceImpl() {
@@ -4341,9 +4345,7 @@ public class CommonServiceImpl<T> {
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
 			String type, String uuid, String version, String action, String dataSourceUuid)
-			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
-			NullPointerException {
+			throws Exception {
 		String directoryPathByDataSource = null;
 		if (dataSourceUuid != null) {
 			Datasource datasource = (Datasource) getOneByUuidAndVersion(dataSourceUuid, null,
@@ -4353,12 +4355,17 @@ public class CommonServiceImpl<T> {
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
-				UploadExec uploadExec = new UploadExec();
+		/*		UploadExec uploadExec = new UploadExec();
 				uploadExec.setBaseEntity();
 				Status status = new Status(Status.Stage.PENDING, new Date());
 				List<Status> statusList = new ArrayList<>();
 				statusList.add(status);
-				uploadExec.setStatusList(statusList);
+				uploadExec.setStatusList(statusList);*/
+				
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(type), version, uuid),
+						null);
+				UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
+
 				FileType type1 = Helper.getFileType(fileType);
 				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
 				String originalFileName = multipartFile.getOriginalFilename();
@@ -4405,19 +4412,17 @@ public class CommonServiceImpl<T> {
 							(message != null) ? message : "Requested " + originalFileName + " file not found!!");
 
 				} else {
-					status = new Status(Status.Stage.RUNNING, new Date());
-					statusList.add(status);
-					uploadExec.setStatusList(statusList);
+					uploadExec.setName(filename1);
+					uploadExec.setLocation(location);
+					uploadExec.setFileName(originalFileName);
+					uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
 					multipartFile.transferTo(dest);
 
 				}
 
-				uploadExec.setName(filename1);
-				uploadExec.setLocation(location);
-				uploadExec.setFileName(originalFileName);
-				status = new Status(Status.Stage.COMPLETED, new Date());
-				statusList.add(status);
-				uploadExec.setStatusList(statusList);
+			
+				uploadExec = (UploadExec) setMetaStatus(uploadExec, MetaType.uploadExec,
+						Status.Stage.COMPLETED);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
 					// ObjectMapper mapper = new ObjectMapper();
@@ -5184,11 +5189,25 @@ public class CommonServiceImpl<T> {
 		return helper.getExecutorContext(getDatasourceByApp().getType());
 	}
 
+	public ExecContext getExecContext() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getExecutorContext(getDatasourceByApp().getType());
+	}
+	
+	public StorageContext getStorageContext(DataStore datastore) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if (datastore.getMetaId().getRef().getType().equals(MetaType.datapod)) {
+			Datapod datapod = (Datapod) getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
+			Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+			return helper.getStorageContext(datasource.getType());
+		}
+		return StorageContext.FILE;
+	}
+	
 	public StorageContext getStorageContext(MetaIdentifier datapodKey) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datapod datapod = (Datapod) getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), datapodKey.getType().toString());
 		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 		return helper.getStorageContext(datasource.getType());
 	}
+
 	public StorageContext getStorageContext(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 		return helper.getStorageContext(datasource.getType());
@@ -5220,4 +5239,48 @@ public class CommonServiceImpl<T> {
 				orgInfoMI.getType().toString(), "N");
 	}
 
+	/**
+	 * @param address
+	 * @return
+	 */
+	public String getOrganizationAddr(List<Address> address) {
+		if(address != null && !address.isEmpty()) {
+			StringBuffer addressBuff = new StringBuffer();
+			int i = 1;
+			for(Address address2 : address) {
+				addressBuff.append("Address "+i).append(": ");
+				addressBuff.append(address2.getAddressLine1());
+				addressBuff.append(address2.getAddressLine2());
+				addressBuff.append(address2.getCity());
+				addressBuff.append(address2.getState());
+				addressBuff.append(address2.getCountry());
+				addressBuff.append(" - ").append(address2.getZipcode());
+				addressBuff.append(".");
+				i++;
+			}
+			return addressBuff.toString();
+		} else {
+			return "";
+		}
+	}
+
+	
+	public Boolean checkTypeVersion(String uuid) throws JsonProcessingException {
+		Datapod datapod = (Datapod) getOneByUuidAndVersion(uuid, null, MetaType.datapod.toString());
+		List<Attribute> attributes = datapod.getAttributes();
+		Boolean flag = false;
+		/*
+		 * attributes.stream().forEach(attr -> { if
+		 * (attr.getName().equalsIgnoreCase("version")) { flag=true; } else {
+		 * flag=false; } });
+		 */
+		for (Attribute attr : attributes) {
+			if (attr.getName().equalsIgnoreCase("version"))
+				return true;
+			else
+				flag = false;
+		}
+
+		return flag;
+	}
 }

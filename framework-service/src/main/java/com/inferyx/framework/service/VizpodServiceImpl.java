@@ -915,7 +915,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				filePathList.add(datastore.getLocation());
 				sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
 			}
-			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null,runMode);
 		}
 
 		

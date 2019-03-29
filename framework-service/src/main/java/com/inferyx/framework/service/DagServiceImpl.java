@@ -318,7 +318,7 @@ public class DagServiceImpl {
 				for (ParamSetHolder paramSetHolder : execParams.getParamInfo()) {
 					execParams.setCurrParamSet(paramSetHolder);
 					// Create object
-					dagExec = createDAGExec(dag, execParams);
+					dagExec = createDAGExec(dag, execParams, runMode);
 					dagExec.setExecParams(execParams); // Set execParams in DAGExec
 					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 					//dagExecServiceImpl.save(dagExec);
@@ -334,7 +334,7 @@ public class DagServiceImpl {
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					execParams.setParamListHolder(paramListHolder);
 					// Create object
-					dagExec = createDAGExec(dag, execParams);
+					dagExec = createDAGExec(dag, execParams, runMode);
 					dagExec.setExecParams(execParams); // Set execParams in DAGExec
 					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 					//dagExecServiceImpl.save(dagExec);
@@ -393,7 +393,7 @@ public class DagServiceImpl {
 		if (dagExec == null) {
 			// Create object
 			long startTime = System.currentTimeMillis();
-			dagExec = createDAGExec(dag, execParams);
+			dagExec = createDAGExec(dag, execParams, runMode);
 			logger.info("Time taken to create dag exec : " + ((System.currentTimeMillis() - startTime)/1000));
 			commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 			//dagExecServiceImpl.save(dagExec);
@@ -447,12 +447,14 @@ public class DagServiceImpl {
 	}
 	
 
-	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws Exception {
+	public DagExec createDAGExec(Dag dag, ExecParams execParams, RunMode runMode) throws Exception {
 		DagExec dagExec = new DagExec(dag);
 		dagExec.setExecParams(execParams);
 		dagExec.setName(dag.getName());
 		dagExec.setBaseEntity();
+		dagExec.setRunMode(runMode);
 		dagExec.setExecCreated("N");
+		dagExec.setAppInfo(dag.getAppInfo());
 		dagExec.setStatusList(DagExecUtil.createInitialStatus(dagExec.getStatusList()));
 		commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 		List<String> datapodList = new ArrayList<>();
@@ -460,10 +462,9 @@ public class DagServiceImpl {
 		// Loop in Stages
 		List<Stage> dagStages = dag.getStages();
 		List<String> dependsOn = dagStages.get(0).getDependsOn();
-		List<StageExec> dagExecStages = createDagExecStages(dagExec, datapodList, dagStages, dependsOn, dagRef, execParams);
+		List<StageExec> dagExecStages = createDagExecStages(dagExec, datapodList, dagStages, dependsOn, dagRef, execParams, runMode);
 		dagExec.setStages(DagExecUtil.convertToStageList(dagExecStages));
 		// dagExec.setName("sys_" + dagExec.getUuid());
-		dagExec.setAppInfo(dag.getAppInfo());
 		dagExec.setExecCreated("Y");
 		// Set DagExec Status
 		return dagExec;
@@ -475,7 +476,7 @@ public class DagServiceImpl {
 	 * dagexec The task list for each stage is prepared by a calling function
 	 */
 	private List<StageExec> createDagExecStages(DagExec dagExec, List<String> datapodList, List<Stage> dagStages, List<String> dependson, MetaIdentifier dagRef,
-			ExecParams execParams) throws Exception {
+			ExecParams execParams,RunMode runMode) throws Exception {
 		List<StageExec> stageExecs = new ArrayList<>();
 		List<String> activeStages = null;
 		if (execParams != null) {
@@ -499,7 +500,7 @@ public class DagServiceImpl {
 			// Add tasks for current stage
 			List<Task> dagTasks = indvStg.getTasks();
 			List<TaskExec> dagExectasks = createDagExecTasks(dagExec, datapodList, dagTasks, indvStg.getDependsOn(), indvStg, dagRef,
-					execParams);
+					execParams,runMode);
 			stageExec.setTasks(DagExecUtil.convertToTaskList(dagExectasks));
 			stageExecs.add(stageExec);
 
@@ -509,7 +510,7 @@ public class DagServiceImpl {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<TaskExec> createDagExecTasks(DagExec dagExec, List<String> datapodList, List<Task> dagTasks, List<String> dependsOn, Stage indvStg,
-			MetaIdentifier dagRef, ExecParams execParams) throws Exception {
+			MetaIdentifier dagRef, ExecParams execParams, RunMode runMode) throws Exception {
 		List<TaskExec> taskExecs = new ArrayList<>();
 		java.util.Map<String, MetaIdentifier> refKeys = null;
 		MetaIdentifier mapRef = null, sourceRef = null, targetRef = null, sourceAttrRef = null, condRef = null,
@@ -600,7 +601,7 @@ public class DagServiceImpl {
 				baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()), 
 						baseExecDependsOnMI, 
 						taskExec, 
-						0, RunMode.BATCH);
+						0, runMode);
 				commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()).toString(), baseExec);
 			} catch(Exception e) {
 				logger.error(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef() + " could not be created ");
@@ -649,7 +650,7 @@ public class DagServiceImpl {
 						sourceAttrRef = commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
 					}
 					baseExec = mapServiceImpl.create(baseExecDependsOnMI.getUuid(), baseExecDependsOnMI.getVersion(), (MapExec) baseExec, dagExec, 
-							datapodList, refKeys, otherParams, taskExecParams, RunMode.BATCH);
+							datapodList, refKeys, otherParams, taskExecParams, runMode);
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
 					loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
@@ -723,13 +724,13 @@ public class DagServiceImpl {
 							dagExec, runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.report)) {
 					baseExec = reportServiceImpl.create(baseExecDependsOnMI.getUuid(), baseExecDependsOnMI.getVersion(),
-							execParams, (ReportExec) baseExec, RunMode.BATCH);
+							execParams, (ReportExec) baseExec, runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.dashboard)) {
 					baseExec = dashboardServiceImpl.create(baseExecDependsOnMI.getUuid(),
-							baseExecDependsOnMI.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
+							baseExecDependsOnMI.getVersion(), (DashboardExec) baseExec, execParams, runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.rule2)) {
 					baseExec = rule2ServiceImpl.create(baseExecDependsOnMI.getUuid(), baseExecDependsOnMI.getVersion(),
-							(RuleExec) baseExec, refKeys, taskExecParams, datapodList, dagExec, RunMode.BATCH);
+							(RuleExec) baseExec, refKeys, taskExecParams, datapodList, dagExec, runMode);
 				}
 			}
 			/*try {
@@ -903,7 +904,7 @@ public class DagServiceImpl {
 						// If conditions with parse goes here - START
 						if (ref.getType().equals(MetaType.map)) {
 							baseExec = mapServiceImpl.generateSql(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
-									datapodList, refKeyMap, otherParams, taskExecParams, RunMode.BATCH);
+									datapodList, refKeyMap, otherParams, taskExecParams, runMode);
 						} else if (ref.getType().equals(MetaType.rule)) {
 //							baseExec = ruleServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeyMap, taskExecParams, datapodList, dagExec);
 							baseExec = ruleServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
@@ -964,10 +965,10 @@ public class DagServiceImpl {
 							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.ingest)) {
 //							baseExec = ingestServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.ingest, MetaType.ingestExec, (IngestExec) baseExec, refKeyMap, datapodList, dagExec);
-							baseExec = ingestServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
+							baseExec = ingestServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.ingestgroup)) {
 //							baseExec = ingestGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, datapodList, (IngestGroupExec)baseExec, dagExec);
-							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
+							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.report)) {
 //							baseExec = reportServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, (ReportExec) baseExec, RunMode.BATCH);
 							baseExec = reportServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, dagExec, runMode);
@@ -975,7 +976,7 @@ public class DagServiceImpl {
 //							baseExec = dashboardServiceImpl.create(ref.getUuid(), ref.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
 							baseExec = dashboardServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), execParams, refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.rule2)) {
-							baseExec = rule2ServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
+							baseExec = rule2ServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						}
 						taskExecParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, taskExecParams.getOtherParams()));
 						// If conditions with parse goes here - END	

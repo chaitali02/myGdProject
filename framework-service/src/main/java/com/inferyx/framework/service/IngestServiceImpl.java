@@ -500,7 +500,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				}
 				data = sparkExecutor.fetchIngestResult(targetDp, datastore.getName(), filePathUrl, Helper.getDelimetrByFormat(ingest.getTargetFormat()), resolveHeader(ingest.getSourceHeader()), Integer.parseInt(""+datastore.getNumRows()), appUuid);
 			} else if(ingest.getTargetFormat() != null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order, null);
+				data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, sortBy, order, null,runMode);
 			} else {
 				Datasource datasource = commonServiceImpl.getDatasourceByApp();
 				if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {

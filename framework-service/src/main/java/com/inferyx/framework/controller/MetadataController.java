@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Lov;
@@ -802,14 +803,14 @@ public class MetadataController {
 	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getdpByDatapod(
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString(), null);
 	}
 	
 	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getrcDatapod(
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString(), null);
 	}
 	
@@ -817,7 +818,7 @@ public class MetadataController {
 	public @ResponseBody Datapod getdqDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(),resultType);
 	}
 
@@ -825,7 +826,7 @@ public class MetadataController {
 	public @ResponseBody Datapod getRuleDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.rule2.toString(),resultType);
 	}
 	
@@ -842,5 +843,15 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return new ObjectMapper().writeValueAsString(metadataServiceImpl.getAppConfigByCurrentApp());
 	}
-	
+
+	@RequestMapping(value = "/uploadOrgLogo", method = RequestMethod.POST)
+	public @ResponseBody FileRefHolder uploadOrgLogo(@RequestParam("file") MultipartFile multiPartFile,
+			@RequestParam("fileName") String filename, @RequestParam(value = "uuid", required = false) String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws Exception {
+
+		return metadataServiceImpl.uploadOrgLogo(multiPartFile, filename, uuid, type);
+	}
+
 }

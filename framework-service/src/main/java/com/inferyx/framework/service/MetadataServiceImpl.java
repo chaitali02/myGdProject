@@ -16,14 +16,18 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.limi
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +57,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -75,7 +80,9 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -112,6 +119,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -148,6 +156,8 @@ public class MetadataServiceImpl {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
+	@Autowired
+	UploadServiceImpl uploadServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 //	private static final String GET = "get";
@@ -213,6 +223,7 @@ public class MetadataServiceImpl {
 		query.fields().include("published");
 		query.fields().include("appInfo");
 		query.fields().include("statusList");
+		query.fields().include("runMode");
 		if(metaType.equals(MetaType.reportExec)){
 			query.fields().include("numRows");
 			query.fields().include("sizeMB");
@@ -281,47 +292,66 @@ public class MetadataServiceImpl {
 				DagExec execObject = new DagExec();
 				execObject = (DagExec) metaObject;
 			    execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
 				baseEntityStatus.setExecCreated(execObject.getExecCreated());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.ruleExec.toString())) {
 				RuleExec execObject =new RuleExec();
 				execObject = (RuleExec) metaObject;
 				execStatus =  (List<Status>)execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.rulegroupExec.toString())) {
 				 RuleGroupExec execObject = new RuleGroupExec();
 				execObject = (RuleGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.profileExec.toString())) {
 				 ProfileExec execObject = new ProfileExec();
 				execObject = (ProfileExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
+				
 			}
 			else if (type.equalsIgnoreCase(MetaType.profilegroupExec.toString())) {
 				 ProfileGroupExec execObject = new ProfileGroupExec();
 				execObject = (ProfileGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.dqExec.toString())) {
 				 DataQualExec execObject = new DataQualExec();
 				execObject = (DataQualExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if (type.equalsIgnoreCase(MetaType.dqgroupExec.toString())) {
 				 DataQualGroupExec execObject = new DataQualGroupExec();
 				execObject = (DataQualGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.vizExec.toString())){
 				VizExec execObject = new VizExec();
 				execObject = (VizExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.loadExec.toString())){
 				LoadExec execObject = new LoadExec();
 				execObject = (LoadExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			/*else if(type.equalsIgnoreCase(MetaType.modelExec.toString())){
 				ModelExec execObject = new ModelExec();
@@ -332,44 +362,61 @@ public class MetadataServiceImpl {
 				MapExec execObject = new MapExec();
 				execObject = (MapExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}else if(type.equalsIgnoreCase(MetaType.session.toString())){
 				Session sessionObject = new Session();
 				sessionObject = (Session) metaObject;
-				execStatus = (List<Status>) sessionObject.getStatusList();	
+				execStatus = (List<Status>) sessionObject.getStatusList();
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.trainExec.toString())){
 				TrainExec execObject = new TrainExec();
 				execObject = (TrainExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.predictExec.toString())){
 				PredictExec execObject = new PredictExec();
 				execObject = (PredictExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.simulateExec.toString())){
 				SimulateExec execObject = new SimulateExec();
 				execObject = (SimulateExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.reconExec.toString())){
 				ReconExec execObject = new ReconExec();
 				execObject = (ReconExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.recongroupExec.toString())){
 				ReconGroupExec execObject = new ReconGroupExec();
 				execObject = (ReconGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} else if(type.equalsIgnoreCase(MetaType.operatorExec.toString())){
 				OperatorExec operatorExec = new OperatorExec();
 				operatorExec = (OperatorExec) metaObject;
-				execStatus = (List<Status>) operatorExec.getStatusList();	
+				execStatus = (List<Status>) operatorExec.getStatusList();
+				baseEntityStatus.setRunMode(operatorExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.graphExec.toString())){
 				GraphExec graphExec = new GraphExec();
 				graphExec = (GraphExec) metaObject;
-				execStatus = (List<Status>) graphExec.getStatusList();	
+				execStatus = (List<Status>) graphExec.getStatusList();
+				baseEntityStatus.setRunMode(graphExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.reportExec.toString())){
 				ReportExec reportExec = new ReportExec();
@@ -377,37 +424,51 @@ public class MetadataServiceImpl {
 				execStatus = (List<Status>) reportExec.getStatusList();
 				baseEntityStatus.setNumRows(reportExec.getNumRows());
 				baseEntityStatus.setSizeMB(reportExec.getSizeMB());
+				baseEntityStatus.setRunMode(reportExec.getRunMode());
+
 				
 			}
 			else if(type.equalsIgnoreCase(MetaType.batchExec.toString())){
 				BatchExec batchExec = new BatchExec();
 				batchExec = (BatchExec) metaObject;
 				execStatus = (List<Status>) batchExec.getStatusList();	
+				baseEntityStatus.setRunMode(batchExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.ingestExec.toString())){
 				IngestExec ingestExec = new IngestExec();
 				ingestExec = (IngestExec) metaObject;
-				execStatus = (List<Status>) ingestExec.getStatusList();	
+				execStatus = (List<Status>) ingestExec.getStatusList();
+				baseEntityStatus.setRunMode(ingestExec.getRunMode());
+
 			}
 			else if(type.equalsIgnoreCase(MetaType.ingestgroupExec.toString())){
 				IngestGroupExec execObject = new IngestGroupExec();
 				execObject = (IngestGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.uploadExec.toString())){
 				UploadExec execObject = new UploadExec();
 				execObject = (UploadExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.processExec.toString())){
 				ProcessExec execObject = new ProcessExec();
 				execObject = (ProcessExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatusList();	
+				execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 			else if(type.equalsIgnoreCase(MetaType.dashboardExec.toString())){
 				DashboardExec execObject = new DashboardExec();
 				execObject = (DashboardExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
+				baseEntityStatus.setRunMode(execObject.getRunMode());
+
 			} 
 				
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
@@ -1926,33 +1987,32 @@ public class MetadataServiceImpl {
 		return latestAlgoList;
 	}
 	
-	
-	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
+	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		if(type.equalsIgnoreCase(MetaType.profile.toString()))
 			{
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+					commonServiceImpl.getConfigValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
 			return dp;
 			}
 		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+					commonServiceImpl.getConfigValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
 			return dp;
 		}
 		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
 			Datapod dp =null;
 			if(resultType ==null) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("summary")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("detail")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
 			}
 			return dp;
 		}
@@ -1960,16 +2020,61 @@ public class MetadataServiceImpl {
 			Datapod dp =null;
 			if(resultType.equals("summary")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("detail")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
 			}
 			return dp;
 		}
 		return null;
 	}
+
+	
+//	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
+//		
+//		if(type.equalsIgnoreCase(MetaType.profile.toString()))
+//			{
+//			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+//			return dp;
+//			}
+//		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
+//			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+//			return dp;
+//		}
+//		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
+//			Datapod dp =null;
+//			if(resultType ==null) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("summary")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("detail")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+//			}
+//			return dp;
+//		}
+//		else if(type.equalsIgnoreCase(MetaType.rule2.toString())){
+//			Datapod dp =null;
+//			if(resultType.equals("summary")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("detail")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+//			}
+//			return dp;
+//		}
+//		return null;
+//	}
 
 	public List<Group> getGroupsByOrg(String orgUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
 		
@@ -2078,4 +2183,72 @@ public class MetadataServiceImpl {
 		}
 		return Helper.getPropertyValue(configName);
 	}
+
+	public FileRefHolder uploadOrgLogo(MultipartFile multiPartFile, String fileName, String uuid, String type)
+			throws Exception {
+		FileRefHolder fileRefHolder = new FileRefHolder();
+		String originalFileName = multiPartFile.getOriginalFilename();
+		String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+		String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+		String fileName_Uuid;
+		if (uuid != null && !uuid.isEmpty()) {
+			fileName_Uuid = uuid + "." + fileExtention;
+
+		} else {
+			uuid = Helper.getNextUUID();
+			fileName_Uuid = uuid + "." + fileExtention;
+
+		}
+		String directoryPath = Helper.getPropertyValue("framework.image.logo.Path");
+		MetaIdentifier metaIdentifier = new MetaIdentifier(MetaType.organization, uuid, Helper.getVersion());
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(metaIdentifier);
+		UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
+
+		String locationServer = directoryPath + "/" + fileName_Uuid;
+		String locationUi = "src/main/webapp/app/avatars/" + "/" + fileName_Uuid;
+		File destServer = new File(locationServer);
+		File destUi = new File(locationUi);
+
+		if (uuid != null && !uuid.isEmpty()) {
+
+			uploadExec.setName(filename1);
+			uploadExec.setLocation(locationServer);
+			uploadExec.setFileName(originalFileName);
+			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.RUNNING);
+			File convFile = new File(locationUi);
+		    convFile.createNewFile(); 
+		    FileOutputStream fos = new FileOutputStream(convFile); 
+		    fos.write(multiPartFile.getBytes());
+		    fos.close(); 
+			multiPartFile.transferTo(destServer);
+			
+
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.COMPLETED);
+
+		} else {
+
+			uploadExec.setName(filename1);
+			uploadExec.setLocation(locationServer);
+			uploadExec.setFileName(originalFileName);
+			uploadServiceImpl.parse(uploadExec, null, RunMode.BATCH);
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.RUNNING);
+			File convFile = new File(locationUi);
+		    convFile.createNewFile(); 
+		    FileOutputStream fos = new FileOutputStream(convFile); 
+		    fos.write(multiPartFile.getBytes());
+		    fos.close(); 
+			multiPartFile.transferTo(destServer);
+
+			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.COMPLETED);
+		}
+		fileRefHolder.setRef(metaIdentifier);
+		fileRefHolder.setFileName(fileName_Uuid);
+		return fileRefHolder;
+	}
+
 }

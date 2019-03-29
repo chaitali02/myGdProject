@@ -536,7 +536,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				MetaType.mapExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(mapExec.getResult().getRef().getUuid(),
 				mapExec.getResult().getRef().getVersion());
-		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
+		data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null,runMode);
 		return data;
 	}
 	
