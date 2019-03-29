@@ -418,21 +418,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return ConstantsUtil.WHERE_1_1;
 	}
 
-	/********************** UNUSED **********************/
-	// public String selectGroupBy (Rule2 rule2, java.util.Map<String,
-	// MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams
-	// execParams) throws JsonProcessingException, IllegalAccessException,
-	// IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-	// SecurityException, NullPointerException, ParseException {
-	// MetaIdentifierHolder ruleSource = new
-	// MetaIdentifierHolder(rule2.getRef(MetaType.rule2));
-	//
-	// return null;
-	// // commented by vaibhav
-	// // return
-	// attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()),
-	// refKeyMap, otherParams, execParams, ruleSource);
-	// }
+	
 
 	public String generateFilter(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,

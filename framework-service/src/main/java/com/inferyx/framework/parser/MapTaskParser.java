@@ -156,14 +156,6 @@ public class MapTaskParser extends TaskParser {
 		return map.getSource().getRef().getType();
 	}
 	
-	/*public String getFilterSql(List<AttributeRefHolder> filterInfo
-			, java.util.Map<String, MetaIdentifier> refKeyMap
-			, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		StringBuilder builder = new StringBuilder();
-		builder.append(filterOperator.generateSql(filterInfo, refKeyMap, otherParams, usedRefKeySet));
-		return builder.toString();
-	}*/
-	
 	protected String getTableFromDatapod(Datapod datapod, Task indvTask, List<String> datapodList, 
 											DagExec dagExec, HashMap<String, String> otherParams) throws Exception {
 		if (indvTask.getDependsOn().size() > 0 && datapodList.contains(datapod.getUuid())) {

@@ -501,17 +501,4 @@ public class ProfileOperator {
 		return str;
 	}
 
-	/********************** UNUSED **********************/
-//	private String getTableName(Datapod dp, ProfileExec profileExec, List<String> datapodList, DagExec dagExec,
-//			HashMap<String, String> otherParams, RunMode runMode) throws Exception {
-//		logger.info("otherParams in profile getTablename : " + otherParams);
-//		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(dp.getUuid())) {
-//			return String.format("%s_%s_%s", dp.getUuid().replaceAll("-", "_"), dp.getVersion(), dagExec.getVersion());
-//		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + dp.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + dp.getUuid() + "_tableName");
-//		}
-//		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + dp.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(dp.getUuid()));
-//		datastoreServiceImpl.setRunMode(runMode);
-//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
-//	}
 }

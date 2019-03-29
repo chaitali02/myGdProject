@@ -240,22 +240,7 @@ public class RelationOperator {
 		return builder.toString();
 	}
 
-	/********************** UNUSED **********************/
-//	/**
-//	 * Get latest datastore for a combination of datapod uuid and dimension list 
-//	 * @param metaUuid
-//	 * @param dimensionList
-//	 * @return
-//	 */
-//	private DataStore getDatastoreByDim(String metaUuid, List<AttributeRefHolder> dimensionList) {
-//		if (StringUtils.isBlank(metaUuid) || dimensionList == null || dimensionList.isEmpty()) {
-//			return null;
-//		}
-//		// Fetch dataStore list by dimensions
-//		List<DataStore> dataStoreList = dataStoreServiceImpl.getDataStoreByDim(metaUuid, dimensionList);
-//		// Return latest dataStorS for the matching dimensions
-//		return dataStoreList.get(0);
-//	}
+	
 	
 	/** 
 	 * Utility to create SQL to union all data from all versions of a datapod if multiple versions are chosen from vizpod

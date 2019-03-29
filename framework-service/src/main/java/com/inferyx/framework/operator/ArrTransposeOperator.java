@@ -286,50 +286,6 @@ public class ArrTransposeOperator implements IOperator {
 		return columns;
 	}
 
-	/********************** UNUSED **********************/
-//	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
-//		String sourceTableName = null;
-//		if(sourceData instanceof Datapod) {
-//			Datapod datapod = (Datapod) sourceData;
-//			sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//		} else if(sourceData instanceof DataSet) {
-//			DataSet dataSet = (DataSet) sourceData;
-//			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-//			if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
-//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
-//				sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
-//				Relation relation = (Relation) sourceData;
-//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
-//				sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			}
-//		} else if(sourceData instanceof Rule) {
-//			Rule rule = (Rule) sourceData;
-//			MetaIdentifierHolder sourceHolder = rule.getSource();
-//			if(sourceHolder.getRef().getType().equals(MetaType.datapod)) {
-//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-//				sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			} else if(sourceHolder.getRef().getType().equals(MetaType.dataset)) {
-//				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-//				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-//				if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
-//					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
-//					sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//				} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
-//					Relation relation = (Relation) sourceData;
-//					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
-//					sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//				}
-//			} else if(sourceHolder.getRef().getType().equals(MetaType.relation)) {
-//				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString());
-//				sourceTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-//			} else if(sourceHolder.getRef().getType().equals(MetaType.rule)) {
-//				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-//				sourceTableName = getTableNameBySource(rule2, runMode);
-//			}
-//		}
-//		return sourceTableName;
-//	}
+
 
 }
