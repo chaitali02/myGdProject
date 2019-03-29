@@ -61,6 +61,17 @@ DatascienceModule.controller("ModelResultSearchController", function ($state, $f
         $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
 
     };
+
+  $scope.updateStats = function () {
+    CommonService.getMetaStats("trainexec").then(function (response) {
+      if (response.data && response.data.length && response.data.length > 0) {
+        $rootScope.metaStats["trainexec"] = response.data[0];
+      }
+    });
+  }
+
+  $scope.updateStats();
+
     $scope.refresh = function () {
         $scope.searchForm.execname = "";
         //$scope.searchForm.modelTypeObj=""
@@ -708,7 +719,7 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
     $scope.downloadMoldeResult = function () {
         $scope.isDownloadDirective=true;
 		$scope.download.uuid =  $scope.modelDetail.uuid;
-		$scope.download.version = $scope.modelDetailversion;
+		$scope.download.version = $scope.modelDetail.version;
 		$scope.download.type=$stateParams.type;
 		// $('#downloadSample').modal({
 		// 	backdrop: 'static',
