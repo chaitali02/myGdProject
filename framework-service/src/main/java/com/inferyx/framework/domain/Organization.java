@@ -12,7 +12,7 @@ public class Organization extends BaseEntity {
 	private List<Phone> phone;
 	private List<Email> email;
 	private List<Address> address;
-	private String logoPath;
+	private String logoName;
 	
 	public List<Contact> getContact() {
 		return this.contact;
@@ -41,18 +41,18 @@ public class Organization extends BaseEntity {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the logoPath
+	 * @return the logoName
 	 */
-	public String getLogoPath() {
-		return logoPath;
+	public String getLogoName() {
+		return logoName;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param logoPath the logoPath to set
+	 * @param logoName the logoName to set
 	 */
-	public void setLogoPath(String logoPath) {
-		this.logoPath = logoPath;
+	public void setLogoName(String logoName) {
+		this.logoName = logoName;
 	}
 	
 }

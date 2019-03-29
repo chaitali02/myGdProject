@@ -328,6 +328,18 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
+
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(limit < 1) {
+			limit = maxRows;
+		}
+		if(limit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
+		
 		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 		
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
@@ -567,8 +579,18 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
-
-				List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, report.getLimit(), true);
+				int rowLimit = report.getLimit();
+				int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+				if(rowLimit < 1) {
+					rowLimit = maxRows;
+				}
+				if(rowLimit > maxRows) {
+					logger.error("Requested rows exceeded the limit of "+maxRows);
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+					throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+				}
+				
+				List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, rowLimit, true);
 				
 				String format = Helper.mapFileFormat(report.getFormat());
 
@@ -614,7 +636,7 @@ public class ReportServiceImpl extends RuleTemplate {
 					
 					Organization organization = commonServiceImpl.getOrgInfoByCurrentApp();
 					document.setOrgName(organization.getName());
-					document.setOrgLogo(organization.getLogoPath());
+					document.setOrgLogoName(organization.getLogoName());
 					document.setOrgAddress(commonServiceImpl.getOrganizationAddr(organization.getAddress()));
 										
 					boolean isDocCreated = documentGenServiceImpl.createDocument(document);				
@@ -772,14 +794,10 @@ public class ReportServiceImpl extends RuleTemplate {
 		return listReportExecView;
 	}
 	
-	public HttpServletResponse downloadReport(String reportExecUuid, String reportExecVersion, String format,
-			int offset, int limit, HttpServletResponse response, String sortBy, String order, String requestId,
+	public HttpServletResponse downloadReport(String reportExecUuid, String reportExecVersion,
+			int offset, HttpServletResponse response, String sortBy, String order, String requestId,
 			RunMode runMode, boolean skipLimitCheck) throws Exception {
 
-		if(StringUtils.isBlank(format)) {
-			throw new RuntimeException("Format not provided ...");
-		}
-		
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
 
@@ -787,7 +805,23 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
-		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
+		String format = report.getFormat();	
+		if(StringUtils.isBlank(format)) {
+			throw new RuntimeException("Format not provided ...");
+		}
+		
+		int rowLimit = report.getLimit();
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rowLimit < 1) {
+			rowLimit = maxRows;
+		}
+		if(rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
+		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, rowLimit, false);
 		
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
@@ -908,6 +942,16 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(limit < 1) {
+			limit = maxRows;
+		}
+		if(limit > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+		
 		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(

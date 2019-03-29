@@ -4510,4 +4510,10 @@ public class SparkExecutor<T> implements IExecutor {
 		} // if SparkSession
 		return data;
 	}
+	
+	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) {
+		
+		
+		return rsHolder;
+	}
 }

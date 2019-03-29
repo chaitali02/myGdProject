@@ -169,7 +169,7 @@ public class DownloadServiceImpl {
 				
 				Organization organization = commonServiceImpl.getOrgInfoByCurrentApp();
 				document.setOrgName(organization.getName());
-				document.setOrgLogo(organization.getLogoPath());
+				document.setOrgLogoName(organization.getLogoName());
 				document.setOrgAddress(commonServiceImpl.getOrganizationAddr(organization.getAddress()));
 				
 				File metaObjFile = new File(filePathUrl);
