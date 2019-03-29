@@ -41,13 +41,14 @@ export class metadataNavigatorComponent {
     this.metadata = new MetadataNavigator();
   }
   ngOnInit() {
-    this.optiondata = { 'caption': 'Name A-Z', name: 'caption' };
+    
     this.optionsort = [
       { 'caption': 'Name A-Z', name: 'caption' },
       { 'caption': 'Name Z-A', name: '-caption' },
       { 'caption': 'Date Asc', name: 'lastUpdatedOn' },
       { 'caption': 'Date Desc', name: '-lastUpdatedOn' },
     ];
+    this.optiondata = this.optionsort[0].name;
     this.c = { 'caption': '', name: '' },
     this.c.caption = "Name A-Z";
     this.isEditInprogess= true
@@ -103,6 +104,7 @@ export class metadataNavigatorComponent {
   }
 
   refersh() {
+    this.isEditInprogess= true
     this.allMetaCount = [];
     this._service.getMetaStats().subscribe(
       response => {
