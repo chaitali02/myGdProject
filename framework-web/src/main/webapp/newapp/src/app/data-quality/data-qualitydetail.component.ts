@@ -134,24 +134,21 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
     this.operators = [
-      { 'label': 'dd/mm/yy', 'value': 'dd/mm/yy' },
-      { 'label': 'dd/mm/yyyy', 'value': 'dd/mm/yyyy' },
-      { 'label': 'd/m/yyyy', 'value': 'd/m/yyyy' },
-      { 'label': 'dd-mmm-yy', 'value': 'dd-mmm-yy' },
-      { 'label': 'dd-mmm-yyyy', 'value': 'dd-mmm-yyyy' },
-      { 'label': 'd-mmm-yy', 'value': 'd-mmm-yy' },
-      { 'label': 'd-mmm-yyyy', 'value': 'd-mmm-yyyy' },
-      { 'label': 'd-mmmm-yy', 'value': 'd-mmmm-yy' },
-      { 'label': 'd-mmmm-yyyy', 'value': 'd-mmmm-yyyy' },
-      { 'label': 'yy/mm/dd', 'value': 'yy/mm/dd' },
-      { 'label': 'yyyy/mm/dd', 'value': 'yyyy/mm/dd' },
-      { 'label': 'mm/dd/yy', 'value': 'mm/dd/yy' },
-      { 'label': 'mm/dd/yyyy', 'value': 'mm/dd/yyyy' },
-      { 'label': 'mmm-dd-yy', 'value': 'mmm-dd-yy' },
-      { 'label': 'mmm-dd-yyyy', 'value': 'mmm-dd-yyyy' },
-      { 'label': 'yyyy-mm-dd', 'value': 'yyyy-mm-dd' },
-      { 'label': 'mmm-yy', 'value': 'mmm-yy' },
-      { 'label': 'yyyy', 'value': 'yyyy' }
+      { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
+      { 'value': '<', 'label': 'LESS THAN(<)' },
+      { 'value': '>', 'label': 'GREATER THAN(>)' },
+      { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
+      { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
+      { 'value': 'BETWEEN', 'label': 'BETWEEN' },
+      { 'value': 'LIKE', 'label': 'LIKE' },
+      { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
+      { 'value': 'RLIKE', 'label': 'RLIKE' },
+      { 'value': 'EXISTS', 'label': 'EXISTS' },
+      { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+      { 'value': 'IN', 'label': 'IN' },
+      { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' },
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -175,11 +172,11 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     ];
     this.datatype = [
       { 'value': '', 'label': '' },
-      { 'value': 'String', 'label': 'String' },
-      { 'value': 'Int', 'label': 'Int' },
-      { 'value': 'Float', 'label': 'Float' },
+      { 'value': 'Date', 'label': 'Date' },
       { 'value': 'Double', 'label': 'Double' },
-      { 'value': 'Date', 'label': 'Date' }
+      { 'value': 'Float', 'label': 'Float' },
+      { 'value': 'Int', 'label': 'Int' },
+      { 'value': 'String', 'label': 'String' }
     ];
     this.isNullArray = [
       { 'value': 'NULL', 'label': 'NULL' },
@@ -308,6 +305,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     //this._location.back();
     this.router.navigate(['app/list/dq']);
   }
+
   changeType() {
     this.selectAttribute = null;
     this.filterTableArray = [];

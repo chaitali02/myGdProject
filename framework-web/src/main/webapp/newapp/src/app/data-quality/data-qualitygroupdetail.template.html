@@ -14,31 +14,37 @@
             <b>{{"DQ Rule Group"}}</b>
           </div>
           <div class="actions">
-            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
-              [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqgroupdata.uuid,version)">
-              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-
-            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
-              data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
-              data-(click)="enableEdit(dqgroupdata.uuid,version)">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-
-            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-              data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(dqgroupdata.uuid,version)">
-              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-            </a>
-
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" title="Refresh" data-placement="top" tooltip
-              (click)="showGraph(dqgroupdata.uuid,version)" data-original-title="" title="Refresh"
-              [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-
-            <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
-              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main"
+                data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqgroupdata.uuid,version)">
+                <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+                data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
+                data-(click)="enableEdit(dqgroupdata.uuid,version)">
+                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+                data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(dqgroupdata.uuid,version)">
+                <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" title="Refresh"
+                data-placement="top" tooltip (click)="showGraph(dqgroupdata.uuid,version)" data-original-title="" title="Refresh"
+                [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
+                <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
           </div>
         </div>
 
@@ -121,7 +127,8 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <!-- <tag-input [(ngModel)]="dqgroupdata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
-                  <p-chips [(ngModel)]="dqgroupdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                  <p-chips [(ngModel)]="dqgroupdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                    [allowDuplicate]="false"></p-chips>
                 </div>
               </div>
 
@@ -184,7 +191,8 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12"style="text-align: right; padding-top: 6px;">Run Immediately ?</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="text-align: right; padding-top: 6px;">Run
+                  Immediately ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
                   <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
                     binary="true"></p-checkbox>

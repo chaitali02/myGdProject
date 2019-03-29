@@ -13,34 +13,38 @@
             <i class="fa fa-gift"></i>{{batch.name}}
           </div>
 
-          <div class="tools">            
-            <a *ngIf="!isAdd" class="left-marginpage"  style="color:white" title="Main" data-placement="top" tooltip
-              [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a class="left-marginpage" *ngIf="!isAdd" href="javascript:;" title="Edit" data-toggle="tooltip"
-              data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a class="left-marginpage" *ngIf="!isAdd" href="javascript:;" title="Show Dependencies" data-placement="top"
-              tooltip [ngClass]="showForm==false? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
-              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
-            </a>
-
-            <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip disabled="true"
-              [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" (click)="showGraph(uuid,label)">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
-            
-            <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;"
-              (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
-
+          <div class="tools">
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" style="color:rgb(151, 129, 129)" title="Main" data-placement="top" tooltip
+                [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: inline-block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" *ngIf="!isAdd" href="javascript:;" title="Edit" data-toggle="tooltip"
+                data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
+                <i class="fa fa-edit" style="display: inline-block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" *ngIf="!isAdd" href="javascript:;" title="Show Dependencies" data-placement="top"
+                tooltip [ngClass]="showForm==false? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+                <i class="fa fa-sitemap" style="display: inline-block;margin:2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip 
+                [ngClass]="showForm == true? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: inline-block;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;"
+                (click)="goBack()">
+                <i class="fa fa-times" aria-hidden="true" style="display: inline-block;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
           </div>
-
         </div>
 
         <div class="portlet-body form">
@@ -125,7 +129,7 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <!-- <tag-input [(ngModel)]="batch.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
                     <p-chips [(ngModel)]="batch.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
-                      (ngModelChange)="setBatchChg()"></p-chips>
+                      (ngModelChange)="setBatchChg()" [allowDuplicate]="false"></p-chips>
                   </div>
                 </div>
 
@@ -293,7 +297,7 @@
                         </select>
                       </td>
                       <td>
-                        <div *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-Weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
+                        <div *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
                           <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
                             name="frequencyDetail+{{i}}+{{optionChoose}}" class="form-control" (click)="showDialog(i, tabledata.attrtype)"
                             [disabled]="mode == 'true'" readonly={{isReadOnly}} />

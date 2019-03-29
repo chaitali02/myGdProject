@@ -259,7 +259,7 @@ export class RuleService {
                   let lhsAttri = new AttributeIO();
                   lhsAttri.uuid = response.filterInfo[k].operand[0].ref.uuid;
                   lhsAttri.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
-                  lhsAttri.attributeId = response.filterInfo[k].operand[0].attributeId;
+                  lhsAttri.attributeId = response.filterInfo[k].operand[0].attributeId.toString();;
                   filterInfo.lhsAttribute = lhsAttri;
                   ruleIO.isAttributeExits = true;
                 }
@@ -298,7 +298,7 @@ export class RuleService {
                   let rhsAttri1 = new AttributeIO();
                   rhsAttri1.uuid = response.filterInfo[k].operand[1].ref.uuid;
                   rhsAttri1.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
-                  rhsAttri1.attributeId = response.filterInfo[k].operand[1].attributeId;
+                  rhsAttri1.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
                   filterInfo.rhsAttribute = rhsAttri1;
 
                   ruleIO.isAttributeExits = true;

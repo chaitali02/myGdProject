@@ -16,13 +16,16 @@ import { AppConfig } from '../app.config';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
 import { GraphParamIO } from '../metadata/domainIO/domain.graphParamIO';
+import { Message } from 'primeng/components/common/api';
+import { CommonListService } from '../common-list/common-list.service';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './business-rulesresult.template.html',
   styleUrls: []
 })
 export class BusinessRulesResultComponent {
-  download: {rows: any, selectFormat: any, format: any};
+  download: { rows: any, selectFormat: any, format: any };
   downloadType: any;
   downloadVersion: any;
   downloadUuid: any;
@@ -48,10 +51,13 @@ export class BusinessRulesResultComponent {
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   showGraph: boolean;
+  restartDialogBox: boolean;
+  msgs: Message[] = [];
+  restartShow: any;
 
-  constructor(private http: Http, private _config: AppConfig, private _location: Location, 
-    private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, 
-    private _commonService: CommonService) {
+  constructor(private http: Http, private _config: AppConfig, private _location: Location,
+    private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
+    private _commonService: CommonService, private _commonListService: CommonListService) {
 
     this.params = new GraphParamIO();
     this.showGraph = false
@@ -59,7 +65,7 @@ export class BusinessRulesResultComponent {
     this.baseUrl = _config.getBaseUrl();
     this.isgraphShow = false;
     this.istableShow = false;
-    this.download = {rows: 0, selectFormat: "", format: []};
+    this.download = { rows: 0, selectFormat: "", format: [] };
     this.download.format = ["excel"]
     this.download.rows = 100
     this.download.selectFormat = 'excel'
@@ -94,7 +100,7 @@ export class BusinessRulesResultComponent {
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
 
-    
+
   }
 
   getOneByUuidAndVersion(id, version, type) {
@@ -198,26 +204,60 @@ export class BusinessRulesResultComponent {
     }, 1000);
   }
 
-  showDagGraph() {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-    this.isResultTable = false;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
-    }, 1000);
+  showDagGraph(uuid, version, graphFlag) {debugger
+    if (graphFlag) {
+      this.isHomeEnable = true;
+      this.showGraph = true;
+      this.isResultTable = false;
+      setTimeout(() => {
+        this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+      }, 1000);
+    }
+    else{
+      if (this._type == 'ruleexec') {
+        this.showMainPage();
+      }
+      this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+    }
   }
 
-  downloadShow(param: any) {
+  downloadShow(param: any) {debugger
 
     this.isResultTable = true;;
     console.log(param)
     this.downloadUuid = param.uuid;
     this.downloadVersion = param.version;
     this.downloadType = param.type;
+    this.restartShow = param.restartShow;
   }
   close() {
     this.isDownloadModel = false
   }
+
+  reGroupExecute() {
+    this.restartDialogBox = true;
+  }
+  submitRestartDialogBox() {
+    debugger
+    console.log("submitRestartDialogBox() call...");
+    this._commonListService.restart(this._uuid, this._version, "rulegroupExec", "execute")
+      .subscribe(
+        response => {
+          // this.getBaseEntityByCriteria()
+          // this.isModel = "false";
+          this.msgs = [];
+          this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Restarted Successfully' });
+          console.log("Success....");
+        },
+        error => console.log("Error :: " + error)
+      );
+    this.restartDialogBox = false;
+  }
+
+  cancelRestartDialogBox() {
+    this.restartDialogBox = false;
+  }
+  
 }
 
 

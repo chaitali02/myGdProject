@@ -13,30 +13,37 @@
         </div>
 
         <div class="actions">
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default currentpage left-margin" title="Main" data-placement="top"
-            tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqdata.uuid,dqdata.version)">
-            <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(dqdata.uuid,dqdata.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(dqdata.uuid,selectedVersion.label)">
-            <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default currentpage left-margin" title="Refresh" data-placement="top"
-            tooltip (click)="showGraph(dqdata.uuid,selectedVersion.label)" data-original-title="" title="Refresh"
-            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
-            <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default currentpage left-margin" title="Main"
+              data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqdata.uuid,dqdata.version)">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+              data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
+              data-(click)="enableEdit(dqdata.uuid,dqdata.version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+              data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(dqdata.uuid,selectedVersion.label)">
+              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default currentpage left-margin" title="Refresh"
+              data-placement="top" tooltip (click)="showGraph(dqdata.uuid,selectedVersion.label)" data-original-title=""
+              title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
+              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
         </div>
       </div>
 
@@ -161,7 +168,8 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                         <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
                           <!-- <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
-                          <p-chips [(ngModel)]="dqdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                          <p-chips [(ngModel)]="dqdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                          [allowDuplicate]="false"></p-chips>
                         </div>
                       </div>
                       <div class="form-group">
@@ -174,7 +182,7 @@
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding" >
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                               [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -339,8 +347,8 @@
                                   </td>
                                   <td>
                                     <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [autoWidth]="false" [filter]="false" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
+                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="false"
+                                      (onChange)="onChangeLhsType(i)" placeholder="--Select--">
                                     </p-dropdown>
                                   </td>
                                   <td>
@@ -358,15 +366,15 @@
 
                                     <div *ngIf="data.lhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [autoWidth]="false" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--" required #lhsAttribute="ngModel">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','box-sizing': 'border-box'}"
-                                        [disabled]="mode == 'true'" [autoWidth]="false" [filter]="true" placeholder="--Select--"
-                                        datakey="label" required #lhsAttribute="ngModel">
+                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" datakey="label"
+                                        required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                   </td>
@@ -452,7 +460,7 @@
                                     <div *ngIf="data.rhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                        placeholder="--Select--"  required #rhsAttribute="ngModel">
+                                        placeholder="--Select--" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
@@ -468,7 +476,7 @@
                                         <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
                                           name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block"
                                           #rhsAttributeReq="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && ( data.rhsAttribute.label === '')}">
-                                          <!-- #rhsAttribute="ngModel" required 
+                                        <!-- #rhsAttribute="ngModel" required 
                                           [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}" -->
                                         <i class="fa fa-search" (click)="searchOption(data.rhsAttribute, i)" style="width:10%;display:inline-block;padding-left: 7%;"
                                           pTooltip="Search"></i>
@@ -488,7 +496,7 @@
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
-                                    [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                      [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" required #rhsAttribute="ngModel">
@@ -539,10 +547,9 @@
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4">
-                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;"
-                            (click)="countBack()">
+                          <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
                             <i class="fa fa-angle-left"></i> Back </a>
-                          <button type="submit" class="btn btn-outline green button-next"> Continue
+                          <button type="submit" class="btn btn-outline green button-next btn-margin"> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
                         </div>
@@ -573,8 +580,8 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <!-- <tag-input [(ngModel)]="valueCheck" name="valueCheck" [disable]="mode == 'true'" theme='bootstrap'
                             style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
-                          <p-chips [(ngModel)]="dqdata.valueCheck" styleClass="pchip-height" [disabled]="mode == 'true'"
-                            name="tags"></p-chips>
+                          <p-chips [(ngModel)]="dqdata.valueCheck" styleClass="pchip-height" [disabled]="mode == 'true' || !IsSelectSoureceAttr"
+                            name="tags" [allowDuplicate]="false"></p-chips>
                         </div>
                       </div>
 
@@ -652,11 +659,10 @@
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4" style="padding-top: 2%;">
-                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;"
-                            (click)="countBack()">
+                          <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
                             <i class="fa fa-angle-left"></i> Back
                           </a>
-                          <button type="submit" class="btn btn-outline green "> Continue
+                          <button type="submit" class="btn btn-outline green btn-margin"> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
                         </div>
@@ -668,7 +674,8 @@
                   <!-- Start Tab4 -->
                   <div class="tab-pane" id="tab4" [ngClass]="{'active' : continueCount == 4}">
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" style="text-align: right; padding-top: 6px;">Run Immediately ?</label>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" style="text-align: right; padding-top: 6px;">Run
+                        Immediately ?</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
                           binary="true"></p-checkbox>
@@ -677,10 +684,10 @@
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4" style="padding-top: 2%;">
-                        <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;" (click)="countBack()">
+                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
                           <i class="fa fa-angle-left"></i> Back
                         </a>
-                        <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'"
+                        <button type="submit" class="btn green btn-margin" [disabled]="mode == 'true' || isSubmit == 'true'"
                           (click)="submitDq()">Submit</button>
                         <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
                           <div class="bounce1"></div>

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Input } from '@angular/core';
-import { Http, Response } from '@angular/http'
+import { Http, Headers, Response } from '@angular/http'
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
@@ -14,10 +14,16 @@ import { AttributeIO } from '../domainIO/domain.attributeIO';
 @Injectable()
 export class DataQualityService {
 
-  constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
-  private handleError<T>(error: any, result?: T) {
+  sessionId: string;
+
+  constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) {
+    let userDetail = JSON.parse(localStorage.getItem('userDetail'));
+    this.sessionId = userDetail['sessionId'];
+  }
+  private handleError<T>(error: any, result?: T) { 
     return throwError(error);
   }
+  private headers = new Headers({ 'sessionId': this.sessionId });
 
   getDataQualExecByDataqual(uuid: Number): Observable<any[]> {
     let url = '/dataQual/getDataQualExecByDataqual?action=view&dataQualUUID=' + uuid;
@@ -90,6 +96,34 @@ export class DataQualityService {
         map(response => { return <any[]>response.json(); }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
+
+  restart1(uuid, version, type): Observable<any[]> {
+    // http://localhost:8080/dataqual/restart?uuid=a85c7c3f-a616-4639-9ccb-a0ee4862390b&version=1553673591&type=dqgroupExec&action=execute
+
+    let url = '/dataqual/restart?action=execute&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    return this._sharedService.getCall(url)
+    .pipe(
+      map(response => { return <any[]>response.json(); }),
+      catchError(error => this.handleError<string>(error, "Network Error!")));
+
+  }
+
+
+  restart2(uuid, version, type: String): Observable<any[]> {debugger
+    let url = ' http://localhost:8080/dataqual/restart?action=execute&uuid=' + uuid + '&version=' + version + '&type=' + type;
+
+    let body = JSON.stringify({});
+    this.headers = null;
+    this.headers = new Headers({ 'sessionId': this.sessionId });
+    this.headers.append('Accept', '*/*')
+    this.headers.append('content-Type', "application/json");
+    return this.http
+      .post(url, body, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
+  }
+
 
   getOneByUuidAndVersion(uuid, version, type): Observable<any> {
     return this._commonService.getOneByUuidAndVersion(uuid, version, type)
@@ -204,6 +238,6 @@ export class DataQualityService {
           }
           console.log(dataQualityIO);
           return <any>dataQualityIO;
-       }), catchError(error => this.handleError<string>(error, "Network Error!")));
-  } 
+        }), catchError(error => this.handleError<string>(error, "Network Error!")));
+  }
 }

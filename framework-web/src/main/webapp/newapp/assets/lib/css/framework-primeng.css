@@ -36,6 +36,11 @@
 .ui-chips>.ui-state-disabled .ui-chips-token-label {
   margin-right: 10px !important;
 }
+.ui-chips>.ui-state-disabled {
+  cursor: default !important;
+  background-color: #eef1f5 !important;  
+  border: 1px solid #c2cad8 !important;
+}
 /* --- p-chips end --- */
 
 /* --- angular2-multiselect start --- */

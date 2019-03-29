@@ -82,6 +82,8 @@ export class ParamlistComponent implements OnInit {
   locked: boolean;
   active: boolean;
   metaType = MetaType;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
 
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig,
     private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,
@@ -90,7 +92,7 @@ export class ParamlistComponent implements OnInit {
     this.showParamlist = true;
     this.paramlist = new ParamList();
     this.isHomeEnable = false
-    this.paramlist.active = true;
+    this.active = true;
     this.paramlist.templateFlg = true;
     this.template = { uuid: "", label: "" };
     this.isSubmitEnable = true;
@@ -196,12 +198,15 @@ export class ParamlistComponent implements OnInit {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {
+  showGraph(uuid, version) {debugger
     this.isHomeEnable = true;
-    this.showDivGraph = false;
+    this.showDivGraph = true;
     this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError = this.d_KnowledgeGraphComponent.isError;
     }, 1000);
   }
 
@@ -546,10 +551,10 @@ export class ParamlistComponent implements OnInit {
     // }
     paramlistJson.tags = this.paramlist.tags
     paramlistJson.desc = this.paramlist.desc
-    paramlistJson.active = this.appHelper.convertBooleanToString(this.paramlist.active);
-    paramlistJson.published = this.appHelper.convertBooleanToString(this.paramlist.published);
+    paramlistJson.active = this.appHelper.convertBooleanToString(this.active);
+    paramlistJson.published = this.appHelper.convertBooleanToString(this.published);
+    paramlistJson.locked = this.appHelper.convertBooleanToString(this.locked);
     paramlistJson.templateFlg = this.appHelper.convertBooleanToString(this.paramlist.templateFlg);
-    paramlistJson.locked = this.appHelper.convertBooleanToString(this.paramlist.locked);
     let templateInfo = new MetaIdentifierHolder();
     if (this.paramlist.templateFlg == false) {
       let templateInfoRef = new MetaIdentifier();

@@ -45,7 +45,6 @@ export class BusinessRulesDetailComponent {
   iSSubmitEnable: boolean;
   dragIndex: any;
   dropIndex: any;
-  //showGraph: boolean;
   isHomeEnable: boolean;
   dialogAttributeName: any;
   dialogAttriNameArray: any[];
@@ -129,7 +128,6 @@ export class BusinessRulesDetailComponent {
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper) {
 
-    //this.showGraph = false;
     this.isHomeEnable = false;
     this.ruledata = {};
     this.continueCount = 1;
@@ -169,11 +167,11 @@ export class BusinessRulesDetailComponent {
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
       let param = <RoutesParam>params;
-      this.id = param.id;
+      this.uuid = param.id;
       this.version = param.version;
       this.mode = param.mode;
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
+        this.getOneByUuidAndVersion(this.uuid, this.version);
         this.getAllVersionByUuid();
         this.getAllParamertLsit();
       }
@@ -302,7 +300,7 @@ export class BusinessRulesDetailComponent {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {
+  showGraph(uuid, version) {debugger
     this.isHomeEnable = true;
     this.showDivGraph = true;
     this.showForm = false;
@@ -905,7 +903,7 @@ export class BusinessRulesDetailComponent {
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid(this.metaType.RULE, this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.RULE, this.uuid)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)

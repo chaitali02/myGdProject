@@ -172,7 +172,7 @@ export class BusinessRulesGroupDetailComponent {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {
+  showGraph(uuid, version) {debugger
     this.isHomeEnable = true;
     this.showDivGraph = true;
     this.showForm = false;
@@ -227,7 +227,7 @@ export class BusinessRulesGroupDetailComponent {
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.datarulegroup = response;
-    this.createdBy = response.createdBy.ref.name
+    this.createdBy = response.createdBy.ref.name;debugger
     this.published = this.appHelper.convertStringToBoolean(this.datarulegroup.published);
     this.active = this.appHelper.convertStringToBoolean(this.datarulegroup.active);
     this.locked = this.appHelper.convertStringToBoolean(this.datarulegroup.locked);
@@ -282,18 +282,10 @@ export class BusinessRulesGroupDetailComponent {
     rulegroupJson.name = this.datarulegroup.name;
     rulegroupJson.desc = this.datarulegroup.desc;
     rulegroupJson.tags = this.datarulegroup.tags;
-    rulegroupJson.active = this.appHelper.convertBooleanToString(this.datarulegroup.active);
-    rulegroupJson.published = this.appHelper.convertBooleanToString(this.datarulegroup.published);
-    rulegroupJson.locked = this.appHelper.convertBooleanToString(this.datarulegroup.locked);
+    rulegroupJson.active = this.appHelper.convertBooleanToString(this.active);
+    rulegroupJson.published = this.appHelper.convertBooleanToString(this.published);
+    rulegroupJson.locked = this.appHelper.convertBooleanToString(this.locked);
 
-    // var tagArray = [];
-    // if (this.datarulegroup.tags != null) {
-    //   for (var counttag = 0; counttag < this.datarulegroup.tags.length; counttag++) {
-    //     tagArray[counttag] = this.datarulegroup.tags[counttag].value;
-
-    //   }
-    // }
-    // rulegroupJson['tags'] = tagArray
     let ruleInfo = [new MetaIdentifierHolder];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let rules = new AttributeRefHolder();
