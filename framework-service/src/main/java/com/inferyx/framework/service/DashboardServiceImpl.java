@@ -343,55 +343,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
 	}
 
-	/********************** UNUSED **********************/
-	/*public Dashboard findOneById(String id) {
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDashboardDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dashboard findLatestByUuid(String uuid) {
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDashboardDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Dashboard dashboard = iDashboardDao.findOne(Id);
-		String ID = dashboard.getId();
-		iDashboardDao.delete(ID);
-		dashboard.setBaseEntity();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dashboard> findAllLatestActive() 	
-	{	  
-		//String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;		
-	   Aggregation dagExecAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Dashboard> dagExecResults = mongoTemplate.aggregate(dagExecAggr,"dashboard", Dashboard.class);	   
-	   List<Dashboard> dagExecList = dagExecResults.getMappedResults();
-
-	   // Fetch the dashboard details for each id
-	   List<Dashboard> result=new  ArrayList<Dashboard>();
-	   for(Dashboard s : dagExecList)
-	   {   
-		   Dashboard  dagExecLatest = iDashboardDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-		   if(appUuid != null)
-		   {
-			   dagExecLatest = iDagExec.findOneByUuidAndVersion(appUuid,s.getId(),s.getVersion());
-		   }
-		   else
-		   {
-			   dagExecLatest = iDagExec.findOneByUuidAndVersion(s.getId(), s.getVersion());
-		   }		   
-		   result.add(dagExecLatest);
-	   }
-	   return result;
-	}
-	*/
-
-
 
 }
 

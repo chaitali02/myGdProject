@@ -101,23 +101,6 @@ public class BatchViewServiceImpl {
 		
 		query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(batchUuid));
 		
-//		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(batchUuid));
-//		GroupOperation schedulerGroup = group("uuid").max("version").as("version");
-//		SortOperation sortByNextRunTime = sort(new Sort(Direction.ASC, "version"));
-//		Aggregation scheduleAggr = newAggregation(filter, schedulerGroup, sortByNextRunTime);
-//		AggregationResults<Schedule> scheduleAggrResults = mongoTemplate.aggregate(scheduleAggr, MetaType.schedule.toString().toLowerCase(), Schedule.class);
-//		List<Schedule> schedulesList = scheduleAggrResults.getMappedResults();	
-//		List<Schedule> latestSchedules = new ArrayList<>();
-//		Set<String> uuidSet = new HashSet<>();
-//		for(Schedule schedule : schedulesList) {
-//			if(!uuidSet.contains(schedule.getUuid())) {
-//				Schedule latestSchedule = (Schedule) batchSchedulerServiceImpl.getSchedule(schedule.getUuid(), schedule.getVersion(), null);
-//				latestSchedules.add(latestSchedule);
-//				uuidSet.add(schedule.getUuid());
-//			}
-//		}
-		
-		
 		List<Schedule> schedulesList = mongoTemplate.find(query, Schedule.class);
 		
 		List<Schedule> latestSchedules = new ArrayList<>();

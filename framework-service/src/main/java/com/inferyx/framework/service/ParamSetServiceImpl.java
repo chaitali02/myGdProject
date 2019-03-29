@@ -83,12 +83,6 @@ public class ParamSetServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ParamSetServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public ParamSet findLatest() {
-		return resolveName(iParamSetDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-
 	public List<ParamSet> findLatestByDependsOn(MetaIdentifierHolder dependsOn){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -106,18 +100,6 @@ public class ParamSetServiceImpl {
 		}
 		return iParamSetDao.findOneByDependsOn(appUuid,dependsOn.getRef().getUuid(),dependsOn.getRef().getVersion());	
 	}
-
-	/********************** UNUSED **********************/
-	/*public ParamSet findLatestByUuid(String uuid){
-		return iParamSetDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-	
-	/********************** UNUSED **********************/
-	/*public ParamSet findOneById(String id){
-		return iParamSetDao.findOne(id);
-	}*/
-	
 	
 	public List<ParamSet> resolveName(List<ParamSet> paramSetList) throws JsonProcessingException {
 		List<ParamSet> paramSet = new ArrayList<ParamSet>(); 
@@ -165,24 +147,7 @@ public class ParamSetServiceImpl {
 		return paramSet;
 	}	
 
-	/********************** UNUSED **********************/
-	/*public List<ParamSet> findAllLatestActive() 	
-	{ 
-		Aggregation appAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<ParamSet> appResults = mongoTemplate.aggregate(appAggr,"paramset", ParamSet.class);	   
-	   List<ParamSet> appList = appResults.getMappedResults();
-
-	   // Fetch the application details for each id
-	   List<ParamSet> result=new  ArrayList<ParamSet>();
-	   for(ParamSet a : appList)
-	   {   		     
-		   ParamSet appLatest = iParamSetDao.findOneByUuidAndVersion(a.getId(), a.getVersion());  		   
-		   result.add(appLatest);
-	   }
-	   return result;
-	}*/
-
-	
+		
    public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {		
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
 		//ParamList paramList = paramListServiceImpl.findLatestByUuid(algo.getParamList().getRef().getUuid());

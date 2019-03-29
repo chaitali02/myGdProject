@@ -160,86 +160,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return dataqual;
 	}
 
-	/********************** UNUSED **********************/
-//	public boolean isExists(String id) {
-//		return iDataQualDao.exists(id);
-//	}
-
 	public void delete(String Id) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		DataQual dataQual = iDataQualDao.findOneById(appUuid, Id);
 		dataQual.setActive("N");
 		iDataQualDao.save(dataQual);
 	}
-
-	/********************** UNUSED **********************/
-//	public List<DataQual> findAllByUuid(String uuid) {
-//		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-//		return iDataQualDao.findAllByUuid(appUuid, uuid);
-//
-//	}
-
-	
-	/********************** UNUSED **********************/
-//	public DataQual findLatestByUuid(String uuid) {
-//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-//				? securityServiceImpl.getAppInfo().getRef().getUuid()
-//				: null;
-//		if (appUuid == null) {
-//			return iDataQualDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-//		}
-//		return iDataQualDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-//	}
-
-	/********************** UNUSED **********************/
-//	public List<DataQual> findAllLatest() {
-//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-//				? securityServiceImpl.getAppInfo().getRef().getUuid()
-//				: null;
-//		Aggregation dqAggr = newAggregation(group("uuid").max("version").as("version"));
-//		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
-//		List<DataQual> dataQualList = dqResults.getMappedResults();
-//
-//		List<DataQual> result = new ArrayList<DataQual>();
-//		for (DataQual d : dataQualList) {
-//			DataQual dqLatest;
-//			if (appUuid != null) {
-//				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, d.getId(), d.getVersion());
-//			} else {
-//				dqLatest = iDataQualDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-//			}
-//			if (dqLatest != null) {
-//				result.add(dqLatest);
-//			}
-//		}
-//		return result;
-//	}
-
-	/********************** UNUSED **********************/
-//	public List<DataQual> findAllLatestActive() {
-//		Aggregation dqAggr = newAggregation(match(Criteria.where("active").is("Y")),
-//				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-//		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
-//		List<DataQual> dqList = dqResults.getMappedResults();
-//
-//		List<DataQual> result = new ArrayList<DataQual>();
-//		for (DataQual r : dqList) {
-//			DataQual dqLatest;
-//			String appUuid = (securityServiceImpl.getAppInfo() != null
-//					&& securityServiceImpl.getAppInfo().getRef() != null)
-//							? securityServiceImpl.getAppInfo().getRef().getUuid()
-//							: null;
-//			if (appUuid != null) {
-//				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
-//			} else {
-//				dqLatest = iDataQualDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-//			}
-//			if (dqLatest != null) {
-//				result.add(dqLatest);
-//			}
-//		}
-//		return result;
-//	}
 
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
 			List<String> datapodList, DagExec dagExec) throws Exception {
@@ -364,12 +290,6 @@ public class DataQualServiceImpl extends RuleTemplate {
 			throws Exception {
 		return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
 	}
-
-	/********************** UNUSED **********************/
-//	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-//				runMode);
-//	}
 
 	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
@@ -746,23 +666,6 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 
-	/*public String getTableName(Datasource datasource, Datapod datapod, DataQualExec dqExec, RunMode runMode) {
-		if (runMode.equals(RunMode.ONLINE)) {
-			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
-		} else {
-			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-				return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
-		} else {
-			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				return datasource.getSid().concat(".").concat(datapod.getName());
-			} else {
-				return datasource.getDbname().concat(".").concat(datapod.getName());
-			}
-		}
-		}
-	}*/
-
 	public List<Map<String, Object>> getResultDetails(String execUuid, String execVersion, int offset, int limit,
 			String sortBy, String order, String requestId, RunMode runMode)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
@@ -824,17 +727,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			throw new RuntimeException((message != null) ? message : "Can not fetch result details");
 		}
 	}
-	/*
-	 * @Override public Datasource getDatasource(BaseRule baseRule) throws
-	 * JsonProcessingException, IllegalAccessException, IllegalArgumentException,
-	 * InvocationTargetException, NoSuchMethodException, SecurityException,
-	 * NullPointerException, ParseException { MetaIdentifier datapodRef =
-	 * ((DataQual)baseRule).getDependsOn().getRef(); Datapod datapod = (Datapod)
-	 * commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(),
-	 * datapodRef.getVersion(), datapodRef.getType().toString()); return
-	 * commonServiceImpl.getDatasourceByDatapod(datapod); }
-	 */
-
+	
 	public List<BaseEntity> createDQRuleForDatapod(String datapodUuid, String datapodVersion, RunMode runMode)
 			throws JSONException, ParseException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,

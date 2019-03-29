@@ -66,67 +66,7 @@ public class PrivilegeServiceImpl {
 
 	static final Logger logger = Logger.getLogger(PrivilegeServiceImpl.class);
     
-	/********************** UNUSED **********************/
-	/*public Privilege findLatest() {
-		return resolveName(iPrivilegeDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Privilege findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iPrivilegeDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iPrivilegeDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Privilege findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iPrivilegeDao.findOneById(appUuid, id);
-		}
-		return iPrivilegeDao.findOne(id);
-	}*/
-
-
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllVersion(String privilegeName) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iPrivilegeDao.findAllVersion(appUuid, privilegeName);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllLatestActive() {
-		Aggregation privilegeAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Privilege> privilegeResults = mongoTemplate.aggregate(privilegeAggr, "privilege",
-				Privilege.class);
-		List<Privilege> privilegeList = privilegeResults.getMappedResults();
-
-		// Fetch the privilege details for each id
-		List<Privilege> result = new ArrayList<Privilege>();
-		for (Privilege p : privilegeList) {
-			Privilege privilegeLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(appUuid, p.getId(), p.getVersion());
-			} else {
-				privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-			}
-			if (privilegeLatest != null) {
-				result.add(privilegeLatest);
-			}
-		}
-		return result;
-	}*/
+	
 
 
 	public List<RolePriv> getRolePriv(String roleUuid) throws JsonProcessingException {
@@ -236,58 +176,5 @@ public class PrivilegeServiceImpl {
 		Meta meta = aggrResults.getUniqueMappedResult();
 		return meta;
 	}
-	/*public List<RolePriv> getRolePriv(String roleUuid) {
-		List<RolePriv> userPrivList = new ArrayList<RolePriv>();
-		Role role = roleServiceImpl.findLatestByUuid(roleUuid);
-		List<MetaIdentifierHolder> privilegeInfo = role.getPrivilegeInfo();
-		List<Privilege> pList = new ArrayList<Privilege>();
-		boolean isPresent = false;
-		for (int i = 0; i < privilegeInfo.size(); i++) {
-			RolePriv userPriv = new RolePriv();
-			List<String> privList = new ArrayList<>();
-			Privilege privilege = findLatestByUuid(privilegeInfo.get(i).getRef().getUuid());
-			Metadata meta = metadataServiceImpl.findLatestByUuid(privilege.getMetaId().getRef().getUuid());
-			for(int j=0; j<pList.size();j++)
-			{
-				if(privilege.getUuid().equals(pList.get(j).getUuid()))
-				{					
-					isPresent = true;
-					break;
-				}
-				else
-				{
-					isPresent = false;
-				}
-			}
-			if (!isPresent) {				
-				String metaName = meta.getName();
-				System.out.println("Metaname: "+metaName);
-				Aggregation privilegeAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(meta.getUuid())),
-						group("uuid").max("version").as("version"));
-				AggregationResults<Privilege> privResults = mongoTemplate.aggregate(privilegeAggr, "privilege",Privilege.class);
-				List<Privilege> privilegeList = privResults.getMappedResults();
-				String privType = null;
-				String metaType = null;				
-				for (Privilege p : privilegeList) {
-					Privilege privilegeLatest;
-					String appUuid = (securityServiceImpl.getAppInfo() != null
-							&& securityServiceImpl.getAppInfo().getRef() != null)
-									? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-					if (appUuid != null) {
-						privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(appUuid, p.getId(), p.getVersion());
-					} else {
-						privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-					}					
-					pList.add(privilegeLatest);
-					privType = privilegeLatest.getPrivType();
-					metaType = metaName;
-					privList.add(privType);									
-				}				
-				userPriv.setType(metaType);	
-				userPriv.setPrivInfo(privList);
-				userPrivList.add(userPriv);
-			}
-		}
-		return userPrivList;
-	}*/
+
 }

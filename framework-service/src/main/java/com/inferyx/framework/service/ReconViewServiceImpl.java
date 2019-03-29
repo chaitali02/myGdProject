@@ -55,20 +55,6 @@ public class ReconViewServiceImpl {
 
 	static final Logger logger = Logger.getLogger(ReconViewServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public RuleView findOneById(String id) {
-		RuleView ruleView = new RuleView();	
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Rule rule;
-		if (appUuid != null) {
-			rule = iRuleDao.findOneById(appUuid, id);
-		} else {
-			rule = iRuleDao.findOne(id);
-		}
-		
-		return ruleView;
-	}*/
 
 	public ReconView findLatestByUuid(String uuid) throws JsonProcessingException {
 		ReconView reconView = new ReconView();	

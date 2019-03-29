@@ -89,24 +89,6 @@ public class LoadServiceImpl {
 
 	java.util.Map<String, String> requestMap = new HashMap<String, String>();
 
-	/********************** UNUSED **********************/
-	/*
-	 * public Load findLatest() { return resolveName(iLoadDao.findLatest(new
-	 * Sort(Sort.Direction.DESC, "version"))); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Load findLatestByUuid(String uuid){ String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid ==
-	 * null) { return iLoadDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC,
-	 * "version")); } return iLoadDao.findLatestByUuid(appUuid,uuid,new
-	 * Sort(Sort.Direction.DESC, "version")); }
-	 */
-
-
 	public Load save(Load load) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -118,25 +100,6 @@ public class LoadServiceImpl {
 		return loadDet;
 	}
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAllLatestActive() { Aggregation loadAggr =
-	 * newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where(
-	 * "name").ne(null)),group("uuid").max("version").as("version"));
-	 * AggregationResults<Load> loadResults =
-	 * mongoTemplate.aggregate(loadAggr,"load", Load.class); List<Load> loadList =
-	 * loadResults.getMappedResults();
-	 * 
-	 * // Fetch the load details for each id List<Load> result=new
-	 * ArrayList<Load>(); for(Load l : loadList) { Load loadLatest; String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { loadLatest = iLoadDao.findOneByUuidAndVersion(appUuid,l.getId(),
-	 * l.getVersion()); } else { loadLatest =
-	 * iLoadDao.findOneByUuidAndVersion(l.getId(), l.getVersion()); } if(loadLatest
-	 * != null) { result.add(loadLatest); } } return result; }
-	 */
 
 	/**********************
 	 * UNUSED
@@ -225,65 +188,6 @@ public class LoadServiceImpl {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/**
-	 * Persists to dataStore and construct the Task result
-	 * 
-	 * @param dfTask
-	 * @param datapodTableName
-	 * @param metaDetails
-	 * @param resultRef
-	 * @throws Exception 
-	 */
-	/*
-	 * private void persistDataStore(DataFrame dfDataqual, String datapodTableName,
-	 * ExecParams execParams, String filePath, OrderKey datapodKey, LoadExec
-	 * loadExec, Load load) throws IOException { MetaIdentifierHolder metaDetails =
-	 * new MetaIdentifierHolder(); MetaIdentifier metaRef = new MetaIdentifier();
-	 * MetaIdentifier execRef = new MetaIdentifier(); MetaIdentifierHolder
-	 * execDetails = new MetaIdentifierHolder(); MetaIdentifier resultDetails = new
-	 * MetaIdentifier(); // Check if DataSaveMode is Overwrite then overwrite data
-	 * else append to parquet String filePathUrl = String.format("%s%s%s",
-	 * hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(),filePath); MetaIdentifier
-	 * datapodRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(),
-	 * datapodKey.getVersion()); Datapod datapod =
-	 * (Datapod)daoRegister.getRefObject(datapodRef); IWriter datapodWriter =
-	 * datasourceFactory.getDatapodWriter(datapod,daoRegister);
-	 * datapodWriter.write(dfDataqual, filePathUrl, datapod);
-	 * System.out.println("FilePath:"+filePathUrl); long count = dfDataqual.count();
-	 * DataStore dataStore = new DataStore();
-	 * 
-	 * //Saving dataStore Obj dataStore.setDesc("Creating datastore for " +
-	 * datapodTableName); dataStore.setName(datapodTableName);
-	 * metaRef.setType(MetaType.datapod); metaRef.setUuid(datapodRef.getUuid());
-	 * metaRef.setVersion(datapodRef.getVersion()); metaDetails.setRef(metaRef);
-	 * dataStore.setMetaId(metaDetails); dataStore.setNumRows(count);
-	 * 
-	 * execRef.setType(MetaType.loadExec); execRef.setUuid(loadExec.getUuid());
-	 * execRef.setVersion(loadExec.getVersion()); execDetails.setRef(execRef);
-	 * dataStore.setExecId(execDetails); List<MetaIdentifierHolder> appInfoList =
-	 * new ArrayList<MetaIdentifierHolder>(); MetaIdentifierHolder appInfo = new
-	 * MetaIdentifierHolder(); MetaIdentifier appMeta = null; if (load.getAppInfo()
-	 * != null && load.getAppInfo().get(0) != null) { appMeta = new
-	 * MetaIdentifier(MetaType.application,
-	 * load.getAppInfo().get(0).getRef().getUuid(),
-	 * load.getAppInfo().get(0).getRef().getVersion()); } appInfo.setRef(appMeta);
-	 * appInfoList.add(appInfo); dataStore.setAppInfo(appInfoList);
-	 * dataStore.setLocation(filePath); if (execParams != null &&
-	 * execParams.getDimInfo() != null && execParams.getDimInfo().size() > 0) {
-	 * dataStore.setDimInfo(execParams.getDimInfo()); // Including Dimension in
-	 * DataStore }
-	 * 
-	 * DataStore ds = dataStoreServiceImpl.Save(dataStore);
-	 * 
-	 * //Set Task result attr for dagExec
-	 * 
-	 * resultDetails.setType(MetaType.datastore);
-	 * resultDetails.setUuid(ds.getUuid());
-	 * resultDetails.setVersion(ds.getVersion());
-	 * 
-	 * }// End persistDataStore
-	 */
 
 	public List<java.util.Map<String, Object>> getLoadResults(String loadExecUUID, String loadExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode)
@@ -440,28 +344,6 @@ public class LoadServiceImpl {
 		return loadExec;
 	}
 
-	/*@Override
-	public void execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		// Validate input
-		if (baseExec == null) {
-			throw new Exception("No executable, cannot execute. ");
-		}
-		// Create datastore 
-		DataStore dataStore = new DataStore();
-		dataStore.setCreatedBy(baseExec.getCreatedBy());
-		// Fetch Load
-		Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
-		// Fetch target datapod
-		OrderKey datapodKey = load.getTarget().getRef().getKey();
-		if (DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()) != null) {
-			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
-		} else {
-			Datapod targetDatapod = (Datapod) commonServiceImpl
-					.getOneByUuidAndVersion(load.getTarget().getRef().getUuid(), load.getTarget().getRef().getVersion(), MetaType.datapod.toString());
-			datapodKey.setVersion(targetDatapod.getVersion());
-		}
-		executeSql((LoadExec) baseExec, datapodTableName, null, datapodKey, dataStore, runMode);
-	}*/
 	
 
 	public LoadExec execute(String loadUuid, String loadVersion, LoadExec loadExec, ExecParams execParams, RunMode runMode) throws Exception, AnalysisException {

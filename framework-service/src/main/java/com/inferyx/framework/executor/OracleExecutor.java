@@ -176,19 +176,6 @@ public class OracleExecutor implements IExecutor {
 		return rsHolder;
 	}
 
-	/*@Override
-	public ResultSetHolder persistFile(Datapod datapod, String filePath, DataFrame df) {
-		try {
-			String saveMode = "append";
-			System.out.println("************************ORACLE");
-			IWriter datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-			datapodWriter.write(df, filePath, datapod, saveMode);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}*/
 	public void registerDatapod(String filePath, String tableName, String clientContext) {
 		// TODO Auto-generated method stub
 		
@@ -441,16 +428,6 @@ public class OracleExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	/********************** UNUSED **********************/
-//	@Override
-//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-//			SecurityException, NullPointerException, ParseException, IOException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	@Override
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {

@@ -201,63 +201,6 @@ public class DatapodServiceImpl {
 		return dp;
 	}	
 
-
-	/********************** UNUSED **********************/
-	/*public Datapod getOneByUuidAndVersion(String uuid, String version) {
-		return idatapodDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Datapod update(Datapod datapod) {
-		datapod.setBaseEntity();		
-		return idatapodDao.save(datapod);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public boolean isExists(String id) {
-		return idatapodDao.exists(id);
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Datapod datapod = idatapodDao.findOneById(appUuid, Id);
-		datapod.setActive("N");
-		idatapodDao.save(datapod);
-//		String ID = datapod.getId();
-//		idatapodDao.delete(appUuid, ID);
-//		datapod.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Datapod> test(String param1) {
-		return idatapodDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Datapod findLatest() {
-		return resolveName(idatapodDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED 
-	 * @throws ParseException 
-	 * @throws JsonProcessingException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException **********************/
-	/*public Datapod findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;	
-				if(appUuid!=null)
-					return idatapodDao.findAllByUuid(appUuid, uuid);
-				else
-					return idatapodDao.findAllByUuid(uuid);
-	}*/
-
 	public Datapod findOneByName(String fileName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
@@ -268,35 +211,7 @@ public class DatapodServiceImpl {
 		return dp;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Datapod findOneById(String id) {
-		System.out.print(id);
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 
-				if(appUuid != null){
-					logger.info("get" + idatapodDao.findOneById(appUuid, id));
-					return idatapodDao.findOneById(appUuid, id);
-				}else
-					return idatapodDao.findOneById(id);
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public String getAttributeName(Datapod datapod, int attrId) {
-		return datapod.getAttribute(attrId).getName();
-	}*/
-// Comment by Vaibhav due to dosent have any refran..
-/*	public String getAttributeName(Datapod datapod, String attributeId) {
-		List<Attribute> attributes = datapod.getAttributes();
-		for (Attribute attribute : attributes) {
-			if (attribute.getAttributeId() != null 
-				&& attribute.getAttributeId().equals(attributeId)) {
-				return attribute.getName();
-			}
-		}
-		return null;
-	}*/
 	
 	// This method returns the attributeName of the ref object
 	public String getAttributeName(String uuid, int attrId) throws JsonProcessingException {
@@ -414,82 +329,6 @@ public class DatapodServiceImpl {
 	}
 
 	// Generate excel file from datapod
-	/*
-	 * public String genDataDict(String path, String multiTab) throws
-	 * IOException, FileNotFoundException, InvalidFormatException { // Create
-	 * multiple tabs in a single document for datapods if
-	 * (multiTab.equalsIgnoreCase("y")) { try {
-	 * 
-	 * Integer id = null; String name = null, type = null, desc = null;
-	 * 
-	 * List<Datapod> datapods = findAllLatest(); HSSFWorkbook workbook = new
-	 * HSSFWorkbook();
-	 * 
-	 * for (Datapod datapod : datapods) {
-	 * 
-	 * ArrayList<String> al = null; ArrayList<ArrayList<String>> arlist = new
-	 * ArrayList<ArrayList<String>>();
-	 * 
-	 * HSSFSheet sheet = workbook.createSheet(datapod.getName());
-	 * 
-	 * List<Attribute> attributes = datapod.getAttributes(); al = new
-	 * ArrayList<>(); al.add("Id"); al.add("Name"); al.add("Type");
-	 * al.add("Desc"); arlist.add(al); for (Attribute attr : attributes) {
-	 * 
-	 * al = new ArrayList<String>();
-	 * 
-	 * id = attr.getAttributeId(); name = attr.getName(); type = attr.getType();
-	 * desc = attr.getDesc();
-	 * 
-	 * al.add(id.toString()); al.add(name); al.add(type); al.add(desc);
-	 * arlist.add(al);
-	 * 
-	 * for (int k = 0; k < arlist.size(); k++) {
-	 * 
-	 * ArrayList<String> ardata = (ArrayList<String>) arlist.get(k);
-	 * 
-	 * HSSFRow row = sheet.createRow((short) k);
-	 * 
-	 * for (int p = 0; p < ardata.size(); p++) {
-	 * 
-	 * HSSFCell cell = row.createCell((short) p);
-	 * cell.setCellValue(ardata.get(p).toString()); } }
-	 * 
-	 * }
-	 * 
-	 * FileOutputStream fileOut = new FileOutputStream(path + "/Datapods.xlsx");
-	 * workbook.write(fileOut); fileOut.flush(); fileOut.close();
-	 * 
-	 * }
-	 * 
-	 * } catch (Exception ex) { logger.info(ex);
-	 * 
-	 * } }
-	 * 
-	 * // Create single document for all datapods else if
-	 * (multiTab.equalsIgnoreCase("n")) { File file = null; PrintWriter pw =
-	 * null; StringBuilder sb = new StringBuilder(); Integer id = null; // TODO
-	 * Auto-generated method stub String name = null, type = null, desc = null;
-	 * 
-	 * List<Datapod> datapod = findAllLatest(); file = new File(path +
-	 * "/BeforeAspect.xlsx"); try { sb.append("Datapod,AttributeId,Name,Type,Desc");
-	 * sb.append("\n"); for (Datapod data : datapod) { pw = new
-	 * PrintWriter(file); List<Attribute> attrb = data.getAttributes();
-	 * 
-	 * for (Attribute attr : attrb) { id = attr.getAttributeId(); name =
-	 * attr.getName(); type = attr.getType(); desc = attr.getDesc();
-	 * 
-	 * sb.append(data.getName()); sb.append(','); sb.append(id); sb.append(',');
-	 * sb.append(name); sb.append(','); sb.append(type); sb.append(',');
-	 * sb.append(desc); sb.append('\n');
-	 * 
-	 * } pw.write(sb.toString()); } } catch (Exception ex) {
-	 * ex.printStackTrace(); } finally { pw.close(); }
-	 * 
-	 * } return "Your excel file has been generated in folder:" + path; }
-	 */
-
-	// Generate excel file from datapod
 	@SuppressWarnings({ "resource", "unchecked" })
 	public void genDataDict(String multitab, HttpServletResponse response) {
 		response.setContentType("application/xml charset=utf-16");
@@ -585,37 +424,6 @@ public class DatapodServiceImpl {
 			logger.info("exception caught while download file");
 		}
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Datapod> findAllLatestActive()
-
-	{
-		Aggregation datapodAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Datapod> datapodResults = mongoTemplate.aggregate(datapodAggr, "datapod", Datapod.class);
-		List<Datapod> datapodList = datapodResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Datapod> result = new ArrayList<Datapod>();
-		for (Datapod d : datapodList) {
-			Datapod datapodLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				datapodLatest = idatapodDao.findOneByUuidAndVersion(appUuid, d.getId(), d.getVersion());
-			} else {
-				datapodLatest = idatapodDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-			}
-			if(datapodLatest != null)
-			{
-			result.add(datapodLatest);
-			}
-		}
-		return result;
-	}
-*/
-
 
 	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {	
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -1054,19 +862,6 @@ public class DatapodServiceImpl {
 			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
 		}
 	}
-
-//	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList, HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromgetTableNameByDatapodKey) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-//		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);		
-//		if(runMode.equals(RunMode.BATCH)) {
-//			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-//				return datapodDs.getDbname() + "." + datapod.getName();
-//			} else {
-//				return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
-//			}
-//		} else {
-//			return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
-//		}		
-//	}
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList,
 			HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromgetTableNameByDatapodKey)

@@ -76,38 +76,6 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 
 	static final Logger logger = Logger.getLogger(ProfileExecServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public ProfileExec findLatest() {
-		ProfileExec profileexec=null;
-		if(iProfileExecDao.findLatest(new Sort(Sort.Direction.DESC, "version"))!=null){
-			profileexec=resolveName(iProfileExecDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-		}
-		return profileexec ;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileExec findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iProfileExecDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iProfileExecDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	
-
-	/********************** UNUSED **********************/
-	/*public ProfileExec findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iProfileExecDao.findOneById(appUuid, id);
-		} else
-			return iProfileExecDao.findOne(id);
-
-	}*/
-
 
 	public ProfileExec resolveName(ProfileExec ProfileExec) {
 		try {
@@ -140,41 +108,6 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return ProfileExec;
 	}
 
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileExec> findAllLatestActive() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Aggregation ProfileExecAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<ProfileExec> ProfileExecResults = mongoTemplate.aggregate(ProfileExecAggr, "profileexec", ProfileExec.class);
-		List<ProfileExec> ProfileExecList = ProfileExecResults.getMappedResults();
-
-		// Fetch the ProfileExec details for each id
-		List<ProfileExec> result = new ArrayList<ProfileExec>();
-		for (ProfileExec p : ProfileExecList) {
-			ProfileExec ProfileExecLatest;
-			if (appUuid != null) {
-				ProfileExecLatest = iProfileExecDao.findOneByUuidAndVersion(appUuid, p.getId(), p.getVersion());
-			} else {
-				ProfileExecLatest = iProfileExecDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-			}
-			if (ProfileExecLatest != null) {
-				result.add(ProfileExecLatest);
-			}
-		}
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileExec getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iProfileExecDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iProfileExecDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	
 	

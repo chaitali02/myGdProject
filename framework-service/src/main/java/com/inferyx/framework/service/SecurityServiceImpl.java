@@ -169,22 +169,7 @@ public class SecurityServiceImpl  implements Serializable{
 		return sessionContext;
 	}
 
-	/********************** UNUSED **********************/
-	/*public SessionContext setSessionContext(String username) {
-		User userDO = userServiceImpl.findLatestByUuid(username);
-		Session sessionDO = sessionServiceImpl.getSessionByUser(userDO.getUuid());
-		MetaIdentifier userMeta = new MetaIdentifier(MetaType.user, userDO.getUuid(), userDO.getVersion());
-		MetaIdentifierHolder userInfo = new MetaIdentifierHolder();
-		MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session, sessionDO.getUuid(), sessionDO.getVersion());
-		MetaIdentifierHolder sessionInfo = new MetaIdentifierHolder();
-		userInfo.setRef(userMeta);
-		sessionInfo.setRef(sessionMeta);
-		int getLast =userDO.getAppInfo().size() - 1; 
-		sessionContext.setAppInfo(userDO.getAppInfo().get(getLast));
-		sessionContext.setUserInfo(userInfo);
-		sessionContext.setSessionInfo(sessionInfo);
-		return sessionContext;
-	}*/
+	
 
 	public MetaIdentifierHolder getAppInfo() {
 		MetaIdentifierHolder appInfo = new MetaIdentifierHolder();	
@@ -321,29 +306,7 @@ public class SecurityServiceImpl  implements Serializable{
 		return sessionInfo;		
 	}
 	
-	/*public List<SessionInformation> listLoggedInUsers() {
-		final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-
-		List<SessionInformation> activeUserSessions = new ArrayList<>();
-
-		for (final Object principal : allPrincipals) {
-			if (principal instanceof org.springframework.security.core.userdetails.User) {
-				final org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) principal;
-
-				activeUserSessions
-						.addAll(sessionRegistry.getAllSessions(principal,  includeExpiredSessions  false)); // Should
-																												// not
-																												// return
-																												// null;
-
-				if (!activeUserSessions.isEmpty()) {
-					// Do something with user
-					logger.info(user);
-				}
-			}
-		}
-		return activeUserSessions;
-	}*/
+	
 
 	@SuppressWarnings("unused")
 	public Boolean UnlockUser(String userName, String password) throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {

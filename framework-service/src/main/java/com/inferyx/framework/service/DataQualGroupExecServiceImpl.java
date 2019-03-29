@@ -51,63 +51,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	
 	static final Logger logger = Logger.getLogger(DataQualGroupExecServiceImpl.class);	
 
-	/********************** UNUSED **********************/
-	/*public DataQualGroupExec findLatest() {
-		return resolveName(iDataQualGroupExecDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-	
-	/********************** UNUSED **********************/
-	/*public DataQualGroupExec findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDataQualGroupExecDao.findOneById(appUuid,id);
-		}
-		return iDataQualGroupExecDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public DataQualGroupExec findLatestByUuid(String DataQualGroupExecUUID) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDataQualGroupExecDao.findLatestByUuid(DataQualGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDataQualGroupExecDao.findLatestByUuid(appUuid,DataQualGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));		
-	}*/
-
-	
-
-	/********************** UNUSED **********************/
-	/*public List<DataQualGroupExec> findAllLatestActive() 	
-	{	   
-	   Aggregation DataQualGroupExecAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<DataQualGroupExec> DataQualExecResults = mongoTemplate.aggregate(DataQualGroupExecAggr,"dqgroupexec", DataQualGroupExec.class);	   
-	   List<DataQualGroupExec> DataQualGroupExecList = DataQualExecResults.getMappedResults();
-
-	   // Fetch the DataQualExec details for each id
-	   List<DataQualGroupExec> result=new  ArrayList<DataQualGroupExec>();
-	   for(DataQualGroupExec r : DataQualGroupExecList)
-	   {   
-		   DataQualGroupExec DataQualGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid,r.getId(), r.getVersion());
-			}
-			else
-			{
-				DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-			}
-			if(DataQualGroupExecLatest != null)
-			{
-			result.add(DataQualGroupExecLatest);
-			}
-	   }
-	   return result;
-	}*/
-
-
 	public List<DataQualGroupExec> resolveNameGroup(List<DataQualGroupExec> DataQualGroupExec) throws JsonProcessingException {
 		List<DataQualGroupExec> DataQualGroupExecList = new ArrayList<>();
 		for(DataQualGroupExec DataqualE : DataQualGroupExec)	{
@@ -131,51 +74,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		}
 		return DataQualExecList;
 	}
-
-	/********************** UNUSED **********************/
-	/*public DataQualGroupExec resolveName(DataQualGroupExec dataQualGroupExec) {
-		
-		if (dataQualGroupExec == null)
-			return null;
-			
-		if (dataQualGroupExec.getCreatedBy() != null) {
-			String createdByRefUuid = dataQualGroupExec.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dataQualGroupExec.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dataQualGroupExec.getAppInfo() != null) {
-			for (int i = 0; i < dataQualGroupExec.getAppInfo().size(); i++) {
-				if( dataQualGroupExec.getAppInfo().get(i)!=null){
-				String appUuid = dataQualGroupExec.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				dataQualGroupExec.getAppInfo().get(i).getRef().setName(appName);
-				}
-			}
-		}
-		String dependsOnUuid=dataQualGroupExec.getDependsOn().getRef().getUuid();
-		DataQualGroup dataQualGroup=dataQualGroupServiceImpl.findLatestByUuid(dependsOnUuid);
-		dataQualGroupExec.getDependsOn().getRef().setName(dataQualGroup.getName());
-
-		if(dataQualGroupExec.getExecList()!=null){
-		for(int i=0;i<dataQualGroupExec.getExecList().size();i++){
-		String dqExecUuid=dataQualGroupExec.getExecList().get(i).getRef().getUuid();
-		DataQualExec dataQualExec=dataQualExecServiceImpl.findLatestByUuid(dqExecUuid);
-		dataQualGroupExec.getExecList().get(i).getRef().setName(dataQualExec.getName());
-
-		}
-
-		}
-
-		return dataQualGroupExec;
-
-//		String createdByRefUuid = dataQualGroupExec.getCreatedBy().getRef().getUuid();
-//		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-//		dataQualGroupExec.getCreatedBy().getRef().setName(user.getName());
-//		return dataQualGroupExec;
-
-	}*/
-
 	
 	public List<DataQualGroupExec> finddqGroupExecBydqGroup(String dqGroupExecUUID,String dqGroupExecVersion) throws JsonProcessingException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -186,26 +84,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 			dqGroupExecList = iDataQualGroupExecDao.finddqGroupExecBydqGroup(dqGroupExecUUID, dqGroupExecVersion);
 		return resolveNameGroup(dqGroupExecList);
 	}
-
-	
-
-	/********************** UNUSED **********************/
-//	public List<DataQualExec> findDataQualExecByDataqualGroupExec(String dataqualGroupExecUuid, String dataqualGroupExecVersion) throws JsonProcessingException {
-//		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;*/
-//		List<DataQualExec> dataQualExecList = null;
-//		DataQualGroupExec dataQualGroupExec = null;		
-//		/*if (appUuid == null) {
-//			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion);
-//		} else {
-//			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid, dataqualGroupExecUuid, dataqualGroupExecVersion);
-//		}*/
-//		dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion, MetaType.dqgroupExec.toString());
-//		for (MetaIdentifierHolder dataQualExecHolder : dataQualGroupExec.getExecList()) {
-////			dataQualExecList.add((DataQualExec)daoRegister.getRefObject(dataQualExecHolder.getRef()));
-//			dataQualExecList.add((DataQualExec)commonServiceImpl.getOneByUuidAndVersion(dataQualExecHolder.getRef().getUuid(), dataQualExecHolder.getRef().getVersion(), dataQualExecHolder.getRef().getType().toString()));			
-//		}
-//		return resolveName(dataQualExecList);
-//	}
 
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/

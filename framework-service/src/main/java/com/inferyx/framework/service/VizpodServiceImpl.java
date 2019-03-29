@@ -117,22 +117,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		
 	static final Logger logger = Logger.getLogger(VizpodServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Vizpod findLatest() {
-		return resolveName(iVizpodDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Vizpod findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iVizpodDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iVizpodDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
 
 	public Vizpod resolveName(Vizpod vizpod) throws JsonProcessingException {
 		if(vizpod.getCreatedBy() != null)
@@ -288,46 +272,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		return result;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Vizpod findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-		return iVizpodDao.findOneById(appUuid,id);
-		}
-		else
-		return iVizpodDao.findOne(id);
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<Vizpod> findAllLatestActive() 	
-	{	   
-	   Aggregation vizpodAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Vizpod> vizpodResults = mongoTemplate.aggregate(vizpodAggr,"vizpod", Vizpod.class);	   
-	   List<Vizpod> vizpodList = vizpodResults.getMappedResults();
-
-	   // Fetch the vizExec details for each id
-	   List<Vizpod> result=new  ArrayList<Vizpod>();
-	   for(Vizpod v : vizpodList)
-	   {   
-		   Vizpod vizpodLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				vizpodLatest = iVizpodDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				vizpodLatest = iVizpodDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			if(vizpodLatest != null)
-			{
-			result.add(vizpodLatest);
-			}
-	   }
-	   return result;
-	}*/
 
 	public List<Vizpod> findVizpodByDatapod(String datapodUUID) throws JsonProcessingException {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/

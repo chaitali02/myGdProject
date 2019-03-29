@@ -1594,37 +1594,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		return mappedAttrAlises;
 	}
 
-	/********************** UNUSED **********************/
-	@SuppressWarnings("unused")
-	private String getSqlQuery(String tableName, String incrColName, String incrLastValue) {
-		String query = "SELECT * FROM "+tableName+" WHERE " + (incrLastValue != null ? incrColName+" > "+incrLastValue : "1=1") + " AND $CONDITIONS";
-		logger.info("query: "+query);
-		return query;
-	}
-	
-	/********************** UNUSED **********************/
-	@SuppressWarnings("unused")
-	private String getSqlQuery(String[] mappedAttrs, String[] mappedAttrsAliaseName, String tableName, String incrColName, String incrLastValue) {
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("SELECT ");
-		for(int i=0; i<mappedAttrs.length; i++) {
-			queryBuilder.append(mappedAttrs[i]);
-			queryBuilder.append(" AS ");
-			queryBuilder.append(mappedAttrsAliaseName[i]);
-			if(i<mappedAttrs.length-1) {
-				queryBuilder.append(",");
-			}
-		}
-		queryBuilder.append(" FROM ");
-		queryBuilder.append(tableName);
-		queryBuilder.append(" WHERE ");
-		queryBuilder.append(incrLastValue != null ? incrColName+" > "+incrLastValue : "1=1");
-		queryBuilder.append(" AND $CONDITIONS");
-		
-		logger.info("sqoop select query: "+queryBuilder.toString());
-		return queryBuilder.toString();
-	}
-
 	public StreamInput getKafkaStreamInput() {
 		// Prepare kafka params
 		StreamInput streamInput = new StreamInput<T, K>(); 
