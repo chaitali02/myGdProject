@@ -50,7 +50,6 @@ public class VizpodController {
 	public List<Map<String, Object>> getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
 			@PathVariable(value = "VizpodVersion") String vizpodVersion,
 			@RequestBody(required = false) ExecParams execParams, 
-			@RequestParam(value ="rows",defaultValue="1000") int rows,
 			@RequestParam(value="offset", defaultValue="0") int offset, 
 			@RequestParam(value="limit", defaultValue="200") int limit,
 			@RequestParam(value="sortBy", required=false) String sortBy,
@@ -60,7 +59,7 @@ public class VizpodController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
+		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)

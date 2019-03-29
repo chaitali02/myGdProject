@@ -432,16 +432,18 @@ public class VizpodServiceImpl extends RuleTemplate {
 	
 	@SuppressWarnings("finally")
 	public List<Map<String, Object>> getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, 
-			 									int rowLimit, int offset, int limit, String sortBy, String order, String requestId, 
+			 									 int offset, int limit, String sortBy, String order, String requestId, 
 												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		List<Map<String, Object>> data = null;
 		try {
-			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion, MetaType.vizpod.toString());
-			
-			if(vizpod.getLimit() != -1 && vizpod.getLimit() != 0 && vizpod.getLimit() < limit) {
+			int maxLimit = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion,
+					MetaType.vizpod.toString());
+			limit = maxLimit;
+			if (vizpod.getLimit() != -1 && vizpod.getLimit() != 0 && vizpod.getLimit() < maxLimit) {
 				limit = vizpod.getLimit();
 			}
-			
+
 			List<String> orderList = new ArrayList<>();
 			List<String> sortList = new ArrayList<>();
 			if(StringUtils.isNotBlank(order)) {	
@@ -873,7 +875,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
-		List<Map<String, Object>> results = getVizpodResults(vizpodUuid, vizpodVersion, execParams, maxRows, offset, limit, sortBy, order, requestId, runMode);
+		List<Map<String, Object>> results = getVizpodResults(vizpodUuid, vizpodVersion, execParams, offset, limit, sortBy, order, requestId, runMode);
 
 		MetaIdentifierHolder vizpodHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion));
 		response = downloadServiceImpl.download(format, response, runMode, results,
