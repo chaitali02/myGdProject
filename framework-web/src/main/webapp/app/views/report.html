@@ -1085,16 +1085,26 @@
                                                   </div>
                                                 </div>
                               
-                                                <div class="col-md-6 form-group">
+                                                <div class="col-md-6 form-group" ng-if="report.format !='PDF'">
                                                   <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right: 0px;width:60px;padding-left:0px;">Layout
                                                   </label>
                                                   <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <select class="form-control" ng-disabled="isLayoutDisable" data-ng-model="report.layout"
+                                                    <select class="form-control" ng-disabled="true" data-ng-model="report.layout"
                                                       ng-options="r for r in allLayouts">
                                                       <option value="">-Select-</option>
                                                     </select>
                                                   </div>
                                                 </div>
+                                                <div class="col-md-6 form-group" ng-if="report.format =='PDF'">
+                                                    <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right: 0px;width:60px;padding-left:0px;">Layout
+                                                        <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                      <select class="form-control" ng-disabled="isLayoutDisable" data-ng-model="report.layout"
+                                                        ng-options="r for r in allLayouts" required>
+                                                      </select>
+                                                    </div>
+                                                  </div>
                                               </div>
                                             <!-- <div class="form-group">
                                                 <label class="col-md-3 control-label">Format</label>
