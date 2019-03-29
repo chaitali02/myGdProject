@@ -80,7 +80,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		{"name":"attribute","caption":"ATTRIBUTE"},
 		{"name":"attributes","caption":"ATTRIBUTE[S]"},
 		{"name":"distribution","caption":"DISTRIBUTION"},
-		{"name":"datapod","caption":"DATEPOD"},
+		{"name":"datapod","caption":"DATAPOD"},
 		{"name":"function","caption":"FUNCTION"},
 		{"name":"list","caption":"LIST"},
 		{"name":"array","caption":"ARRAY"}];
