@@ -13,6 +13,7 @@ package com.inferyx.framework.common;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Document;
+import com.inferyx.framework.enums.Alignment;
 import com.inferyx.framework.enums.Layout;
 
 import be.quodlibet.boxable.BaseTable;
@@ -87,10 +88,11 @@ public class PDFUtil {
 		contentStream.setNonStrokingColor(new Color(36, 92, 148));
 		
 		//adding rectangle to title page and filling it with color
-		final float rectXPos = margin;
-		final float rextYPos = margin;
-		final float rectWidth = pdfPage.getMediaBox().getWidth() - 2.0f*margin;
-		final float rectHeight = pdfPage.getMediaBox().getHeight() - 2.0f*margin;
+		final float boxPadding = 15.0f;
+		final float rectXPos = margin + boxPadding;
+		final float rextYPos = margin + boxPadding;
+		final float rectWidth = pdfPage.getMediaBox().getWidth() - 2.0f*margin - (2*boxPadding);
+		final float rectHeight = pdfPage.getMediaBox().getHeight() - 2.0f*margin - (2*boxPadding);
 		contentStream.addRect(rectXPos, rextYPos, rectWidth, rectHeight);
 		contentStream.fill();
 		
@@ -102,14 +104,20 @@ public class PDFUtil {
 
 		PDStreamUtils.write(contentStream, title, boldFont, titleSize, titleX, y, Color.WHITE);
 
-		//drawing document details 
-		y -= 70.0f;
-		float tableWidth2 = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
+		//drawing document details
+		float tableWidth2 = pdfPage.getMediaBox().getWidth() - 2.00f * (margin+boxPadding+10);
 		if (document.getLayout().equals(Layout.LANDSCAPE)) {
 			pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 			tableWidth2 = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
 		}
-		BaseTable baseTable2 = new BaseTable(y, y, 50f, tableWidth2, margin, pdfDoc, pdfPage, true, true);
+		
+		float margin2 = (pdfPage.getMediaBox().getWidth() - tableWidth2) / 2;
+		if (document.getLayout().equals(Layout.LANDSCAPE)) {
+			margin2 += 20;
+		}
+		 
+		y -= 110.0f;
+		BaseTable baseTable2 = new BaseTable(y, y, 50f, tableWidth2, margin2, pdfDoc, pdfPage, true, true);
 
 		Map<String, String> otherDetails = new LinkedHashMap<>();
 		otherDetails.put("Name", document.getName());
@@ -117,14 +125,14 @@ public class PDFUtil {
 		otherDetails.put("Parameters", document.getParameters());
 		otherDetails.put("Generation Date", document.getGenerationDate());
 
-		float cell0Width = 18;
-		float cell1Width = 25;
-		float cell2Width = 57;
+		float cell0Width = 14;
+		float cell1Width = 32;
+		float cell2Width = 40;
 
 		if (document.getLayout().equals(Layout.LANDSCAPE)) {
-			cell0Width = 25;
-			cell1Width = 18;
-			cell2Width = 57;
+			cell0Width = 20;
+			cell1Width = 25;
+			cell2Width = 28;
 		}
 
 		for (String key : otherDetails.keySet()) {
@@ -133,25 +141,25 @@ public class PDFUtil {
 			Cell<PDPage> cell0 = tableRow.createCell(cell0Width, " ");
 			cell0.setTextColor(Color.WHITE);
 			cell0.setFontSize(12);
-			cell0.setRightBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell0.setLeftBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell0.setTopBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell0.setBottomBorderStyle(LineStyle.produceDotted(Color.white, 1));
+			cell0.setRightBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell0.setLeftBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell0.setTopBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell0.setBottomBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			
-			Cell<PDPage> cell1 = tableRow.createCell(cell1Width, key);
+			Cell<PDPage> cell1 = tableRow.createCell(cell1Width, "   "+key);
 			cell1.setTextColor(Color.WHITE);
 			cell1.setFontSize(12);
-			cell1.setRightBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell1.setLeftBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell1.setTopBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
+			cell1.setRightBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell1.setLeftBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell1.setTopBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell1.setBottomBorderStyle(LineStyle.produceDotted(Color.white, 1));
 			
 			Cell<PDPage> cell2 = tableRow.createCell(cell2Width, otherDetails.get(key));
 			cell2.setTextColor(Color.WHITE);
 			cell2.setFontSize(12);
-			cell2.setRightBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell2.setLeftBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
-			cell2.setTopBorderStyle(LineStyle.produceDashed(new Color(36, 92, 148), 0));
+			cell2.setRightBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell2.setLeftBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
+			cell2.setTopBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell2.setBottomBorderStyle(LineStyle.produceDotted(Color.white, 1));
 		}
 
@@ -186,22 +194,14 @@ public class PDFUtil {
 		for (List<String> keySubList : partitionedLeyList) {
 			pdfPage = new PDPage();			
 			pdfDoc.addPage(pdfPage);
-
-//			float tableWidth = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
-//			if (document.getLayout().equals(Layout.LANDSCAPE)) {
-//				pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
-//				tableWidth = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
-//			}
-//			if(keySubList.size() < numCellsPerPage) {
-//				float remainingSize = tableWidth - (keySubList.size() * cellSize);
-//				tableWidth -=  remainingSize;
-//			}
 			
 			BaseTable baseTable = null;
 			if (document.getLayout().equals(Layout.LANDSCAPE)) {
-				baseTable = new BaseTable(545.0f, 545.0f, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+				float yStartNewPage = 545.0f - 30;
+				float yStart = yStartNewPage;
+				baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
 			} else if (document.getLayout().equals(Layout.PORTRAIT)) {
-				float yStartNewPage = pdfPage.getMediaBox().getHeight();
+				float yStartNewPage = pdfPage.getMediaBox().getHeight() - 30;
 				float yStart = yStartNewPage;
 				baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
 			}
@@ -210,6 +210,8 @@ public class PDFUtil {
 			for (String colName : keySubList) {
 				Cell<PDPage> cell = headerRow.createCell(cellSize, colMap.get(colName).toString());
 				cell.setFont(boldFont);
+				cell.setTextColor(Color.WHITE);
+				cell.setFontSize(10);
 //				cell.setFillColor(Color.WHITE);
 				cell.setAlign(HorizontalAlignment.CENTER);
 				cell.setFillColor(new Color(36, 92, 148));
@@ -243,41 +245,63 @@ public class PDFUtil {
 			String header = !StringUtils.isBlank(document.getHeader()) ? document.getHeader() : "";
 			float headerWidth = boldFont.getStringWidth(header) / 1000 * headerFontSize;
 			float headerX = getAlignmentPosition(document.getHeaderAlignment(), pageWidth, headerWidth, margin);
-			float headerYStart = pdPage.getMediaBox().getHeight() + 32;
+			float headerYStart = pdPage.getMediaBox().getHeight() - margin;
 
 			final String footer = !StringUtils.isBlank(document.getFooter()) ? document.getFooter() : "";
 			float footerWidth = boldFont.getStringWidth(footer) / 1000 * fontSize;
 			float footerX = getAlignmentPosition(document.getFooterAlignment(), pageWidth, footerWidth, margin);
 			float footerYStart = (pdPage.getMediaBox().getHeight() - (pdPage.getMediaBox().getHeight() - margin))
 					- 20;
-
+			
+			final String pageNum = ""+(i+1);
+			float pageNumWidth = boldFont.getStringWidth(pageNum) / 1000 * fontSize;
+			String pageNumAlignment = Alignment.RIGHT.toString();
+			if(document.getFooterAlignment().equalsIgnoreCase(Alignment.RIGHT.toString())) {
+				pageNumAlignment = Alignment.CENTER.toString();
+			}
+			float pageNumberX = getAlignmentPosition(pageNumAlignment, pageWidth, pageNumWidth, margin);
+			float pageNumYStart = footerYStart;
+			
 			if (document.getLayout().equals(Layout.LANDSCAPE)) {
 //				pdPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 
-				headerYStart = pdPage.getMediaBox().getHeight() - 22;
+				headerYStart = pdPage.getMediaBox().getHeight() - margin;
 				headerX = getAlignmentPosition(document.getHeaderAlignment(), pageWidth, headerWidth, margin);
 
 				footerYStart = (pdPage.getMediaBox().getHeight() - (pdPage.getMediaBox().getHeight() - margin)) - 20;
 				footerX = getAlignmentPosition(document.getFooterAlignment(), pageWidth, footerWidth, margin);
+				
+
+				pageNumberX = getAlignmentPosition(pageNumAlignment, pageWidth, pageNumWidth, margin);
+				pageNumYStart = footerYStart;
 			}
 
 			PDPageContentStream contentStream = new PDPageContentStream(pdfDoc, pdPage, AppendMode.APPEND, true);
 			
 			//drawing organization logo
-			final float imgWidth = 30.0f;
-			final float imgHeight = 30.0f;
-			final float imgXPos = getAlignmentPosition(document.getLogoAlignment().toString(), pageWidth, imgWidth, margin);
-			final float imgYPos = pdPage.getMediaBox().getHeight() - 10.5f - imgHeight;
-			PDImageXObject pdImage = PDImageXObject.createFromFile(document.getOrgLogo(), pdfDoc);
-			contentStream.drawImage(pdImage, imgXPos, imgYPos, imgWidth, imgHeight);
-
-			PDStreamUtils.write(contentStream, footer, nonBoldFont, 10, footerX, footerYStart,
-					new Color(102, 102, 102));// set stayle and size
+			if(!StringUtils.isBlank(document.getOrgLogoName())) {
+				final float imgWidth = 35.0f;
+				final float imgHeight = 35.0f;
+				final float imgXPos = getAlignmentPosition(document.getLogoAlignment().toString(), pageWidth, imgWidth, 15);
+				final float imgYPos = pdPage.getMediaBox().getHeight() - 15.0f - imgHeight;
+				PDImageXObject pdImage = PDImageXObject.createFromFile(document.getOrgLogoName(), pdfDoc);
+				contentStream.drawImage(pdImage, imgXPos, imgYPos, imgWidth, imgHeight);
+			}
+			
+			//drawing header
 			if (i != 0) {
 				PDStreamUtils.write(contentStream, header, boldFont, headerFontSize, headerX, headerYStart,
 						Color.BLACK);// set stayle and size
 			}
 
+			//drawing footer
+			PDStreamUtils.write(contentStream, footer, nonBoldFont, 10, footerX, footerYStart,
+					new Color(102, 102, 102));// set stayle and size
+			
+			//drawing page number
+			PDStreamUtils.write(contentStream, pageNum, nonBoldFont, 10, pageNumberX, pageNumYStart,
+					new Color(102, 102, 102));// set stayle and size
+			
 			contentStream.close();
 
 			pdfDoc2.addPage(pdPage);

@@ -117,14 +117,12 @@ public class ReportController {
 	public HttpServletResponse  downloadReport(
 			 	@RequestParam(value= "uuid") String reportExecUuid, 
 	    		@RequestParam(value= "version") String reportExecVersion,
-				@RequestParam(value = "format", defaultValue = "excel") String format,
-				@RequestParam(value = "rows", defaultValue = "200") int rows,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
 				@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 				HttpServletResponse response) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
-		    reportServiceImpl.downloadReport(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
+		    reportServiceImpl.downloadReport(reportExecUuid, reportExecVersion, 0, response, null, null,
 					null, runMode, false);
 		    return null;
 	   }
