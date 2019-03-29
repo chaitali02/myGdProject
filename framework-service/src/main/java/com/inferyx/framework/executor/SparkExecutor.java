@@ -15,12 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -156,9 +154,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
-import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
@@ -190,10 +186,6 @@ public class SparkExecutor<T> implements IExecutor {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private ModelServiceImpl modelServiceImpl;
-	@Autowired
-	private DatapodServiceImpl datapodServiceImpl;
 	@Resource
 	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
 	@Autowired
@@ -4516,15 +4508,68 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 	
-//	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) throws SQLException {
-//		ResultSet rs = rsHolder.getResultSet();
-//		ResultSetMetaData rsMetaData = rs.getMetaData();
-//		rsMetaData.get
-//		for(int j = 0; rs.next(); j++) {
-//			String colName = rs.getString("COLUMN_NAME");
-//			rs.getString("TYPE_NAME");
-//		}
-//		
-//		return rsHolder;
-//	}
+	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) throws SQLException, IOException {
+		ResultSet rs = rsHolder.getResultSet();
+		ResultSetMetaData rsMetaData = rs.getMetaData();
+		int columnCount = rsMetaData.getColumnCount();
+
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		
+		StructField [] schema = new StructField[columnCount];
+		for(int i=1; i <= columnCount; i++) {
+			StructField field = new StructField(rsMetaData.getColumnName(i), getSparkDTypeBySqlDType(rsMetaData.getColumnType(i)), true, Metadata.empty());
+			schema[i-1] = field;
+		}
+		
+		List<Row> rowList = new ArrayList<>();		
+		while(rs.next()) {
+			List<Object> row = new ArrayList<>();		
+			for(int i = 1; i<= columnCount; i++) {
+				row.add(rs.getObject(i));
+			}
+			rowList.add(RowFactory.create(row.toArray(new Object[row.size()])));
+		}
+
+		Dataset<Row> df = sparkSession.createDataFrame(rowList, new StructType(schema));
+		df.printSchema();
+		df.show(false);
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setCountRows(df.count());
+		return rsHolder;
+	}
+	
+	public static DataType getSparkDTypeBySqlDType(int type) {
+	    switch (type) {
+	    case Types.INTEGER:
+	        return DataTypes.IntegerType;
+	    case Types.BIGINT:
+	        return DataTypes.LongType;
+	    case Types.FLOAT:
+	        return DataTypes.FloatType;
+	    case Types.DOUBLE:
+	        return DataTypes.DoubleType;
+	    case Types.NUMERIC:
+	        return DataTypes.LongType;
+	    case Types.DECIMAL:
+	        return DataTypes.DoubleType;
+	    case Types.CHAR:
+	        return DataTypes.StringType;
+	    case Types.VARCHAR:
+	        return DataTypes.StringType;
+	    case Types.LONGVARCHAR:
+	        return DataTypes.StringType;
+	    case Types.DATE:
+	        return DataTypes.DateType;
+	    case Types.TIMESTAMP:
+	        return DataTypes.TimestampType;
+	    case Types.BINARY:
+	        return DataTypes.BinaryType;
+	    case Types.BOOLEAN:
+	        return DataTypes.BooleanType;
+	    default : return null;
+	    }
+	}
 }
