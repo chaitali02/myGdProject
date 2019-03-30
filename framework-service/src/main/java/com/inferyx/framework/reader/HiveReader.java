@@ -40,7 +40,7 @@ public class HiveReader implements IReader {
 	static final Logger logger=Logger.getLogger(HiveReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, Object conObject, Datasource dataSource) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		
 		ResultSetHolder rsHolder = null;
 		try {

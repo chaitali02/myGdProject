@@ -153,6 +153,7 @@ public class PDFUtil {
 			cell1.setLeftBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell1.setTopBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell1.setBottomBorderStyle(LineStyle.produceDotted(Color.white, 1));
+			cell1.setLineSpacing(1.5f);
 			
 			Cell<PDPage> cell2 = tableRow.createCell(cell2Width, otherDetails.get(key));
 			cell2.setTextColor(Color.WHITE);
@@ -161,6 +162,7 @@ public class PDFUtil {
 			cell2.setLeftBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell2.setTopBorderStyle(LineStyle.produceDotted(new Color(36, 92, 148), 0));
 			cell2.setBottomBorderStyle(LineStyle.produceDotted(Color.white, 1));
+			cell2.setLineSpacing(1.5f);
 		}
 
 		baseTable2.draw();

@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.service.ModelServiceImpl;
 
 /**
@@ -24,8 +23,6 @@ import com.inferyx.framework.service.ModelServiceImpl;
 @Component
 public class TrainAndValidateOperator {
 
-	@Autowired
-	private HDFSInfo hdfsInfo;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl; 
 

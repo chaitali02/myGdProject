@@ -272,7 +272,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.restartExec = function (row, status) {
-    debugger
     $scope.selectDetail=row;
     var tempCaption= dagMetaDataService.elementDefs[$scope.select].caption;
     $scope.confMsg=tempCaption.split("Exec")[0]
@@ -284,7 +283,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     if(row.runMode =="BATCH" && ["dagexec","batchexec"].indexOf($scope.newType) ==-1){
       notify.type = 'info',
       notify.title = 'Info',
-      notify.content ="Please restart using batch module";
+      notify.content ="Please restart using data pipeline module";
       $scope.$emit('notify', notify); 
       return false;
     }

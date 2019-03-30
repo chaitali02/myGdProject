@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
@@ -24,14 +25,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -59,26 +56,36 @@ public class ParquetReader implements IReader
 	static final Logger logger = Logger.getLogger(ParquetReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds) 
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, Object conObject, Datasource ds) 
 			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		String tableName="";
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		try {
-			String filePath = datastore.getLocation();
-			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+			String filePath = null;
 			
-			if (!filePath.contains(hdfsInfo.getHdfsURL()) && !filePath.contains(hdfsInfo.getSchemaPath())) 
-				filePath = String.format("%s%s", hdfsLocation, filePath);
-			else if(!filePath.contains(hdfsInfo.getHdfsURL()))
-				filePath = String.format("%s%s", hdfsInfo.getHdfsURL(), filePath);
-			else if(!filePath.contains(hdfsInfo.getSchemaPath()))
-				filePath = String.format("%s%s", hdfsInfo.getSchemaPath(), filePath);
+			filePath = Helper.getPath(datastore, ds);
 			
 			/*DataFrameHolder dfm = dataFrameService.getaDataFrameHolder(filePath, conObject);*/
 			Dataset<Row> df = null;
 			SparkSession sparkSession = (SparkSession) conObject;
-			DataFrameReader reader = sparkSession.read();
-			df = reader.load(filePath);
+			String sessionParameters = ds.getSessionParameters();
+			if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+//				Configuration config = sparkSession.sparkContext().hadoopConfiguration();
+				for(String sessionParam :sessionParameters.split(",")) {
+					sparkSession.sql("SET "+sessionParam);
+					if (sessionParam.contains("s3")) {
+						String []hadoopConf = sessionParam.split("=");
+						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+						logger.info(hadoopConf[0] + ":" + sparkSession.sparkContext().hadoopConfiguration().get(hadoopConf[0]));
+//						hadoopConf = null;
+					}
+				}
+				for (String param : sparkSession.sparkContext().hadoopConfiguration().getFinalParameters()) {
+					logger.info(param + ":" + sparkSession.sparkContext().hadoopConfiguration().get(param));
+				}
+			}
+			logger.info("File Path : " + filePath);
+			df = sparkSession.read().load(filePath);
 			tableName = Helper.genTableName(filePath);
 			rsHolder.setDataFrame(df);
 			rsHolder.setCountRows(df.count());

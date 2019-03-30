@@ -38,7 +38,7 @@ public class MySqlReader implements IReader {
 	Logger logger=Logger.getLogger(MySqlReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, Object conObject, Datasource dataSource) throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		ResultSetHolder rsHolder = null;
 		try {
 			Datasource execDatasource = commonServiceImpl.getDatasourceByApp();

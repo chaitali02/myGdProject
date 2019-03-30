@@ -359,7 +359,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 					if($scope.selectParamList.paramInfo[i].paramType =="date"){
 						paramListObj.paramValue.value = $filter('date')($scope.selectParamList.paramInfo[i].paramValue, "yyyy-MM-dd");
 					}else{
+						if($scope.selectParamList.paramInfo[i].paramType =="simple"){
 						paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+						}
 					}
 					
 					paramListInfo[i] = paramListObj;
@@ -403,8 +405,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 		$scope.executionmsg = "Report Submited Successfully"
 		notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = $scope.executionmsg
+		notify.title = 'Success',
+		notify.content = $scope.executionmsg
 		$scope.$emit('notify', notify);
 		console.log(JSON.stringify(execParams));
 		$scope.reportExecute(execParams);
@@ -932,7 +934,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.onChangeFromat=function(format){
-		debugger
 		if(format !="PDF"){
 			$scope.report.layout=null;
 			$scope.isLayoutDisable=true;
@@ -1033,6 +1034,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.reportParamListParam = paramsArray
 				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
 					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.reportParamListParam);
+				else{
+					$scope.allparamlistParams =$scope.reportParamListParam;
+				}
 			}
 		}
 	}
@@ -1474,7 +1478,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist = true;
 			$scope.filterTableArray[index].isrhsFunction = false;
-			$scope.getParamByApp();
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getParamByApp();
+		    }
 		}
 
 	}
@@ -1578,8 +1584,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = true;
 			$scope.attributeTableArray[index].isOnDropDown=true;
-
-			$scope.getParamByApp();
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getParamByApp();
+			}
 		}
 
 
@@ -2715,7 +2722,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
     $scope.getDownload = function (data) {
 		notify.type = 'success',
 		notify.title = 'Success',
-		notify.content = 'Report Download Submitted'
+		notify.content = 'Report Download Successfully'
 		
 		$scope.execDetail=data;
 		$scope.msgDetail={};
@@ -2834,7 +2841,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			if(response ==true){
 				notify.type = 'success',
 				notify.title = 'Success',
-				notify.content = 'Email Sent Successfully '
+				notify.content = 'Report Emailed Successfully'
 				$scope.$emit('notify', notify);
 			}else{
 				notify.type = 'error',

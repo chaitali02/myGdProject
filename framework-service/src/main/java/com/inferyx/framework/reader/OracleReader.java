@@ -38,7 +38,7 @@ public class OracleReader implements IReader {
 	Logger logger=Logger.getLogger(OracleReader.class);
 	
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource dataSource)
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, Object conObject, Datasource dataSource)
 			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		ResultSetHolder rsHolder = null;
 		try {

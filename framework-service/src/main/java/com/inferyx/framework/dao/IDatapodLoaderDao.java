@@ -34,11 +34,6 @@ public interface IDatapodLoaderDao
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
 	public Datapod findOneByUuidAndVersion(String uuid, String version);
 
-	/*public DataFrameHolder getReader(Datapod dp,Datasource ds,DataStore datastroe, HDFSInfo hdfsInfo,HiveContext hiveContext);
-	
-	public DataFrameHolder getWriter(String dpTableName, String query, HiveContext hiveContext);*/
-
-
 	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	

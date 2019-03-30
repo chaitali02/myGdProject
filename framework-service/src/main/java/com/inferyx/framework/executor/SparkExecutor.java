@@ -15,12 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,10 +114,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.HistogramUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -156,9 +152,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
-import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
@@ -177,8 +171,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
-	HDFSInfo hdfsInfo;
-	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	ModelExecServiceImpl modelExecServiceImpl;
@@ -190,10 +182,6 @@ public class SparkExecutor<T> implements IExecutor {
 	private ExecutorFactory execFactory;
 	@Autowired
 	private DataSourceFactory datasourceFactory;
-	@Autowired
-	private ModelServiceImpl modelServiceImpl;
-	@Autowired
-	private DatapodServiceImpl datapodServiceImpl;
 	@Resource
 	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
 	@Autowired
@@ -326,6 +314,10 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
+					if (sessionParam.contains("s3a")) {
+						String []hadoopConf = sessionParam.split("=");
+						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+					}
 				}
 				df = sparkSession.sql(sql);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
@@ -650,7 +642,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 */
 	@Override
 	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
-			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
+			 				Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception {
 		if(tableName == null)
 			tableName = datapod.getName();
 		
@@ -659,13 +651,13 @@ public class SparkExecutor<T> implements IExecutor {
 		Object obj = conHolder.getStmtObject();
 		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		String filePath = datastore.getLocation();
-		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+		String hdfsLocation = datasource.getPath();
 		if (!filePath.contains(hdfsLocation)) {
 			filePath = String.format("%s%s", hdfsLocation, filePath);
 		}
 		if (obj instanceof SparkSession) {
 			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-			ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			ResultSetHolder rsHolder = iReader.read(datapod, datastore, obj, datasource);
 			sparkSession.sqlContext().registerDataFrameAsTable(rsHolder.getDataFrame(), tableName);
 			return tableName;
 		} /*
@@ -679,7 +671,11 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public ResultSetHolder executeAndPersist(String sql, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																						datapod.getDatasource().getRef().getVersion(), 
+																						datapod.getDatasource().getRef().getType().toString(), "N");
+		String filePathUrl = String.format("%s%s", datasource.getPath(), filePath);
 		IWriter datapodWriter = null;
 		ResultSetHolder rsHolder = executeSql(sql);
 
@@ -710,7 +706,10 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public ResultSetHolder createRegisterAndPersist(List<RowObj> rowObjList, List<Attribute> attributes, String tableName, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																						datapod.getDatasource().getRef().getVersion(), 
+																						datapod.getDatasource().getRef().getType().toString(), "N");
+		String filePathUrl = String.format("%s%s", datasource.getPath(), filePath);
 		int count = 0;
 		StructField[] fieldArray = new StructField[attributes.size()];
 		for(Attribute attribute : attributes){						
@@ -767,12 +766,25 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public ResultSetHolder registerAndPersist(ResultSetHolder rsHolder, String tableName, String filePath, Datapod datapod, String saveMode,
 			String clientContext) throws IOException {
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+				datapod.getDatasource().getRef().getVersion(), 
+				datapod.getDatasource().getRef().getType().toString(), "N");
+		String filePathUrl = String.format("%s%s", datasource.getPath(), filePath);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
 		IWriter datapodWriter = null;
 		if (obj instanceof SparkSession) {
+			
+			if (rsHolder.getType().equals(ResultType.resultset))
+				try {
+					rsHolder = convertResultsetToDataframe(rsHolder);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					throw new IOException(e1);
+				}
+			
 			registerTempTable(rsHolder.getDataFrame(), tableName);
 			logger.info("temp table registered: " + tableName);
 			try {
@@ -792,8 +804,11 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder executeRegisterAndPersist(String sql, String tableName, String filePath, Datapod datapod,
 			String saveMode, boolean formPath, String clientContext) throws IOException {
 		String filePathUrl = filePath;
+		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																						datapod.getDatasource().getRef().getVersion(), 
+																						datapod.getDatasource().getRef().getType().toString(), "N");
 		if(formPath) {
-			filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+			filePathUrl = String.format("%s%s", datasource.getPath(), filePath);
 		} 
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
@@ -870,7 +885,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 		Object obj = conHolder.getStmtObject();
 		if (obj instanceof SparkSession) {
-			ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			ResultSetHolder rsHolder = iReader.read(datapod, datastore, obj, datasource);
 			df = rsHolder.getDataFrame();
 		}
 		RFormula formula = new RFormula().setFormula("Species ~ .");
@@ -899,7 +914,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 		Object obj = conHolder.getStmtObject();
 		if (obj instanceof SparkSession) {
-			ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, obj, datasource);
+			ResultSetHolder rsHolder = iReader.read(datapod, datastore, obj, datasource);
 			df = rsHolder.getDataFrame();
 		}
 		
@@ -924,7 +939,7 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
 
-		ResultSetHolder rsHolder = iReader.read(datapod, datastore, hdfsInfo, conHolder.getStmtObject(), datasource);
+		ResultSetHolder rsHolder = iReader.read(datapod, datastore, conHolder.getStmtObject(), datasource);
 		df = rsHolder.getDataFrame();		
 		
 //		df.show(false);
@@ -955,46 +970,56 @@ public class SparkExecutor<T> implements IExecutor {
 												.option("header", "true").load(load.getSource().getValue());
 		long count = dfTmp.count();
 		
-		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
-		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
-		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
-		
-		ResultSetHolder rsHolder = null;		
-		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
-				+ " AS version FROM "+tempTableName;
-		String sqlWoVersion = "SELECT * FROM "+tempTableName;
-
-		String[] columns = dfTmp.columns();
-		List<String> list = Arrays.asList(columns);
-		if (list.contains("version")) {
-			rsHolder = executeSql(sqlWoVersion, clientContext);
-		} else {
-			if (!datapod.getAttributes().get(datapod.getAttributes().size() - 1).getName()
-					.equalsIgnoreCase("version")) {
-				rsHolder = executeSql(sqlWoVersion, clientContext);
-			} else
-				rsHolder = executeSql(sqlWiVersion, clientContext);
-		}
-		
-		Dataset<Row> dfTask = rsHolder.getDataFrame();
+		ResultSetHolder rsHolder = new ResultSetHolder();	
+		rsHolder.setCountRows(count);
+		rsHolder.setDataFrame(dfTmp);
+		rsHolder.setTableName(datapodTableName);
+		rsHolder.setType(ResultType.dataframe);
+//		
+//		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
+//		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
+//		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
+//		
+//		ResultSetHolder rsHolder = null;		
+//		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
+//				+ " AS version FROM "+tempTableName;
+//		String sqlWoVersion = "SELECT * FROM "+tempTableName;
+//
+//		String[] columns = dfTmp.columns();
+//		List<String> list = Arrays.asList(columns);
+//		if (list.contains("version")) {
+//			rsHolder = executeSql(sqlWoVersion, clientContext);
+//		} else {
+//			if (!datapod.getAttributes().get(datapod.getAttributes().size() - 1).getName()
+//					.equalsIgnoreCase("version")) {
+//				rsHolder = executeSql(sqlWoVersion, clientContext);
+//			} else
+//				rsHolder = executeSql(sqlWiVersion, clientContext);
+//		}
+//		
+//		Dataset<Row> dfTask = rsHolder.getDataFrame();
 
 		// dfTask = hiveContext.sql("select *, "+ dagExecVer + " as version from
 		// dfLoadTemp").coalesce(4);
 //		dfTask.cache();
 		// sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
-		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
+		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, datapodTableName);
 		logger.info("Going to datapodWriter");
 		
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
 		// MetaIdentifier(MetaType.datapod, datapodKey.getUUID(),
 		// datapodKey.getVersion()));
 		
-		String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																				datapod.getDatasource().getRef().getVersion(), 
+																				datapod.getDatasource().getRef().getType().toString(), "N");
+		
+		String filePathUrl = String.format("%s%s", ds.getPath(), filePath);
 		ResultSetHolder rsHolder2 = new ResultSetHolder();
 		if(datapod != null) {
 			rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);
 		} else {
-			rsHolder2.setDataFrame(dfTask);
+			rsHolder2.setDataFrame(dfTmp);
 			rsHolder2.setType(ResultType.dataframe);
 			
 		}
@@ -1009,8 +1034,8 @@ public class SparkExecutor<T> implements IExecutor {
 			String clientContext) throws IOException {
 		Datasource datasource = null;
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
-		
+//			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 			IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
 			IReader iReader;
 			try {
@@ -1025,7 +1050,7 @@ public class SparkExecutor<T> implements IExecutor {
 			ConnectionHolder conHolder = connection.getConnection();
 			Object obj = conHolder.getStmtObject();
 			if (obj instanceof SparkSession && !execContext.equals(ExecContext.livy_spark)) {
-				ResultSetHolder rsHolder = iReader.read(datapod, dataStore, hdfsInfo, obj, datasource);
+				ResultSetHolder rsHolder = iReader.read(datapod, dataStore, obj, datasource);
 				Dataset<Row> df = rsHolder.getDataFrame();
 				
 				tableName = rsHolder.getTableName();
@@ -1545,9 +1570,13 @@ public class SparkExecutor<T> implements IExecutor {
 				if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 					for(String sessionParam :sessionParameters.split(",")) {
 						df.sparkSession().sql("SET "+sessionParam);
+						if (sessionParam.contains("s3a")) {
+							String []hadoopConf = sessionParam.split("=");
+							df.sparkSession().sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+						}
 					}
 				}
-
+				
 				Map<String, String> options = new HashMap<>();
 				options.put("driver", datasource.getDriver());
 				options.put("user", datasource.getUsername());
@@ -3278,9 +3307,12 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException {
+	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException, SQLException {
 		logger.info("inside method registerAndPersistDataframe");
 
+		if (rsHolder.getType().equals(ResultType.resultset))
+			rsHolder = convertResultsetToDataframe(rsHolder);
+		
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
 		if(datapod !=null) {
@@ -3384,7 +3416,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String tableName, String saveMode, String fileFormat, String header) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String tableName, String saveMode, String fileFormat, String header) throws IOException, SQLException {
 
 		logger.info("inside method writeFileByFormat");
 		Dataset<Row> df = rsHolder.getDataFrame();
@@ -3464,6 +3496,10 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
+					if (sessionParam.contains("s3a")) {
+						String []hadoopConf = sessionParam.split("=");
+						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+					}
 				}
 				df = sparkSession.sql(sql);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
@@ -3522,7 +3558,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	
-	public ResultSetHolder writeResult(String sql, ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode, String tableName, String header, String clientContext) throws IOException {
+	public ResultSetHolder writeResult(String sql, ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode, String tableName, String header, String clientContext) throws IOException, SQLException {
 		if(rsHolder == null && sql == null) {
 			throw new RuntimeException("Please provide source(sql or ResultSetHolder) source to presist.");
 		} else if(sql != null && !sql.isEmpty()) {
@@ -3894,15 +3930,69 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 	
-//	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) throws SQLException {
-//		ResultSet rs = rsHolder.getResultSet();
-//		ResultSetMetaData rsMetaData = rs.getMetaData();
-//		rsMetaData.get
-//		for(int j = 0; rs.next(); j++) {
-//			String colName = rs.getString("COLUMN_NAME");
-//			rs.getString("TYPE_NAME");
-//		}
-//		
-//		return rsHolder;
-//	}
+	public ResultSetHolder convertResultsetToDataframe(ResultSetHolder rsHolder) throws SQLException, IOException {
+		ResultSet rs = rsHolder.getResultSet();
+		ResultSetMetaData rsMetaData = rs.getMetaData();
+		int columnCount = rsMetaData.getColumnCount();
+
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		
+		StructField [] schema = new StructField[columnCount];
+		for(int i=1; i <= columnCount; i++) {
+			StructField field = new StructField(rsMetaData.getColumnName(i), getSparkDTypeBySqlDType(rsMetaData.getColumnType(i)), true, Metadata.empty());
+			schema[i-1] = field;
+		}
+		
+		List<Row> rowList = new ArrayList<>();		
+		while(rs.next()) {
+			List<Object> row = new ArrayList<>();		
+			for(int i = 1; i<= columnCount; i++) {
+				row.add(rs.getObject(i));
+			}
+			rowList.add(RowFactory.create(row.toArray(new Object[row.size()])));
+		}
+
+		Dataset<Row> df = sparkSession.createDataFrame(rowList, new StructType(schema));
+		df.printSchema();
+		df.show(false);
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setResultSet(null);
+		rsHolder.setCountRows(df.count());
+		return rsHolder;
+	}
+	
+	public static DataType getSparkDTypeBySqlDType(int type) {
+	    switch (type) {
+	    case Types.INTEGER:
+	        return DataTypes.IntegerType;
+	    case Types.BIGINT:
+	        return DataTypes.LongType;
+	    case Types.FLOAT:
+	        return DataTypes.FloatType;
+	    case Types.DOUBLE:
+	        return DataTypes.DoubleType;
+	    case Types.NUMERIC:
+	        return DataTypes.LongType;
+	    case Types.DECIMAL:
+	        return DataTypes.createDecimalType();
+	    case Types.CHAR:
+	        return DataTypes.StringType;
+	    case Types.VARCHAR:
+	        return DataTypes.StringType;
+	    case Types.LONGVARCHAR:
+	        return DataTypes.StringType;
+	    case Types.DATE:
+	        return DataTypes.DateType;
+	    case Types.TIMESTAMP:
+	        return DataTypes.TimestampType;
+	    case Types.BINARY:
+	        return DataTypes.BinaryType;
+	    case Types.BOOLEAN:
+	        return DataTypes.BooleanType;
+	    default : return null;
+	    }
+	}
 }
