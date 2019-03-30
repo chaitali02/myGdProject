@@ -968,7 +968,8 @@ public class DataStoreServiceImpl {
 //				data = sparkExecutor.executeAndFetchFromTempTable(
 //						"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
 //			} else 
-			if ((metaType.equals(MetaType.rule) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+//			if ((metaType.equals(MetaType.rule) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+			if (storageContext.equals(StorageContext.FILE)) {
 				customCondition.append(limitBuilder);
 				data = sparkExecutor.executeAndFetchFromTempTable(
 						"SELECT * FROM " + tableName + customCondition.toString(), appUuid);

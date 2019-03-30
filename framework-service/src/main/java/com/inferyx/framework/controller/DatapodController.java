@@ -130,9 +130,11 @@ public class DatapodController {
 			@RequestParam(value = "datapodUuid") String datapodUuid,
 			@RequestParam(value = "desc") String desc,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception{
 		try{
-			datapodServiceImpl.upload(csvFile,datapodUuid,desc);
+		 	RunMode runMode = Helper.getExecutionMode(mode);			
+			datapodServiceImpl.upload(csvFile,datapodUuid,desc,runMode);
 		}catch (Exception e) {
 			e.printStackTrace();
 			return false;

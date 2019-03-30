@@ -765,6 +765,16 @@ public class SparkExecutor<T> implements IExecutor {
 		Object obj = conHolder.getStmtObject();
 		IWriter datapodWriter = null;
 		if (obj instanceof SparkSession) {
+			
+			if (rsHolder.getType().equals(ResultType.resultset))
+				try {
+					rsHolder = convertResultsetToDataframe(rsHolder);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					throw new IOException(e1);
+				}
+			
 			registerTempTable(rsHolder.getDataFrame(), tableName);
 			logger.info("temp table registered: " + tableName);
 			try {
@@ -947,34 +957,40 @@ public class SparkExecutor<T> implements IExecutor {
 												.option("header", "true").load(load.getSource().getValue());
 		long count = dfTmp.count();
 		
-		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
-		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
-		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
-		
-		ResultSetHolder rsHolder = null;		
-		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
-				+ " AS version FROM "+tempTableName;
-		String sqlWoVersion = "SELECT * FROM "+tempTableName;
-
-		String[] columns = dfTmp.columns();
-		List<String> list = Arrays.asList(columns);
-		if (list.contains("version")) {
-			rsHolder = executeSql(sqlWoVersion, clientContext);
-		} else {
-			if (!datapod.getAttributes().get(datapod.getAttributes().size() - 1).getName()
-					.equalsIgnoreCase("version")) {
-				rsHolder = executeSql(sqlWoVersion, clientContext);
-			} else
-				rsHolder = executeSql(sqlWiVersion, clientContext);
-		}
-		
-		Dataset<Row> dfTask = rsHolder.getDataFrame();
+		ResultSetHolder rsHolder = new ResultSetHolder();	
+		rsHolder.setCountRows(count);
+		rsHolder.setDataFrame(dfTmp);
+		rsHolder.setTableName(datapodTableName);
+		rsHolder.setType(ResultType.dataframe);
+//		
+//		// sparkSession.registerDataFrameAsTable(dfTmp, "dfLoadTemp");
+//		String tempTableName = "dfLoadTemp"+"_"+loadExecVer;
+//		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, tempTableName);
+//		
+//		ResultSetHolder rsHolder = null;		
+//		String sqlWiVersion = "SELECT *, " + ((dagExecVer == null) ? loadExecVer : dagExecVer)
+//				+ " AS version FROM "+tempTableName;
+//		String sqlWoVersion = "SELECT * FROM "+tempTableName;
+//
+//		String[] columns = dfTmp.columns();
+//		List<String> list = Arrays.asList(columns);
+//		if (list.contains("version")) {
+//			rsHolder = executeSql(sqlWoVersion, clientContext);
+//		} else {
+//			if (!datapod.getAttributes().get(datapod.getAttributes().size() - 1).getName()
+//					.equalsIgnoreCase("version")) {
+//				rsHolder = executeSql(sqlWoVersion, clientContext);
+//			} else
+//				rsHolder = executeSql(sqlWiVersion, clientContext);
+//		}
+//		
+//		Dataset<Row> dfTask = rsHolder.getDataFrame();
 
 		// dfTask = hiveContext.sql("select *, "+ dagExecVer + " as version from
 		// dfLoadTemp").coalesce(4);
 //		dfTask.cache();
 		// sparkSession.registerDataFrameAsTable(dfTask, datapodTableName);
-		sparkSession.sqlContext().registerDataFrameAsTable(dfTask, datapodTableName);
+		sparkSession.sqlContext().registerDataFrameAsTable(dfTmp, datapodTableName);
 		logger.info("Going to datapodWriter");
 		
 		// Datapod datapod = (Datapod) daoRegister.getRefObject(new
@@ -986,7 +1002,7 @@ public class SparkExecutor<T> implements IExecutor {
 		if(datapod != null) {
 			rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);
 		} else {
-			rsHolder2.setDataFrame(dfTask);
+			rsHolder2.setDataFrame(dfTmp);
 			rsHolder2.setType(ResultType.dataframe);
 			
 		}
@@ -1001,8 +1017,8 @@ public class SparkExecutor<T> implements IExecutor {
 			String clientContext) throws IOException {
 		Datasource datasource = null;
 		try {
-			datasource = commonServiceImpl.getDatasourceByApp();
-		
+//			datasource = commonServiceImpl.getDatasourceByApp();
+			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 			IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
 			IReader iReader;
 			try {
@@ -3270,9 +3286,12 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException {
+	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException, SQLException {
 		logger.info("inside method registerAndPersistDataframe");
 
+		if (rsHolder.getType().equals(ResultType.resultset))
+			rsHolder = convertResultsetToDataframe(rsHolder);
+		
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
 		if(datapod !=null) {
@@ -3376,7 +3395,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String tableName, String saveMode, String fileFormat, String header) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String tableName, String saveMode, String fileFormat, String header) throws IOException, SQLException {
 
 		logger.info("inside method writeFileByFormat");
 		Dataset<Row> df = rsHolder.getDataFrame();
@@ -3514,7 +3533,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	
-	public ResultSetHolder writeResult(String sql, ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode, String tableName, String header, String clientContext) throws IOException {
+	public ResultSetHolder writeResult(String sql, ResultSetHolder rsHolder, String filePathUrl, Datapod datapod, String saveMode, String tableName, String header, String clientContext) throws IOException, SQLException {
 		if(rsHolder == null && sql == null) {
 			throw new RuntimeException("Please provide source(sql or ResultSetHolder) source to presist.");
 		} else if(sql != null && !sql.isEmpty()) {
@@ -3915,6 +3934,7 @@ public class SparkExecutor<T> implements IExecutor {
 		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setResultSet(null);
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}
@@ -3932,7 +3952,7 @@ public class SparkExecutor<T> implements IExecutor {
 	    case Types.NUMERIC:
 	        return DataTypes.LongType;
 	    case Types.DECIMAL:
-	        return DataTypes.DoubleType;
+	        return DataTypes.createDecimalType();
 	    case Types.CHAR:
 	        return DataTypes.StringType;
 	    case Types.VARCHAR:

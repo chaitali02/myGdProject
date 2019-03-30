@@ -655,7 +655,7 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
-	public void upload(MultipartFile csvFile, String datapodUuid, String desc) throws JsonProcessingException, JSONException, ParseException {		
+	public void upload(MultipartFile csvFile, String datapodUuid, String desc, RunMode runMode) throws JsonProcessingException, JSONException, ParseException {		
 		String csvFileName = csvFile.getOriginalFilename();
 		UploadExec uploadExec=new UploadExec();	
 		Status status = new Status(Status.Stage.PENDING, new Date());
@@ -779,8 +779,9 @@ public class DatapodServiceImpl {
 			status = new Status(Status.Stage.RUNNING, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
-			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()),
-					RunMode.BATCH, desc);
+//			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//					RunMode.BATCH, desc);
+			loadExec = loadServiceImpl.execute(load.getUuid(), load.getVersion(), loadExec, null, runMode);
 			status = new Status(Status.Stage.COMPLETED, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);

@@ -49,6 +49,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.LoadOperator;
@@ -133,37 +134,55 @@ public class LoadServiceImpl {
 //			datapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion()));
 			datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString(), "N");
 
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
-			IExecutor exec = execFactory.getExecutor(datasource.getType());
+			IExecutor exec = execFactory.getExecutor(datapodDS.getType());
+			
+//			execContext = commonServiceImpl.getExecContext(runMode);
+//			exec = execFactory.getExecutor(execContext.toString());			
+			StorageContext storageContext = commonServiceImpl.getStorageContext(datapod);
+	
 			long count = 0; 
-			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))	{
-				if(datapodDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
-							datapod, appUuid);
-				}
-				else if(datapodDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())  || datapodDS.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())){
-					loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
-					exec.executeSql(loadExec.getExec(), appUuid);
-				}
-				else {
-					ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
-					count = rsHolder.getCountRows();
-				}				
-			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			if (storageContext.equals(StorageContext.FILE))
+				count = sparkExecutor.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
+								datapod, appUuid);
+			else if (storageContext.equals(StorageContext.HIVE) || storageContext.equals(StorageContext.IMPALA)) {
 				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
 				exec.executeSql(loadExec.getExec(), appUuid);
-				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
-				rsHolder.getResultSet().next();
-				count = rsHolder.getResultSet().getLong(1);
-			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
+			}
+			else {
 				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
 				count = rsHolder.getCountRows();
 			}
+
+//			long count = 0; 
+//			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()))	{
+//				if(datapodDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//					count = exec.loadAndRegister(load, filePath, dagExecVer, loadExec.getVersion(), targetTableName,
+//							datapod, appUuid);
+//				}
+//				else if(datapodDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())  || datapodDS.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())){
+//					loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
+//					exec.executeSql(loadExec.getExec(), appUuid);
+//				}
+//				else {
+//					ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
+//					count = rsHolder.getCountRows();
+//				}				
+//			} else if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+//					|| datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+//				loadExec = (LoadExec) loadOperator.parse(loadExec, null, runMode);
+//				exec.executeSql(loadExec.getExec(), appUuid);
+//				ResultSetHolder rsHolder = exec.executeSql("SELECT COUNT(*) FROM " + targetTableName, appUuid);
+//				rsHolder.getResultSet().next();
+//				count = rsHolder.getResultSet().getLong(1);
+//			} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {				
+//				ResultSetHolder rsHolder  = sparkExecutor.uploadCsvToDatabase(load, datapodDS, targetTableName, datapod);				
+//				count = rsHolder.getCountRows();
+//			}
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			dataStoreServiceImpl.setRunMode(runMode);
@@ -351,7 +370,7 @@ public class LoadServiceImpl {
 			Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadUuid, loadVersion, MetaType.load.toString());
 			MetaIdentifier targetMI = load.getTarget().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
-			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, false);
+			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, true);
 			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode, null);
 			return loadExec;
 		} catch (Exception e) {

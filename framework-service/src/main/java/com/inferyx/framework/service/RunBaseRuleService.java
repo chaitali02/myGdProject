@@ -688,13 +688,14 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				executor = execFactory.getExecutor(ExecContext.spark.toString());
 				rsHolder = executor.registerAndPersist(rsHolder, tableName, filePath, targetDp,SaveMode.APPEND.toString(),null);
 			}
-			else //For Spark + Mysql
+			else { //For Spark + Mysql
 				if(storageContext.equals(StorageContext.ORACLE))
 					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
 				else
 					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
 				rsHolder.setTableName(tableName);
-				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());					
+				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+			}
 		}
 
 		/*if (runMode != null && runMode.equals(RunMode.BATCH)) {

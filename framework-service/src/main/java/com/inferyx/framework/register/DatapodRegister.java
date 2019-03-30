@@ -82,7 +82,9 @@ public class DatapodRegister {
 //				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
 //			}
 			
-			execContext = commonServiceImpl.getExecContext(runMode);
+//			execContext = commonServiceImpl.getExecContext(runMode);
+//			executor = execFactory.getExecutor(execContext.toString());
+			execContext = ExecContext.spark;
 			executor = execFactory.getExecutor(execContext.toString());
 			
 //			exec = execFactory.getExecutor(execContext.toString());

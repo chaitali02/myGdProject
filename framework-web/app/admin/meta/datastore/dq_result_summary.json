@@ -28,7 +28,7 @@
       "value": null
     }
   ],
-  "publicFlag": "N",
+  "publicFlag": "Y",
   "metaId": {
     "ref": {
       "type": "datapod",

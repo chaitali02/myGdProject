@@ -51,31 +51,33 @@ public class LoadOperator implements IOperator {
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
 		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
 
-		loadQuery.append("LOAD DATA LOCAL INPATH '");
+//		loadQuery.append("LOAD DATA LOCAL INPATH '");
+		loadQuery.append("LOAD DATA INPATH '");
 		loadQuery.append(filePathUrl).append("' ");
 		loadQuery.append(" INTO TABLE ");
 		loadQuery.append(targetTableName);
 		if(datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			String version = Helper.getVersion();
-			boolean isVersion = false;
+//			String version = Helper.getVersion();
+//			boolean isVersion = false;
 			if(loadQuery.toString().contains("INPATH"))
 				loadQuery.replace(loadQuery.indexOf("INPATH"), loadQuery.indexOf("INPATH")+6, "INFILE");
 			
 			loadQuery.append(" FIELDS TERMINATED BY ',' ");
-			loadQuery.append("LINES TERMINATED BY '\\n' ");
+			loadQuery.append("LINES TERMINATED BY '\\r' ");
 			loadQuery.append(" IGNORE 1 LINES ");
-			loadQuery.append(" ( ");
-			for(Attribute attribute : targetDatapod.getAttributes()) {
-				loadQuery.append(attribute.getName());
-				loadQuery.append(", ");
-				if(attribute.getName().equalsIgnoreCase("version")){
-					isVersion = true;
-				}
-			}
-			String query = loadQuery.subSequence(0, loadQuery.lastIndexOf(",")).toString().concat(" ) ");
-			if(isVersion){
-				query = query.concat("SET version="+version);
-			}
+			String query = loadQuery.toString();
+//			loadQuery.append(" ( ");
+//			for(Attribute attribute : targetDatapod.getAttributes()) {
+//				loadQuery.append(attribute.getName());
+//				loadQuery.append(", ");
+//				if(attribute.getName().equalsIgnoreCase("version")){
+//					isVersion = true;
+//				}
+//			}
+//			String query = loadQuery.subSequence(0, loadQuery.lastIndexOf(",")).toString().concat(" ) ");
+//			if(isVersion){
+//				query = query.concat("SET version="+version);
+//			}
 			logger.info("query: "+query);
 			return query;
 		} else if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
@@ -150,7 +152,7 @@ public class LoadOperator implements IOperator {
 		MetaIdentifierHolder targetHolder = load.getTarget();
 		String filePathUrl = load.getSource().getValue();
 		Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-		String targetTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, false);
+		String targetTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, true);
 		String sql = generateSql(targetTableName, targetHolder, filePathUrl);
 		baseExec.setExec(sql);
 		commonServiceImpl.save(MetaType.loadExec.toString(), baseExec);
