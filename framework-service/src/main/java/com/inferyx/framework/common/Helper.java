@@ -774,6 +774,8 @@ public class Helper {
 			}
 		return null;
 	}
+	
+	
 	public static String getFileCustomNameByFileType(FileType fileType, String extension,String type) {
 		return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 	}
@@ -801,6 +803,9 @@ public class Helper {
 				case LOG : return getPropertyValue("framework.model.log.path");
 				case ZIP : return getPropertyValue("framework.file.zip.location");		
 				case XLS : return getPropertyValue("framework.file.download.path");		
+				case LOGOIMG : return getPropertyValue("framework.image.logo.Path");
+				case AVTARIMG : return getPropertyValue("framework.image.avtar.Path");
+				
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			default:
 				break;

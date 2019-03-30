@@ -70,6 +70,16 @@ public class FileController {
 									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
+	
+	@RequestMapping(value = "/uploadGen", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
+	public @ResponseBody FileRefHolder uploadGen(@RequestParam("file") MultipartFile file,
+									   @RequestParam(value = "extension") String extension,
+									   @RequestParam(value = "fileType") String fileType,
+									   @RequestParam(value = "uuid", required = false) String uuid,
+									   @RequestParam(value = "type", required = false) String type,
+									   @RequestParam(value = "fileName", required = false) String fileName) throws Exception {
+	 return uploadServiceImpl.uploadGen(file, extension, fileType, fileName, type, uuid);
+	}
 }
 
 
