@@ -36,11 +36,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Algorithm;
-import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -92,8 +90,6 @@ public class MetadataController {
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired
 	DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	HDFSInfo hdfsInfo;
 	@Autowired
 	HiveRegister hiveRegister;
 	@Autowired

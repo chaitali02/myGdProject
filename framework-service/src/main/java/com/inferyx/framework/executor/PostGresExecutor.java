@@ -364,8 +364,8 @@ public class PostGresExecutor implements IExecutor {
 	 */
 	@Override
 	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
-			HDFSInfo hdfsInfo, Object conObject, Datasource datasource)
-			throws InterruptedException, ExecutionException, Exception {
+							Object conObject, Datasource datasource)
+							throws InterruptedException, ExecutionException, Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

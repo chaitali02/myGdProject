@@ -59,8 +59,6 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	private HDFSInfo hdfsInfo;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private ExecutorFactory execFactory;
@@ -142,7 +140,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), getFilePath(datapod, operatorExecVersion));
+			String filePathUrl = String.format("%s%s", datasource.getPath(), getFilePath(datapod, operatorExecVersion));
 			datastore.setLocation(filePathUrl);
 			data = exec.fetchResults(datastore, datapod, rowLimit, tableName, commonServiceImpl.getApp().getUuid());
 		} catch (Exception e) {
@@ -192,13 +190,13 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			String tableName = String.format("%s_%s_%s", operator.getUuid().replace("-", "_"), operator.getVersion(),
 					operatorExec.getVersion());
 
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), filePath);
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String appUuid = commonServiceImpl.getApp().getUuid();
+			String filePathUrl = String.format("%s%s", datasource.getPath(), filePath);
 
 			if (execParams != null) {
 				List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
@@ -210,7 +208,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 								datapodHolder.getRef().getType().toString());
 						DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(),
 								datapod.getVersion());
-						String tabName = exec.readFile(appUuid, datapod, datastore, tableName, hdfsInfo, null,
+						String tabName = exec.readFile(appUuid, datapod, datastore, tableName, null,
 								datasource);
 						String sql = transposeOldOperator.generateSql(datapod, tabName);
 						result = exec.executeRegisterAndPersist(sql, tabName, filePath, datapod,

@@ -44,8 +44,6 @@ public class SparkMLOperator implements IModelOperator {
 //	@Autowired
 //	private SparkSession sparkSession;
 //	@Autowired
-//	private HDFSInfo hdfsInfo;
-//	@Autowired
 //	private ModelServiceImpl modelServiceImpl;
 
 	static final Logger LOGGER = Logger.getLogger(SparkMLOperator.class);

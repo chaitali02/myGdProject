@@ -110,7 +110,7 @@ public class DataSourceFactory {
 //		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
 																		datapod.getDatasource().getRef().getVersion(), 
-																		datapod.getDatasource().getRef().getType().toString());
+																		datapod.getDatasource().getRef().getType().toString(), "N");
 		String dataSourceType = datasource.getType();
 		switch (dataSourceType.toUpperCase()) {
 		case "HIVE":// HiveWriter hr = new HiveWriter();

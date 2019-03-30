@@ -29,7 +29,6 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.StructType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -302,13 +301,12 @@ public interface IExecutor {
 	 * @param datapod
 	 * @param datastore
 	 * @param tableName TODO
-	 * @param hdfsInfo
 	 * @param conObject
 	 * @param datasource
 	 * @return
 	 */
 	public String readFile(String clientContext, Datapod datapod, DataStore datastore, String tableName,
-			HDFSInfo hdfsInfo, Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
+							Object conObject, Datasource datasource) throws InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 

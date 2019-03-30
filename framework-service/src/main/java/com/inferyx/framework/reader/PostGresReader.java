@@ -38,7 +38,7 @@ public class PostGresReader implements IReader {
 	
 
 	@Override
-	public ResultSetHolder read(Datapod datapod, DataStore datastore, HDFSInfo hdfsInfo, Object conObject, Datasource ds)
+	public ResultSetHolder read(Datapod datapod, DataStore datastore, Object conObject, Datasource ds)
 			throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ParseException {
 		ResultSetHolder rsHolder = null;
 		try {

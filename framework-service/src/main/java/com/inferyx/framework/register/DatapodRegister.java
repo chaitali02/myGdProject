@@ -88,7 +88,11 @@ public class DatapodRegister {
 			executor = execFactory.getExecutor(execContext.toString());
 			
 //			exec = execFactory.getExecutor(execContext.toString());
-			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+//			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																							datapod.getDatasource().getRef().getVersion(), 
+																							datapod.getDatasource().getRef().getType().toString(), "N");
+			String hdfsLocation = datasource.getPath();
 			if (filepath != null && !filepath.contains(hdfsLocation)) {
 				filepath = String.format("%s%s", hdfsLocation, filepath);
 			}

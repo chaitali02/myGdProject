@@ -59,14 +59,109 @@ import org.deeplearning4j.nn.conf.layers.variational.VariationalAutoencoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.domain.*;
+import com.inferyx.framework.domain.Activity;
+import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.AppConfig;
+import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeDomain;
+import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Batch;
+import com.inferyx.framework.domain.BatchExec;
+import com.inferyx.framework.domain.Comment;
+import com.inferyx.framework.domain.Condition;
+import com.inferyx.framework.domain.Dag;
+import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualExec;
+import com.inferyx.framework.domain.DataQualGroup;
+import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
+import com.inferyx.framework.domain.Dimension;
+import com.inferyx.framework.domain.Distribution;
+import com.inferyx.framework.domain.DownloadExec;
+import com.inferyx.framework.domain.Export;
+import com.inferyx.framework.domain.Expression;
+import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.Filter;
+import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Graphpod;
+import com.inferyx.framework.domain.Group;
+import com.inferyx.framework.domain.Import;
+import com.inferyx.framework.domain.Ingest;
+import com.inferyx.framework.domain.IngestExec;
+import com.inferyx.framework.domain.IngestGroup;
+import com.inferyx.framework.domain.IngestGroupExec;
+import com.inferyx.framework.domain.Key;
+import com.inferyx.framework.domain.Load;
+import com.inferyx.framework.domain.LoadExec;
+import com.inferyx.framework.domain.Log;
+import com.inferyx.framework.domain.Lov;
+import com.inferyx.framework.domain.Map;
+import com.inferyx.framework.domain.MapExec;
+import com.inferyx.framework.domain.Measure;
+import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.domain.Meta;
+import com.inferyx.framework.domain.MetaIdentifier;
+import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.ModelExec;
+import com.inferyx.framework.domain.Operator;
+import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Organization;
+import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamSet;
+import com.inferyx.framework.domain.Predict;
+import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.Privilege;
+import com.inferyx.framework.domain.ProcessExec;
+import com.inferyx.framework.domain.Profile;
+import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.domain.ProfileGroup;
+import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.Recon;
+import com.inferyx.framework.domain.ReconExec;
+import com.inferyx.framework.domain.ReconGroup;
+import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.Role;
+import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.RuleExec;
+import com.inferyx.framework.domain.RuleGroup;
+import com.inferyx.framework.domain.RuleGroupExec;
+import com.inferyx.framework.domain.RunStatusHolder;
+import com.inferyx.framework.domain.Schedule;
+import com.inferyx.framework.domain.Session;
+import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.SimulateExec;
+import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Tag;
+import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.StorageContext;
-import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
@@ -1360,4 +1455,26 @@ public class Helper {
 
 	    return "?";
 	}
+	
+	/**
+	 * Returns filePath given datastore and datasource
+	 * @param datastore
+	 * @param datasource
+	 * @return
+	 */
+	public static String getPath(DataStore datastore, Datasource datasource) {
+		String dsLocation = "";
+		String dstLocation = "";
+		if (datasource == null) {
+			return null;
+		}
+		if (datasource.getType() != null && datasource.getType().equals("FILE")) {
+			dsLocation = datasource.getPath();
+		}
+		if (datastore != null) {
+			dstLocation = datastore.getLocation();
+		}
+		return String.format("%s%s", dsLocation, dstLocation);
+	}
+	
 }
