@@ -314,7 +314,7 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
-					if (sessionParam.contains("s3a")) {
+					if (sessionParam.contains("s3")) {
 						String []hadoopConf = sessionParam.split("=");
 						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
 					}
@@ -1570,7 +1570,7 @@ public class SparkExecutor<T> implements IExecutor {
 				if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 					for(String sessionParam :sessionParameters.split(",")) {
 						df.sparkSession().sql("SET "+sessionParam);
-						if (sessionParam.contains("s3a")) {
+						if (sessionParam.contains("s3")) {
 							String []hadoopConf = sessionParam.split("=");
 							df.sparkSession().sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
 						}
@@ -3496,7 +3496,7 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
-					if (sessionParam.contains("s3a")) {
+					if (sessionParam.contains("s3")) {
 						String []hadoopConf = sessionParam.split("=");
 						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
 					}

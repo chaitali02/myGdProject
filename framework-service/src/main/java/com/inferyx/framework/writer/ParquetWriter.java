@@ -14,14 +14,17 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.SparkSession;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -43,6 +46,21 @@ public class ParquetWriter implements IWriter {
 		try { 
 //			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			Dataset<Row> df = rsHolder.getDataFrame();
+			SparkSession sparkSession = df.sparkSession();
+			Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
+																					datapod.getDatasource().getRef().getVersion(), 
+																					datapod.getDatasource().getRef().getType().toString(), "N");
+			String sessionParameters = ds.getSessionParameters();
+			if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+//				Configuration config = sparkSession.sparkContext().hadoopConfiguration();
+				for(String sessionParam :sessionParameters.split(",")) {
+					sparkSession.sql("SET "+sessionParam);
+					if (sessionParam.contains("s3")) {
+						String []hadoopConf = sessionParam.split("=");
+						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+					}
+				}
+			}
 //			df.show(false);
 			if(datapod !=null) {
 				if(df.columns().length != datapod.getAttributes().size())
