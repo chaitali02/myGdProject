@@ -370,7 +370,7 @@ public class LoadServiceImpl {
 			Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadUuid, loadVersion, MetaType.load.toString());
 			MetaIdentifier targetMI = load.getTarget().getRef();
 			Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
-			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, true);
+			String targetDpTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, false);
 			executeSql(loadExec, null, targetDpTableName, new OrderKey(targetDp.getUuid(), targetDp.getVersion()), runMode, null);
 			return loadExec;
 		} catch (Exception e) {

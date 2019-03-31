@@ -12,10 +12,15 @@ package com.inferyx.framework.reader;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.text.ParseException;
+import java.util.Iterator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
@@ -85,6 +90,13 @@ public class ParquetReader implements IReader
 				}
 			}
 			logger.info("File Path : " + filePath);
+			// Check if path exists
+			/*logger.info("Path exists : " + FileSystem.get(new URI("s3://inferyx"), sparkSession.sparkContext().hadoopConfiguration()).exists(new Path(filePath+"/")));
+			RemoteIterator<LocatedFileStatus> it = FileSystem.get(new URI("s3://inferyx"), sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path("s3://inferyx/user/hive/warehouse/framework/data/"), true);// ed47f654-2d4b-483c-971f-804ee88f092f/1488620292/1540987853/
+			while(it.hasNext()) {
+				logger.info(it.next().getPath().getName());
+			}*/
+			logger.info("Going to fetch file ");
 			df = sparkSession.read().load(filePath);
 			tableName = Helper.genTableName(filePath);
 			rsHolder.setDataFrame(df);

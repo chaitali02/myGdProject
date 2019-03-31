@@ -11,11 +11,12 @@
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,12 +40,23 @@ public class SparkConnector implements IConnector{
 	
 	@SuppressWarnings({ "resource", "static-access" })
 	private SparkSession getSparkSession() throws IOException {
+		String key;
+		String value;
 		if (this.sparkSession == null) {
 			synchronized ("1") {
 				if (this.sparkSession == null) {
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
 					System.out.println("Creating a spark context as sparkSession is : " + this.sparkSession);
 					SparkContext sparkContext = new SparkContext(sparkConf);
+					Enumeration<?> e = sparkInfo.getProp().propertyNames();
+					while (e.hasMoreElements()) {
+						key = (String) e.nextElement();
+						value = sparkInfo.getProp().getProperty(key);							
+						if(key.contains("s3")) {					
+							String []hadoopConf = key.split("=");
+							sparkContext.hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);				
+						}
+					}
 					this.sparkSession = new SparkSession(sparkContext).builder().enableHiveSupport().getOrCreate();
 					registerUDF.register(sparkSession);
 				}

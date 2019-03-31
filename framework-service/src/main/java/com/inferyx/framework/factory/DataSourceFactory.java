@@ -80,7 +80,7 @@ public class DataSourceFactory {
 //		Datasource ds = commonServiceImpl.getDatasourceByApp();
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), 
 																			dp.getDatasource().getRef().getVersion(), 
-																			dp.getDatasource().getRef().getType().toString());
+																			dp.getDatasource().getRef().getType().toString(), "N");
 		
 		
 		String dataSourceType = ds.getType();
