@@ -1016,13 +1016,14 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		String filePathUrl = String.format("%s%s", ds.getPath(), filePath);
 		ResultSetHolder rsHolder2 = new ResultSetHolder();
-		if(datapod != null) {
-			rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);
-		} else {
-			rsHolder2.setDataFrame(dfTmp);
-			rsHolder2.setType(ResultType.dataframe);
-			
-		}
+		rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);		
+//		if(datapod != null) {
+//			rsHolder2 = applySchema(rsHolder, datapod, null, datapodTableName, true);
+//		} else {
+//			rsHolder2.setDataFrame(dfTmp);
+//			rsHolder2.setType(ResultType.dataframe);
+//			
+//		}
 		rsHolder2.setTableName(datapodTableName);
 		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod);
 		datapodWriter.write(rsHolder2, filePathUrl, datapod, SaveMode.Overwrite.toString());

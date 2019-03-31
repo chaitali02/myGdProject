@@ -11,6 +11,8 @@
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.Enumeration;
 
 import org.apache.hadoop.conf.Configuration;
@@ -20,10 +22,12 @@ import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SparkInfo;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.register.UDFRegister;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
 public class SparkConnector implements IConnector{
@@ -32,6 +36,8 @@ public class SparkConnector implements IConnector{
 	SparkInfo sparkInfo;
 	@Autowired
 	UDFRegister registerUDF;
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 	
 	/*@Autowired
 	HiveContext hiveContext;*/
@@ -48,15 +54,23 @@ public class SparkConnector implements IConnector{
 					SparkConf sparkConf = sparkInfo.getSparkConfiguration();
 					System.out.println("Creating a spark context as sparkSession is : " + this.sparkSession);
 					SparkContext sparkContext = new SparkContext(sparkConf);
-					Enumeration<?> e = sparkInfo.getProp().propertyNames();
-					while (e.hasMoreElements()) {
-						key = (String) e.nextElement();
-						value = sparkInfo.getProp().getProperty(key);							
-						if(key.contains("s3")) {					
-							String []hadoopConf = key.split("=");
-							sparkContext.hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);				
-						}
+					try {
+						sparkContext.hadoopConfiguration().set("fs.s3n.awsAccessKeyId",commonServiceImpl.getConfigValue("fs.s3n.awsAccessKeyId"));
+						sparkContext.hadoopConfiguration().set("fs.s3n.awsSecretAccessKey",commonServiceImpl.getConfigValue("fs.s3n.awsSecretAccessKey"));
+					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+							| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
+					//					Enumeration<?> e = sparkInfo.getProp().propertyNames();
+//					while (e.hasMoreElements()) {
+//						key = (String) e.nextElement();
+//						value = sparkInfo.getProp().getProperty(key);							
+//						if(key.contains("s3")) {					
+//							String []hadoopConf = key.split("=");
+//							sparkContext.hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);				
+//						}
+//					}
 					this.sparkSession = new SparkSession(sparkContext).builder().enableHiveSupport().getOrCreate();
 					registerUDF.register(sparkSession);
 				}

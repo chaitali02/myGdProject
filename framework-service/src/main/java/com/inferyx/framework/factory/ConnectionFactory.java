@@ -21,6 +21,7 @@ import com.inferyx.framework.connector.OracleConnector;
 import com.inferyx.framework.connector.PostGresConnector;
 import com.inferyx.framework.connector.PythonConnector;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.connector.S3Connector;
 import com.inferyx.framework.connector.SparkConnector;
 
 @Service
@@ -42,6 +43,8 @@ public class ConnectionFactory {
 	PythonConnector pythonConnector;
 	@Autowired
 	PostGresConnector postGresConnector;
+	@Autowired
+	S3Connector s3Connector;
 	
 	public IConnector getConnector(String connection)
 	{
@@ -56,6 +59,7 @@ public class ConnectionFactory {
 		case "r" : return rConnector;
 		case "python" : return pythonConnector;
 		case "postgres" : return postGresConnector;
+		case "s3" : return s3Connector;
 		default:				
 		}
 		return null;

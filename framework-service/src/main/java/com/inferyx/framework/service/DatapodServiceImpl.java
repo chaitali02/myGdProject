@@ -59,7 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
+//import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
@@ -145,8 +145,8 @@ public class DatapodServiceImpl {
 	ExecutorFactory execFactory;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
-	@Autowired
-	HDFSInfo hdfsInfo;
+//	@Autowired
+//	HDFSInfo hdfsInfo;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -274,7 +274,9 @@ public class DatapodServiceImpl {
 		if(tempDatapod !=null) {
 			dp.setUuid(tempDatapod.getUuid());
 		}
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		String datasourceUuid = commonServiceImpl.getConfigValue("framework.register.datasource.uuid");
+		Datasource datasource = (Datasource) commonServiceImpl.getLatestByUuid(datasourceUuid, MetaType.datasource.toString());		
 		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
 				datasource.getVersion());
 		MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
@@ -680,7 +682,8 @@ public class DatapodServiceImpl {
 			File file = new File(uploadPath);
 			csvFile.transferTo(file);
 		 
-			uploadPath = hdfsInfo.getHdfsURL() + uploadPath;
+//			uploadPath = hdfsInfo.getHdfsURL() + uploadPath;
+//			uploadPath = uploadPath;
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodUuid, MetaType.datapod.toString());
 			uploadExec.setLocation(uploadPath);
 			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,datapod.getUuid(),datapod.getVersion())));

@@ -490,10 +490,10 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					
 					String mappedFeatureAttrSql = modelServiceImpl.generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, null, tableName);	
 
-					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
+//					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
 					String defaultDir = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
 					String modelFileName = dataStore.getLocation();
-					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
+					String savePredict = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 
 					modelServiceImpl.deleteFileOrDirIfExists(defaultDir);
@@ -569,7 +569,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 									, "file://"+saveFileName, tableName
 									, "true", true);
 							saveFileName = modelServiceImpl.renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.PARQUET.toString().toLowerCase());
-							saveFileName = URI+saveFileName;
+//							saveFileName = saveFileName;
 							logger.info("Saved file name : " + saveFileName);
 						}						
 						

@@ -44,11 +44,15 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
+import com.inferyx.framework.connector.S3Connector;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -1491,24 +1495,56 @@ public class RegisterService {
 	            }
 	         };
 	     
-	     	File[] listOfFiles = folder.listFiles(fileNameFilter);
+	        File[] listOfFiles = null;
+	        String bucket_name = null;
+	        if (datasource.getAccess().equals(ExecContext.S3.toString())) {
+	        	String[] arrOfStr = datasource.getPath().split("s3://", 2);
+	        	arrOfStr = arrOfStr[1].split("/", 2);
+	        	bucket_name = arrOfStr[0];
+	        	String folderPath = arrOfStr[1];
+				IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+				ConnectionHolder conHolder = connector.getConnection();
+	        	AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+			    ListObjectsV2Result result = s3.listObjectsV2(bucket_name,folderPath);
+		        List<S3ObjectSummary> objects = result.getObjectSummaries();		        
+		        int i = 0;
+		        listOfFiles = new File[objects.size()];
+		        for (S3ObjectSummary os: objects) {
+		        	File file = new File(os.getKey());
+		        	listOfFiles[i] = file;	        	
+		        	i++;
+		            System.out.println("* " + os.getKey());
+		        }
+	        }
+	        else
+	        	listOfFiles = folder.listFiles(fileNameFilter);
 	     	
 //			List<String> fileList = new ArrayList<String>();
 			Map<String, String> tablesWithPath = new Hashtable<>();
-			
 			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					logger.info("File " + listOfFiles[i].getName());
+//				File file = new File("s3://"+bucket_name+"/"+listOfFiles[i]);
+				if (listOfFiles[i].toString().contains(".")) {
 					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
 					fileName=fileName.toLowerCase();
 					logger.info(fileName);
-//					fileList.add(fileName);
 					String path = datasource.getPath() + listOfFiles[i].getName();
 					tablesWithPath.put(fileName, path);
-				} else if (listOfFiles[i].isDirectory()) {
-					logger.info("Directory " + listOfFiles[i].getName());
 				}
+				
 			}
+//			for (int i = 0; i < listOfFiles.length; i++) {
+//				if (listOfFiles[i].isFile()) {
+//					logger.info("File " + listOfFiles[i].getName());
+//					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
+//					fileName=fileName.toLowerCase();
+//					logger.info(fileName);
+////					fileList.add(fileName);
+//					String path = datasource.getPath() + listOfFiles[i].getName();
+//					tablesWithPath.put(fileName, path);
+//				} else if (listOfFiles[i].isDirectory()) {
+//					logger.info("Directory " + listOfFiles[i].getName());
+//				}
+//			}
 			List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
 			registryList.addAll(datapodList);
 		}

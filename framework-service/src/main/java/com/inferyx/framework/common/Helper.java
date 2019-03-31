@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,6 +58,7 @@ import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
 import org.deeplearning4j.nn.conf.layers.misc.FrozenLayer;
 import org.deeplearning4j.nn.conf.layers.variational.VariationalAutoencoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Activity;
@@ -71,6 +73,7 @@ import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.Comment;
 import com.inferyx.framework.domain.Condition;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Dashboard;
@@ -169,9 +172,10 @@ public class Helper {
 	static Logger logger=Logger.getLogger(Helper.class);
 	@Autowired
 	Engine engine;
+//	@Autowired
+//	private HDFSInfo hdfsInfo;
 	@Autowired
-	private HDFSInfo hdfsInfo;
-	@Autowired
+	static
 	MetadataServiceImpl metadataServiceImpl;
 
 	public static String getNextUUID(){
@@ -651,6 +655,17 @@ public class Helper {
 		return new MetaIdentifier(type, baseEntity.getUuid(), baseEntity.getVersion(), baseEntity.getName());
 	}
 	
+//	public static String getConfigValue(String configName) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InvocationTargetException {
+//		List<Config> appConfigList = metadataServiceImpl.getAppConfigByCurrentApp();
+//		for (Config config : appConfigList) {
+//			if (config.getConfigName().equals(configName)) {
+//				return config.getConfigVal();
+//			}
+//		}
+//		// Pull from framework.properties as resultConfig could not be resolved
+//		return getPropertyValue(configName);
+//	}
+
 	public static String getPropertyValue(String key) throws FileNotFoundException, IOException {
 		Properties property = new Properties();
 		InputStream stream = Helper.class.getClassLoader().getResourceAsStream("framework.properties");
@@ -869,8 +884,6 @@ public class Helper {
 			}
 		return null;
 	}
-	
-	
 	public static String getFileCustomNameByFileType(FileType fileType, String extension,String type) {
 		return Helper.getNextUUID()+"_"+Helper.getVersion()+"."+extension;
 	}
@@ -900,7 +913,6 @@ public class Helper {
 				case XLS : return getPropertyValue("framework.file.download.path");		
 				case LOGOIMG : return getPropertyValue("framework.image.logo.Path");
 				case AVTARIMG : return getPropertyValue("framework.image.avtar.Path");
-				
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			default:
 				break;
@@ -1185,7 +1197,8 @@ public class Helper {
 	}
 	
 	public String getPathByDataSource(Datasource datasource) {
-		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
+//		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
+		return String.format("%s/%s", datasource.getPath());
 	}
 	
 	public static Pattern getRegexByFileInfo(String fileName, String fileExtn, String fileFormat, boolean isCaseSensitive) {

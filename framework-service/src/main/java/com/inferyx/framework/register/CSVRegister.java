@@ -15,7 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.HDFSInfo;
+//import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FileType;
@@ -38,8 +38,8 @@ public class CSVRegister extends DataSourceRegister {
 	DatasourceServiceImpl datasourceServiceImpl;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
-    @Autowired
-	HDFSInfo hdfsInfo;
+//    @Autowired
+//	HDFSInfo hdfsInfo;
     
 	/*public DataFrame load(String filePath, HiveContext hiveContext){
 		return hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
@@ -48,7 +48,8 @@ public class CSVRegister extends DataSourceRegister {
 
 	public List<Registry> register(String uuid, String version, List<Registry> registryList, RunMode runMode) throws Exception {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
-		String filepath = hdfsInfo.getHdfsURL()+ds.getPath();
+//		String filepath = hdfsInfo.getHdfsURL()+ds.getPath();
+		String filepath = ds.getPath();
 		for(int i=0; i<registryList.size(); i++) {
 			MetaIdentifierHolder loadExec = null;
 			try {

@@ -12,5 +12,5 @@ package com.inferyx.framework.executor;
 
 public enum ExecContext {
 
-	spark, HIVE, IMPALA, ORACLE, MYSQL, FILE, livy_spark, R, PYTHON, POSTGRES, SQOOP,STREAM, DL4J;
+	spark, HIVE, IMPALA, ORACLE, MYSQL, FILE, livy_spark, R, PYTHON, POSTGRES, SQOOP,STREAM, DL4J, S3;
 }
