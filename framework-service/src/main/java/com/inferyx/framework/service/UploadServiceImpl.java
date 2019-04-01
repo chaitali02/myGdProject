@@ -229,8 +229,8 @@ public class UploadServiceImpl {
 			File scriptFile = new File(fileLocation);
 			multiPartFile.transferTo(scriptFile);
 
-			uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
-					Status.Stage.RUNNING);
+		/*	uploadExec = (UploadExec) commonServiceImpl.setMetaStatus(uploadExec, MetaType.uploadExec,
+					Status.Stage.RUNNING);*/
 
 			// UploadExec uploadExec = new UploadExec();
 			/*

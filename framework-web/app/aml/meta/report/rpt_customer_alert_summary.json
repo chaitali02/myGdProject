@@ -187,5 +187,5 @@
   "limit": -1,
   "format": "EXCEL",
   "type" : "default",
-  "attributeRefInfo" : null
+  "attributeFilterInfo" : null
 }

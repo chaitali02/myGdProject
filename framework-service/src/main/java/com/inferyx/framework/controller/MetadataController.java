@@ -482,7 +482,7 @@ public class MetadataController {
 	public @ResponseBody String getNumRowsbyExec(@RequestParam("execUuid") String execUuid,
 			@RequestParam("execVersion") String execVersion, @RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return registerService.getNumRowsbyExec(execUuid, execVersion, type);
+		return commonServiceImpl.getNumRowsbyExec(execUuid, execVersion, type);
 	}
 
 	@RequestMapping(value = "/getBaseEntityByCriteria", method = RequestMethod.GET)
