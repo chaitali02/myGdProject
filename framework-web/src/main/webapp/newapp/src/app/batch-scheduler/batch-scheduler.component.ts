@@ -59,7 +59,7 @@ export class BatchSchedulerComponent implements OnInit {
   isSubmitEnable: boolean;
   scheduleInfoArray: Array<ScheduleIO>;
   selectallattribute: boolean;
-  attrtypes: string[];
+  attrtypes: { value: String, label: String }[];
   attrtype: string;
   displayDialog: boolean;
   displayDialog1: boolean;
@@ -197,8 +197,19 @@ export class BatchSchedulerComponent implements OnInit {
         this.dropdownSettingsPipeline.disabled = this.mode == "false" ? false : true
       } this.getAllLatestPipeline();
     })
-    this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Hourly", "Quarterly", "Monthly", "Yearly"];
-    this.attrtype = this.attrtypes[0];
+    // this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Hourly", "Quarterly", "Monthly", "Yearly"];
+
+    this.attrtypes = [
+      { value: 'ONCE', label: 'Once' },
+      { value: 'DAILY', label: 'Daily' },
+      { value: 'WEEKLY', label: 'Weekly' },
+      { value: 'BI-WEEKLY', label: 'Bi-Weekly' },
+      { value: 'HOURLY', label: 'Hourly' },
+      { value: 'QUARTERLY', label: 'Quarterly' },
+      { value: 'MONTHLY', label: 'Monthly' },
+      { value: 'YEARLY', label: 'Yearly' }
+    ];
+    this.attrtype = this.attrtypes[0].label.toString();
     this.setMode(this.mode);
   }
   setMode(mode: any) {
@@ -296,56 +307,60 @@ export class BatchSchedulerComponent implements OnInit {
     this.pipelineInfoTags = pipelineInfoNew;
 
     let attribute: any[] = [];
-    for (var i = 0; i < response.scheduleInfo.length; i++) {
-      let obj = new ScheduleIO();
-      obj.uuid = response.scheduleInfo[i].uuid;
-      obj.name = response.scheduleInfo[i].name;
-      obj.startDate = new Date(this.datePipe.transform(response.scheduleInfo[i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
-      obj.endDate = new Date(this.datePipe.transform(response.scheduleInfo[i].endDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
-      obj.attrtype = this.toTitleCase(response.scheduleInfo[i].frequencyType);
-      obj.frequencyDetail = [];
+    if (response.scheduleInfo) {
+      for (var i = 0; i < response.scheduleInfo.length; i++) {
+        let obj = new ScheduleIO();
+        obj.uuid = response.scheduleInfo[i].uuid;
+        obj.name = response.scheduleInfo[i].name;
+        obj.startDate = new Date(this.datePipe.transform(response.scheduleInfo[i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
+        obj.endDate = new Date(this.datePipe.transform(response.scheduleInfo[i].endDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
 
-      if (obj.attrtype == "Weekly" || obj.attrtype == "Bi-Weekly") {
-        let p = 0;
-        for (let k = 0; k < this.weekName.weekAlias.length; k++) {
-          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.weekAlias[k].position) {
-            obj.frequencyDetail[p] = this.weekName.weekAlias[k].name;
-            p++;
-            k = -1;
-          }
-        }
-      }
-      if (obj.attrtype == "Quarterly") {
-        let p = 0;
-        for (let k = 0; k < this.weekName.quarters.length; k++) {
-          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.quarters[k].position) {
-            obj.frequencyDetail[p] = this.weekName.quarters[k].name;
-            p++;
-            k = -1;
-          }
-        }
-      }
-      if (obj.attrtype == "Hourly") {
-        let p = 0;
-        for (let k = 0; k < this.weekName.hour.length; k++) {
-          // add toString() to last check strickly
-          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.hour[k].position.toString()) {
-            obj.frequencyDetail[p] = this.weekName.hour[k].name;
-            p++;
-            k = -1;
-          }
-        }
-      }
-      if (obj.attrtype == "Monthly") {
-        let p = 0;
-        obj.frequencyDetail = response.scheduleInfo[i].frequencyDetail;
-        p++;
-      }
-      if (obj.attrtype == "Once" || obj.attrtype == "Daily" || obj.attrtype == "Yearly") {
+        // obj.attrtype = this.toTitleCase(response.scheduleInfo[i].frequencyType);
+        obj.attrtype = response.scheduleInfo[i].frequencyType;
         obj.frequencyDetail = [];
+
+        if (obj.attrtype == "WEEKLY" || obj.attrtype == "BI-WEEKLY") {
+          let p = 0;
+          for (let k = 0; k < this.weekName.weekAlias.length; k++) {
+            if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.weekAlias[k].position) {
+              obj.frequencyDetail[p] = this.weekName.weekAlias[k].name;
+              p++;
+              k = -1;
+            }
+          }
+        }
+        if (obj.attrtype == "QUARTERLY") {
+          let p = 0;
+          for (let k = 0; k < this.weekName.quarters.length; k++) {
+            if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.quarters[k].position) {
+              obj.frequencyDetail[p] = this.weekName.quarters[k].name;
+              p++;
+              k = -1;
+            }
+          }
+        }
+        if (obj.attrtype == "HOURLY") {
+          let p = 0;
+          for (let k = 0; k < this.weekName.hour.length; k++) {
+            // add toString() to last check strickly
+            if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.hour[k].position.toString()) {
+              obj.frequencyDetail[p] = this.weekName.hour[k].name;
+              p++;
+              k = -1;
+            }
+          }
+        }
+        if (obj.attrtype == "MONTHLY") {
+          let p = 0;
+          obj.frequencyDetail = response.scheduleInfo[i].frequencyDetail;
+          p++;
+        }
+        if (obj.attrtype == "ONCE" || obj.attrtype == "DAILY" || obj.attrtype == "YEARLY") {
+          obj.frequencyDetail = [];
+        }
+        obj.scheduleChg = "N"
+        attribute[i] = obj;
       }
-      obj.scheduleChg = "N"
-      attribute[i] = obj;
     }
     this.scheduleInfoArray = attribute;
     console.log(JSON.stringify(this.pipelineInfoTags));
@@ -467,17 +482,15 @@ export class BatchSchedulerComponent implements OnInit {
           //var a = this.scheduleInfoArray[i].attrtype;
           if (this.scheduleInfoArray[i].attrtype != null)
             schedule.frequencyType = this.scheduleInfoArray[i].attrtype.toUpperCase();
-
           let frequencyDetails: any[] = [];
-          if (this.scheduleInfoArray[i].attrtype == "Once" || this.scheduleInfoArray[i].attrtype == "Daily" || this.scheduleInfoArray[i].attrtype == "Yearly") {
+          if (this.scheduleInfoArray[i].attrtype == "ONCE" || this.scheduleInfoArray[i].attrtype == "DAILY" || this.scheduleInfoArray[i].attrtype == "YEARLY") {
             frequencyDetails = this.scheduleInfoArray[i].frequencyDetail;
-            console.log("asfghg");
           }
-          else if (this.scheduleInfoArray[i].attrtype == "Monthly") {
+          else if (this.scheduleInfoArray[i].attrtype == "MONTHLY") {
             frequencyDetails = this.scheduleInfoArray[i].frequencyDetail;
           }
 
-          else if (this.scheduleInfoArray[i].attrtype == "Weekly" || this.scheduleInfoArray[i].attrtype == "Bi-Weekly") {
+          else if (this.scheduleInfoArray[i].attrtype == "WEEKLY" || this.scheduleInfoArray[i].attrtype == "BI-WEEKLY") {
             let k = 0;
             for (let j = 0; j < this.weekName.weekAlias.length; j++) {
               if (this.scheduleInfoArray[i].frequencyDetail[k] == this.weekName.weekAlias[j].name) {
@@ -489,7 +502,7 @@ export class BatchSchedulerComponent implements OnInit {
             }
           }
 
-          else if (this.scheduleInfoArray[i].attrtype == "Quarterly") {
+          else if (this.scheduleInfoArray[i].attrtype == "QUARTERLY") {
             let k = 0;
             for (let j = 0; j < this.weekName.quarters.length; j++) {
               if (this.scheduleInfoArray[i].frequencyDetail[k] == this.weekName.quarters[j].name) {
@@ -501,7 +514,7 @@ export class BatchSchedulerComponent implements OnInit {
             }
           }
 
-          else if (this.scheduleInfoArray[i].attrtype == "Hourly") {
+          else if (this.scheduleInfoArray[i].attrtype == "HOURLY") {
             let k = 0;
             for (let j = 0; j < this.weekName.hour.length; j++) {
               if (this.scheduleInfoArray[i].frequencyDetail[k] == this.weekName.hour[j].name) {
@@ -616,7 +629,7 @@ export class BatchSchedulerComponent implements OnInit {
   }
 
   showDialog(index: any, type: string) {
-    if (type == "Weekly" || type == 'Bi-Weekly') {
+    if (type == "WEEKLY" || type == 'BI-WEEKLY') {
       if (this.scheduleInfoArray[index].frequencyDetail) {
         //let o = this.scheduleInfoArray[index].frequencyDetail;
 
@@ -637,7 +650,7 @@ export class BatchSchedulerComponent implements OnInit {
       this.displayDialog = true;
     }
 
-    else if (type == "Quarterly") {
+    else if (type == "QUARTERLY") {
       if (this.scheduleInfoArray[index].frequencyDetail) {
         // let o = this.scheduleInfoArray[index].frequencyDetail;
 
@@ -658,7 +671,7 @@ export class BatchSchedulerComponent implements OnInit {
       this.displayDialog1 = true;
     }
 
-    else if (type == "Hourly") {
+    else if (type == "HOURLY") {
       if (this.scheduleInfoArray[index].frequencyDetail) {
         //let o = this.scheduleInfoArray[index].frequencyDetail;
         if (this.scheduleInfoArray[index].frequencyDetail != null) {
@@ -677,7 +690,7 @@ export class BatchSchedulerComponent implements OnInit {
       this.displayDialog3 = true;
     }
 
-    else if (type == "Monthly") {
+    else if (type == "MONTHLY") {
       if (this.scheduleInfoArray[index].frequencyDetail) {
         this.frequencyDetailCal = [];
         // const today = new Date();

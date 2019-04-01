@@ -1,8 +1,8 @@
-<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
 <br>
 <div class="row">
     <div class="col-md-12">
- 
+
         <div class="portlet box green" id="dag-exec-model">
             <div class="portlet-title">
                 <div class="caption">
@@ -17,19 +17,25 @@
                     </a>
                     <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'"  ng-click="showgraphdiv = true">
                         <i class="fa fa-sitemap" area-hidden="true"></i>
-                    </a>-->                    
-                    <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadPipeline()">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                     <!--<a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>-->
+
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download"
+                            data-toggle="tooltip" data-placement="top" tooltip (click)="downloadPipeline()">
+                            <i class="fa fa-download" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <!--<a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: inline-block;margin: 2px auto;color:white;"></i>
                     </a>
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="broadcastRefreshData()" ng-if="showgraphdiv || !(daggroupExecName || resultExecName)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: inline-block;margin: 2px auto;color:white;"></i>
                     </a> -->
-                    <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: inline-block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="portlet-body">
@@ -37,8 +43,7 @@
                     <app-jointjs [data]="dagexecdata" [mode]="mode" [execMode]="true"></app-jointjs>
                 </div>
             </div>
-           
+
         </div><!-- END SAMPLE TABLE PORTLET-->
-    </div>   
+    </div>
 </div>
-       

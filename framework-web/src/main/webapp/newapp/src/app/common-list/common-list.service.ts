@@ -135,10 +135,10 @@ export class CommonListService {
   }
   execute(uuid, version, type, action): Observable<any> {
     if (type == "rule") {
-      this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+      this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version; // + '&type=' + type;
     }
     if (type == "rulegroup") {
-      this.url = this.baseUrl + 'rule/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+      this.url = this.baseUrl + 'rule/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version; // + '&type=' + type;
     }
     if (type == "profile") {
       this.url = this.baseUrl + 'profile/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
@@ -192,7 +192,7 @@ export class CommonListService {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
-    if (type == "rulegroup") {
+    if (type == "rulegroup" || type == "rulegroupExec") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "profile") {
@@ -205,6 +205,9 @@ export class CommonListService {
       this.url = this.baseUrl + 'dataqual/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "dqgroup") {
+      this.url = this.baseUrl + 'dataqual/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "dqgroupExec") {
       this.url = this.baseUrl + 'dataqual/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "dag") {

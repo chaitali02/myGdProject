@@ -8,31 +8,58 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a class="left-marginpage" title="Main" style="color:white;" data-placement="top"
-                        tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'" (click)="showMainPage()">
-                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
-                    </a>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Main" style="color:white;" data-placement="top" tooltip
+                            [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'" (click)="showMainPage()">
+                            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Profile Group"
+                            data-placement="top" tooltip (click)="reGroupExecute()">
+                            <i class="fa fa-repeat" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <!--8080 <a class="left-marginpage" style="color:white;" ng-disabled="!allowReGroupExecution" ng-class="{'currentpage':!allowReGroupExecution}"
+                        title="Restart Profile Group" data-toggle="tooltip" data-placement="top" tooltip="" ng-click="reGroupExecute()"
+                        disabled="disabled" class="currentpage">
+                        <i class="fa fa-repeat" area-hidden="true"></i>
+                    </a> -->
                     <!-- <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
                         [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="isResultTable == true">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a> -->
-                    <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip"
-                        data-placement="top" tooltip (click)="downloadResult()" *ngIf="isResultTable == true" [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                    <a class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies"
-                        data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data-(click)="showDagGraph(_uuid,_version)">
-                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
-                    </a>
-
-                    <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip
-                        (click)="showDagGraph(_uuid,_version)">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download"
+                            data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" *ngIf="isResultTable == true"
+                            [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'">
+                            <i class="fa fa-download" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies"
+                            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                            data-(click)="showDagGraph(_uuid,_version, true)">
+                            <i class="fa fa-sitemap" style="margin:2px auto;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable==false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid,_version, false)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable!=false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid,_version, true)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="portlet-body">
@@ -54,6 +81,29 @@
                     </div>
                 </div>
             </div>
+
+            <p-dialog class="dialog-titlebar" header="Confirm" [(visible)]="restartDialogBox" [modal]="true"
+                [responsive]="true" [width]="350" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}"
+                [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+                <form class="form-horizontal" name="myform" novalidate="novalidate">
+                    <div class="form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-12" style="text-align: left; margin-bottom: -5px;">
+                            Restart DQ Group?</label>
+                    </div>
+                </form>
+                <p-footer>
+                    <div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+                            <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a> -->
+                            <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
+                                (click)="cancelRestartDialogBox()">
+                            <input type="button" class="btn btn-success" value="Ok" name="ok" style="border-radius: 4px;"
+                                (click)="submitRestartDialogBox()">
+                        </div>
+                    </div>
+                </p-footer>
+            </p-dialog>
+
 
             <p-dialog class="dialog-titlebar" header="Download" [(visible)]="displayDialogBox" [modal]="true"
                 [responsive]="true" [width]="500" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}"
@@ -83,7 +133,7 @@
                             <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
                                 (click)="cancelDialogBox()">
                             <input type="button" class="btn btn-success" value="Submit" name="submit" style="border-radius: 4px;"
-                            (click)="submitDialogBox(i)">
+                                (click)="submitDialogBox(i)">
                         </div>
                     </div>
                 </p-footer>

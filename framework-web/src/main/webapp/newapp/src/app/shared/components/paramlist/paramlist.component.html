@@ -13,29 +13,35 @@
             <i class="fa fa-gift"></i>{{paramlist.name}}
           </div>
           <div class="tools">
-            
-            <a *ngIf="!isAdd" class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip 
-              [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-              [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
-              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
-            </a>
-
-            <a class="left-marginpage" href="javascript:;" disabled="true" (click)="showGraph(uuid,label)"
-              data-original-title="" title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
-            </a>
-            <a class="left-marginpage" (click)="goBack()" title="Close">
-              <i class="fa fa-times" style="margin: 2px auto;color:white"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip
+                [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip"
+                data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top"
+                tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+                <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" href="javascript:;" (click)="showGraph(uuid,version)" data-original-title=""
+                title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" (click)="goBack()" title="Close">
+                <i class="fa fa-times" style="margin: 2px auto;color:white"></i>
+              </a>
+            </span>
           </div>
         </div>
 
@@ -138,8 +144,7 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch (change)="onChangeActive($event)" [(ngModel)]="active" name="active" 
-                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
+                      <ui-switch (change)="onChangeActive($event)" [(ngModel)]="active" name="active" [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false"></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -147,8 +152,7 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch [(ngModel)]="locked" name="locked"
-                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
+                      <ui-switch [(ngModel)]="locked" name="locked" [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false"></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -156,8 +160,8 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch (change)="onChangePublished($event)" [(ngModel)]="published" name="published" 
-                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
+                      <ui-switch (change)="onChangePublished($event)" [(ngModel)]="published" name="published"
+                        [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false"></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -240,7 +244,7 @@
                               </td>
                               <td>
                                 <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name{{i}}"
-                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control"  
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control"
                                   #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name'+i]?.invalid)}">
                               </td>
                               <td>
@@ -261,7 +265,7 @@
 
                               <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
                                 <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1{{i}}"
-                                  [disabled]="mode"  #value1="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['value1'+i]?.invalid)}">
+                                  [disabled]="mode" #value1="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['value1'+i]?.invalid)}">
                               </td>
 
                               <td *ngIf="data1.paramType == 'distribution'">

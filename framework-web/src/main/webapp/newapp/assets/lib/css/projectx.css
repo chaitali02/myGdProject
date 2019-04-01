@@ -803,11 +803,17 @@ div[joint-graph-directive]:hover .joint-graph-zoom-slider, div[render-group-dire
   display: block;
 }
 .currentpage{
-opacity:0.6  !important;
-cursor: not-allowed !important;
+  opacity:0.6  !important;
+  /* cursor: not-allowed !important; */
+  pointer-events: none;
 }
 .notcurrentpage{
-opacity:1 !important;
+  opacity:1 !important;
+  pointer-events: auto;
+}
+.wrapcurrentpage{
+  cursor: not-allowed !important;
+  display: inline-block;
 }
 
 div[dnd-list] .dndDraggingSource {
@@ -1304,11 +1310,12 @@ cursor: not-allowed !important;
 } 
 /* view single-Page Icon margin */
 .left-marginpage{
-  margin: 0px 2px 0px 0px;
+  margin: 0px 2px 0px 6px;
+  display: inline-block;
 }
 
 .btn-margin{
-  margin: 0% 0% 0% 1%;
+  margin: 0% 0% 0% 1.5%;
   border-radius: 3px !important;
 }
 

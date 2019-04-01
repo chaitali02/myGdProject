@@ -72,7 +72,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9  col-lg-7">
                                             <div class="pcalender-border">
                                                 <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate"
-                                                    inputStyleClass="form-control" name="startDate" [utc]="true"
+                                                    inputStyleClass="form-control" name="startDate" [utc]="true" [showTime]="true"
                                                     hourFormat="12" [disabled]="mode == 'true'" [minDate]="today"
                                                     (onSelect)="onUpdateStartDate(startDate)" [showIcon]="true" icon="fa fa-calendar">
                                                 </p-calendar>
@@ -125,7 +125,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
                                             <div class="pcalender-border">
                                                 <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
-                                                    inputStyleClass="form-control" name="endDate" [utc]="true"
+                                                    inputStyleClass="form-control" name="endDate" [utc]="true" [showTime]="true"
                                                     hourFormat="12" [disabled]="mode == 'true'" [showIcon]="true"
                                                     (onSelect)="onUpdateEndDate()" icon="fa fa-calendar">
                                                 </p-calendar>

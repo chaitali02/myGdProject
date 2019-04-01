@@ -8,27 +8,51 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a *ngIf="!isAdd" class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip 
-                        [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'" (click)="showMainPage()">
-                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
-                    </a>
-                    <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" [ngClass]="isResultTable == true?'notcurrentpage':'currentpage'">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                    <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data- (click)="showDagGraph()">
-                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
-                    </a>
-
-                    <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="showDagGraph()">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"
-                        [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"></i>
-                    </a>
-                    <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="!isAdd" class="left-marginpage" title="Main" style="color:white;" title="Main"
+                            data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
+                            (click)="showMainPage()">
+                            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Rule Group" data-placement="top" 
+                            tooltip [ngClass]="restartShow==true?'notcurrentpage':'currentpage'" (click)="reGroupExecute()">
+                            <i class="fa fa-repeat" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Download"
+                            data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" [ngClass]="isResultTable == true?'notcurrentpage':'currentpage'">
+                            <i class="fa fa-download" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies"
+                            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                            data- (click)="showDagGraph(_uuid, _version, true)">
+                            <i class="fa fa-sitemap" style="margin:2px auto;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable==false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid, _version, false)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable!=false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid, _version, true)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </span>
                 </div>
-            </div>  
+            </div>
             <div class="portlet-body">
                 <div *ngIf="isgraphShow && !showGraph">
                     <app-jointjs-group [graphParms]="params" (downloadShow)="downloadShow($event)"></app-jointjs-group>
@@ -52,6 +76,27 @@
         <!-- END SAMPLE TABLE PORTLET-->
     </div>
 </div>
+
+<p-dialog class="dialog-titlebar" header="Confirm" [(visible)]="restartDialogBox" [modal]="true" [responsive]="true"
+    [width]="350" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+    <form class="form-horizontal" name="myform" novalidate="novalidate">
+        <div class="form-group">
+            <label class="control-label col-md-6 col-sm-6 col-xs-12" style="text-align: left; margin-bottom: -5px;">
+                Restart Rule Group?</label>
+        </div>
+    </form>
+    <p-footer>
+        <div>
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+                <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a> -->
+                <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
+                    (click)="cancelRestartDialogBox()">
+                <input type="button" class="btn btn-success" value="Ok" name="ok" style="border-radius: 4px;" (click)="submitRestartDialogBox()">
+            </div>
+        </div>
+    </p-footer>
+</p-dialog>
+
 <p-dialog header="Download" [(visible)]="isDownloadModel" [modal]="true" [responsive]="true" [minWidth]="450"
     [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'min-height':'212px'}">
     <div class="modal-body" *ngIf="isDownloadModel">

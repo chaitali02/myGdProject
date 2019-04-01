@@ -1,8 +1,7 @@
-import { MetadataIO } from './../metadata/domainIO/domain.metadataIO';
-
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
+import { Message } from 'primeng/components/common/api';
 
 import { AppMetadata } from '../app.metadata';
 import { TableRenderComponent } from '../shared/components/resulttable/resulttable.component'
@@ -16,6 +15,8 @@ import { AppConfig } from '../app.config';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
 import { GraphParamIO } from '../metadata/domainIO/domain.graphParamIO';
+import { DataQualityService } from '../metadata/services/dataQuality.services';
+import { CommonListService } from '../common-list/common-list.service';
 
 @Component({
   selector: 'app-dataqualityresult',
@@ -43,13 +44,20 @@ export class DataQualityResultComponent {
   istableShow: boolean;
   isgraphShow: boolean;
   graphParams: any
-  index:0;
+  index: 0;
 
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
-    
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
+  restartDialogBox: boolean;
+  msgs: Message[] = [];
+
+  constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute,
+    private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService, private _dataQualityService: DataQualityService,
+    private _commonListService: CommonListService, ) {
+
     this.graphParams = new GraphParamIO();
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
@@ -177,18 +185,30 @@ export class DataQualityResultComponent {
   showMainPage() {
     this.isHomeEnable = false;
     this.showKnowledgeGraph = false;
-    setTimeout(() => {
-      this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
-      this.d_tableRenderComponent.renderTable(this.graphParams);
-    }, 1000);
+    if (this._type == 'dqexec') {
+      setTimeout(() => {
+        this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+        this.d_tableRenderComponent.renderTable(this.graphParams);
+      }, 1000);
+    }
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showKnowledgeGraph = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
-    }, 1000);
+  showDagGraph(uuid, version, graphFlag) {
+    if (graphFlag) {
+      this.isHomeEnable = true;
+      this.showKnowledgeGraph = true;
+      setTimeout(() => {
+        this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+        this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+        this.isGraphError = this.d_KnowledgeGraphComponent.isError;
+      }, 1000);
+    }
+    else {
+      if (this._type == 'dqexec') {
+        this.showMainPage();
+      }
+      this.d_JointjsGroupComponent.generateGroupGraph(this.graphParams);
+    }
   }
 
   cancelDialogBox() {
@@ -202,6 +222,32 @@ export class DataQualityResultComponent {
     this.versionJointJs = param.version;
     this.typeJointJs = param.type;
   }
+
+  reGroupExecute() {
+    this.restartDialogBox = true;
+  }
+
+  submitRestartDialogBox() {
+    debugger
+    console.log("submitRestartDialogBox() call...");
+    this._commonListService.restart(this._uuid, this._version, "dqgroupExec", "execute")
+      .subscribe(
+        response => {
+          // this.getBaseEntityByCriteria()
+          // this.isModel = "false";
+          this.msgs = [];
+          this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'dqx Restarted Successfully' });
+          console.log("Success....");
+        },
+        error => console.log("Error :: " + error)
+      );
+    this.restartDialogBox = false;
+  }
+
+  cancelRestartDialogBox() {
+    this.restartDialogBox = false;
+  }
+
 }
 
 

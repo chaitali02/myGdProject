@@ -14,29 +14,36 @@
         </div>
 
         <div class="actions">
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top"
-            tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
-            <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
-            data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
-            data-(click)="enableEdit(ruledata.uuid,version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
-            <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
-            (click)="showGraph(uuid,label)" data-original-title="" title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
-            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
-            <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top"
+              tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
+              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+              data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
+              data-(click)="enableEdit(ruledata.uuid,version)">
+              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+              data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" (click)="showGraph(uuid,version)"
+              data-original-title="" title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
+          <span class="wrapcurrentpage">
+            <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
+              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
+            </a>
+          </span>
         </div>
 
       </div>
@@ -165,7 +172,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
                           <!-- <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
                           <p-chips [(ngModel)]="ruledata.tags" styleClass="pchip-height" [disabled]="mode == 'true'"
-                            name="tags"></p-chips>
+                            name="tags" [allowDuplicate]="false"></p-chips>
                         </div>
                       </div>
                       <div class="form-group">
@@ -235,7 +242,6 @@
                             </div>
                           </div>
                         </div>
-
                         <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
                           Name
                           <span class="required" aria-required="true"> * </span>
@@ -612,8 +618,6 @@
                           <div class="caption">
                             <span class="caption-subject  sbold ">Attribute</span>
                           </div>
-
-
 
                           <div class="actions pull-right" style="position:relative;padding-right: 5px;">
                             <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"

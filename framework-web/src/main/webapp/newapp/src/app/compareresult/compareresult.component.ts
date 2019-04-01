@@ -96,6 +96,7 @@ export class CompareResultComponent {
     this.isSourceDataError = false;
     this.isTargetDataError = false;
     this.selectedSource = '';
+    this.searchForm.selectedTypeRadio = this.type;
 
     // for rule
     this.allNameRuleGroup = [];
@@ -292,13 +293,13 @@ export class CompareResultComponent {
     else {
       endDate = '';
     }
-
-    if (this.type == MetaTypeEnum.MetaType.DQ) {
+    debugger
+    if (this.type == MetaTypeEnum.MetaType.DQ && this.searchForm.selectedTypeRadio == MetaTypeEnum.MetaType.DQ) {
       this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == MetaTypeEnum.MetaType.DATAPOD) {
+    else if (this.searchForm.selectedTypeRadio == MetaTypeEnum.MetaType.DATAPOD) {
       this._dataQualityService.getdqExecByDatapod(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
@@ -556,6 +557,7 @@ export class CompareResultComponent {
     }
 
     this.isSubmitDisable = true;
+    this.isInProgress = true;
     this.refreshCompareResult();
   }
 
