@@ -377,7 +377,7 @@ export class DataIngestionDetailComponent implements OnInit {
       },
       error => {
         console.log("Error::", +error)
-        this.isEditError = false;
+        this.isEditError = true;
       }
     )
   }

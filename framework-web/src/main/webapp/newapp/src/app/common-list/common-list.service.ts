@@ -228,6 +228,9 @@ export class CommonListService {
     if (type == "batchexec") {
       this.url = this.baseUrl + 'batch/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "ingestgroup") {
+      this.url = this.baseUrl + 'ingest/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });

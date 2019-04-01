@@ -304,6 +304,18 @@ export class CommonService {
 
   }
 
+  restart(type, uuid, version): Observable<any[]> {
+    let url = '/ingest/restart?uuid=' + uuid + '&version=' + version + '&action=execute'+ '&type=' + type;
+    let data1 = {};
+    return this._sharedService.postCall(url, data1)
+      .pipe(map(response => {
+        console.log(response);
+        return <any>response;
+      }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
+
+  }
+
   getNumRowsbyExec(uuid, version, type): Observable<any> {
     let url = 'metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + "&execVersion=" + version + "&type=" + type;
     return this._sharedService.getCall(url)
@@ -318,6 +330,15 @@ export class CommonService {
         map(response => { return <any[]>response.json(); }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
+
+
+
+  // /ingest/restart?action=execute&uuid=2b80b258-3459-450d-9e86-9b42a3bbd343&version=1553780312&type=ingestgroup
+
+
+
+
+
 
   execute(uuid, version, type, action): Observable<any> {
     let url;

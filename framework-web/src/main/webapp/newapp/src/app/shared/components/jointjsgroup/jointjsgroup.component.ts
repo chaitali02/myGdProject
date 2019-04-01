@@ -20,6 +20,7 @@ import { jointjsGroupService } from './joinjsgroup.service'
 })
 
 export class JointjsGroupComponent {
+    restartStatus: boolean;
     tableparms: {};
     columnOptions: any[];
     cols: any[];
@@ -33,6 +34,8 @@ export class JointjsGroupComponent {
     graphParms: any
     IsGraphShow: any;
     @Output() downloadShow = new EventEmitter<any>();
+
+    @Output() jointJSRunStatus = new EventEmitter<any>();
     @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
 
     constructor(private _location: Location, d3Service: D3Service, private activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _jointjsService: JointjsService, private _jointjsGroupService: jointjsGroupService) {
@@ -203,17 +206,17 @@ export class JointjsGroupComponent {
         let apiuri = params.url + actualType + "GroupExecUuid=" + params.id + "&" + actualType + "GroupExecVersion=" + params.version + "&action=view"
         this._jointjsGroupService.getExecByGroupExec(apiuri)
             .subscribe(
-            response => {
-                this.drawChildGraph(response)
-                setTimeout(() => {
-                    this.startStatusUpdate(params);
-                }, 1000);
-                this.intervalId = setInterval(() => {
-                    this.startStatusUpdate(params);
-                }, 5000);
+                response => {
+                    this.drawChildGraph(response)
+                    setTimeout(() => {
+                        this.startStatusUpdate(params);
+                    }, 1000);
+                    this.intervalId = setInterval(() => {
+                        this.startStatusUpdate(params);
+                    }, 5000);
 
-            },
-            error => console.log("Error :: " + error));
+                },
+                error => console.log("Error :: " + error));
     }
 
     drawChildGraph(data) {
@@ -345,10 +348,10 @@ export class JointjsGroupComponent {
         this.groupExecUuid = params.id;
         this._jointjsGroupService.getGroupExecStatus(params.id, params.version, type)
             .subscribe(
-            response => {
-                this.onSuccessGetStatusByDagExec(response)
-            },
-            error => console.log("Error :: " + error)
+                response => {
+                    this.onSuccessGetStatusByDagExec(response)
+                },
+                error => console.log("Error :: " + error)
             );
 
     }
@@ -369,13 +372,14 @@ export class JointjsGroupComponent {
 
             let statusTask = task.statusList.length == 0 ? 'InProgress' : d_this.latestStatus(task.statusList)["stage"];
             let taskid = task.metaRef.ref.uuid;
-            //   if(taskid == $scope.GroupExecUuid){
+
+            //   if(taskid == d_this.groupExecUuid){
 
             //     if(['Failed','Killed'].indexOf(statusTask) !=-1){
-            //       $rootScope.allowReGroupExecution = true;
+            //         this.restartStatus = true;
             //     }
             //     else{
-            //       $rootScope.allowReGroupExecution =false;
+            //         this.restartStatus = false;
             //     }
             //   }
 
@@ -389,6 +393,26 @@ export class JointjsGroupComponent {
                 $(".status[element-id=" + taskid + "]").attr(status.stage, status.createdOn);
             });
         });
+
+        //  this.restartStatus = data[data.length - 1].statusList[2].stage;
+
+        for (const i in data) {
+            this.restartStatus = false;
+            if (d_this.groupExecUuid == data[i].metaRef.ref.uuid) {
+                for (const j in data[i].statusList) {
+                    if (data[i].statusList[j].stage == "Failed" || data[i].statusList[j].stage == "Killed") {
+                        this.restartStatus = true;
+                        break;
+                    }
+                    else {
+                        this.restartStatus = false;
+                    }
+                }
+                console.log("1");
+            }
+            console.log(this.restartStatus);
+            this.jointJSRunStatus.emit(this.restartStatus);
+        }
     }
 
     getMenuItem(id, cell): any {
@@ -551,10 +575,10 @@ export class JointjsGroupComponent {
         }
         this._jointjsGroupService.setStatus(api, uuid, version, execType, status)
             .subscribe(
-            response => {
-                console.log(response)
-            },
-            error => console.log("Error :: " + error)
+                response => {
+                    console.log(response)
+                },
+                error => console.log("Error :: " + error)
             );
     }
 
@@ -575,14 +599,14 @@ export class JointjsGroupComponent {
         else {
             this._jointjsGroupService.getMetaIdByExecId(uuid, version, type)
                 .subscribe(
-                response => {
-                    let _moduleUrl
-                    let _routerUrl
-                    _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
-                    _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
-                    d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });
-                },
-                error => console.log("Error :: " + error)
+                    response => {
+                        let _moduleUrl
+                        let _routerUrl
+                        _moduleUrl = this.appMetadata.getMetadataDefs(response.type)['moduleState']
+                        _routerUrl = this.appMetadata.getMetadataDefs(response.type)['detailState']
+                        d_this.router.navigate(["./" + _moduleUrl + "/" + _routerUrl, response.uuid, response.version || "", 'true'], { relativeTo: this.activatedRoute });
+                    },
+                    error => console.log("Error :: " + error)
                 );
         }
     }

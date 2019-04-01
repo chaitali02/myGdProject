@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Params, ActivatedRoute, Router } from '@angular/router';
 import { AppConfig } from '../../app.config';
-import { Http, Headers} from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Location } from '@angular/common';
 
 import { AppMetadata } from '../../app.metadata';
@@ -13,12 +13,12 @@ import { saveAs } from 'file-saver';
 import { RoutesParam } from '../../metadata/domain/domain.routeParams';
 
 @Component({
-  selector: 'app-data-ingestion-results',     
+  selector: 'app-data-ingestion-results',
   templateUrl: './data-ingestion-results.component.html'
 })
 export class DataIngestionResultsComponent implements OnInit {
   showKnowledgeGraph: boolean;
-  isHomeEnable: boolean;
+  showForm: boolean;
   numRows: any;
   downloadFormatArray: any[];
   displayDialogBox: boolean;
@@ -37,15 +37,21 @@ export class DataIngestionResultsComponent implements OnInit {
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isEditInprogess: boolean;
+  isEditError: boolean;
+  isRestart: boolean;
+  restartStatus: any;
+  msgs: any[];
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
     this.numRows = 100;
-    this.isHomeEnable = false;
+    this.showForm = false;
     this.displayDialogBox = false
     this.isgraphShow = false;
     this.isEditInprogess = false;
+    this.isEditError = false;
+    this.isRestart = true;
     this.breadcrumbDataFrom = [
       {
         "caption": "Data Ingestion ",
@@ -62,7 +68,7 @@ export class DataIngestionResultsComponent implements OnInit {
     ]
 
     this.downloadFormatArray = [
-      {"value" : "excel", "label" : "excel"}]
+      { "value": "excel", "label": "excel" }]
     this.params = {
       "typeLabel": "RuleGroup",
       "url": "ingest/getIngestExecByRGExec?",
@@ -82,16 +88,20 @@ export class DataIngestionResultsComponent implements OnInit {
   }
 
   getOneByUuidAndVersion(id, version, type) {
-    this.isEditInprogess = false;
+    this.isEditInprogess = true;
     this._commonService.getOneByUuidAndVersion(id, version, type)
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => {
+          console.log("Error::", +error)
+          this.isEditError = true;
+        }
+      )
   }
 
-  onSuccessgetOneByUuidAndVersion(response ) {
+  onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.params.id = this._uuid;
     this.params.uuid = this._uuid;
@@ -109,27 +119,72 @@ export class DataIngestionResultsComponent implements OnInit {
     }
     this.params["type"] = this._type;
 
-    this.isEditInprogess = true;
+    this.isEditInprogess = false;
   }
-  
+
   public goBack() {
     this._location.back();
   }
 
   showMainPage() {
-    this.isHomeEnable = false;
+    this.showForm = false;
     this.showKnowledgeGraph = false;
   }
 
   showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
+    this.showForm = true;
     this.showKnowledgeGraph = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this._uuid,this._version);
-    }, 1000); 
+      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+    }, 1000);
   }
 
   cancelDialogBox() {
     this.displayDialogBox = false;
+  }
+
+  refreshKnowledgeGraph() {
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+    }, 1000);
+  }
+
+  refreshJointJSGraph() {
+    this.showKnowledgeGraph = true;
+    this.isEditInprogess = true;
+    this.d_JointjsGroupComponent.generateGroupGraph(this.params)
+    this.isEditInprogess = false;
+    setTimeout(() => {
+      this.showKnowledgeGraphFalse();
+    }, 1000);
+  }
+
+  showKnowledgeGraphFalse() {
+    this.showKnowledgeGraph = false;
+  }
+
+  restart() {
+    this._commonService.restart("ingestgroup", this._uuid, this._version)
+      .subscribe(
+        response => {
+          this.onSuccessrestart(response)
+        },
+        error => {
+          console.log("Error::", +error)
+          this.isEditError = true;
+        }
+      )
+      this.msgs = [];
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ingest Group Restarted Successfully' });
+  }
+
+  onSuccessrestart(response) {
+    //this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+    this.refreshJointJSGraph(); 
+  }
+
+  receiveJointJSRunStatus(status) {
+    this.restartStatus = status
+    console.log(this.restartStatus);
   }
 }
