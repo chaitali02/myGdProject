@@ -874,6 +874,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 			$scope.isSourceTypeDisable=true;
 		}else{
+			if(isSourceNameByTypeCall)
 			$scope.getAllLatest($scope.selectSourceType,null);
 			$scope.allAttributesRef=[];
 			$scope.isSourceTypeDisable=false
@@ -1006,6 +1007,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 	
 	$scope.getSourceNameByType=function(defaultvalue){
+		
         if($scope.report.type =="dq"){
 			ReportSerivce.getDatapodForDq("datapod").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
@@ -1017,7 +1019,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 					defaultoption.uuid = defaultvalue.ref.uuid
 					$scope.allSource.defaultoption = defaultoption;
 				}else{
-					$scope.allSource.defaultoption=response[0];
+					//$scope.allSource.defaultoption=response[0];
 				}
 				$scope.getAllAttributeBySource();
 				$scope.getFormulaByType();
@@ -1035,7 +1037,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-			debugger
 			$scope.allSource = response;
 			if (defaultvalue != null) {
 				var defaultoption = {};
@@ -1043,7 +1044,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				defaultoption.uuid = defaultvalue.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
 			}else{
-				$scope.allSource.defaultoption =response.options[0];
+				//$scope.allSource.defaultoption =response.options[0];
 			}
 			$scope.getAllAttributeBySource();
 			$scope.getFormulaByType();
