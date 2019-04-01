@@ -1028,6 +1028,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
     }
 	 
+    $scope.clear=function(){
+    	$scope.attributeRefTags=null;
+	}
 
 	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });

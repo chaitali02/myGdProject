@@ -311,6 +311,7 @@
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Filter
                                                 </label>
                                                 <div class="col-md-6">
+                                                    
                                                   <tags-input class="tag-scroll" ng-model="$parent.attributeRefTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
                                                     add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                                                     <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
@@ -318,10 +319,10 @@
                                                     </auto-complete>
                                                   </tags-input>
                                                 </div>
-                                                <!-- <div class="col-md-1">
+                                                <div class="col-md-1">
                                                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                                                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
-                                                </div> -->
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
