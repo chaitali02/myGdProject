@@ -864,12 +864,17 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		});
 	};
 	 
-	$scope.onChangeType=function(type){
+	$scope.onChangeType=function(type,isSourceNameByTypeCall){
 		$scope.attributeRefTags=null;
 		if(type =="dq"){
 			$scope.getAllAttributesByDatapods();
+			$scope.selectSourceType="datapod";
+			if(isSourceNameByTypeCall)
+			$scope.getSourceNameByType(null);
+
 			$scope.isSourceTypeDisable=true;
 		}else{
+			$scope.getAllLatest($scope.selectSourceType,null);
 			$scope.allAttributesRef=[];
 			$scope.isSourceTypeDisable=false
 
@@ -994,11 +999,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 	}
 	
-	$scope.getSourceNameByType=function(){
-        if($scope.report.type !="dq"){
-			ReportSerivce.getDatapodForDq(type).then(function (response) { onSuccess(response.data) });
+	$scope.getSourceNameByType=function(defaultvalue){
+        if($scope.report.type =="dq"){
+			ReportSerivce.getDatapodForDq("datapod").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				$scope.allSource = response;
+				$scope.allSource={};
+				$scope.allSource.options= response;
 				if (defaultvalue != null) {
 					var defaultoption = {};
 					defaultoption.type = defaultvalue.ref.type
@@ -1152,9 +1158,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-			$scope.onChangeType($scope.report.type);
+			$scope.onChangeType($scope.report.type,false);
 			if($scope.report.type="dq"){
-				$scope.getSourceNameByType();
+				$scope.getSourceNameByType(response.report.dependsOn);
 			}else{
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			}
@@ -1209,9 +1215,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 
 			$scope.getParamByApp();
-            $scope.onChangeType($scope.report.type);
+            $scope.onChangeType($scope.report.type,false);
 			if($scope.report.type="dq"){
-				$scope.getSourceNameByType();
+				$scope.getSourceNameByType(response.report.dependsOn);
 			}else{
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			}
@@ -1930,7 +1936,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		ref.uuid = $scope.allSource.defaultoption.uuid
 		dependsOn.ref = ref;
 		reportJson.dependsOn = dependsOn;
-
 		var attributesRefInfoArray = [];
 		if ($scope.attributeRefTags != null) {
 			for (var i = 0; i < $scope.attributeRefTags.length; i++) {

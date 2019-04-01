@@ -697,16 +697,18 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 			}
 			reportViewJson.tags = tags;
 			var attributeFilterInfoArray = [];
-			for (var i = 0; i < response.attributeFilterInfo.length; i++) {
-				var attrRefInfo = {};
-				attrRefInfo.uuid = response.attributeFilterInfo[i].ref.uuid;
-				attrRefInfo.type = response.attributeFilterInfo[i].ref.type;
-				attrRefInfo.attributeId = response.attributeFilterInfo[i].attrId;
-				attrRefInfo.dname = response.attributeFilterInfo[i].ref.name + "." + response.attributeFilterInfo[i].attrName;
-				attrRefInfo.id = response.attributeFilterInfo[i].ref.uuid + "_" + response.attributeFilterInfo[i].attrId;
-				attributeFilterInfoArray[i] = attrRefInfo;
-			}
-            reportViewJson.attributeFilterInfoArray=attributeFilterInfoArray;
+			if(response.attributeFilterInfo && response.attributeFilterInfo.length){
+				for (var i = 0; i < response.attributeFilterInfo.length; i++) {
+					var attrRefInfo = {};
+					attrRefInfo.uuid = response.attributeFilterInfo[i].ref.uuid;
+					attrRefInfo.type = response.attributeFilterInfo[i].ref.type;
+					attrRefInfo.attributeId = response.attributeFilterInfo[i].attrId;
+					attrRefInfo.dname = response.attributeFilterInfo[i].ref.name + "." + response.attributeFilterInfo[i].attrName;
+					attrRefInfo.id = response.attributeFilterInfo[i].ref.uuid + "_" + response.attributeFilterInfo[i].attrId;
+					attributeFilterInfoArray[i] = attrRefInfo;
+				}
+				reportViewJson.attributeFilterInfoArray=attributeFilterInfoArray;
+		    }
 			var filterInfoArray = [];
 			if (response.filterInfo != null) {
 				for (i = 0; i < response.filterInfo.length; i++) {
