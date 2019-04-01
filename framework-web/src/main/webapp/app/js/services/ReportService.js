@@ -679,16 +679,18 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 			}
 			reportViewJson.tags = tags;
 			var attributeRefInfoArray = [];
-			for (var i = 0; i < response.attributeRefInfo.length; i++) {
-				var attrRefInfo = {};
-				attrRefInfo.uuid = response.attributeRefInfo[i].ref.uuid;
-				attrRefInfo.type = response.attributeRefInfo[i].ref.type;
-				attrRefInfo.attributeId = response.attributeRefInfo[i].attrId;
-				attrRefInfo.dname = response.attributeRefInfo[i].ref.name + "." + response.attributeRefInfo[i].attrName;
-				attrRefInfo.id = response.attributeRefInfo[i].ref.uuid + "_" + response.attributeRefInfo[i].attrId;
-				attributeRefInfoArray[i] = attrRefInfo;
+			if(response.attributeRefInfo && response.attributeRefInfo.length){
+				for (var i = 0; i < response.attributeRefInfo.length; i++) {
+					var attrRefInfo = {};
+					attrRefInfo.uuid = response.attributeRefInfo[i].ref.uuid;
+					attrRefInfo.type = response.attributeRefInfo[i].ref.type;
+					attrRefInfo.attributeId = response.attributeRefInfo[i].attrId;
+					attrRefInfo.dname = response.attributeRefInfo[i].ref.name + "." + response.attributeRefInfo[i].attrName;
+					attrRefInfo.id = response.attributeRefInfo[i].ref.uuid + "_" + response.attributeRefInfo[i].attrId;
+					attributeRefInfoArray[i] = attrRefInfo;
+				}
+	            reportViewJson.attributeRefInfoArray=attributeRefInfoArray;
 			}
-            reportViewJson.attributeRefInfoArray=attributeRefInfoArray;
 			var filterInfoArray = [];
 			if (response.filterInfo != null) {
 				for (i = 0; i < response.filterInfo.length; i++) {

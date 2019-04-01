@@ -37,6 +37,8 @@ public class ConstantsUtil {
 	public static final String SINGLE_QUOTE = "'";
 	public static final String AS = " AS ";
 	public static final String WHERE_1_1 = " WHERE (1=1) ";
+	public static final String CONCAT= " CONCAT";
+	public static final String IN= " IN ";
 	public static final String DATAPODUUID = "DatapodUUID";
 	public static final String DATAPODVERSION = "DatapodVersion";
 	public static final String ATTRIBUTE_ID = "AttributeId";
@@ -50,5 +52,7 @@ public class ConstantsUtil {
 	public static final String PERSIST_MODE_MEMORY_AND_DISK = "MEMORY_AND_DISK";
 	// Operator
 	public static final String EXEC_PARAMS = "EXEC_PARAMS";
+	public static final String BRACKET_OPEN = "( ";
+	public static final String BRACKET_CLOSE = " ) ";
 	
 }
