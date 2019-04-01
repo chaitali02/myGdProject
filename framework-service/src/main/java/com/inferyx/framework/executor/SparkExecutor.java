@@ -314,10 +314,10 @@ public class SparkExecutor<T> implements IExecutor {
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
-					if (sessionParam.contains("s3")) {
-						String []hadoopConf = sessionParam.split("=");
-						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
-					}
+//					if (sessionParam.contains("s3")) {
+//						String []hadoopConf = sessionParam.split("=");
+//						sparkSession.sparkContext().hadoopConfiguration().set(hadoopConf[0], hadoopConf[1]);
+//					}
 				}
 				df = sparkSession.sql(sql);
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {

@@ -223,8 +223,8 @@ public class DQOperator implements IParsable {
 	private String ATTRIBUTE_ID = "attribute_id";
 	private String ATTRIBUTE_VAL = "attribute_value";
 	private String ATTRIBUTE_DESC = "attribute_desc";
-	private String PII_FLAG = "pii_Flag";
-    private String CDE_FLAG = "cde_Flag";
+	private String PII_FLAG = "pii_flag";
+    private String CDE_FLAG = "cde_flag";
 	private String ROWKEY_NAME = "rowkey_name";
 	private String ROWKEY_VALUE = "rowkey_value";
 	private String EMPTY = "";
@@ -339,7 +339,7 @@ public class DQOperator implements IParsable {
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
 		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
 						.concat(ROWKEY_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrDesc(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(getAttributeDesc(datapod,attributeName)).concat(SINGLE_QUOTE).concat(AS)
 				.concat(ATTRIBUTE_DESC).concat(COMMA);
 		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(PII_FLAG).concat(COMMA);
@@ -571,6 +571,18 @@ public class DQOperator implements IParsable {
 			}
 		}
 		return attributeList;
+	}
+	
+	private String getAttributeDesc(Datapod datapod, String attributeName) {
+		if (datapod == null || attributeName == null) {
+			return "-NA-";
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (attr.getName().equals(attributeName)) {
+				return attr.getDesc();
+			}
+		}
+		return "-NA-";
 	}
 	
 	private Attribute getRowKey(Datapod datapod) {

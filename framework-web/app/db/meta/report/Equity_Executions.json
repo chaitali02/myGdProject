@@ -1,8 +1,8 @@
 {
-  "uuid": "925e968d-3866-4639-a370-7929efed3a00",
-  "version": "1554148072",
-  "name": "rpt_data_quality_summary",
-  "desc": "Data Quality Summary",
+  "uuid": "a97d9e14-1923-4c90-b97f-67233a9589c2",
+  "version": "1554147696",
+  "name": "Equity Executions",
+  "desc": "Data Quality Report for critical data elements under equity execution feed",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Apr 01 15:47:52 EDT 2019",
+  "createdOn": "Mon Apr 01 15:41:36 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -29,10 +29,10 @@
     }
   ],
   "publicFlag": "N",
-  "title": "Data Quality Summary",
-  "header": "Data Quality Summary",
+  "title": "Data Quality Report",
+  "header": "EQUITY EXECUTIONS",
   "headerAlign": "CENTER",
-  "footer": "Internal Use Only",
+  "footer": "Confidential Document - Internal Use Only",
   "footerAlign": "CENTER",
   "filterInfo": null,
   "dependsOn": {
@@ -48,27 +48,7 @@
     {
       "attrSourceId": "0",
       "attrDisplaySeq": null,
-      "attrSourceName": "datapod_name",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-          "version": null,
-          "name": "dq_result_summary"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "datapod_name",
-        "attrType": "varchar",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq": null,
-      "attrSourceName": "attribute_name",
+      "attrSourceName": "CDE_Name",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -86,9 +66,9 @@
       }
     },
     {
-      "attrSourceId": "2",
+      "attrSourceId": "1",
       "attrDisplaySeq": null,
-      "attrSourceName": "rule_name",
+      "attrSourceName": "CDE_Description",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -98,9 +78,29 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "11",
-        "attrName": "rule_name",
-        "attrType": "varchar",
+        "attrId": "4",
+        "attrName": "attribute_desc",
+        "attrType": "VARCHAR",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Data_Accuracy_Rule",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "rule_desc",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
@@ -108,67 +108,7 @@
     {
       "attrSourceId": "3",
       "attrDisplaySeq": null,
-      "attrSourceName": "rule_exec_time",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-          "version": null,
-          "name": "dq_result_summary"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "rule_exec_time",
-        "attrType": "varchar",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_row_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-          "version": null,
-          "name": "dq_result_summary"
-        },
-        "value": null,
-        "attrId": "56",
-        "attrName": "total_row_count",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_pass_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-          "version": null,
-          "name": "dq_result_summary"
-        },
-        "value": null,
-        "attrId": "57",
-        "attrName": "total_pass_count",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_fail_count",
+      "attrSourceName": "Failed_Record_Count",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -180,15 +120,15 @@
         "value": null,
         "attrId": "58",
         "attrName": "total_fail_count",
-        "attrType": "integer",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
     },
     {
-      "attrSourceId": "7",
+      "attrSourceId": "4",
       "attrDisplaySeq": null,
-      "attrSourceName": "total_fail_percentage",
+      "attrSourceName": "Failed_Record_Percentage",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -206,9 +146,9 @@
       }
     },
     {
-      "attrSourceId": "8",
+      "attrSourceId": "5",
       "attrDisplaySeq": null,
-      "attrSourceName": "threshold_type",
+      "attrSourceName": "Failure_Threshold_Type",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -220,15 +160,15 @@
         "value": null,
         "attrId": "59",
         "attrName": "threshold_type",
-        "attrType": "varchar",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
-      "attrSourceId": "9",
+      "attrSourceId": "6",
       "attrDisplaySeq": null,
-      "attrSourceName": "threshold_limit",
+      "attrSourceName": "Failure_Threshold_Limit",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -240,15 +180,15 @@
         "value": null,
         "attrId": "60",
         "attrName": "threshold_limit",
-        "attrType": "integer",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
     },
     {
-      "attrSourceId": "10",
+      "attrSourceId": "7",
       "attrDisplaySeq": null,
-      "attrSourceName": "threshold_ind",
+      "attrSourceName": "Failure_Threshold_Indicator",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -260,27 +200,7 @@
         "value": null,
         "attrId": "61",
         "attrName": "threshold_ind",
-        "attrType": "varchar",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "11",
-      "attrDisplaySeq": null,
-      "attrSourceName": "score",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-          "version": null,
-          "name": "dq_result_summary"
-        },
-        "value": null,
-        "attrId": "62",
-        "attrName": "score",
-        "attrType": "decimal",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
@@ -301,5 +221,90 @@
   "format": "PDF",
   "layout": "LANDSCAPE",
   "type": "dq",
-  "attributeFilterInfo": []
+  "attributeFilterInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "trade_execution_identifier",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "trade_execution_event_number",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "trade_execution_event_type_code",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "trade_execution_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "trade_execution_event_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "32",
+      "attrName": "security_identifier",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
+  ]
 }

@@ -1,0 +1,464 @@
+{
+  "uuid": "c2eb0d96-680d-43a6-be08-dc48eb5f510d",
+  "version": "1554150047",
+  "name": "fm_all_wire_trans_velocity_ratio",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Apr 01 16:20:47 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "sum"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "CASE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 4,
+      "value": null,
+      "attributeName": "transaction_type_code",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'WR'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "AND",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "direction",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'INCOMING'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "amount_usd",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ELSE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "END",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "/",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "sum"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "CASE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 4,
+      "value": null,
+      "attributeName": "transaction_type_code",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'WR'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "AND",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "direction",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'OUTGOING'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+        "version": null,
+        "name": "fact_transaction_journal"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "amount_usd",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ELSE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "END",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
+}

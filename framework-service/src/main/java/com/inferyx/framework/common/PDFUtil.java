@@ -181,8 +181,8 @@ public class PDFUtil {
 		float cellSize = 16.70f;
 		int numCellsPerPage = 6;
 		if (document.getLayout().equals(Layout.LANDSCAPE)) {
-			cellSize = 14.30f;
-			numCellsPerPage = 7;
+			cellSize = 12.50f;
+			numCellsPerPage = 8;
 		}
 		
 		float tableWidth = pdfPage.getMediaBox().getWidth() - 2.00f * margin;

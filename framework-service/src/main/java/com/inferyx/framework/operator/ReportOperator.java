@@ -173,7 +173,7 @@ public class ReportOperator implements IOperator {
 		if (!report.getType().equals(MetaType.dq.toString()))
 			return ConstantsUtil.WHERE_1_1;
 		else {
-			if(report.getAttributeFilterInfo() != null) {
+			if(report.getAttributeFilterInfo().size()>0) {
 			whereBuilder.append(ConstantsUtil.AND).append(ConstantsUtil.CONCAT).append(ConstantsUtil.BRACKET_OPEN)
 					.append("datapod_uuid,'-',attribute_id").append(ConstantsUtil.BRACKET_CLOSE).append(ConstantsUtil.IN)
 					.append(ConstantsUtil.BRACKET_OPEN).append(commaSepFilter(report.getAttributeFilterInfo()))

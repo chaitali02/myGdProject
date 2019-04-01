@@ -1498,7 +1498,7 @@ public class RegisterService {
 	        File[] listOfFiles = null;
 	        String bucket_name = null;
 	        if (datasource.getAccess().equals(ExecContext.S3.toString())) {
-	        	String[] arrOfStr = datasource.getPath().split("s3://", 2);
+	        	String[] arrOfStr = datasource.getPath().split("s3n://", 2);
 	        	arrOfStr = arrOfStr[1].split("/", 2);
 	        	bucket_name = arrOfStr[0];
 	        	String folderPath = arrOfStr[1];
@@ -1530,7 +1530,9 @@ public class RegisterService {
 					String path = datasource.getPath() + listOfFiles[i].getName();
 					tablesWithPath.put(fileName, path);
 				}
-				
+				else {
+					logger.info("Directory " + listOfFiles[i].getName());
+					}								
 			}
 //			for (int i = 0; i < listOfFiles.length; i++) {
 //				if (listOfFiles[i].isFile()) {
