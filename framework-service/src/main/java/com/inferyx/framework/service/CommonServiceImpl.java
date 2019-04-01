@@ -5282,17 +5282,5 @@ public class CommonServiceImpl<T> {
 		return flag;
 	}
 	
-	@SuppressWarnings("null")
-	public List<AttributeRefHolder>  getAttrByDatapods()
-			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		List<AttributeRefHolder> attributeRefHolders =  new ArrayList<>();
-		List<BaseEntity> datapodList=getAllLatest(MetaType.datapod.toString(), "Y");
-	      for(BaseEntity dp:datapodList) {
-	  		List<AttributeRefHolder> attributeRefHolders1 = registerService.getAttributesByDatapod(dp.getUuid());
 
-	    	  	attributeRefHolders.addAll(attributeRefHolders1);
-	      }		
-		return attributeRefHolders;
-	}
 }

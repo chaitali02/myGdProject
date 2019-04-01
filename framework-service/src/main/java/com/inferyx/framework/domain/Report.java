@@ -35,7 +35,7 @@ public class Report extends BaseEntity {
 	private String format;
 	private Layout layout;
 	private List<Attribute> attributeRef = new ArrayList<Attribute>();
-	private MetaType type;
+	private String type;
 
 	public List<Attribute> getAttributeRef() {
 		return attributeRef;
@@ -45,11 +45,11 @@ public class Report extends BaseEntity {
 		this.attributeRef = attributeRef;
 	}
 
-	public MetaType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(MetaType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	/**

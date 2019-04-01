@@ -850,6 +850,11 @@ public class MetadataController {
 		return metadataServiceImpl.uploadOrgLogo(multiPartFile, filename, uuid, type);
 	}
 	
+	@RequestMapping(value = "/getAttributesByDatapods", method = RequestMethod.GET)
+	public @ResponseBody List<AttributeRefHolder>  getAttributesByDatapods(
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException, NullPointerException, java.text.ParseException  {
+		return metadataServiceImpl.getAttributesByDatapods();
+	}
 	
-
 }

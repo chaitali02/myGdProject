@@ -390,11 +390,6 @@ public class CommonController<T> {
 		return commonServiceImpl.getOrgInfoByCurrentApp();
 	}
 	
-	@RequestMapping(value = "/getAttrByDatapods", method = RequestMethod.GET)
-	public @ResponseBody List<AttributeRefHolder>  getAttrByDatapods(
-			@RequestParam(value = "action", required=false) String action,
-			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
-		return commonServiceImpl.getAttrByDatapods();
-	}
+	
 	
 }
