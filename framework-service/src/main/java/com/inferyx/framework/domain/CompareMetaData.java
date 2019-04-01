@@ -22,6 +22,8 @@ public class CompareMetaData {
 	private String targetType;
 	private String targetLength;
 	private String status;
+	private String sourcePrecision;
+	private String targetPrecision;
 	
 	/**
 	 * @Ganesh
@@ -56,7 +58,30 @@ public class CompareMetaData {
 		this.status = status;
 	}
 
-
+	/**
+	 * @param sourceAttribute
+	 * @param sourceType
+	 * @param sourceLength
+	 * @param targetAttribute
+	 * @param targetType
+	 * @param targetLength
+	 * @param status
+	 * @param sourcePrecision
+	 * @param targetPrecision
+	 */
+	public CompareMetaData(String sourceAttribute, String sourceType, String sourceLength, String targetAttribute,
+			String targetType, String targetLength, String status, String sourcePrecision, String targetPrecision) {
+		super();
+		this.sourceAttribute = sourceAttribute;
+		this.sourceType = sourceType;
+		this.sourceLength = sourceLength;
+		this.targetAttribute = targetAttribute;
+		this.targetType = targetType;
+		this.targetLength = targetLength;
+		this.status = status;
+		this.sourcePrecision = sourcePrecision;
+		this.targetPrecision = targetPrecision;
+	}
 
 	/**
 	 * @Ganesh
@@ -169,5 +194,49 @@ public class CompareMetaData {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sourcePrecision
+	 */
+	public String getSourcePrecision() {
+		return sourcePrecision;
+	}
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param sourcePrecision the sourcePrecision to set
+	 */
+	public void setSourcePrecision(String sourcePrecision) {
+		this.sourcePrecision = sourcePrecision;
+	}
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the targetPrecision
+	 */
+	public String getTargetPrecision() {
+		return targetPrecision;
+	}
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param targetPrecision the targetPrecision to set
+	 */
+	public void setTargetPrecision(String targetPrecision) {
+		this.targetPrecision = targetPrecision;
 	}
 }

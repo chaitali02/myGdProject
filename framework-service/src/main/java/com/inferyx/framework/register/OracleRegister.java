@@ -125,6 +125,9 @@ public class OracleRegister {
 						}
 						rsTabMeta.next();
 						attr.setLength(Integer.parseInt(rsTabMeta.getString("COLUMN_SIZE")));
+						if(rs.getString("DECIMAL_DIGITS") != null) {
+							attr.setPrecision(Integer.parseInt(rs.getString("DECIMAL_DIGITS")));
+						}
 						attr.setPartition("N");
 						attr.setActive("Y");
 						attr.setDispName(colName);
