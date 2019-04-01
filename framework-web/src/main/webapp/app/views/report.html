@@ -262,6 +262,7 @@
                                                        <span class="required" aria-required="true"> * </span>
                                                     </label>
                                                     <div class="col-md-6">
+                                                        
                                                         <select
                                                         ng-model="report.type" ng-options="x.text as x.caption for x in types"
                                                         ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type,true)">
