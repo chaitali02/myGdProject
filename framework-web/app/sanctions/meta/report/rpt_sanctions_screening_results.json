@@ -371,5 +371,5 @@
         "sendAttachment" : "Y"
     },
         "type" : "default",
-        "attributeRef" : null
+        "attributeRefInfo" : null
 }

@@ -362,5 +362,5 @@
   "limit": -1,
   "format": "EXCEL",
   "type" : "default",
-  "attributeRef" : null
+  "attributeRefInfo" : null
 }
