@@ -66,6 +66,7 @@ import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BatchExec;
@@ -159,6 +160,8 @@ public class MetadataServiceImpl {
 	ParamListServiceImpl paramListServiceImpl;
 	@Autowired
 	UploadServiceImpl uploadServiceImpl;
+	@Autowired
+	RegisterService registerService;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 //	private static final String GET = "get";
@@ -2263,6 +2266,17 @@ public class MetadataServiceImpl {
 		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
 		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 		return fileName;
+	}
+	
+	public List<AttributeRefHolder>  getAttributesByDatapods()
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<AttributeRefHolder> attributeRefHolders =  new ArrayList<>();
+		List<BaseEntity> datapodList=commonServiceImpl.getAllLatest(MetaType.datapod.toString(), "Y");
+	      for(BaseEntity dp:datapodList) {
+	    	  	attributeRefHolders.addAll(registerService.getAttributesByDatapod(dp.getUuid()));
+	      }		
+		return attributeRefHolders;
 	}
 
 }

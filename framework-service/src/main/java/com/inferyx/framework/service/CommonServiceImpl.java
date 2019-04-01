@@ -65,6 +65,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
@@ -181,6 +182,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
@@ -5280,5 +5282,38 @@ public class CommonServiceImpl<T> {
 		}
 
 		return flag;
+	}
+	
+	public String getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		Object exec = getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) getOneByUuidAndVersion(
+				resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString());
+		MetaIdentifier mi = new MetaIdentifier();
+		ExecStatsHolder execHolder = new ExecStatsHolder();
+		mi.setType(MetaType.datastore);
+		mi.setUuid(resultHolder.getRef().getUuid());
+		mi.setVersion(resultHolder.getRef().getVersion());
+		execHolder.setRef(mi);
+		execHolder.setNumRows(dataStore.getNumRows());
+		execHolder.setPersistMode(dataStore.getPersistMode());
+		execHolder.setRunMode(dataStore.getRunMode());
+		return ow.writeValueAsString(execHolder);
+	}
+	   
+	
+	public List<BaseEntity> getDatapodForDq() throws Exception {
+		List<BaseEntity> baseEntities = new ArrayList<>();
+
+		String summaryUuid = getConfigValue("framework.dataqual.summary.uuid");
+		String detailUuid = getConfigValue("framework.dataqual.detail.uuid");
+
+		if (summaryUuid != null && !summaryUuid.isEmpty())
+			baseEntities.add((BaseEntity) getOneByUuidAndVersion(summaryUuid, null, MetaType.datapod.toString()));
+		if (detailUuid != null && !detailUuid.isEmpty())
+			baseEntities.add((BaseEntity) getOneByUuidAndVersion(detailUuid, null, MetaType.datapod.toString()));
+
+		return baseEntities;
 	}
 }

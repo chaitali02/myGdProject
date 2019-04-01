@@ -239,12 +239,67 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		}).then(function(response) {
 		  return response
 		})
-	  }
+	}
+	
+	factory.findDatapodForDq = function(type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+		  url: url + "common/getDatapodForDq?action=view&type=" + type,
+		  method: "GET",
+		}).then(function(response) {
+		  return response
+		})
+	}
+
+	factory.findAllAttributesByDatapods = function(type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+		  url: url + "metadata/getAttributesByDatapods?action=view&type=" + type,
+		  method: "GET",
+		}).then(function(response) {
+		  return response
+		})
+	}
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFactory, ReportFactory, CF_GRID) {
-	
+	this.getDatapodForDq = function (type) {
+		var deferred = $q.defer();
+		ReportFactory.findDatapodForDq(type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
+	this.getAllAttributesByDatapods = function (type) {
+		var deferred = $q.defer();
+		ReportFactory.findAllAttributesByDatapods(type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			if(response && response.length >0){
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
+					attributes.push(attributedetail)
+				}
+			}
+			deferred.resolve({
+				data: attributes
+			})
+		}
+		return deferred.promise;
+	};
+
 	this.getReprotExecViewByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
 		var deferred = $q.defer();
 		ReportFactory.findReprotExecViewByCriteria(type, name, userName, startDate, endDate, tags, active,published,status).then(function(response) {
@@ -641,25 +696,19 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 				}
 			}
 			reportViewJson.tags = tags;
-			/*var filterInfoArray = [];
-			if(response.filterInfo !=null){
-				for (var i = 0; i < response.filterInfo.length; i++) {
-					var filterinfo = {};
-					filterinfo.uuid = response.filterInfo[i].ref.uuid;
-					filterinfo.type = response.filterInfo[i].ref.type;
-					if(response.filterInfo[i].ref.type !="formula"){
-						filterinfo.attributeId = response.filterInfo[i].attrId;
-						filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-						filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
-					}
-					else{
-						filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
-						filterinfo.id = response.filterInfo[i].ref.uuid;
-					}
-					filterInfoArray[i] = filterinfo;
+			var attributeFilterInfoArray = [];
+			if(response.attributeFilterInfo && response.attributeFilterInfo.length){
+				for (var i = 0; i < response.attributeFilterInfo.length; i++) {
+					var attrRefInfo = {};
+					attrRefInfo.uuid = response.attributeFilterInfo[i].ref.uuid;
+					attrRefInfo.type = response.attributeFilterInfo[i].ref.type;
+					attrRefInfo.attributeId = response.attributeFilterInfo[i].attrId;
+					attrRefInfo.dname = response.attributeFilterInfo[i].ref.name + "." + response.attributeFilterInfo[i].attrName;
+					attrRefInfo.id = response.attributeFilterInfo[i].ref.uuid + "_" + response.attributeFilterInfo[i].attrId;
+					attributeFilterInfoArray[i] = attrRefInfo;
 				}
+				reportViewJson.attributeFilterInfoArray=attributeFilterInfoArray;
 		    }
-			reportViewJson.filterInfo = filterInfoArray*/
 			var filterInfoArray = [];
 			if (response.filterInfo != null) {
 				for (i = 0; i < response.filterInfo.length; i++) {

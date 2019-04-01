@@ -229,12 +229,14 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.exeDetail = response;
 			$scope.select = "report"
 			if (response.paramList != null) {
+				//$scope.isParamModelEnable=true;
 				$('#responsive').modal({
 					backdrop: 'static',
 					keyboard: false
 				});
 			}
 			else {
+				$scope.isParamModelEnable=false;
 				$scope.message = "Report Submitted Successfully"
 				notify.type = 'success',
 				notify.title = 'Success',
@@ -721,7 +723,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 	}
 	$scope.userDetail = {}
-	$scope.alignType = ["LEFT", "RIGHT", "CENTER"]
+	$scope.alignType = ["LEFT", "RIGHT", "CENTER"];
+	$scope.types=[{"text":"default","caption":"DEFAULT"},{"text":"dq","caption":"DATA-QUALITY"}];
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false";
@@ -847,6 +850,37 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		});
 	};
 	$scope.getLovByType();
+
+	$scope.getAllAttributesByDatapods = function () {
+		ReportSerivce.getAllAttributesByDatapods("datapod").then(function (response) { onSuccessGetAllAttributesByDatapods(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetAllAttributesByDatapods = function (response) {
+			$scope.allAttributesRef = response;
+		}
+	}
+  
+	$scope.loadAttribute = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.allAttributesRef, query);
+		});
+	};
+	 
+	$scope.onChangeType=function(type,isSourceNameByTypeCall){
+		$scope.attributeRefTags=null;
+		if(type =="dq"){
+			$scope.getAllAttributesByDatapods();
+			$scope.selectSourceType="datapod";
+			if(isSourceNameByTypeCall)
+			$scope.getSourceNameByType(null);
+
+			$scope.isSourceTypeDisable=true;
+		}else{
+			$scope.getAllLatest($scope.selectSourceType,null);
+			$scope.allAttributesRef=[];
+			$scope.isSourceTypeDisable=false
+
+		}
+	}
+	
 	$scope.countContinue = function () {
 		if ($scope.continueCount == 3) {
 			if ($scope.isDuplication == true) {
@@ -927,10 +961,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.getExpressionByType = function () {
-		ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
-		var onSuccessExpression = function (response) {
-			$scope.allExpress = response
-		}
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
+			var onSuccessExpression = function (response) {
+				$scope.allExpress = response
+			}
+	    }
 	}
 
 	$scope.onChangeFromat=function(format){
@@ -949,30 +985,62 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		
 	}
 	$scope.getFormulaByType = function () {
-		ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-		var onSuccessFormula = function (response) {
-			$scope.allSourceFormula = response;;
-			$scope.allFilterormula = response;
-		}//End onSuccessGetFormulaByType
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			var onSuccessFormula = function (response) {
+				$scope.allSourceFormula = response;;
+				$scope.allFilterormula = response;
+			}//End onSuccessGetFormulaByType
+	    }
 	}
 
 	$scope.getAllAttributeBySource = function () {
-		ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
-		var onSuccessGetDatapodByRelation = function (response) {
-			$scope.sourcedatapodattribute = response;
-			$scope.lhsdatapodattributefilter = response;
-			$scope.allattribute = response;
-		}
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
+			var onSuccessGetDatapodByRelation = function (response) {
+				$scope.sourcedatapodattribute = response;
+				$scope.lhsdatapodattributefilter = response;
+				$scope.allattribute = response;
+			}
+	    }
 	}
+	
+	$scope.getSourceNameByType=function(defaultvalue){
+        if($scope.report.type =="dq"){
+			ReportSerivce.getDatapodForDq("datapod").then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				$scope.allSource={};
+				$scope.allSource.options= response;
+				if (defaultvalue != null) {
+					var defaultoption = {};
+					defaultoption.type = defaultvalue.ref.type
+					defaultoption.uuid = defaultvalue.ref.uuid
+					$scope.allSource.defaultoption = defaultoption;
+				}else{
+					$scope.allSource.defaultoption=response[0];
+				}
+				$scope.getAllAttributeBySource();
+				$scope.getFormulaByType();
+				$scope.getExpressionByType();
+			}
+	    }else{
+			$scope.allSource=null;
+		}
+    }
+	 
+
 	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
+			debugger
 			$scope.allSource = response;
 			if (defaultvalue != null) {
 				var defaultoption = {};
 				defaultoption.type = defaultvalue.ref.type
 				defaultoption.uuid = defaultvalue.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
+			}else{
+				$scope.allSource.defaultoption =response.options[0];
 			}
 			$scope.getAllAttributeBySource();
 			$scope.getFormulaByType();
@@ -1101,12 +1169,16 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-   
-			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			$scope.onChangeType($scope.report.type,false);
+			if($scope.report.type=="dq"){
+				$scope.getSourceNameByType(response.report.dependsOn);
+			}else{
+				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
-			debugger
+			$scope.attributeRefTags=response.attributeFilterInfoArray;
 
 			$scope.onChangeFromat(response.report.format);
 		}//End onSuccessResult
@@ -1154,10 +1226,17 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 
 			$scope.getParamByApp();
-			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+            $scope.onChangeType($scope.report.type,false);
+			if($scope.report.type=="dq"){
+				$scope.getSourceNameByType(response.report.dependsOn);
+			}else{
+				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
+			$scope.attributeRefTags=response.attributeFilterInfoArray;
+
 		}//End onSuccessResult
 		var onError = function () {
 			$scope.isEditInprogess = false;
@@ -1840,7 +1919,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.published = $scope.report.published;
 		reportJson.publicFlag = $scope.report.publicFlag;
 		reportJson.saveOnRefresh = $scope.report.saveOnRefresh;
-
+		reportJson.type = $scope.report.type;
 		reportJson.title = $scope.report.title;
 		reportJson.header = $scope.report.header;
 		reportJson.footer = $scope.report.footer;
@@ -1860,7 +1939,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				upd_tag = "Y"
 			}
 		}
-
+      
 		reportJson.tags = tagArray;
 		var dependsOn = {};
 		var ref = {};
@@ -1868,6 +1947,19 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		ref.uuid = $scope.allSource.defaultoption.uuid
 		dependsOn.ref = ref;
 		reportJson.dependsOn = dependsOn;
+		var attributesRefInfoArray = [];
+		if ($scope.attributeRefTags != null) {
+			for (var i = 0; i < $scope.attributeRefTags.length; i++) {
+				var attrRefInfo = {}
+				var ref = {};
+				ref.type = $scope.attributeRefTags[i].type;
+				ref.uuid = $scope.attributeRefTags[i].uuid;
+				attrRefInfo.ref = ref;
+				attrRefInfo.attrId = $scope.attributeRefTags[i].attributeId;
+				attributesRefInfoArray[i] = attrRefInfo;
+			}
+            reportJson.attributeFilterInfo=attributesRefInfoArray;
+		} 
 
 		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
 			var paramlist = {};

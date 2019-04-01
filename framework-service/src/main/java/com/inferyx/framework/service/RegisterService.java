@@ -2251,8 +2251,9 @@ public class RegisterService {
 
 		return countHolder;
 	}
-
-	public String getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+	
+    //commented by vaibhav redirected to common service
+	/*public String getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		if (type != null && !type.isEmpty()) {
@@ -2297,7 +2298,9 @@ public class RegisterService {
 			}
 		}
 		return result;
-	}
+	}*/
+	
+	
 	public List<RuleExec> getRuleExecByRule(String ruleUuid, String startDate, String endDate, String type, String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		Query query = new Query();
 		query.fields().include("statusList");

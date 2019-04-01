@@ -143,7 +143,7 @@
               <!--Start C3 Graph Code-->
               <div ng-repeat="row in sectionRows">
                   <!-- style="min-height:440px;" -->
-                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
+                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 4 ? 12/(row.columns.length) : '3')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
                   <!-- style="min-height:420px;" -->
                   <div class="portlet light bordered  chartBox">
                     

@@ -1,8 +1,8 @@
 <style>
     .select2-container--open {
-          z-index: 10060;
-        }
-      </style>
+        z-index: 10060;
+    }
+</style>
 <div ng-controller="ReportListController">
     <div class="page-bar">
         <ul class="page-breadcrumb">
@@ -131,6 +131,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div ng-if="isParamModelEnable">
+            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'report'"></exec-param-directive>
         </div>
 
         <div id="responsive" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">

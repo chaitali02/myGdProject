@@ -1134,6 +1134,73 @@
     }
     return deferred.promise;
   };
+
+  this.getParamByParamList2 = function(uuid,version,type) {
+    var deferred = $q.defer();
+    var url;
+    url ="metadata/getParamByParamList?action=view&uuid=" +uuid+"&type=" + type;
+    CommonFactory.httpGet(url).then(function(response) {
+      onSuccess(response.data)
+    });
+    var onSuccess = function(response) {
+      var paramListHolder=[];
+      var type=['distribution','attribute','attributes','datapod','list'];
+      if(response.length >0){
+        for(var i=0;i<response.length;i++){
+          var paramList={};
+          paramList.uuid=response[i].ref.uuid;
+          paramList.type=response[i].ref.type;
+          paramList.paramId=response[i].paramId;
+          paramList.paramType=response[i].paramType.toLowerCase();
+          paramList.paramName=response[i].paramName;
+          paramList.ref=response[i].ref;
+          paramList.attributeInfo;
+          paramList.allAttributeinto=[];
+          paramList.attributeInfoTag=[];
+          if(type.indexOf(response[i].paramType) == -1 ){
+            paramList.isParamType="simple";
+            paramList.paramValue=response[i].paramValue.value.replace(/["']/g, "");
+            paramList.selectedParamValueType='simple'
+            if(response[i].paramType =='date'){
+            var temp =response[i].paramValue.value.replace(/["']/g, "")
+            paramList.paramValue = new Date(temp);
+            paramList.paramValueType = "simple"
+           }
+          }else if(type.indexOf(response[i].paramType) != -1){
+            paramList.isParamType=response[i].paramType;
+            paramList.selectedParamValueType=response[i].paramType=="distribution" ?response[i].paramType:"datapod";
+            paramList.paramValue=response[i].paramValue;
+            if(response[i].paramValue !=null && response[i].paramValue !='list'){
+            var selectedParamValue={};
+            selectedParamValue.uuid=response[i].paramValue.ref.uuid;
+            selectedParamValue.type=response[i].paramValue.ref.type;
+            paramList.selectedParamValue=selectedParamValue;
+            }
+            if( response[i].paramValue && response[i].paramType =='list'){
+              paramList.selectedParamValueType="list";
+              var listvalues=response[i].paramValue.value.split(',');
+              var selectedParamValue={};
+              selectedParamValue.type=response[i].paramValue.ref.type;
+              selectedParamValue.value=listvalues[0];
+              paramList.paramValue=selectedParamValue;
+              paramList.selectedParamValue=selectedParamValue;
+              paramList.allListInfo=listvalues;
+            }
+          }else{
+            paramList.isParamType="datapod";
+            paramList.selectedParamValueType='datapod'
+            paramList.paramValue=response[i].paramValue;    
+          }
+         
+          paramListHolder[i]=paramList;
+        }
+      }
+      deferred.resolve({
+        data: paramListHolder
+      });
+    }
+    return deferred.promise;
+  };
   this.getParamListChilds = function(uuid,version,type) {
     var deferred = $q.defer();
     var url;

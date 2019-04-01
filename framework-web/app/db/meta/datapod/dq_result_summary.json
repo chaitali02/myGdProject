@@ -179,8 +179,86 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 11,
+            "attributeId" : 58,
             "displaySeq" : 11,
+            "name" : "attribute_id",
+            "type" : "string",
+            "desc" : "attribute_id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "attribute_id",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 59,
+            "displaySeq" : 12,
+            "name" : "attribute_name",
+            "type" : "string",
+            "desc" : "attribute_name",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "attribute_name",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 60,
+            "displaySeq" : 13,
+            "name" : "attribute_value",
+            "type" : "string",
+            "desc" : "attribute_value",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "attribute_value",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 61,
+            "displaySeq" : 14,
+            "name" : "attribute_desc",
+            "type" : "string",
+            "desc" : "attribute_desc",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "attribute_desc",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 62,
+            "displaySeq" : 15,
+            "name" : "pii_flag",
+            "type" : "string",
+            "desc" : "pii_flag",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "pii_flag",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 63,
+            "displaySeq" : 16,
+            "name" : "cde_flag",
+            "type" : "string",
+            "desc" : "cde_flag",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "cde_flag",
+            "active" : "Y",
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 11,
+            "displaySeq" : 17,
             "name" : "null_pass_count",
             "type" : "string",
             "desc" : "null_pass_count",
@@ -193,7 +271,7 @@
         }, 
         {
             "attributeId" : 12,
-            "displaySeq" : 12,
+            "displaySeq" : 18,
             "name" : "null_fail_count",
             "type" : "string",
             "desc" : "null_fail_count",
@@ -206,7 +284,7 @@
         }, 
         {
             "attributeId" : 13,
-            "displaySeq" : 13,
+            "displaySeq" : 19,
             "name" : "null_score",
             "type" : "string",
             "desc" : "null_score",
@@ -219,7 +297,7 @@
         }, 
         {
             "attributeId" : 14,
-            "displaySeq" : 14,
+            "displaySeq" : 20,
             "name" : "value_pass_count",
             "type" : "string",
             "desc" : "value_pass_count",
@@ -232,7 +310,7 @@
         }, 
         {
             "attributeId" : 15,
-            "displaySeq" : 15,
+            "displaySeq" : 21,
             "name" : "value_fail_count",
             "type" : "string",
             "desc" : "value_fail_count",
@@ -245,7 +323,7 @@
         }, 
         {
             "attributeId" : 16,
-            "displaySeq" : 16,
+            "displaySeq" : 22,
             "name" : "value_score",
             "type" : "string",
             "desc" : "value_score",
@@ -258,7 +336,7 @@
         }, 
         {
             "attributeId" : 17,
-            "displaySeq" : 17,
+            "displaySeq" : 23,
             "name" : "range_pass_count",
             "type" : "string",
             "desc" : "range_pass_count",
@@ -271,7 +349,7 @@
         }, 
         {
             "attributeId" : 18,
-            "displaySeq" : 18,
+            "displaySeq" : 24,
             "name" : "range_fail_count",
             "type" : "string",
             "desc" : "range_fail_count",
@@ -284,7 +362,7 @@
         }, 
         {
             "attributeId" : 19,
-            "displaySeq" : 19,
+            "displaySeq" : 25,
             "name" : "range_score",
             "type" : "string",
             "desc" : "range_score",
@@ -297,7 +375,7 @@
         }, 
         {
             "attributeId" : 20,
-            "displaySeq" : 20,
+            "displaySeq" : 26,
             "name" : "datatype_pass_count",
             "type" : "string",
             "desc" : "datatype_pass_count",
@@ -310,7 +388,7 @@
         }, 
         {
             "attributeId" : 21,
-            "displaySeq" : 21,
+            "displaySeq" : 27,
             "name" : "datatype_fail_count",
             "type" : "string",
             "desc" : "datatype_fail_count",
@@ -323,7 +401,7 @@
         }, 
         {
             "attributeId" : 22,
-            "displaySeq" : 22,
+            "displaySeq" : 28,
             "name" : "datatype_score",
             "type" : "string",
             "desc" : "datatype_score",
@@ -336,7 +414,7 @@
         }, 
         {
             "attributeId" : 23,
-            "displaySeq" : 23,
+            "displaySeq" : 29,
             "name" : "format_pass_count",
             "type" : "string",
             "desc" : "format_pass_count",
@@ -349,7 +427,7 @@
         }, 
         {
             "attributeId" : 24,
-            "displaySeq" : 24,
+            "displaySeq" : 30,
             "name" : "format_fail_count",
             "type" : "string",
             "desc" : "format_fail_count",
@@ -362,7 +440,7 @@
         }, 
         {
             "attributeId" : 25,
-            "displaySeq" : 25,
+            "displaySeq" : 31,
             "name" : "format_score",
             "type" : "string",
             "desc" : "format_score",
@@ -375,7 +453,7 @@
         }, 
         {
             "attributeId" : 26,
-            "displaySeq" : 26,
+            "displaySeq" : 32,
             "name" : "length_pass_count",
             "type" : "string",
             "desc" : "length_pass_count",
@@ -388,7 +466,7 @@
         }, 
         {
             "attributeId" : 27,
-            "displaySeq" : 27,
+            "displaySeq" : 33,
             "name" : "length_fail_count",
             "type" : "string",
             "desc" : "length_fail_count",
@@ -401,7 +479,7 @@
         }, 
         {
             "attributeId" : 28,
-            "displaySeq" : 28,
+            "displaySeq" : 34,
             "name" : "length_score",
             "type" : "string",
             "desc" : "length_score",
@@ -414,7 +492,7 @@
         }, 
         {
             "attributeId" : 29,
-            "displaySeq" : 29,
+            "displaySeq" : 35,
             "name" : "refint_pass_count",
             "type" : "string",
             "desc" : "refint_pass_count",
@@ -427,7 +505,7 @@
         }, 
         {
             "attributeId" : 30,
-            "displaySeq" : 30,
+            "displaySeq" : 36,
             "name" : "refint_fail_count",
             "type" : "string",
             "desc" : "refint_fail_count",
@@ -440,7 +518,7 @@
         }, 
         {
             "attributeId" : 31,
-            "displaySeq" : 31,
+            "displaySeq" : 37,
             "name" : "refint_score",
             "type" : "string",
             "desc" : "refint_score",
@@ -453,7 +531,7 @@
         }, 
         {
             "attributeId" : 32,
-            "displaySeq" : 32,
+            "displaySeq" : 38,
             "name" : "dup_pass_count",
             "type" : "string",
             "desc" : "dup_pass_count",
@@ -466,7 +544,7 @@
         }, 
         {
             "attributeId" : 33,
-            "displaySeq" : 33,
+            "displaySeq" : 39,
             "name" : "dup_fail_count",
             "type" : "string",
             "desc" : "dup_fail_count",
@@ -479,7 +557,7 @@
         }, 
         {
             "attributeId" : 34,
-            "displaySeq" : 34,
+            "displaySeq" : 40,
             "name" : "dup_score",
             "type" : "string",
             "desc" : "dup_score",
@@ -492,7 +570,7 @@
         }, 
         {
             "attributeId" : 35,
-            "displaySeq" : 35,
+            "displaySeq" : 41,
             "name" : "custom_pass_count",
             "type" : "string",
             "desc" : "custom_pass_count",
@@ -505,7 +583,7 @@
         }, 
         {
             "attributeId" : 36,
-            "displaySeq" : 36,
+            "displaySeq" : 42,
             "name" : "custom_fail_count",
             "type" : "string",
             "desc" : "custom_fail_count",
@@ -518,7 +596,7 @@
         }, 
         {
             "attributeId" : 37,
-            "displaySeq" : 37,
+            "displaySeq" : 43,
             "name" : "custom_score",
             "type" : "string",
             "desc" : "custom_score",
@@ -531,7 +609,7 @@
         }, 
         {
             "attributeId" : 38,
-            "displaySeq" : 38,
+            "displaySeq" : 44,
             "name" : "domain_pass_count",
             "type" : "string",
             "desc" : "domain_pass_count",
@@ -544,7 +622,7 @@
         }, 
         {
             "attributeId" : 39,
-            "displaySeq" : 39,
+            "displaySeq" : 45,
             "name" : "domain_fail_count",
             "type" : "string",
             "desc" : "domain_fail_count",
@@ -557,7 +635,7 @@
         }, 
         {
             "attributeId" : 40,
-            "displaySeq" : 40,
+            "displaySeq" : 46,
             "name" : "domain_score",
             "type" : "string",
             "desc" : "domain_score",
@@ -570,7 +648,7 @@
         }, 
         {
             "attributeId" : 41,
-            "displaySeq" : 41,
+            "displaySeq" : 47,
             "name" : "blankspace_pass_count",
             "type" : "string",
             "desc" : "blankspace_pass_count",
@@ -583,7 +661,7 @@
         }, 
         {
             "attributeId" : 42,
-            "displaySeq" : 42,
+            "displaySeq" : 48,
             "name" : "blankspace_fail_count",
             "type" : "string",
             "desc" : "blankspace_fail_count",
@@ -596,7 +674,7 @@
         }, 
         {
             "attributeId" : 43,
-            "displaySeq" : 43,
+            "displaySeq" : 49,
             "name" : "blankspace_score",
             "type" : "string",
             "desc" : "blankspace_score",
@@ -609,7 +687,7 @@
         }, 
         {
             "attributeId" : 44,
-            "displaySeq" : 44,
+            "displaySeq" : 50,
             "name" : "expression_pass_count",
             "type" : "string",
             "desc" : "expression_pass_count",
@@ -622,7 +700,7 @@
         }, 
         {
             "attributeId" : 45,
-            "displaySeq" : 45,
+            "displaySeq" : 51,
             "name" : "expression_fail_count",
             "type" : "string",
             "desc" : "expression_fail_count",
@@ -635,7 +713,7 @@
         }, 
         {
             "attributeId" : 46,
-            "displaySeq" : 46,
+            "displaySeq" : 52,
             "name" : "expression_score",
             "type" : "string",
             "desc" : "expression_score",
@@ -648,7 +726,7 @@
         }, 
         {
             "attributeId" : 45,
-            "displaySeq" : 47,
+            "displaySeq" : 53,
             "name" : "case_pass_count",
             "type" : "string",
             "desc" : "case_pass_count",
@@ -661,7 +739,7 @@
         }, 
         {
             "attributeId" : 48,
-            "displaySeq" : 48,
+            "displaySeq" : 54,
             "name" : "case_fail_count",
             "type" : "string",
             "desc" : "case_fail_count",
@@ -674,7 +752,7 @@
         }, 
         {
             "attributeId" : 49,
-            "displaySeq" : 49,
+            "displaySeq" : 55,
             "name" : "case_score",
             "type" : "string",
             "desc" : "case_score",
@@ -687,7 +765,7 @@
         }, 
         {
             "attributeId" : 50,
-            "displaySeq" : 50,
+            "displaySeq" : 56,
             "name" : "total_row_count",
             "type" : "string",
             "desc" : "total_row_count",
@@ -700,7 +778,7 @@
         }, 
         {
             "attributeId" : 51,
-            "displaySeq" : 51,
+            "displaySeq" : 57,
             "name" : "total_pass_count",
             "type" : "string",
             "desc" : "total_pass_count",
@@ -713,7 +791,7 @@
         }, 
         {
             "attributeId" : 52,
-            "displaySeq" : 52,
+            "displaySeq" : 58,
             "name" : "total_fail_count",
             "type" : "string",
             "desc" : "total_fail_count",
@@ -726,7 +804,7 @@
         }, 
         {
             "attributeId" : 53,
-            "displaySeq" : 53,
+            "displaySeq" : 59,
             "name" : "threshold_type",
             "type" : "string",
             "desc" : "threshold_type",
@@ -739,7 +817,7 @@
         }, 
         {
             "attributeId" : 54,
-            "displaySeq" : 54,
+            "displaySeq" : 60,
             "name" : "threshold_limit",
             "type" : "string",
             "desc" : "threshold_limit",
@@ -752,7 +830,7 @@
         }, 
         {
             "attributeId" : 55,
-            "displaySeq" : 55,
+            "displaySeq" : 61,
             "name" : "threshold_ind",
             "type" : "string",
             "desc" : "threshold_ind",
@@ -765,7 +843,7 @@
         }, 
         {
             "attributeId" : 56,
-            "displaySeq" : 56,
+            "displaySeq" : 62,
             "name" : "score",
             "type" : "integer",
             "desc" : "score",
@@ -778,7 +856,7 @@
         }, 
         {
             "attributeId" : 57,
-            "displaySeq" : 57,
+            "displaySeq" : 63,
             "name" : "version",
             "type" : "integer",
             "desc" : "version",

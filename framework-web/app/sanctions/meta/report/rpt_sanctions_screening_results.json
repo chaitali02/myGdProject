@@ -369,5 +369,7 @@
         "notifOnSuccess" : "Y",
         "notifyOnFailure" : "Y",
         "sendAttachment" : "Y"
-    }
+    },
+        "type" : "default",
+        "attributeFilterInfo" : null
 }

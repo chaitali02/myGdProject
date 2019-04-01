@@ -34,7 +34,9 @@ public class Report extends BaseEntity {
 	private int limit;
 	private String format;
 	private Layout layout;
-	
+	private String type;
+	private List<AttributeRefHolder> attributeFilterInfo = new ArrayList<AttributeRefHolder>();
+
 	/**
 	 * @Ganesh
 	 *
@@ -250,4 +252,20 @@ public class Report extends BaseEntity {
 	public void setParamList(MetaIdentifierHolder paramList) {
 		this.paramList = paramList;
 	}
+	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	public List<AttributeRefHolder> getAttributeFilterInfo() {
+		return attributeFilterInfo;
+	}
+	public void setAttributeFilterInfo(List<AttributeRefHolder> attributeFilterInfo) {
+		this.attributeFilterInfo = attributeFilterInfo;
+	}
+	
 }

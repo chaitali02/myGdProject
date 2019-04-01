@@ -311,7 +311,7 @@ public class DQOperator implements IParsable {
 				.concat(SINGLE_QUOTE).concat(dq.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULEUUID).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(RULEVERSION).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getName()).concat(SINGLE_QUOTE).concat(AS).concat(RULENAME).concat(COMMA)
-				.concat(SINGLE_QUOTE).concat(dq.getDesc()).concat(SINGLE_QUOTE).concat(AS).concat(RULEDESC).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat((dq.getDesc() == null) ? "null" : dq.getDesc()).concat(SINGLE_QUOTE).concat(AS).concat(RULEDESC).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getDependsOn().getRef().getUuid())
 				.concat(SINGLE_QUOTE).concat(AS).concat(DATAPODUUID).concat(COMMA).concat(SINGLE_QUOTE)
 				.concat(datapod.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(DATAPODVERSION).concat(COMMA)
@@ -338,11 +338,11 @@ public class DQOperator implements IParsable {
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
 		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
 						.concat(ROWKEY_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrDesc(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrDesc(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(ATTRIBUTE_DESC).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(PII_FLAG).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(CDE_FLAG).concat(COMMA);
 		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
 			.concat(ROWKEY_VALUE).concat(COMMA);
@@ -571,6 +571,19 @@ public class DQOperator implements IParsable {
 		}
 		return attributeList;
 	}
+	
+	private Attribute getRowKey(Datapod datapod) {
+		List<Attribute> attribute = new ArrayList<>();
+		if (datapod == null) {
+			return null;
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (StringUtils.isNotBlank(attr.getKey())) {
+				return attr;
+			}
+		}
+		return (Attribute) attribute;
+	}
 
 	private String commaSepAttrIds(List<Attribute> attrList) {
 		StringBuilder attrStr = new StringBuilder();
@@ -585,43 +598,36 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	private String commaSepAttrDesc(List<Attribute> attrList) {
+	private String commaSepAttrDesc(Attribute attribute) {
 		StringBuilder attrStr = new StringBuilder();
-		String attrs = null;
-		if (attrList == null || attrList.isEmpty()) {
+		if (attribute == null) {
 			return null;
 		}
-		for (Attribute attribute : attrList) {
-			attrStr.append(attribute.getDesc()).append(COMMA);
-		}
-		attrs = attrStr.toString();
-		return attrs.substring(0, attrs.length() - 2);
+
+		attrStr.append(attribute.getDesc()).append(COMMA);
+
+		return attrStr.substring(0, attrStr.length() - 2);
 	}
-	
-	private String commaSepAttrPii(List<Attribute> attrList) {
+
+	private String commaSepAttrPii(Attribute attribute) {
 		StringBuilder attrStr = new StringBuilder();
-		String attrs = null;
-		if (attrList == null || attrList.isEmpty()) {
+		if (attribute == null) {
 			return null;
 		}
-		for (Attribute attribute : attrList) {
-			attrStr.append(attribute.getPiiFlag()).append(COMMA);
-		}
-		attrs = attrStr.toString();
-		return attrs.substring(0, attrs.length() - 2);
+
+		attrStr.append(attribute.getPiiFlag()).append(COMMA);
+
+		return attrStr.substring(0, attrStr.length() - 2);
 	}
-	
-	private String commaSepAttrCde(List<Attribute> attrList) {
+
+	private String commaSepAttrCde(Attribute attribute) {
 		StringBuilder attrStr = new StringBuilder();
-		String attrs = null;
-		if (attrList == null || attrList.isEmpty()) {
+		if (attribute == null) {
 			return null;
 		}
-		for (Attribute attribute : attrList) {
-			attrStr.append(attribute.getCdeFlag()).append(COMMA);
-		}
-		attrs = attrStr.toString();
-		return attrs.substring(0, attrs.length() - 2);
+		attrStr.append(attribute.getCdeFlag()).append(COMMA);
+
+		return attrStr.substring(0, attrStr.length() - 2);
 	}
 
 	private String commaSepAttrNames(List<Attribute> attrList) {
@@ -885,6 +891,18 @@ public class DQOperator implements IParsable {
 				  .append(DATAPOD_NAME).append(COMMA)
 				  .append(DATAPOD_DESC).append(COMMA)
 
+				.append(ATTRIBUTE_ID).append(COMMA)
+
+				.append(ATTRIBUTE_NAME).append(COMMA)
+
+				.append(ATTRIBUTE_VAL).append(COMMA)
+
+				.append(ATTRIBUTE_DESC).append(COMMA)
+
+				.append(PII_FLAG).append(COMMA)
+
+				.append(CDE_FLAG).append(COMMA)
+
 				  .append(NULL_PASS_COUNT).append(COMMA)
 				  .append(NULL_FAIL_COUNT).append(COMMA)				  
 				  .append(NULL_SCORE).append(COMMA)
@@ -962,8 +980,13 @@ public class DQOperator implements IParsable {
 				  .append(DATAPODUUID).append(COMMA)
 				  .append(DATAPODVERSION).append(COMMA)
 				  .append(DATAPOD_NAME).append(COMMA)
-				  .append(DATAPOD_DESC).append(COMMA)
- 
+				  .append(DATAPOD_DESC).append(COMMA)				  
+				  .append(ATTRIBUTE_ID).append(COMMA)
+				  .append(ATTRIBUTE_NAME).append(COMMA)
+				  .append(ATTRIBUTE_VAL).append(COMMA)
+				  .append(ATTRIBUTE_DESC).append(COMMA)
+				  .append(PII_FLAG).append(COMMA)
+				  .append(CDE_FLAG).append(COMMA)
 				// added count
 				.append(NULL_PASS_COUNT).append(COMMA).append(NULL_FAIL_COUNT).append(COMMA)
 				// ( null_pass_count / total_row_count ) * 100 AS null_score
@@ -1128,6 +1151,12 @@ public class DQOperator implements IParsable {
 				  							.append(DATAPODVERSION).append(COMMA)
 				  							.append(DATAPOD_NAME).append(COMMA)
 				  							.append(DATAPOD_DESC).append(COMMA)
+				  							.append(ATTRIBUTE_ID).append(COMMA)
+				  							.append(ATTRIBUTE_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_VAL).append(COMMA)
+				  							.append(ATTRIBUTE_DESC).append(COMMA)
+				  							.append(PII_FLAG).append(COMMA)
+				  							.append(CDE_FLAG).append(COMMA)
 				  							;
 
 		sql = sql.append(SUM).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(NULL_PASS_COUNT).append(COMMA)
@@ -1171,6 +1200,12 @@ public class DQOperator implements IParsable {
 					.append(DATAPODVERSION).append(COMMA)
 					.append(DATAPOD_NAME).append(COMMA)
 					.append(DATAPOD_DESC).append(COMMA)
+					.append(ATTRIBUTE_ID).append(COMMA)
+					.append(ATTRIBUTE_NAME).append(COMMA)
+					.append(ATTRIBUTE_VAL).append(COMMA)
+					.append(ATTRIBUTE_DESC).append(COMMA)
+					.append(PII_FLAG).append(COMMA)
+					.append(CDE_FLAG).append(COMMA)
 					.append(VERSION);
 		
 		return sql.toString();
@@ -1186,6 +1221,12 @@ public class DQOperator implements IParsable {
 								.append(DATAPODVERSION).append(COMMA)
 								.append(DATAPOD_NAME).append(COMMA)
 								.append(DATAPOD_DESC).append(COMMA)
+								.append(ATTRIBUTE_ID).append(COMMA)
+								.append(ATTRIBUTE_NAME).append(COMMA)
+								.append(ATTRIBUTE_VAL).append(COMMA)
+								.append(ATTRIBUTE_DESC).append(COMMA)
+								.append(PII_FLAG).append(COMMA)
+								.append(CDE_FLAG).append(COMMA)
 								.append(ALL_CHECK_PASS).append(COMMA);
 		select = select
 					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_Y, NULL_CHECK_P)).append(COMMA)
