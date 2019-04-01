@@ -185,5 +185,7 @@
     "value": null
   },
   "limit": -1,
-  "format": "EXCEL"
+  "format": "EXCEL",
+  "type" : "default",
+  "attributeRef" : null
 }

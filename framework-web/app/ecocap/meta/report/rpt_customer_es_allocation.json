@@ -29,6 +29,8 @@
     }
   ],
   "limit":-1,
+  "type" : "default",
+  "attributeRef" : null,
   "title": "Customer ES Allocation",
   "header": "Customer ES Allocation",
   "headerAlign": "CENTER",
@@ -129,3 +131,4 @@
         "sendAttachment" : "Y"
     }
 }
+
