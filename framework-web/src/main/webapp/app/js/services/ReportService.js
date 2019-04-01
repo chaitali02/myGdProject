@@ -241,6 +241,16 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		})
 	}
 	
+	factory.findDatapodForDq = function(type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+		  url: url + "common/getDatapodForDq?action=view&type=" + type,
+		  method: "GET",
+		}).then(function(response) {
+		  return response
+		})
+	}
+
 	factory.findAllAttributesByDatapods = function(type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -250,12 +260,20 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		  return response
 		})
 	}
-
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFactory, ReportFactory, CF_GRID) {
-	
+	this.getDatapodForDq = function (type) {
+		var deferred = $q.defer();
+		ReportFactory.findDatapodForDq(type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
 	this.getAllAttributesByDatapods = function (type) {
 		var deferred = $q.defer();
 		ReportFactory.findAllAttributesByDatapods(type).then(function (response) { onSuccess(response.data) });
@@ -678,17 +696,17 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 				}
 			}
 			reportViewJson.tags = tags;
-			var attributeRefInfoArray = [];
-			for (var i = 0; i < response.attributeRefInfo.length; i++) {
+			var attributeFilterInfoArray = [];
+			for (var i = 0; i < response.attributeFilterInfo.length; i++) {
 				var attrRefInfo = {};
-				attrRefInfo.uuid = response.attributeRefInfo[i].ref.uuid;
-				attrRefInfo.type = response.attributeRefInfo[i].ref.type;
-				attrRefInfo.attributeId = response.attributeRefInfo[i].attrId;
-				attrRefInfo.dname = response.attributeRefInfo[i].ref.name + "." + response.attributeRefInfo[i].attrName;
-				attrRefInfo.id = response.attributeRefInfo[i].ref.uuid + "_" + response.attributeRefInfo[i].attrId;
-				attributeRefInfoArray[i] = attrRefInfo;
+				attrRefInfo.uuid = response.attributeFilterInfo[i].ref.uuid;
+				attrRefInfo.type = response.attributeFilterInfo[i].ref.type;
+				attrRefInfo.attributeId = response.attributeFilterInfo[i].attrId;
+				attrRefInfo.dname = response.attributeFilterInfo[i].ref.name + "." + response.attributeFilterInfo[i].attrName;
+				attrRefInfo.id = response.attributeFilterInfo[i].ref.uuid + "_" + response.attributeFilterInfo[i].attrId;
+				attributeFilterInfoArray[i] = attrRefInfo;
 			}
-            reportViewJson.attributeRefInfoArray=attributeRefInfoArray;
+            reportViewJson.attributeFilterInfoArray=attributeFilterInfoArray;
 			var filterInfoArray = [];
 			if (response.filterInfo != null) {
 				for (i = 0; i < response.filterInfo.length; i++) {

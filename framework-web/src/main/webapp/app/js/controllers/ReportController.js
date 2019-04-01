@@ -229,12 +229,14 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.exeDetail = response;
 			$scope.select = "report"
 			if (response.paramList != null) {
+				//$scope.isParamModelEnable=true;
 				$('#responsive').modal({
 					backdrop: 'static',
 					keyboard: false
 				});
 			}
 			else {
+				$scope.isParamModelEnable=false;
 				$scope.message = "Report Submitted Successfully"
 				notify.type = 'success',
 				notify.title = 'Success',
@@ -722,7 +724,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 	$scope.userDetail = {}
 	$scope.alignType = ["LEFT", "RIGHT", "CENTER"];
-	$scope.types=[{"text":"default","caption":"default"},{"text":"dq","caption":"data_quality"}];
+	$scope.types=[{"text":"default","caption":"DEFAULT"},{"text":"dq","caption":"DATA-QUALITY"}];
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false";
@@ -863,10 +865,14 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	};
 	 
 	$scope.onChangeType=function(type){
+		$scope.attributeRefTags=null;
 		if(type =="dq"){
 			$scope.getAllAttributesByDatapods();
+			$scope.isSourceTypeDisable=true;
 		}else{
 			$scope.allAttributesRef=[];
+			$scope.isSourceTypeDisable=false
+
 		}
 	}
 	
@@ -987,6 +993,28 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.allattribute = response;
 		}
 	}
+	
+	$scope.getSourceNameByType=function(){
+        if($scope.report.type !="dq"){
+			ReportSerivce.getDatapodForDq(type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				$scope.allSource = response;
+				if (defaultvalue != null) {
+					var defaultoption = {};
+					defaultoption.type = defaultvalue.ref.type
+					defaultoption.uuid = defaultvalue.ref.uuid
+					$scope.allSource.defaultoption = defaultoption;
+				}
+				$scope.getAllAttributeBySource();
+				$scope.getFormulaByType();
+				$scope.getExpressionByType();
+			}
+	    }else{
+			$scope.allSource=null;
+		}
+    }
+	 
+
 	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -1124,12 +1152,16 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-            $scope.onChangeType($scope.report.type);
-			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			$scope.onChangeType($scope.report.type);
+			if($scope.report.type="dq"){
+				$scope.getSourceNameByType();
+			}else{
+				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
-			$scope.attributeRefTags=response.attributeRefInfoArray;
+			$scope.attributeRefTags=response.attributeFilterInfoArray;
 
 			$scope.onChangeFromat(response.report.format);
 		}//End onSuccessResult
@@ -1178,11 +1210,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 			$scope.getParamByApp();
             $scope.onChangeType($scope.report.type);
-			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			if($scope.report.type="dq"){
+				$scope.getSourceNameByType();
+			}else{
+				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
-			$scope.attributeRefTags=response.attributeRefInfoArray;
+			$scope.attributeRefTags=response.attributeFilterInfoArray;
 
 		}//End onSuccessResult
 		var onError = function () {
@@ -1906,7 +1942,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				attrRefInfo.attrId = $scope.attributeRefTags[i].attributeId;
 				attributesRefInfoArray[i] = attrRefInfo;
 			}
-            reportJson.attributeRefInfo=attributesRefInfoArray;
+            reportJson.attributeFilterInfo=attributesRefInfoArray;
 		} 
 
 		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {

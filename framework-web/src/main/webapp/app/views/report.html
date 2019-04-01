@@ -258,12 +258,12 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Types
+                                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
                                                        <span class="required" aria-required="true"> * </span>
                                                     </label>
                                                     <div class="col-md-6">
                                                         <select
-                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types | orderBy : 'caption'"
+                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types"
                                                         ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type)">
                                                     </select>
                                                     </div>
@@ -292,7 +292,7 @@
                                                     <span class="required" aria-required="true"> * </span>
                                                 </label>
                                                 <div class="col-md-2 col-sm-2 col-xs-12">
-                                                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType"
+                                                    <select class="form-control" ng-disabled="{{mode}} || isSourceTypeDisable"data-ng-model="selectSourceType"
                                                         ng-options="r for r in SourceTypes" ng-change="selectType()"
                                                         required>
                                                     </select>
@@ -307,7 +307,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" ng-if="report.type =='dq'">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Info
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Filter
                                                 </label>
                                                 <div class="col-md-6">
                                                   <tags-input class="tag-scroll" ng-model="attributeRefTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
