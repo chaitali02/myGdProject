@@ -961,10 +961,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.getExpressionByType = function () {
-		ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
-		var onSuccessExpression = function (response) {
-			$scope.allExpress = response
-		}
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
+			var onSuccessExpression = function (response) {
+				$scope.allExpress = response
+			}
+	    }
 	}
 
 	$scope.onChangeFromat=function(format){
@@ -983,20 +985,24 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		
 	}
 	$scope.getFormulaByType = function () {
-		ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-		var onSuccessFormula = function (response) {
-			$scope.allSourceFormula = response;;
-			$scope.allFilterormula = response;
-		}//End onSuccessGetFormulaByType
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			var onSuccessFormula = function (response) {
+				$scope.allSourceFormula = response;;
+				$scope.allFilterormula = response;
+			}//End onSuccessGetFormulaByType
+	    }
 	}
 
 	$scope.getAllAttributeBySource = function () {
-		ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
-		var onSuccessGetDatapodByRelation = function (response) {
-			$scope.sourcedatapodattribute = response;
-			$scope.lhsdatapodattributefilter = response;
-			$scope.allattribute = response;
-		}
+		if($scope.allSource.defaultoption){
+			ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
+			var onSuccessGetDatapodByRelation = function (response) {
+				$scope.sourcedatapodattribute = response;
+				$scope.lhsdatapodattributefilter = response;
+				$scope.allattribute = response;
+			}
+	    }
 	}
 	
 	$scope.getSourceNameByType=function(defaultvalue){
@@ -1010,6 +1016,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 					defaultoption.type = defaultvalue.ref.type
 					defaultoption.uuid = defaultvalue.ref.uuid
 					$scope.allSource.defaultoption = defaultoption;
+				}else{
+					$scope.allSource.defaultoption=response[0];
 				}
 				$scope.getAllAttributeBySource();
 				$scope.getFormulaByType();
@@ -1024,12 +1032,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
+			debugger
 			$scope.allSource = response;
 			if (defaultvalue != null) {
 				var defaultoption = {};
 				defaultoption.type = defaultvalue.ref.type
 				defaultoption.uuid = defaultvalue.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
+			}else{
+				$scope.allSource.defaultoption =response.options[0];
 			}
 			$scope.getAllAttributeBySource();
 			$scope.getFormulaByType();
@@ -1159,7 +1170,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 			$scope.getParamByApp();
 			$scope.onChangeType($scope.report.type,false);
-			if($scope.report.type="dq"){
+			if($scope.report.type=="dq"){
 				$scope.getSourceNameByType(response.report.dependsOn);
 			}else{
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
@@ -1216,7 +1227,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 			$scope.getParamByApp();
             $scope.onChangeType($scope.report.type,false);
-			if($scope.report.type="dq"){
+			if($scope.report.type=="dq"){
 				$scope.getSourceNameByType(response.report.dependsOn);
 			}else{
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
