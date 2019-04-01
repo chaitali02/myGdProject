@@ -117,6 +117,9 @@ public class HiveRegister extends DataSourceRegister {
 							attr.setKey(null);
 						}
 						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
+						if(rs.getString("DECIMAL_DIGITS") != null) {
+							attr.setPrecision(Integer.parseInt(rs.getString("DECIMAL_DIGITS")));
+						}
 						attr.setPartition("N");
 						attr.setActive("Y");
 						attr.setDispName(colName);

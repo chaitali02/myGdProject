@@ -891,6 +891,18 @@ public class DQOperator implements IParsable {
 				  .append(DATAPOD_NAME).append(COMMA)
 				  .append(DATAPOD_DESC).append(COMMA)
 
+				.append(ATTRIBUTE_ID).append(COMMA)
+
+				.append(ATTRIBUTE_NAME).append(COMMA)
+
+				.append(ATTRIBUTE_VAL).append(COMMA)
+
+				.append(ATTRIBUTE_DESC).append(COMMA)
+
+				.append(PII_FLAG).append(COMMA)
+
+				.append(CDE_FLAG).append(COMMA)
+
 				  .append(NULL_PASS_COUNT).append(COMMA)
 				  .append(NULL_FAIL_COUNT).append(COMMA)				  
 				  .append(NULL_SCORE).append(COMMA)
@@ -968,8 +980,13 @@ public class DQOperator implements IParsable {
 				  .append(DATAPODUUID).append(COMMA)
 				  .append(DATAPODVERSION).append(COMMA)
 				  .append(DATAPOD_NAME).append(COMMA)
-				  .append(DATAPOD_DESC).append(COMMA)
- 
+				  .append(DATAPOD_DESC).append(COMMA)				  
+				  .append(ATTRIBUTE_ID).append(COMMA)
+				  .append(ATTRIBUTE_NAME).append(COMMA)
+				  .append(ATTRIBUTE_VAL).append(COMMA)
+				  .append(ATTRIBUTE_DESC).append(COMMA)
+				  .append(PII_FLAG).append(COMMA)
+				  .append(CDE_FLAG).append(COMMA)
 				// added count
 				.append(NULL_PASS_COUNT).append(COMMA).append(NULL_FAIL_COUNT).append(COMMA)
 				// ( null_pass_count / total_row_count ) * 100 AS null_score
@@ -1134,6 +1151,12 @@ public class DQOperator implements IParsable {
 				  							.append(DATAPODVERSION).append(COMMA)
 				  							.append(DATAPOD_NAME).append(COMMA)
 				  							.append(DATAPOD_DESC).append(COMMA)
+				  							.append(ATTRIBUTE_ID).append(COMMA)
+				  							.append(ATTRIBUTE_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_VAL).append(COMMA)
+				  							.append(ATTRIBUTE_DESC).append(COMMA)
+				  							.append(PII_FLAG).append(COMMA)
+				  							.append(CDE_FLAG).append(COMMA)
 				  							;
 
 		sql = sql.append(SUM).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(NULL_PASS_COUNT).append(COMMA)
@@ -1177,6 +1200,12 @@ public class DQOperator implements IParsable {
 					.append(DATAPODVERSION).append(COMMA)
 					.append(DATAPOD_NAME).append(COMMA)
 					.append(DATAPOD_DESC).append(COMMA)
+					.append(ATTRIBUTE_ID).append(COMMA)
+					.append(ATTRIBUTE_NAME).append(COMMA)
+					.append(ATTRIBUTE_VAL).append(COMMA)
+					.append(ATTRIBUTE_DESC).append(COMMA)
+					.append(PII_FLAG).append(COMMA)
+					.append(CDE_FLAG).append(COMMA)
 					.append(VERSION);
 		
 		return sql.toString();
@@ -1192,6 +1221,12 @@ public class DQOperator implements IParsable {
 								.append(DATAPODVERSION).append(COMMA)
 								.append(DATAPOD_NAME).append(COMMA)
 								.append(DATAPOD_DESC).append(COMMA)
+								.append(ATTRIBUTE_ID).append(COMMA)
+								.append(ATTRIBUTE_NAME).append(COMMA)
+								.append(ATTRIBUTE_VAL).append(COMMA)
+								.append(ATTRIBUTE_DESC).append(COMMA)
+								.append(PII_FLAG).append(COMMA)
+								.append(CDE_FLAG).append(COMMA)
 								.append(ALL_CHECK_PASS).append(COMMA);
 		select = select
 					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_Y, NULL_CHECK_P)).append(COMMA)

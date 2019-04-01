@@ -27,6 +27,7 @@ public class Attribute {
     private MetaIdentifierHolder domain;
     private String piiFlag = "N";
     private String cdeFlag = "N";
+    private Integer Precision;
 	
 	public String getPiiFlag() {
 		return piiFlag;
@@ -218,6 +219,24 @@ public class Attribute {
 
 	public void setDisplaySeq(Integer displaySeq) {
 		this.displaySeq = displaySeq;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the precision
+	 */
+	public Integer getPrecision() {
+		return Precision;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param precision the precision to set
+	 */
+	public void setPrecision(Integer precision) {
+		Precision = precision;
 	}
     
    

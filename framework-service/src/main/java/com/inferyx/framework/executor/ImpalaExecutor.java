@@ -521,6 +521,7 @@ public class ImpalaExecutor implements IExecutor {
 					sourceAttrDetails.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
 					sourceAttrDetails.put("TYPE_NAME", rs.getString("TYPE_NAME"));
 					sourceAttrDetails.put("COLUMN_SIZE", rs.getString("COLUMN_SIZE"));
+					sourceAttrDetails.put("DECIMAL_DIGITS", rs.getString("DECIMAL_DIGITS"));
 					sourceColDetails.add(sourceAttrDetails);
 				}
 				
@@ -559,6 +560,7 @@ public class ImpalaExecutor implements IExecutor {
 	public Map<String, CompareMetaData> compareAttr(Map<String, CompareMetaData> comparisonResultMap, Attribute attribute, Map<String, String> sourceAttrDetails, List<String> sourceAttrList, List<String> targetAttrList) {
 		CompareMetaData comparison = new CompareMetaData();
 		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
+		String attrPrecision = attribute.getPrecision() != null ? attribute.getPrecision().toString() : "";
 		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
 			String status = null;			
 			if(Helper.getMappedDataTypes(attribute.getType()).contains(sourceAttrDetails.get("TYPE_NAME").toLowerCase())) {
@@ -573,10 +575,12 @@ public class ImpalaExecutor implements IExecutor {
 			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
 			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
 			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			comparison.setSourcePrecision(sourceAttrDetails.get("DECIMAL_DIGITS"));
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
 			comparison.setTargetType(attribute.getType());
+			comparison.setTargetPrecision(attrPrecision);
 			
 			comparison.setStatus(status);
 			comparisonResultMap.put(attribute.getName(), comparison);
@@ -584,23 +588,27 @@ public class ImpalaExecutor implements IExecutor {
 			comparison.setSourceAttribute("");
 			comparison.setSourceLength("");
 			comparison.setSourceType("");
+			comparison.setSourcePrecision("");
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
 			comparison.setTargetType(attribute.getType());
+			comparison.setTargetPrecision(attrPrecision);
 			
-			comparison.setStatus(Compare.NEW.toString());
+			comparison.setStatus(Compare.DELETED.toString());
 			comparisonResultMap.put(attribute.getName(), comparison);
 		} else if(!targetAttrList.contains(sourceAttrDetails.get("COLUMN_NAME"))) {
 			comparison.setSourceAttribute(sourceAttrDetails.get("COLUMN_NAME"));
 			comparison.setSourceLength(sourceAttrDetails.get("COLUMN_SIZE"));
 			comparison.setSourceType(sourceAttrDetails.get("TYPE_NAME"));
+			comparison.setSourcePrecision(sourceAttrDetails.get("DECIMAL_DIGITS"));
 			
 			comparison.setTargetAttribute("");
 			comparison.setTargetLength("");
 			comparison.setTargetType("");
+			comparison.setTargetPrecision("");
 			
-			comparison.setStatus(Compare.DELETED.toString());
+			comparison.setStatus(Compare.NEW.toString());
 			comparisonResultMap.put(sourceAttrDetails.get("COLUMN_NAME"), comparison);
 		}
 		return comparisonResultMap;
