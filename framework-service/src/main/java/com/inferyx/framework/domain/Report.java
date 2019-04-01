@@ -35,7 +35,7 @@ public class Report extends BaseEntity {
 	private String format;
 	private Layout layout;
 	private String type;
-	private List<AttributeRefHolder> attributeRefInfo = new ArrayList<AttributeRefHolder>();
+	private List<AttributeRefHolder> attributeFilterInfo = new ArrayList<AttributeRefHolder>();
 
 	/**
 	 * @Ganesh
@@ -261,10 +261,11 @@ public class Report extends BaseEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public List<AttributeRefHolder> getAttributeRefInfo() {
-		return attributeRefInfo;
+	public List<AttributeRefHolder> getAttributeFilterInfo() {
+		return attributeFilterInfo;
 	}
-	public void setAttributeRefInfo(List<AttributeRefHolder> attributeRefInfo) {
-		this.attributeRefInfo = attributeRefInfo;
+	public void setAttributeFilterInfo(List<AttributeRefHolder> attributeFilterInfo) {
+		this.attributeFilterInfo = attributeFilterInfo;
 	}
+	
 }
