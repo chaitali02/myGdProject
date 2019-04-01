@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -55,6 +55,7 @@ export class BusinessRulesResultComponent {
   msgs: Message[] = [];
   restartShow: any;
 
+
   constructor(private http: Http, private _config: AppConfig, private _location: Location,
     private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
     private _commonService: CommonService, private _commonListService: CommonListService) {
@@ -102,6 +103,7 @@ export class BusinessRulesResultComponent {
 
 
   }
+
 
   getOneByUuidAndVersion(id, version, type) {
     this._commonService.getOneByUuidAndVersion(id, version, type)
@@ -204,7 +206,7 @@ export class BusinessRulesResultComponent {
     }, 1000);
   }
 
-  showDagGraph(uuid, version, graphFlag) {debugger
+  showDagGraph(uuid, version, graphFlag) {
     if (graphFlag) {
       this.isHomeEnable = true;
       this.showGraph = true;
@@ -213,7 +215,7 @@ export class BusinessRulesResultComponent {
         this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
       }, 1000);
     }
-    else{
+    else {
       if (this._type == 'ruleexec') {
         this.showMainPage();
       }
@@ -221,14 +223,12 @@ export class BusinessRulesResultComponent {
     }
   }
 
-  downloadShow(param: any) {debugger
-
+  downloadShow(param: any) {
     this.isResultTable = true;;
     console.log(param)
     this.downloadUuid = param.uuid;
     this.downloadVersion = param.version;
     this.downloadType = param.type;
-    this.restartShow = param.restartShow;
   }
   close() {
     this.isDownloadModel = false
@@ -238,26 +238,28 @@ export class BusinessRulesResultComponent {
     this.restartDialogBox = true;
   }
   submitRestartDialogBox() {
-    debugger
-    console.log("submitRestartDialogBox() call...");
     this._commonListService.restart(this._uuid, this._version, "rulegroupExec", "execute")
       .subscribe(
         response => {
-          // this.getBaseEntityByCriteria()
-          // this.isModel = "false";
           this.msgs = [];
           this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Restarted Successfully' });
           console.log("Success....");
         },
         error => console.log("Error :: " + error)
       );
+    this.restartShow = false;
     this.restartDialogBox = false;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+    }, 1000);
   }
 
   cancelRestartDialogBox() {
     this.restartDialogBox = false;
   }
-  
+
+
+
 }
 
 

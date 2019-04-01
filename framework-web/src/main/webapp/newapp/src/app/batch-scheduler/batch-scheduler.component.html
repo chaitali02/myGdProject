@@ -293,11 +293,11 @@
                       <td>
                         <select class="form-control" [(ngModel)]="tabledata.attrtype" name="attrtype+{{i}}" [disabled]="mode == 'true'"
                           (change)="onChangeAttrtype(i)">
-                          <option *ngFor="let app of attrtypes" [ngValue]="app">{{app}} </option>
+                          <option *ngFor="let app of attrtypes" [ngValue]="app.value">{{app.label}} </option>
                         </select>
                       </td>
                       <td>
-                        <div *ngIf="(tabledata.attrtype=='Weekly' || tabledata.attrtype=='Bi-weekly' || tabledata.attrtype=='Hourly'|| tabledata.attrtype=='Quarterly' || tabledata.attrtype=='Monthly') else notAllow">
+                        <div *ngIf="(tabledata.attrtype=='WEEKLY' || tabledata.attrtype=='BI-WEEKLY' || tabledata.attrtype=='HOURLY'|| tabledata.attrtype=='QUARTERLY' || tabledata.attrtype=='MONTHLY') else notAllow">
                           <input type="text" [(ngModel)]="tabledata.frequencyDetail" title="{{tabledata.frequencyDetail}}"
                             name="frequencyDetail+{{i}}+{{optionChoose}}" class="form-control" (click)="showDialog(i, tabledata.attrtype)"
                             [disabled]="mode == 'true'" readonly={{isReadOnly}} />

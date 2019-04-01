@@ -239,12 +239,7 @@ export class BatchSchedulerResultComponent {
 
   kill(uuid, version) {
     console.log("kill call..");
-    // this._batchService.setStatus(uuid, version, "batchexec", "Killed")
-    //   .subscribe(
-    //     response => {
-    //       this.onSuccessSetStatus(response)
-    //     },
-    //     error => { console.log("Error :: " + error); });
+    this._commonListService.kill(this._uuid, this._version, 'batchexec', 'Killed');
   }
 
   onSuccessSetStatus(response) {
@@ -253,6 +248,7 @@ export class BatchSchedulerResultComponent {
 
   restart(uuid, version) {
     console.log("restart call..");
+    this._commonListService.restart(this._uuid, this._version, 'batchexec', 'execute');
   }
 
   onClickMenu(data) {

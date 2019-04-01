@@ -300,7 +300,7 @@ export class BusinessRulesDetailComponent {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {debugger
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showDivGraph = true;
     this.showForm = false;
@@ -1689,7 +1689,6 @@ export class BusinessRulesDetailComponent {
       }
     }
   }
-
 
   ngOnDestroy() {
     this.txtQueryChangedFilter.unsubscribe();

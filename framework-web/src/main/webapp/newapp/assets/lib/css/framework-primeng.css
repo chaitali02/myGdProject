@@ -92,3 +92,7 @@
 .ui-calendar.ui-calendar-w-btn input {  
   border: none !important;
 }
+.ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
+  background-color: #186ba0 !important;
+  color: #ffffff !important;
+}

@@ -172,7 +172,7 @@ export class BusinessRulesGroupDetailComponent {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {debugger
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showDivGraph = true;
     this.showForm = false;
@@ -227,7 +227,7 @@ export class BusinessRulesGroupDetailComponent {
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.datarulegroup = response;
-    this.createdBy = response.createdBy.ref.name;debugger
+    this.createdBy = response.createdBy.ref.name;
     this.published = this.appHelper.convertStringToBoolean(this.datarulegroup.published);
     this.active = this.appHelper.convertStringToBoolean(this.datarulegroup.active);
     this.locked = this.appHelper.convertStringToBoolean(this.datarulegroup.locked);

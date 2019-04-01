@@ -133,7 +133,7 @@ export class CommonListService {
         map(response => { return <any>response.json(); }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
-  execute(uuid, version, type, action): Observable<any> {debugger
+  execute(uuid, version, type, action): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/execute?action=' + action + '&uuid=' + uuid + '&version=' + version; // + '&type=' + type;
     }
@@ -188,7 +188,7 @@ export class CommonListService {
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-  restart(uuid, version, type, action): Observable<any> {debugger
+  restart(uuid, version, type, action): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
@@ -244,7 +244,7 @@ export class CommonListService {
   }
 
 
-  kill(uuid, version, type, status): Observable<any> {debugger
+  kill(uuid, version, type, status): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/setStatus?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }

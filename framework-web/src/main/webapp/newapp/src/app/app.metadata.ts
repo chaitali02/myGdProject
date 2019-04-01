@@ -1790,7 +1790,7 @@ export class AppMetadata {
       },
       'batchexec': {
         name: 'batchexec',
-        caption: 'Batch',
+        caption: 'Batch Result',
         execType: 'batchexec',
         metaType: 'batchexec',
         color: '#EB54C3',
