@@ -65,6 +65,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
@@ -5283,8 +5284,8 @@ public class CommonServiceImpl<T> {
 		return flag;
 	}
 	
-	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
-
+	public String getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		Object exec = getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
 		com.inferyx.framework.domain.DataStore dataStore = (DataStore) getOneByUuidAndVersion(
@@ -5298,7 +5299,7 @@ public class CommonServiceImpl<T> {
 		execHolder.setNumRows(dataStore.getNumRows());
 		execHolder.setPersistMode(dataStore.getPersistMode());
 		execHolder.setRunMode(dataStore.getRunMode());
-		return execHolder;
+		return ow.writeValueAsString(execHolder);
 	}
 	   
 	
