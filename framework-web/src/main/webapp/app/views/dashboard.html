@@ -331,7 +331,7 @@
                   <div class="col-xs-12 text-center" ng-if="row.columns.length == 0" style="{{row.columns.length == 0 ? 'min-height:150px;background-color:pink;opacity:0.6;': ''}}">
                     <span>Empty Row</span>
                   </div>
-                  <div class="col-xs-{{row.columns.length < 3 ? 12/(row.columns.length) : '4'}} sectionColumn" ng-repeat="column in row.columns"
+                  <div class="col-xs-{{row.columns.length < 4 ? 12/(row.columns.length) : '3'}} sectionColumn" ng-repeat="column in row.columns"
                     ng-model="row.columns" data-drag="true" jqyoui-draggable="{index:$index,animate:false}" data-jqyoui-options="{revert: 'invalid'}">
                     <div class="cardshadow" style="background-color:#fcfcfc;padding:5px;margin-bottom:0px;">
                       <!-- {{column.name}} -->
@@ -374,7 +374,7 @@
                     </div>
                   </div>
 
-                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
+                  <a ng-if="row.columns.length < 4" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
                     <i class="fa fa-plus-circle"></i>
                   </a>
 
@@ -439,7 +439,7 @@
                       </div>
                     </div>
                   </div>
-                  <a ng-if="row.columns.length < 3" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
+                  <a ng-if="row.columns.length < 4" ng-click="addSectionColumn(row)" class="pull-right addSectionColumn">
                     <i class="fa fa-plus-circle"></i>
                   </a>
                   <div class="col-md-12 addSectionRow" style="left: calc(50% - 20px);">

@@ -624,7 +624,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       if (!val.fullWidth)
         count++;
     })
-    return (count < 3 ? 12 / (count || 1) : '4')
+    return (count <= 4 ? 12 / (count || 1) : '3')
   }
   $scope.showDashboardGraph = function (uuid, version) {
     if($scope.checkIsInrogess () ==false){
