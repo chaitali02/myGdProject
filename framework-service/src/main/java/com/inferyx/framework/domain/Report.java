@@ -34,7 +34,24 @@ public class Report extends BaseEntity {
 	private int limit;
 	private String format;
 	private Layout layout;
-	
+	private List<Attribute> attributeRef = new ArrayList<Attribute>();
+	private MetaType type;
+
+	public List<Attribute> getAttributeRef() {
+		return attributeRef;
+	}
+
+	public void setAttributeRef(List<Attribute> attributeRef) {
+		this.attributeRef = attributeRef;
+	}
+
+	public MetaType getType() {
+		return type;
+	}
+
+	public void setType(MetaType type) {
+		this.type = type;
+	}
 	/**
 	 * @Ganesh
 	 *

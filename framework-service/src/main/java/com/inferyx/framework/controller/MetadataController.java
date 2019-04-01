@@ -849,5 +849,7 @@ public class MetadataController {
 
 		return metadataServiceImpl.uploadOrgLogo(multiPartFile, filename, uuid, type);
 	}
+	
+	
 
 }

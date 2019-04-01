@@ -34,6 +34,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -387,4 +389,12 @@ public class CommonController<T> {
 			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
 		return commonServiceImpl.getOrgInfoByCurrentApp();
 	}
+	
+	@RequestMapping(value = "/getAttrByDatapods", method = RequestMethod.GET)
+	public @ResponseBody List<AttributeRefHolder>  getAttrByDatapods(
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
+		return commonServiceImpl.getAttrByDatapods();
+	}
+	
 }
