@@ -26,9 +26,10 @@
                             <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
                         </div>
                     </div>
-                </div>
-                <!-- END PAGE HEADER-->
+                </div><!-- END PAGE HEADER-->
+                
                 <br>
+
                 <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
                 <div options="dirOptions" type="'recon'" on-close="onPanelClose" mode="mode" current-user="userDetail"
                     comment-data="report" comment-panel-directive></div>
@@ -255,6 +256,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="form-group">
+                                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Types
+                                                       <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-6">
+                                                        <select
+                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types | orderBy : 'caption'"
+                                                        ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type)">
+                                                    </select>
+                                                    </div>
+                                                </div>
+
                                                 <div class="row">
                                                     <label class="control-label col-md-3"></label>
                                                     <div class="col-md-4">
@@ -292,6 +306,23 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group" ng-if="report.type =='dq'">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Info
+                                                </label>
+                                                <div class="col-md-6">
+                                                  <tags-input class="tag-scroll" ng-model="attributeRefTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+                                                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                                                    <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                                                      load-on-empty="true">
+                                                    </auto-complete>
+                                                  </tags-input>
+                                                </div>
+                                                <!-- <div class="col-md-1">
+                                                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                                                    aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                                                </div> -->
+                                            </div>
+
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Parameter List
                                                 </label>
@@ -1052,13 +1083,6 @@
                                     <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
                                         <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="submit()"
                                             novalidate="novalidate">
-                                            <!-- <div class="form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit</label>
-                                                <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="number" class="form-control" name="linit" ng-class=""
-                                                        ng-disabled="{{mode}}" ng-model="report.limit" placeholder="">
-                                                </div>
-                                            </div> -->
                                             <div class="col-md-12">
                                                 <div class="col-md-6 form-group">
                                                   <label class="control-label col-md-6 col-sm-6 col-xs-12">Limit
@@ -1106,18 +1130,11 @@
                                                     </div>
                                                   </div>
                                               </div>
-                                            <!-- <div class="form-group">
-                                                <label class="col-md-3 control-label">Format</label>
-                                                <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <select class="form-control" ng-disabled="{{mode}}"data-ng-model="report.format"
-                                                        ng-options="r for r in allFormats" required>
-                                                    </select>
-                                                </div>
-                                            </div> -->
+                                     
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Send Notification</label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;padding-top:15px;">
+                                                    <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;padding-top:18px;">
 
                                                         <!-- <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;margin-left:4%;"> -->
                                                         <!-- <legend style="width:auto;border:none;padding:0px 5px 0px 5px;margin-bottom:2px;">Send
