@@ -34,24 +34,9 @@ public class Report extends BaseEntity {
 	private int limit;
 	private String format;
 	private Layout layout;
-	private List<Attribute> attributeRef = new ArrayList<Attribute>();
 	private String type;
+	private List<AttributeRefHolder> attributeRefInfo = new ArrayList<AttributeRefHolder>();
 
-	public List<Attribute> getAttributeRef() {
-		return attributeRef;
-	}
-
-	public void setAttributeRef(List<Attribute> attributeRef) {
-		this.attributeRef = attributeRef;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
 	/**
 	 * @Ganesh
 	 *
@@ -266,5 +251,20 @@ public class Report extends BaseEntity {
 	}
 	public void setParamList(MetaIdentifierHolder paramList) {
 		this.paramList = paramList;
+	}
+	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	public List<AttributeRefHolder> getAttributeRefInfo() {
+		return attributeRefInfo;
+	}
+	public void setAttributeRefInfo(List<AttributeRefHolder> attributeRefInfo) {
+		this.attributeRefInfo = attributeRefInfo;
 	}
 }
