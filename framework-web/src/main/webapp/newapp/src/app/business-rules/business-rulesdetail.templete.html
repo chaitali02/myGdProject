@@ -249,7 +249,7 @@
                         <div class="col-md-3">
                           <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
                             <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedataReq" dataKey="uuid"
-                              [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                              [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true"
                               (onChange)="changeSourceType()" placeholder="--Select--" #sourcedataReq="ngModel"
                               required>
                             </p-dropdown>
@@ -396,13 +396,13 @@
                                       placeholder="-enter string-" #lhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                     <div *ngIf="data.lhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
@@ -488,14 +488,14 @@
 
                                     <div *ngIf="data.rhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="attributeId" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
@@ -509,13 +509,13 @@
                                     </div>
                                     <div *ngIf="data.rhsType == 'function'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'paramlist'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
@@ -523,7 +523,7 @@
                                     <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
                                       [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" required #rhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
@@ -723,13 +723,13 @@
                                         [disabled]="mode == 'true'">
                                       <div *ngIf="attributeTableArray[i].isSourceAtributeDatapod">
                                         <p-dropdown [options]="allSourceAttribute" [(ngModel)]="attributeTableArray[i].sourceattribute"
-                                          name="sourceattribute+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'"
+                                          name="sourceattribute+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'" appendTo="body" [panelStyle]="{'width':'19.3%'}"
                                           [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="onChangeAttributeDatapod(attributeTableArray[i].sourceattribute,i)">
                                         </p-dropdown>
                                       </div>
 
                                       <div *ngIf="attributeTableArray[i].isSourceAtributeFormula">
-                                        <p-dropdown [options]="allFormula" [(ngModel)]="attributeTableArray[i].sourceformula"
+                                        <p-dropdown [options]="allFormula" [(ngModel)]="attributeTableArray[i].sourceformula" appendTo="body" [panelStyle]="{'width':'19.3%'}"
                                           name="sourceformula+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
                                           [filter]="true">
                                         </p-dropdown>
@@ -737,13 +737,13 @@
 
                                       <div *ngIf="attributeTableArray[i].isSourceAtributeExpression">
                                         <p-dropdown [options]="allExpression" [(ngModel)]="attributeTableArray[i].sourceexpression"
-                                          name="sourceexpression+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'"
+                                          name="sourceexpression+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'" appendTo="body" [panelStyle]="{'width':'19.3%'}"
                                           [style]="{'width':'100%','padding':'3px'}" [filter]="true">
                                         </p-dropdown>
                                       </div>
                                       <div *ngIf="attributeTableArray[i].isSourceAtributeFunction">
                                         <p-dropdown [options]="allFunction" [(ngModel)]="attributeTableArray[i].sourcefunction"
-                                          name="sourcefunction+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'"
+                                          name="sourcefunction+{{i}}" dataKey="u_Id" [disabled]="mode == 'true'" appendTo="body" [panelStyle]="{'width':'19.3%'}"
                                           [style]="{'width':'100%','padding':'3px'}" [filter]="true">
                                         </p-dropdown>
                                       </div>
