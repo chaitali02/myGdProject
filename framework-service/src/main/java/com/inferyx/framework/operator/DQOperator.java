@@ -173,7 +173,8 @@ public class DQOperator implements IParsable {
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
-	private String TOTAL_FAIL_COUNT = "total_fail_count";
+	private String TOTAL_FAIL_COUNT = "total_fail_count";	
+	private String TOTAL_FAIL_PERCENTAGE = "total_fail_percentage";
 	private String DQ_RESULT_ALIAS = "dq_result_alias";
 	private String DQ_RESULT_READY_ALIAS = "dq_result_ready_alias";
 	private final String DQ_RESULT_ALL_CHECK_DETAIL = " dq_result_all_check_detail ";
@@ -894,8 +895,8 @@ public class DQOperator implements IParsable {
 				.append(ATTRIBUTE_ID).append(COMMA)
 
 				.append(ATTRIBUTE_NAME).append(COMMA)
-
-				.append(ATTRIBUTE_VAL).append(COMMA)
+                // commented by vaibhav
+				//.append(ATTRIBUTE_VAL).append(COMMA)
 
 				.append(ATTRIBUTE_DESC).append(COMMA)
 
@@ -960,6 +961,9 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(TOTAL_FAIL_COUNT).append(COMMA)
+				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+					.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(TOTAL_FAIL_PERCENTAGE).append(COMMA) 
+					
 				  .append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
 				  .append(SCORE).append(COMMA)
 				  .append(VERSION)//.append(COMMA)
@@ -983,7 +987,7 @@ public class DQOperator implements IParsable {
 				  .append(DATAPOD_DESC).append(COMMA)				  
 				  .append(ATTRIBUTE_ID).append(COMMA)
 				  .append(ATTRIBUTE_NAME).append(COMMA)
-				  .append(ATTRIBUTE_VAL).append(COMMA)
+				  /*.append(ATTRIBUTE_VAL).append(COMMA)*/
 				  .append(ATTRIBUTE_DESC).append(COMMA)
 				  .append(PII_FLAG).append(COMMA)
 				  .append(CDE_FLAG).append(COMMA)
@@ -1058,8 +1062,17 @@ public class DQOperator implements IParsable {
 
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
-				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
-				  .append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT).append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
+				  
+				  
+				.append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT)
+				.append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
+
+				
+				
+				.append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
+				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
+				
+				
 				  .append(VERSION).append(COMMA);
 		if (dq.getThresholdInfo().getType() != null 
 				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
@@ -1153,7 +1166,7 @@ public class DQOperator implements IParsable {
 				  							.append(DATAPOD_DESC).append(COMMA)
 				  							.append(ATTRIBUTE_ID).append(COMMA)
 				  							.append(ATTRIBUTE_NAME).append(COMMA)
-				  							.append(ATTRIBUTE_VAL).append(COMMA)
+				  							/*.append(ATTRIBUTE_VAL).append(COMMA)*/
 				  							.append(ATTRIBUTE_DESC).append(COMMA)
 				  							.append(PII_FLAG).append(COMMA)
 				  							.append(CDE_FLAG).append(COMMA)
@@ -1202,7 +1215,7 @@ public class DQOperator implements IParsable {
 					.append(DATAPOD_DESC).append(COMMA)
 					.append(ATTRIBUTE_ID).append(COMMA)
 					.append(ATTRIBUTE_NAME).append(COMMA)
-					.append(ATTRIBUTE_VAL).append(COMMA)
+					/*.append(ATTRIBUTE_VAL).append(COMMA)*/
 					.append(ATTRIBUTE_DESC).append(COMMA)
 					.append(PII_FLAG).append(COMMA)
 					.append(CDE_FLAG).append(COMMA)
@@ -1223,7 +1236,7 @@ public class DQOperator implements IParsable {
 								.append(DATAPOD_DESC).append(COMMA)
 								.append(ATTRIBUTE_ID).append(COMMA)
 								.append(ATTRIBUTE_NAME).append(COMMA)
-								.append(ATTRIBUTE_VAL).append(COMMA)
+								/*.append(ATTRIBUTE_VAL).append(COMMA)*/
 								.append(ATTRIBUTE_DESC).append(COMMA)
 								.append(PII_FLAG).append(COMMA)
 								.append(CDE_FLAG).append(COMMA)
