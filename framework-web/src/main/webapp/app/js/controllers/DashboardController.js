@@ -157,9 +157,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 
 	var dragDisableTimeOut = {};
 	$scope.dragoverCallback = function (index, external, type, rowIndex, row) {
-		
 		var ColWidth = $scope.getColWidth(row);
-		if (ColWidth <= 4) {
+		if (ColWidth < 4) {
 			$('.sectionRow#sectionRowNo_' + rowIndex).css('opacity', '0.3');
 			$('.sectionRow#sectionRowNo_' + rowIndex).css('background-color', 'red');
 			clearTimeout(dragDisableTimeOut[rowIndex]);
@@ -196,7 +195,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				count++;
 			}
 		})
-		return count < 3 ? 12 / (count) : '4'
+		return count <= 4 ? 12 / (count) : '3'
 	}
 
 	$scope.mode = " ";
