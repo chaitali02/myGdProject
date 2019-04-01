@@ -1,8 +1,8 @@
-  <p-growl [(value)]="msgs" ></p-growl>
-  <div>
-    <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
-    <br>
-   
+<p-growl [(value)]="msgs"></p-growl>
+<div>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
+  <br>
+
   <div class="row">
     <div class="col-md-12">
       <div class="portlet light bordered" id="form_wizard_1">
@@ -13,66 +13,88 @@
               <span class="step-title"> Step 1 of 3 </span>
             </span>
           </div>
-  
+
           <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-               data- (click)="showMainPage(uuid,version)" *ngIf="mode && isHomeEnable">
-              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-  
-            <a class="btn btn-circle btn-icon-only btn-default linkDisabled " title="Main" data-placement="top" tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-               *ngIf="mode && !isHomeEnable">
-              <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-  
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data- (click)="enableEdit(uuid,version)"
-              *ngIf="mode == 'true'">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-  
-            <a class="btn btn-circle btn-icon-only btn-default linkDisabled" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" 
-              *ngIf="mode == 'false'">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-  
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-            *ngIf="mode" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(uuid,version)">
-              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-            </a>
-  
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
-              data-original-title="" title="Refresh">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-            <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
-              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main"
+                data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+                data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
+                ng-hide="isAdd" data- (click)="enableEdit(uuid,version)">
+                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+                data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+                <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="reload btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;"
+                (click)="showGraph()" data-original-title="" title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
+                <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
           </div>
         </div>
-        <div class="portlet-body form" *ngIf="!showGraph">
-          <div>
-            <div class="form-wizard">
-              <div class="form-body" style="padding-top: 20px;">
-                <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
-                  <li [ngClass]="{'active' : continueCount == 1,'done':continueCount>1}">
-                    <a class="step" aria-expanded="true">
-                      <span class="number"> 1 </span>
-                      <span class="desc">
-                        <i class="fa fa-check"></i> Rule Setup </span>
-                    </a>
-                  </li>
-                  <li [ngClass]="{'active' : continueCount == 2,'done':continueCount>2}">
-                    <a class="step">
-                      <span class="number"> 2 </span>
-                      <span class="desc">
-                        <i class="fa fa-check"></i> Rule Source
-                      </span>
-                    </a>
-                  </li>
-  
-                  <!-- <li [ngClass]="{'active' : continueCount == 3,'done':continueCount>3}">
+
+        <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div class="show-graph-body" id="graphWrapper">
+            <knowledge-graph></knowledge-graph>
+          </div>
+        </div>
+
+        <div class="form-body" *ngIf="showForm">
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+          <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
+            <div>
+              <div class="form-wizard">
+                <div class="form-body" style="padding-top: 20px;">
+                  <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
+                    <li [ngClass]="{'active' : continueCount == 1,'done':continueCount>1}">
+                      <a class="step" aria-expanded="true">
+                        <span class="number"> 1 </span>
+                        <span class="desc">
+                          <i class="fa fa-check"></i> Rule Setup </span>
+                      </a>
+                    </li>
+                    <li [ngClass]="{'active' : continueCount == 2,'done':continueCount>2}">
+                      <a class="step">
+                        <span class="number"> 2 </span>
+                        <span class="desc">
+                          <i class="fa fa-check"></i> Rule Source
+                        </span>
+                      </a>
+                    </li>
+
+                    <!-- <li [ngClass]="{'active' : continueCount == 3,'done':continueCount>3}">
                     <a class="step">
                       <span class="number"> 3 </span>
                       <span class="desc">
@@ -80,82 +102,84 @@
                       </span>
                     </a>
                   </li> -->
-                  <li [ngClass]="{'active' : continueCount == 3,'done':continueCount>3}">
-                    <a class="step">
-                      <span class="number"> 3 </span>
-                      <span class="desc">
-                        <i class="fa fa-check"></i>Rule Execute
-                      </span>
-                    </a>
-                  </li>
-  
-                </ul>
-                <div id="bar" class="progress progress-striped" role="progressbar" style="height:10px;">
-                  <div class="progress-bar progress-bar-success" [style.width]="progressbarWidth"></div>
-                </div>
-                <div class="tab-content">
-                  <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
-                    <form class="form-horizontal" name="myform" novalidate="novalidate">
-                      <div class="form-group" *ngIf="mode" >
-                        <label class="col-md-3 control-label">UUID</label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" [(ngModel)]="dataprofile.uuid" name="uuid" placeholder="" [disabled]="true">
+                    <li [ngClass]="{'active' : continueCount == 3,'done':continueCount>3}">
+                      <a class="step">
+                        <span class="number"> 3 </span>
+                        <span class="desc">
+                          <i class="fa fa-check"></i>Rule Execute
+                        </span>
+                      </a>
+                    </li>
+
+                  </ul>
+                  <div id="bar" class="progress progress-striped" role="progressbar" style="height:10px;">
+                    <div class="progress-bar progress-bar-success" [style.width]="progressbarWidth"></div>
+                  </div>
+                  <div class="tab-content">
+                    <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
+                      <form class="form-horizontal" name="myform" novalidate="novalidate">
+                        <div class="form-group" *ngIf="mode">
+                          <label class="col-md-3 control-label">UUID</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" [(ngModel)]="profiledata.uuid" name="uuid"
+                              placeholder="" [disabled]="true">
+                          </div>
                         </div>
-                      </div>
-        
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Name
-                          <span class="required" aria-required="true"> * </span>
-                        </label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" [(ngModel)]="dataprofile.name" name="name" placeholder="" [disabled]="mode == 'true'">
+
+                        <div class="form-group">
+                          <label class="col-md-3 control-label">Name
+                            <span class="required" aria-required="true"> * </span>
+                          </label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" [(ngModel)]="profiledata.name" name="name"
+                              placeholder="" [disabled]="mode == 'true'">
+                          </div>
                         </div>
-                      </div>
-                      <div class="form-group" *ngIf="mode">
-                        <label class="col-md-3 control-label">Version </label>
-                        <div class="col-md-6">
-                          <p-dropdown [options]="VersionList"          
-                          [(ngModel)]="selectedVersion"
-                          name="selectedVersion"
-                          [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true"
-                          [disabled]="mode == 'false'"
-                          (onChange)="onVersionChange()">
-                          </p-dropdown>
+                        <div class="form-group" *ngIf="mode">
+                          <label class="col-md-3 control-label">Version </label>
+                          <div class="col-md-6">
+                            <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion"
+                              [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'false'"
+                              (onChange)="onVersionChange()">
+                            </p-dropdown>
+                          </div>
                         </div>
-                      </div>
-                      <div class="form-group" *ngIf="mode" >
-                        <label class="col-md-3 control-label">CreatedBy</label>
-                        <div class="col-md-6" >
-                          <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                        <div class="form-group" *ngIf="mode">
+                          <label class="col-md-3 control-label">CreatedBy</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                          </div>
                         </div>
-                      </div>
-        
-                      <div class="form-group" *ngIf="mode" >
-                        <label class="col-md-3 control-label">CreatedOn</label>
-                        <div class="col-md-6">
-                          <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="dataprofile.createdOn" name="createdOn">
+
+                        <div class="form-group" *ngIf="mode">
+                          <label class="col-md-3 control-label">CreatedOn</label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" [disabled]="true" [(ngModel)]="profiledata.createdOn"
+                              name="createdOn">
+                          </div>
                         </div>
-                      </div>
-        
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <tag-input [(ngModel)]="dataprofile.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <!-- <tag-input [(ngModel)]="profiledata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                            <p-chips [(ngModel)]="profiledata.tags" styleClass="pchip-height" [disabled]="mode == 'true'"
+                              name="tags" [allowDuplicate]="false"></p-chips>
+                          </div>
                         </div>
-                      </div>
-                    
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                        <div class="col-md-6">
-                          <textarea [disabled]="mode == 'true'" [(ngModel)]="dataprofile.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                          <div class="col-md-6">
+                            <textarea [disabled]="mode == 'true'" [(ngModel)]="profiledata.desc" name="desc" class="form-control noresize "
+                              rows="2" style="resize:none;"></textarea>
+                          </div>
                         </div>
-                      </div>
-                      <!-- <div class="form-group">
+                        <!-- <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofile.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                           </div>
                         </div>
                       </div>
@@ -163,7 +187,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofile.locked" name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.locked" name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                           </div>
                         </div>
                       </div>
@@ -171,290 +195,336 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofile.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                           </div>
                         </div>
                       </div> -->
-                      <div class="row">
-                        <label class="control-label col-md-3"></label>
-                        <div class="col-md-4" style="padding-top: 2%;">
-                          <button type="submit" class="btn btn-outline green " (click)="countContinue()"> Continue
-                            <i class="fa fa-angle-right"></i>
-                          </button>
+                        <div class="row">
+                          <label class="control-label col-md-3"></label>
+                          <div class="col-md-4" style="padding-top: 2%;">
+                            <button type="submit" class="btn btn-outline green " (click)="countContinue()"> Continue
+                              <i class="fa fa-angle-right"></i>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </form>
-                  </div>
-                  <!-- End Tab1-->
-  
-                  <!--Start Tab2-->
-                  <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
-  
-                    <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate">
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
-                          <span class="required" aria-required="true"> * </span>
-                        </label>
-                        <div class="col-md-2 col-sm-2 col-xs-12">
-                            <select class="form-control" [(ngModel)]="source" name="source" [disabled]="mode == 'true'">
-                                <option *ngFor="let app of sources" [ngValue]="app" >{{app}} </option>
-                              </select>
-                        </div>
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                      </form>
+                    </div>
+                    <!-- End Tab1-->
+
+                    <!--Start Tab2-->
+                    <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
+
+                      <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()"
+                        novalidate="novalidate">
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
                             <span class="required" aria-required="true"> * </span>
                           </label>
-                        <div class="col-md-3 col-sm-4 col-xs-12" >
-                            <p-dropdown [options]="allNames"          
-                            [(ngModel)]="sourcedata"
-                            name="sourcedata"
-                            dataKey="uuid"
-                            [disabled]="mode == 'true'"
-                            [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true"
-                            (onChange)="changeType()"
-                            >
+                          <div class="col-md-2 col-sm-2 col-xs-12">
+                            <select class="form-control" [(ngModel)]="source" name="source" [disabled]="mode == 'true'">
+                              <option *ngFor="let app of sources" [ngValue]="app">{{app}} </option>
+                            </select>
+                          </div>
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                            <span class="required" aria-required="true"> * </span>
+                          </label>
+                          <div class="col-md-3 col-sm-4 col-xs-12">
+                            <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedata" dataKey="uuid"
+                              [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                              (onChange)="changeType()">
                             </p-dropdown>
+                          </div>
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Attributes
-                          <span class="required" aria-required="true"> * </span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
-                          
-                            <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" 
-                              [settings]="dropdownSettings" name="attributeInfo">
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Attributes
+                            <span class="required" aria-required="true"> * </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
+
+                            <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
+                              name="attributeInfo">
                             </angular2-multiselect>
-                           </div>
-                           <div class="col-md-1" style="padding-left:0px">
-                            <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
-                              aria-hidden="true" (click)=" clear()" style="top:3px;cursor: pointer;"></span>
-                              <span *ngIf="mode != 'true'" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
-                              (click)="addAll()" style="top:3px;cursor: pointer;"></span>
-                            </div>
-                          
-                      </div>
-                      <div class="portlet light bordered">
-                        <div class="portlet-title">
-                          <div class="caption">
-                            Filter
                           </div>
+                          <div class="col-md-1" style="padding-left:0px">
+                            <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All"
+                              data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true" (click)=" clear()"
+                              style="top:3px;cursor: pointer;margin: 3px 7px 0px -6px;"></span>
+                            <span *ngIf="mode != 'true'" class="fa fa-list-alt" title="Select All" data-toggle="tooltip"
+                              data-placement="top" tooltip aria-hidden="true" (click)="addAll()" style="top:3px;cursor: pointer;"></span>
+                          </div>
+
                         </div>
-                        <div class="portlet-body form">
-                          <div class="x_title" style="padding:10px;">
-                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRow()" [disabled]="mode == 'true'"></button>
-                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()" [disabled]="mode == 'true'"></button>
+                        <div class="portlet light bordered">
+                          <div class="portlet-title">
+                            <div class="caption">
+                              Filter
+                            </div>
                           </div>
-                          <br>
-                          <div class="form-body" style="padding-top:50px;">
-                            <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
-                              <thead>
-                                <tr>
-                                  <th style="width:5%;text-align: center; Vertical-align: middle;">
-                                    <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
-                                      (click)="checkAllFilterRow()" />
-                                  </th>
-                                  <th style="text-align: center; Vertical-align: middle;width:8%;">Logical Operator</th>
-                                  <th style="text-align: center;width:15%;">LHS Type</th>
-                                  <th style="text-align: center;width:20%;">LHS Attribute</th>
-                                  <th style="text-align: center;width:20%;">Operator</th>
-                                  <th style="text-align: center;width:15%;">RHS Type</th>
-                                  <th style="text-align: center;width:25%;">RHS Attribute</th>
-                                  <th class="text-center" style="width:10%;">Move</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let data of dataprofile.filterTableArray ;let i=index"
-                                pDraggable="cars"
-                                (onDragStart)="dragStart($event,i)" (onDragEnd)="dragEnd($event)" pDroppable="cars" 
-                                (onDrop)="drop($event,i)">
-  
-                                  <td style="text-align:center;Vertical-align:middle;">
-                                    <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"
-                                    />
-                                  </td>
-                                  <td>
-                                    <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                      [disabled]="i === 0 || mode == 'true'" [filter]="true" placeholder="--Select--">
-                                    </p-dropdown>
-                                  </td>
-                                  <td>
-                                    <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                      [disabled]="mode == 'true'" [filter]="true" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
-                                    </p-dropdown>
-                                  </td>
-                                  <td>
-                                    <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter only integer"
-                                      tooltipPosition="top" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                                      *ngIf="data.lhsType == 'integer'" placeholder="-enter integer value-">
-                                    <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter values into single quotes"
-                                      tooltipPosition="top" tooltipEvent="focus" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                                      *ngIf="data.lhsType == 'string'" placeholder="-enter string-">
-                                    <div *ngIf="data.lhsType == 'formula'">
-                                      <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                          <div class="portlet-body form">
+                            <div class="x_title" style="padding:10px;">
+                              <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
+                                (click)="removeRow()" [disabled]="mode == 'true'"></button>
+                              <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
+                                (click)="addRow()" [disabled]="mode == 'true'"></button>
+                            </div>
+                            <br>
+                            <div class="form-body" style="padding-top:30px;">
+                              <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
+                                <thead>
+                                  <tr>
+                                    <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                      <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox"
+                                        [(ngModel)]="checkAll" name="checkAll" (click)="checkAllFilterRow()" />
+                                    </th>
+                                    <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
+                                    <th style="text-align: center;width:13%;">LHS Type</th>
+                                    <th style="text-align: center;width:19%;">LHS Attribute</th>
+                                    <th style="text-align: center;width:14%;">Operator</th>
+                                    <th style="text-align: center;width:15%;">RHS Type</th>
+                                    <th style="text-align: center;width:19%;">RHS Attribute</th>
+                                    <!-- <th class="text-center" style="width:10%;">Move</th> -->
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let data of profiledata.filterTableArray ;let i=index" pDraggable="cars"
+                                    (onDragStart)="dragStart($event,i)" (onDragEnd)="dragEnd($event)" pDroppable="cars"
+                                    (onDrop)="drop($event,i)">
+
+                                    <td style="text-align:center;Vertical-align:middle;">
+                                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
+                                        name="selected" [disabled]="mode == 'true'" />
+                                    </td>
+                                    <td>
+                                      <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="i === 0 || mode == 'true'"
+                                        [filter]="true" placeholder="--Select--">
                                       </p-dropdown>
-                                    </div>
-                                    <div *ngIf="data.lhsType == 'datapod'">
-                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" datakey="label">
+                                    </td>
+                                    <td>
+                                      <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}"
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        (onChange)="onChangeLhsType(i)" placeholder="--Select--">
                                       </p-dropdown>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeOperator(i)">
-                                    </p-dropdown>
-                                  </td>
-                                  <td>
-                                    <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsType(i)"
-                                      [disabled]="mode == 'true'" placeholder="--Select--">
-                                      <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' && data.operator !== 'IS'  ">
-                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
-                                      </ng-container>
-  
-                                      <ng-container *ngIf="data.operator == 'BETWEEN'">
-                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
-                                      </ng-container>
-  
-                                      <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS'">
-                                        <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
-                                      </ng-container>
-  
-                                      <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">
-                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
-                                      </ng-container>
-  
-                                      <ng-container *ngIf="data.operator == 'IS' ">
-                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
-                                        <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
-                                      </ng-container>
-                                    </select>
-                                  </td>
-                                  <td>
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                      *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'" placeholder="-enter integer value-">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                      *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator != 'IS'"
-                                      placeholder="-enter string-">
-                                    <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
-                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:30%;display: inline-block"
-                                        [disabled]="mode == 'true'" placeholder="--Select--"> {{"-"}}
-                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}" style="width:30%;display: inline-block"
-                                        [disabled]="mode == 'true'" placeholder="--Select--">
-                                    </div>
-                                    <div *ngIf="data.rhsType == 'formula'">
-                                      <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
-                                      </p-dropdown>
-                                    </div>
-                                    <div *ngIf="data.rhsType == 'datapod'">
-                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" datakey="attributeId">
-                                      </p-dropdown>
-                                    </div>
-                                    <div *ngIf="data.rhsType == 'dataset'">
-                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}" [disabled]="'true'"
-                                        style="width:80%;display: inline-block">
-                                      <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block" pTooltip="Search"></i>
-                                    </div>
-                                    <div *ngIf="data.rhsType == 'function'">
-                                      <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                                      </p-dropdown>
-                                    </div>
-                                    <div *ngIf="data.rhsType == 'paramlist'">
-                                      <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                                      </p-dropdown>
-                                    </div>
-  
-                                    <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
-                                      <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                                        [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
-                                      </p-dropdown>
-                                    </div>
-  
-                                    <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
-                                      [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
-  
-                                      <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                          <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                            [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() "
-                                            dataKey="uuid">
-                                          </p-dropdown>
-                                        </div>
+                                    </td>
+                                    <td>
+                                      <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                        pTooltip="enter only integer" tooltipPosition="top" [disabled]="mode == 'true'"
+                                        [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'integer'"
+                                        placeholder="-enter integer value-">
+                                      <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                        pTooltip="enter values into single quotes" tooltipPosition="top" tooltipEvent="focus"
+                                        [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'string'"
+                                        placeholder="-enter string-">
+                                      <div *ngIf="data.lhsType == 'formula'">
+                                        <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--">
+                                        </p-dropdown>
                                       </div>
-  
-                                      <div>
+                                      <div *ngIf="data.lhsType == 'datapod'">
+                                        <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--" datakey="label">
+                                        </p-dropdown>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}"
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" (onChange)="onChangeOperator(i)">
+                                      </p-dropdown>
+                                    </td>
+                                    <td>
+                                      <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}"
+                                        style="width:100%" (click)="onChangeRhsType(i)" [disabled]="mode == 'true'"
+                                        placeholder="--Select--">
+                                        <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' && data.operator !== 'IS'  ">
+                                          <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="data.operator == 'BETWEEN'">
+                                          <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS'">
+                                          <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">
+                                          <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="data.operator == 'IS' ">
+                                          <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                          <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
+                                      </select>
+                                    </td>
+                                    <td>
+                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                        [disabled]="mode == 'true'" *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
+                                        placeholder="-enter integer value-">
+                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                        [disabled]="mode == 'true'" *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator != 'IS'"
+                                        placeholder="-enter string-">
+                                      <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
+                                        <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}"
+                                          style="width:30%;display: inline-block" [disabled]="mode == 'true'"
+                                          placeholder="--Select--">
+                                        {{"-"}}
+                                        <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}"
+                                          style="width:30%;display: inline-block" [disabled]="mode == 'true'"
+                                          placeholder="--Select--">
+                                      </div>
+                                      <div *ngIf="data.rhsType == 'formula'">
+                                        <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--">
+                                        </p-dropdown>
+                                      </div>
+                                      <div *ngIf="data.rhsType == 'datapod'">
+                                        <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--" datakey="attributeId">
+                                        </p-dropdown>
+                                      </div>
+                                      <div *ngIf="data.rhsType == 'dataset'">
+                                        <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
+                                          name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
+                                        <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block"
+                                          pTooltip="Search"></i>
+                                      </div>
+                                      <div *ngIf="data.rhsType == 'function'">
+                                        <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                        </p-dropdown>
+                                      </div>
+                                      <div *ngIf="data.rhsType == 'paramlist'">
+                                        <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                        </p-dropdown>
+                                      </div>
+
+                                      <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
+                                        <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [filter]="true" placeholder="--Select--">
+                                        </p-dropdown>
+                                      </div>
+
+                                      <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true"
+                                        [responsive]="true" [width]="400" [resizable]="true" [baseZIndex]="1000"
+                                        [contentStyle]="{'height':'200px'}">
+
                                         <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+                                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                           <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName" name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                            <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName"
+                                              name="dialogSelectName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
+                                              (onChange)="onChangeDialogAttribute() " dataKey="uuid">
                                             </p-dropdown>
                                           </div>
                                         </div>
-                                      </div>
-                                      <p-footer>
-                                        <div style="padding-top: 10px;">
-                                          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                                            <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                                            <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
+
+                                        <div>
+                                          <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                              <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
+                                                name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
+                                                dataKey="uuid">
+                                              </p-dropdown>
+                                            </div>
                                           </div>
                                         </div>
-                                      </p-footer>
-                                    </p-dialog>
-                                  </td>
-                                  <td>
-                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <div style="text-align: center;">
-                                        <a class="move-column" [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" (click)="onAttrRowUp(i)">
-                                          <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
-                                          <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
-                                        </a>
-                                        <a class="move-column" [attr.disabled]="(i == dataprofile.filterTableArray.length-1 ||mode == 'true') ? 'disabled' : null" (click)="onAttrRowDown(i)">
-                                          <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
-                                          <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
-                                        </a>
-                                      </div>
-                                    </span>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                        <p-footer>
+                                          <div style="padding-top: 10px;">
+                                            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                                              <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+                                              <input type="button" class="btn btn-success" value="Submit" name="submit"
+                                                (click)="submitDialogBox(i)">
+                                            </div>
+                                          </div>
+                                        </p-footer>
+                                      </p-dialog>
+                                    </td>
+                                    <!-- <td>
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <div style="text-align: center;">
+                                          <a class="move-column" [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null"
+                                            (click)="onAttrRowUp(i)">
+                                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                                          </a>
+                                          <a class="move-column" [attr.disabled]="(i == profiledata.filterTableArray.length-1 ||mode == 'true') ? 'disabled' : null"
+                                            (click)="onAttrRowDown(i)">
+                                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                                          </a>
+                                        </div>
+                                      </span>
+                                    </td> -->
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
+                        </div>
+                        <div class="row">
+                          <label class="control-label col-md-3"></label>
+                          <div class="col-md-4" style="padding-top: 2%;">
+                            <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
+                              <i class="fa fa-angle-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-outline green btn-margin"> Continue
+                              <i class="fa fa-angle-right"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <!--End Tab2-->
+
+                    <!-- Start Tab4 -->
+                    <div class="tab-pane" id="tab3" [ngClass]="{'active' : continueCount == 3}">
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="text-align: right; padding-top: 6px;">
+                          Run Immediately ?
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
+                            binary="true"></p-checkbox>
                         </div>
                       </div>
                       <div class="row">
@@ -463,59 +533,24 @@
                           <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
                             <i class="fa fa-angle-left"></i> Back
                           </a>
-                          <button type="submit" class="btn btn-outline green "> Continue
-                            <i class="fa fa-angle-right"></i>
-                          </button>
+                          <button type="submit" class="btn green btn-margin" [disabled]="mode == 'true' || isSubmit == 'true'"
+                            (click)="submit()">Submit</button>
+                          <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                          </span>
                         </div>
                       </div>
-                    </form>
-                  </div>
-                  <!--End Tab2-->                
-  
-                  <!-- Start Tab4 -->
-                  <div class="tab-pane" id="tab3" [ngClass]="{'active' : continueCount == 3}">
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
-                      </div>
                     </div>
-                    <div class="row">
-                      <label class="control-label col-md-3"></label>
-                      <div class="col-md-4" style="padding-top: 2%;">
-                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
-                          <i class="fa fa-angle-left"></i> Back
-                        </a>
-                        <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'" (click)="submit()">Submit</button>
-                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
-                          <div class="bounce1"></div>
-                          <div class="bounce2"></div>
-                          <div class="bounce3"></div>
-                        </span>
-                      </div>
-                    </div>
+                    <!-- End Tab4-->
                   </div>
-                  <!-- End Tab4-->
+                  <!--End tab-content-->
                 </div>
-                <!--End tab-content-->
+                <!--End form-body-->
               </div>
-              <!--End form-body-->
-              <div class="form-actions">
-              </div>
+              <!--End form-wizard-->
             </div>
-            <!--End form-wizard-->
-          </div>
-        </div>
-    
-        <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
-          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-          <div class="spinner" id="graphloader">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
-            <div class="bounce3"></div>
-          </div>
-          <div class="show-graph-body" id="graphWrapper" >
-            <knowledge-graph ></knowledge-graph>
           </div>
         </div>
       </div>

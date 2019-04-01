@@ -43,7 +43,7 @@ export class DataProfileDetailComponent {
   selectedAllFitlerRow: boolean;
   progressbarWidth: string;
   continueCount: number;
-  showGraph: boolean;
+  // showGraph: boolean;
   isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
@@ -63,13 +63,39 @@ export class DataProfileDetailComponent {
   uuid: any;
   id: any;
   routerUrl: any;
-  dataprofile: any
+  // profiledata: any
   sources: any;
   sourcedata: DependsOn;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  showForm: boolean = true;
+  isGraphInprogess: boolean;
+  showDivGraph: boolean;
+  isGraphError: boolean;
+  isversionEnable: boolean;
+  isAdd: boolean;
+  isEdit: boolean = false;
+  profiledata: any;
+  // isEditError: boolean = false;
+  // isEditInprogess: boolean = false;
+  // isFilterInprogess: boolean = false;
+  // metaType = MetaType;
+  // moveTo: number;
+  // moveToEnable: boolean;
+  // count: any[];
+  // invalideMinRow: boolean = false;
+  // invalideMaxRow: boolean = false;
+  // txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  // resetTableTopBottom: Subject<string> = new Subject<string>();
+  // txtQueryChangedAttribute: Subject<string> = new Subject<string>();
+  // rowIndex: any;
+  // topDisabled: boolean;
+  // bottomDisabled: boolean;
+  // datasetNotEmpty: boolean = true;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
-    this.dataprofile = {};
-    this.dataprofile["active"] = true
+    // this.profiledata = {};
+    this.profiledata = {};
+    this.profiledata["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
     this.sources = ["datapod"];
@@ -171,7 +197,87 @@ export class DataProfileDetailComponent {
         this.getAllLatest();
       }
     });
+    this.setMode(this.mode);
   }
+
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataProfiling/profile', uuid, version, 'false']);
+    this.dropdownSettings = {
+      singleSelection: false,
+      text: "Select Attrubutes",
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      classes: "myclass custom-class",
+      maxHeight: 110,
+      disabled: false
+    };
+    this.isEdit = true;
+  }
+
+  showview(uuid, version) {
+    this.router.navigate(['app/dataProfiling/profile', uuid, version, 'true']);
+    this.dropdownSettings = {
+      singleSelection: false,
+      text: "Select Attrubutes",
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      classes: "myclass custom-class",
+      maxHeight: 110,
+      disabled: true
+    };
+  }
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showDivGraph = false;
+    this.showForm = true;
+  } 
+
+  showGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showDivGraph = true;
+    this.showForm = false;
+    this.isGraphInprogess = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError = this.d_KnowledgeGraphComponent.isError;
+    }, 1000);
+  }
+
+  // showDagGraph(uuid,version){
+  //   this.isHomeEnable = true;
+  //   this.showGraph = true;
+  //   setTimeout(() => {
+  //     this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+  //   }, 1000);  
+  // }
+
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.profiledata.name;
+  }
+
+  public goBack() {
+    // this._location.back();
+    this.router.navigate(['app/list/profile']);
+  }
+
   getAllLatest() {
     this._commonService.getAllLatest(this.source).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -213,9 +319,9 @@ export class DataProfileDetailComponent {
   changeType() {
     this.selectedItems = [];
     this.getAllAttributeBySource();
-    this.dataprofile.filterTableArray=[]
-    // if(this.dataprofile.filterTableArray){
-    //   for(let i=0;i<this.dataprofile.filterTableArray.length;i++){
+    this.profiledata.filterTableArray=[]
+    // if(this.profiledata.filterTableArray){
+    //   for(let i=0;i<this.profiledata.filterTableArray.length;i++){
     //     this.onChangeLhsType(i)
     //   }
     // }
@@ -250,7 +356,8 @@ export class DataProfileDetailComponent {
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.dataprofile = response;
+    this.profiledata = response;
+    // this.profiledata = response;
     this.uuid = response.uuid
     this.createdBy = response.createdBy.ref.name
     var tags = [];
@@ -262,12 +369,12 @@ export class DataProfileDetailComponent {
         tags[i] = tag
 
       }//End For
-      this.dataprofile.tags = tags;
+      this.profiledata.tags = tags;
     }//End If
 
-    this.dataprofile.published = response["published"] == 'Y' ? true : false
-    this.dataprofile.active = response["active"] == 'Y' ? true : false
-    this.dataprofile.locked = response["locked"] == 'Y' ? true : false
+    this.profiledata.published = response["published"] == 'Y' ? true : false
+    this.profiledata.active = response["active"] == 'Y' ? true : false
+    this.profiledata.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
@@ -415,7 +522,7 @@ export class DataProfileDetailComponent {
           }
         }
         filterInfoArray.push(filterInfo);
-        this.dataprofile.filterTableArray = filterInfoArray
+        this.profiledata.filterTableArray = filterInfoArray
       }
     }
   }
@@ -466,7 +573,7 @@ export class DataProfileDetailComponent {
     rhsattribute["label"] = this.dialogAttributeName.label;
     rhsattribute["uuid"] = this.dialogAttributeName.uuid;
     rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
-    this.dataprofile.filterTableArray[index].rhsAttribute = rhsattribute;
+    this.profiledata.filterTableArray[index].rhsAttribute = rhsattribute;
   }
 
   cancelDialogBox() {
@@ -500,10 +607,7 @@ export class DataProfileDetailComponent {
       },
       error => console.log("Error :: " + error));
   }
-  public goBack() {
-    // this._location.back();
-    this.router.navigate(['app/list/profile']);
-  }
+ 
   onSuccessgetFormulaByLhsType(response) {
     this.lhsFormulaArray = []
     for (const i in response) {
@@ -532,57 +636,57 @@ export class DataProfileDetailComponent {
   }
 
   onChangeLhsType(index) {
-    this.dataprofile.filterTableArray[index]["lhsAttribute"] = null;
+    this.profiledata.filterTableArray[index]["lhsAttribute"] = null;
 
-    if (this.dataprofile.filterTableArray[index]["lhsType"] == 'formula') {
+    if (this.profiledata.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
         error => console.log("Error ::", error))
     }
 
-    else if (this.dataprofile.filterTableArray[index]["lhsType"] == 'datapod') {
+    else if (this.profiledata.filterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
         error => console.log("Error ::", error))
     }
 
     else {
-      this.dataprofile.filterTableArray[index]["lhsAttribute"] = null;
+      this.profiledata.filterTableArray[index]["lhsAttribute"] = null;
     }
   }
 
   onChangeRhsType(index) {
-    this.dataprofile.filterTableArray[index]["rhsAttribute"] = null;
+    this.profiledata.filterTableArray[index]["rhsAttribute"] = null;
 
-    if (this.dataprofile.filterTableArray[index]["rhsType"] == 'formula') {
+    if (this.profiledata.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
         error => console.log("Error ::", error))
     }
-    else if (this.dataprofile.filterTableArray[index]["rhsType"] == 'datapod') {
+    else if (this.profiledata.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
         error => console.log("Error ::", error))
     }
-    else if (this.dataprofile.filterTableArray[index]["rhsType"] == 'function') {
+    else if (this.profiledata.filterTableArray[index]["rhsType"] == 'function') {
       this._commonService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
         error => console.log("Error ::", error))
     }
-    else if (this.dataprofile.filterTableArray[index]["rhsType"] == 'paramlist') {
+    else if (this.profiledata.filterTableArray[index]["rhsType"] == 'paramlist') {
       this._commonService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
         error => console.log("Error ::", error))
     }
-    else if (this.dataprofile.filterTableArray[index]["rhsType"] == 'dataset') {
+    else if (this.profiledata.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
       rhsAttribute["label"] = "-Select-";
       rhsAttribute["uuid"] = "";
       rhsAttribute["attributeId"] = "";
-      this.dataprofile.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+      this.profiledata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
     else {
-      this.dataprofile.filterTableArray[index]["rhsAttribute"] = null;
+      this.profiledata.filterTableArray[index]["rhsAttribute"] = null;
     }
   }
   onSuccessgetFunctionByCriteria(response) {
@@ -640,27 +744,27 @@ export class DataProfileDetailComponent {
   // }
 
   onChangeOperator(index) {
-    this.dataprofile.filterTableArray[index].rhsAttribute = null;
-    if (this.dataprofile.filterTableArray[index].operator == 'EXISTS' || this.dataprofile.filterTableArray[index].operator == 'NOT EXISTS') {
-      this.dataprofile.filterTableArray[index].rhsType = 'dataset';
+    this.profiledata.filterTableArray[index].rhsAttribute = null;
+    if (this.profiledata.filterTableArray[index].operator == 'EXISTS' || this.profiledata.filterTableArray[index].operator == 'NOT EXISTS') {
+      this.profiledata.filterTableArray[index].rhsType = 'dataset';
       let rhsAttribute = {};
       rhsAttribute["label"] = "-Select-";
       rhsAttribute["uuid"] = "";
       rhsAttribute["attributeId"] = "";
-      this.dataprofile.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+      this.profiledata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
-    else if(this.dataprofile.filterTableArray[index].operator == 'IS'){
-			this.dataprofile.filterTableArray[index].rhsType = 'string';
+    else if(this.profiledata.filterTableArray[index].operator == 'IS'){
+			this.profiledata.filterTableArray[index].rhsType = 'string';
     }
     else{
-			this.dataprofile.filterTableArray[index].rhsType = 'integer';
+			this.profiledata.filterTableArray[index].rhsType = 'integer';
 		}
   }
   addRow() {
-    if (this.dataprofile.filterTableArray == null) {
-      this.dataprofile.filterTableArray = [];
+    if (this.profiledata.filterTableArray == null) {
+      this.profiledata.filterTableArray = [];
     }
-    var len = this.dataprofile.filterTableArray.length + 1
+    var len = this.profiledata.filterTableArray.length + 1
     var filertable = {};
     filertable["logicalOperator"] = ""
     filertable["lhsType"] = "integer"
@@ -668,12 +772,12 @@ export class DataProfileDetailComponent {
     filertable["operator"] = ""
     filertable["rhsType"] = "integer"
     filertable["rhsAttribute"] = ""
-    this.dataprofile.filterTableArray.splice(this.dataprofile.filterTableArray.length, 0, filertable);
+    this.profiledata.filterTableArray.splice(this.profiledata.filterTableArray.length, 0, filertable);
   }
   removeRow() {
     let newDataList = [];
     this.selectedAllFitlerRow = false;
-    this.dataprofile.filterTableArray.forEach(selected => {
+    this.profiledata.filterTableArray.forEach(selected => {
       if (!selected.selected) {
         newDataList.push(selected);
       }
@@ -681,7 +785,7 @@ export class DataProfileDetailComponent {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
-    this.dataprofile.filterTableArray = newDataList;
+    this.profiledata.filterTableArray = newDataList;
   }
   checkAllFilterRow() {
     if (!this.selectedAllFitlerRow) {
@@ -690,7 +794,7 @@ export class DataProfileDetailComponent {
     else {
       this.selectedAllFitlerRow = false;
     }
-    this.dataprofile.filterTableArray.forEach(filter => {
+    this.profiledata.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
   }
@@ -698,13 +802,13 @@ export class DataProfileDetailComponent {
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";
     let profileJson = {}
-    profileJson["uuid"] = this.dataprofile.uuid
-    profileJson["name"] = this.dataprofile.name
-    profileJson["desc"] = this.dataprofile.desc
+    profileJson["uuid"] = this.profiledata.uuid
+    profileJson["name"] = this.profiledata.name
+    profileJson["desc"] = this.profiledata.desc
     var tagArray = [];
-    if (this.dataprofile.tags != null) {
-      for (var counttag = 0; counttag < this.dataprofile.tags.length; counttag++) {
-        tagArray[counttag] = this.dataprofile.tags[counttag].value;
+    if (this.profiledata.tags != null) {
+      for (var counttag = 0; counttag < this.profiledata.tags.length; counttag++) {
+        tagArray[counttag] = this.profiledata.tags[counttag].value;
 
       }
     }
@@ -715,9 +819,9 @@ export class DataProfileDetailComponent {
     ref["uuid"] = this.sourcedata.uuid
     dependsOn["ref"] = ref;
     profileJson["dependsOn"] = dependsOn;
-    profileJson["active"] = this.dataprofile.active == true ? 'Y' : "N"
-    profileJson["published"] = this.dataprofile.published == true ? 'Y' : "N"
-    profileJson["locked"] = this.dataprofile.locked == true ? 'Y' : "N"
+    profileJson["active"] = this.profiledata.active == true ? 'Y' : "N"
+    profileJson["published"] = this.profiledata.published == true ? 'Y' : "N"
+    profileJson["locked"] = this.profiledata.locked == true ? 'Y' : "N"
     let attributeInfo = [];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let attributes = {}
@@ -730,103 +834,103 @@ export class DataProfileDetailComponent {
     }
     profileJson["attributeInfo"] = attributeInfo;
     let filterInfoArray = [];
-    if(this.dataprofile.filterTableArray!=null){
-    if (this.dataprofile.filterTableArray.length > 0) {
-      for (let i = 0; i < this.dataprofile.filterTableArray.length; i++) {
+    if(this.profiledata.filterTableArray!=null){
+    if (this.profiledata.filterTableArray.length > 0) {
+      for (let i = 0; i < this.profiledata.filterTableArray.length; i++) {
 
         let filterInfo = {};
-        filterInfo["logicalOperator"] = this.dataprofile.filterTableArray[i].logicalOperator;
-        filterInfo["operator"] = this.dataprofile.filterTableArray[i].operator;
+        filterInfo["logicalOperator"] = this.profiledata.filterTableArray[i].logicalOperator;
+        filterInfo["operator"] = this.profiledata.filterTableArray[i].operator;
         filterInfo["operand"] = [];
 
-        if (this.dataprofile.filterTableArray[i].lhsType == 'integer' || this.dataprofile.filterTableArray[i].lhsType == 'string') {
+        if (this.profiledata.filterTableArray[i].lhsType == 'integer' || this.profiledata.filterTableArray[i].lhsType == 'string') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "simple";
           operatorObj["ref"] = ref;
-          operatorObj["value"] = this.dataprofile.filterTableArray[i].lhsAttribute;
+          operatorObj["value"] = this.profiledata.filterTableArray[i].lhsAttribute;
           operatorObj["attributeType"] = "string"
           filterInfo["operand"][0] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].lhsType == 'formula') {
+        else if (this.profiledata.filterTableArray[i].lhsType == 'formula') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "formula";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].lhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].lhsAttribute.uuid;
           operatorObj["ref"] = ref;
           // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
           filterInfo["operand"][0] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].lhsType == 'datapod') {
+        else if (this.profiledata.filterTableArray[i].lhsType == 'datapod') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "datapod";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].lhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].lhsAttribute.uuid;
           operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dataprofile.filterTableArray[i].lhsAttribute.attributeId;
+          operatorObj["attributeId"] = this.profiledata.filterTableArray[i].lhsAttribute.attributeId;
           filterInfo["operand"][0] = operatorObj;
         }
-        if (this.dataprofile.filterTableArray[i].rhsType == 'integer' || this.dataprofile.filterTableArray[i].rhsType == 'string') {
+        if (this.profiledata.filterTableArray[i].rhsType == 'integer' || this.profiledata.filterTableArray[i].rhsType == 'string') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "simple";
           operatorObj["ref"] = ref;
-          operatorObj["value"] = this.dataprofile.filterTableArray[i].rhsAttribute;
+          operatorObj["value"] = this.profiledata.filterTableArray[i].rhsAttribute;
           operatorObj["attributeType"] = "string"
           filterInfo["operand"][1] = operatorObj;
 
-          if (this.dataprofile.filterTableArray[i].rhsType == 'integer' && this.dataprofile.filterTableArray[i].operator == 'BETWEEN') {
+          if (this.profiledata.filterTableArray[i].rhsType == 'integer' && this.profiledata.filterTableArray[i].operator == 'BETWEEN') {
             let operatorObj = {};
             let ref = {}
             ref["type"] = "simple";
             operatorObj["ref"] = ref;
-            operatorObj["value"] = this.dataprofile.filterTableArray[i].rhsAttribute1 + "and" + this.dataprofile.filterTableArray[i].rhsAttribute2;
+            operatorObj["value"] = this.profiledata.filterTableArray[i].rhsAttribute1 + "and" + this.profiledata.filterTableArray[i].rhsAttribute2;
             filterInfo["operand"][1] = operatorObj;
           }
         }
-        else if (this.dataprofile.filterTableArray[i].rhsType == 'formula') {
+        else if (this.profiledata.filterTableArray[i].rhsType == 'formula') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "formula";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].rhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].rhsAttribute.uuid;
           operatorObj["ref"] = ref;
           //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].rhsType == 'function') {
+        else if (this.profiledata.filterTableArray[i].rhsType == 'function') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "function";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].rhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].rhsAttribute.uuid;
           operatorObj["ref"] = ref;
           //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].rhsType == 'paramlist') {
+        else if (this.profiledata.filterTableArray[i].rhsType == 'paramlist') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "paramlist";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].rhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].rhsAttribute.uuid;
           operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dataprofile.filterTableArray[i].rhsAttribute.attributeId;
+          operatorObj["attributeId"] = this.profiledata.filterTableArray[i].rhsAttribute.attributeId;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].rhsType == 'dataset') {
+        else if (this.profiledata.filterTableArray[i].rhsType == 'dataset') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "dataset";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].rhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].rhsAttribute.uuid;
           operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dataprofile.filterTableArray[i].rhsAttribute.attributeId;
+          operatorObj["attributeId"] = this.profiledata.filterTableArray[i].rhsAttribute.attributeId;
           filterInfo["operand"][1] = operatorObj;
         }
-        else if (this.dataprofile.filterTableArray[i].rhsType == 'datapod') {
+        else if (this.profiledata.filterTableArray[i].rhsType == 'datapod') {
           let operatorObj = {};
           let ref = {}
           ref["type"] = "datapod";
-          ref["uuid"] = this.dataprofile.filterTableArray[i].rhsAttribute.uuid;
+          ref["uuid"] = this.profiledata.filterTableArray[i].rhsAttribute.uuid;
           operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dataprofile.filterTableArray[i].rhsAttribute.attributeId;
+          operatorObj["attributeId"] = this.profiledata.filterTableArray[i].rhsAttribute.attributeId;
           filterInfo["operand"][1] = operatorObj;
         }
         filterInfoArray[i] = filterInfo;
@@ -880,45 +984,11 @@ export class DataProfileDetailComponent {
     this.msgs = [];
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/dataProfiling/profile', uuid, version, 'false']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: false
-    };
-  }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataProfiling/profile', uuid, version, 'true']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: true
-    };
+ 
+ 
+ 
 
-  }
-  showMainPage(){
-    this.isHomeEnable = false;
-    this.showGraph = false;
-  }
-
-  showDagGraph(uuid,version){
-    this.isHomeEnable = true;
-    this.showGraph = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
-    }, 1000);  
-  }
+ 
   clear(){
     this.selectedItems=[]
   }
@@ -926,19 +996,19 @@ export class DataProfileDetailComponent {
 		this.selectedItems = this.dropdownList;
   }
   onAttrRowDown(index){
-		var rowTempIndex=this.dataprofile.filterTableArray[index];
-    var rowTempIndexPlus=this.dataprofile.filterTableArray[index+1];
-		this.dataprofile.filterTableArray[index]=rowTempIndexPlus;
-    this.dataprofile.filterTableArray[index+1]=rowTempIndex;
+		var rowTempIndex=this.profiledata.filterTableArray[index];
+    var rowTempIndexPlus=this.profiledata.filterTableArray[index+1];
+		this.profiledata.filterTableArray[index]=rowTempIndexPlus;
+    this.profiledata.filterTableArray[index+1]=rowTempIndex;
     this.iSSubmitEnable=true
 
 	}
 	
 	onAttrRowUp(index){
-		var rowTempIndex=this.dataprofile.filterTableArray[index];
-    var rowTempIndexMines=this.dataprofile.filterTableArray[index-1];
-		this.dataprofile.filterTableArray[index]=rowTempIndexMines;
-    this.dataprofile.filterTableArray[index-1]=rowTempIndex;
+		var rowTempIndex=this.profiledata.filterTableArray[index];
+    var rowTempIndexMines=this.profiledata.filterTableArray[index-1];
+		this.profiledata.filterTableArray[index]=rowTempIndexMines;
+    this.profiledata.filterTableArray[index-1]=rowTempIndex;
     this.iSSubmitEnable=true
   }
   dragStart(event,data){
@@ -954,9 +1024,9 @@ export class DataProfileDetailComponent {
       this.dropIndex=data
       // console.log(event)
       // console.log(data)
-      var item=this.dataprofile.filterTableArray[this.dragIndex]
-      this.dataprofile.filterTableArray.splice(this.dragIndex,1)
-      this.dataprofile.filterTableArray.splice(this.dropIndex,0,item)
+      var item=this.profiledata.filterTableArray[this.dragIndex]
+      this.profiledata.filterTableArray.splice(this.dragIndex,1)
+      this.profiledata.filterTableArray.splice(this.dropIndex,0,item)
       this.iSSubmitEnable=true
     }
     
