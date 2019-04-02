@@ -133,7 +133,7 @@
             </div>
         </div>
         <div ng-if="isParamModelEnable">
-            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'report'"></exec-param-directive>
+            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'report'" on-execute="onExecute"></exec-param-directive>
         </div>
 
         <div id="responsive" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">

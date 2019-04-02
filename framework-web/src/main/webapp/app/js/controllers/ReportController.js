@@ -229,11 +229,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.exeDetail = response;
 			$scope.select = "report"
 			if (response.paramList != null) {
-				//$scope.isParamModelEnable=true;
-				$('#responsive').modal({
-					backdrop: 'static',
-					keyboard: false
-				});
+				$scope.isParamModelEnable=true;
+				// $('#responsive').modal({
+				// 	backdrop: 'static',
+				// 	keyboard: false
+				// });
 			}
 			else {
 				$scope.isParamModelEnable=false;
@@ -247,7 +247,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		}
 	}
 
-	$scope.onChangeParamType = function () {
+	$scope.onExecute=function(data){
+		$scope.isParamModelEnable=data.isParamModelEnable;
+	}
+
+	/*$scope.onChangeParamType = function () {
 		$scope.allparamset = null;
 		$scope.allParamList = null;
 		$scope.isParamLsitTable = false;
@@ -260,9 +264,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.getExecParamsSet();
 		}
 
-	}
+	}*/
 
-	$scope.onChangeParamList = function () {
+	/*$scope.onChangeParamList = function () {
 		$scope.isParamLsitTable = false;
 		CommonService.getParamByParamList($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
 		var onSuccesGetParamListByTrain = function (response) {
@@ -300,9 +304,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			}
 			$scope.selectParamList.paramInfo = paramArray;
 		}
-	}
+	}*/
 
-	$scope.getParamListByTrainORRule = function () {
+	/*$scope.getParamListByTrainORRule = function () {
 		$scope.paramlistdata = null;
 		$scope.isPramlistInProgess = true;
 		CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version, $scope.select).then(function (response) { onSuccesGetParamListByTrain(response.data) });
@@ -313,9 +317,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				$scope.isParamListRquired = false;
 			}
 		}
-	}
+	}*/
 
-	$scope.getExecParamsSet = function () {
+	/*$scope.getExecParamsSet = function () {
 		$scope.paramtablecol = null
 		$scope.paramtable = null;
 		$scope.isTabelShow = false;
@@ -331,9 +335,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.isPramsetInProgess = false;
 			$scope.allparamset = response;
 		}
-	}
+	}*/
 
-	$scope.executeWithExecParams = function () {
+	/*$scope.executeWithExecParams = function () {
 		if ($scope.selectParamType == "paramlist") {
 			console.log($scope.selectParamList.paramInfo)
 			if ($scope.paramlistdata) {
@@ -412,109 +416,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		$scope.$emit('notify', notify);
 		console.log(JSON.stringify(execParams));
 		$scope.reportExecute(execParams);
-	}
+	}*/
 
 
-	$scope.applyFilter = function (index) {
-		console.log(JSON.stringify($scope.selectedAttributeValue));
-		$scope.isShowSimpleData = true
-		$scope.isDataInpogress = true
-		$scope.isDataError = false;
-		$scope.tableclass = "centercontent";
-		$scope.showForm = false;
-		$scope.showGraphDiv = false;
-		var count = 0;
-		$scope.filterListarray = [];
-		$scope.filterTag = [];
-		for (var i = 0; i < $scope.selectedAttributeValue.length; i++) {
-			var filterList = {};
-			var ref = {};
-			var filterTag = {};
-			if ($scope.selectedAttributeValue[i].value != "-select-") {
-				ref.type = $scope.filterAttribureIdValues[i].type;
-				ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
-				filterList.ref = ref;
-				if ($scope.filterAttribureIdValues[i].type != "formual") {
-					filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
-					filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
-				}
-				else {
-					filterTag.text = $scope.filterAttribureIdValues[i].name + " - " + $scope.selectedAttributeValue[i].value;
-				}
-				filterTag.index = i;
-				filterTag.value = $scope.selectedAttributeValue[i].value;
-				filterList.value = $scope.selectedAttributeValue[i].value;
-				$scope.filterListarray[count] = filterList;
-				$scope.filterTag[count] = filterTag;
-				count = count + 1;
-			}
-		}
-		console.log(JSON.stringify($scope.filterListarray));
-		if ($scope.filterListarray.length > 0) {
-			$scope.vizpodbody = {};
-			$scope.vizpodbody.filterInfo = $scope.filterListarray;
-		} else {
-			$scope.vizpodbody = null;
-		}
-		$('#attrFilter').modal("hide");
-		$scope.reportExecute($scope.vizpodbody);
-	}
-
-	$scope.openFilterPopup = function (data) {
-		$('#attrFilter').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		if ($scope.filterAttribureIdValues == null) {
-			$scope.getFilterValue(data);
-		}
-
-	}
-
-	$scope.getFilterValue = function (data) {
-		$scope.filterAttribureIdValues = []
-		$scope.selectedAttributeValue = []
-		if (data.filterInfo && data.filterInfo.length > 0) {
-			var filterAttribureIdValue = [];
-			for (var n = 0; n < data.filterInfo.length; n++) {
-				var filterattributeidvalepromise = ReportSerivce.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId, data.filterInfo[n].ref.type);
-				filterAttribureIdValue.push(filterattributeidvalepromise);
-			}//End For Loop
-			$q.all(filterAttribureIdValue).then(function (result) {
-				for (var i = 0; i < result.length; i++) {
-					var filterAttribureIdvalueJSON = {};
-					var defaultvalue = {}
-					defaultvalue.id = null;
-					defaultvalue.value = "-select-"
-					filterAttribureIdvalueJSON.vizpoduuid =
-						filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
-					filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
-					filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
-					if (data.filterInfo[i].ref.type != "formula") {
-						filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
-						filterAttribureIdvalueJSON.attrName = data.filterInfo[i].attrName;
-						filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
-					}
-					else {
-						filterAttribureIdvalueJSON.attrName = data.filterInfo[i].ref.name;
-						filterAttribureIdvalueJSON.dname = "formula" + "." + data.filterInfo[i].ref.name;
-					}
-					filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name
-					filterAttribureIdvalueJSON.values = result[i].data
-					filterAttribureIdvalueJSON.values.splice(0, 0, defaultvalue)
-					$scope.selectedAttributeValue[i] = defaultvalue
-					$scope.filterAttribureIdValues[i] = filterAttribureIdvalueJSON
-				}
-			}, function (response) {
-				$('#attrFilter').modal("hide");
-				$scope.isDataInpogress = true;
-				$scope.isDataError = true;
-				$scope.msgclass = "errorMsg";
-				$scope.datamessage = "Some Error Occurred";
-				$scope.spinner = false;
-			});//End $q.all
-		}//End If
-	}//End getFilterValue
 
 	$scope.submitOk = function (action) {
 		if (action == "Clone") {
@@ -1019,7 +923,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 					defaultoption.uuid = defaultvalue.ref.uuid
 					$scope.allSource.defaultoption = defaultoption;
 				}else{
-					//$scope.allSource.defaultoption=response[0];
+					$scope.allSource.defaultoption=response[0];
 				}
 				$scope.getAllAttributeBySource();
 				$scope.getFormulaByType();
@@ -2468,14 +2372,22 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
 		var onSuccessGetOneByUuidAndVersion = function (response) {
 			$scope.reportExecData = response;
-			debugger
 			$scope.filterTag = [];
 			if (response && response.execParams && response.execParams.paramListInfo != null && response.execParams.paramListInfo.length > 0) {
+				var count =0;
 				for (var i = 0; i < response.execParams.paramListInfo.length; i++) {
 					var filterTag = {};
-					if (response.execParams.paramListInfo[i].paramValue.ref.type == "simple")
+					if(response.execParams.paramListInfo[i].paramValue !=null && response.execParams.paramListInfo[i].paramValue.ref.type == "simple"){
 						filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + response.execParams.paramListInfo[i].paramValue.value;
-					$scope.filterTag[i] = filterTag;
+						$scope.filterTag[count] = filterTag;
+						count=count+1;
+					}
+					else{
+						filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + null;
+						$scope.filterTag[count] = filterTag;
+						count=count+1;
+					}
+					
 				}
 
 

@@ -1326,6 +1326,9 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
         else if ($scope.parantType == 'report') {
           url = 'getParamListByReport'
         }
+        else if ($scope.parantType == 'dq') {
+          url = 'getParamListByDq'
+        }
         else if ($scope.parantType == 'dag') {
           url = 'getParamListByDag'
         }
@@ -1894,13 +1897,14 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
 })
 
 
-InferyxApp.directive('execParamDirective', function (CommonService) {
+InferyxApp.directive('execParamDirective', function (CommonService,$filter) {
   return {
       restrict: 'EA',
       scope: {
         metaType: "=",
         uuid: "=",
         version: "=",
+        onExecute: "=",
       },
       link: function ($scope, element, attr,$location) {
         $scope.paramTypes = [{ "text": "paramlist", "caption": "paramlist", "disabled": false }, { "text": "paramset", "caption": "paramset", "disabled": false }];
@@ -1932,7 +1936,58 @@ InferyxApp.directive('execParamDirective', function (CommonService) {
         $('#execParamModel').modal({
 					backdrop: 'static',
 					keyboard: false
-				});
+        });
+        
+        $scope.getAllLatest=function(type){  
+          CommonService.getAllLatest(type || "datapod").then(function (response) { onSuccessGetAllLatest(response.data) });
+          var onSuccessGetAllLatest = function (response) {
+            if(type =="datapod"){
+              $scope.allDatapod=response;
+            }
+            else if(type =="relation"){
+              $scope.allRelation=response;
+            }
+            else if(type =="distribution"){
+              $scope.allDistribution=response;
+            }
+            else if(type =="dataset"){
+              $scope.allDataset=response;
+            }
+            else if(type =="rule"){
+              $scope.allRule=response;
+            }
+           
+          }
+        }
+        $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
+          if(data !=null){ 
+            CommonService.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+            var onSuccessGetAllAttributeBySource = function (response) {
+              $scope.paramListHolder[index].allAttributeinto=response
+            }
+          }
+        }
+
+        $scope.onChangeForAttributeInfo=function(data,type,index){
+          $scope.paramListHolder[index].attributeInfoTag=null;
+          $scope.getAllAttributeBySource(data,type,index);
+        }
+        
+        $scope.onChangeDistribution=function(data,index){
+          CommonService.getParamListByType('distribution',data.uuid,data.version | "").then(function (response){ onSuccessGetParamListByType(response.data)});
+          var onSuccessGetParamListByType = function (response) {
+            if($scope.paramListHolder.length == $scope.opringinalparamListHolder.length){
+              $scope.opringinalparamListHolder=$scope.paramListHolder;
+            }
+            else{
+              $scope.paramListHolder=$scope.paramListHolder.slice(0,$scope.opringinalparamListHolder.length);
+            }
+            var paramList
+            paramList = $scope.paramListHolder.concat(response);
+            $scope.paramListHolder=paramList;
+          }
+        }
+
         $scope.onChangeParamType = function () {
           $scope.allparamset = null;
           $scope.allParamList = null;
@@ -1962,12 +2017,21 @@ InferyxApp.directive('execParamDirective', function (CommonService) {
         
        
         $scope.onChangeParamList = function () {
-          $scope.attributeTypes=['datapod','dataset','rule'];
-          $scope.isExecParamList = false;
-          CommonService.getParamByParamList2($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
-          var onSuccesGetParamListByTrain = function (response) {
-            $scope.isExecParamList = true;
-            $scope.selectParamList = response;
+          if($scope.paramlistdata){
+            $scope.attributeTypes=['datapod','dataset','rule'];
+            $scope.isExecParamList = false;
+            CommonService.getParamByParamList2($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
+            var onSuccesGetParamListByTrain = function (response) {
+              $scope.isExecParamList = true;
+              $scope.paramListHolder = response;
+              $scope.opringinalparamListHolder=response;
+
+            }
+          }
+          else{
+            $scope.isExecParamList=false;
+            $scope.paramListHolder = null;
+            $scope.opringinalparamListHolder=null;
           }
         }
         
@@ -1976,102 +2040,178 @@ InferyxApp.directive('execParamDirective', function (CommonService) {
           $scope.paramtable = null;
           $scope.isTabelShow = false;
           $scope.isPramsetInProgess = true;
-          CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version)
+          CommonService.getParamSetByType($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version)
           .then(function (response) { onSuccessGetExecuteModel(response.data)});
           var onSuccessGetExecuteModel = function (response) {
-            $('#responsive').modal({
-              backdrop: 'static',
-              keyboard: false
-            });
             $scope.isPramsetInProgess = false;
             $scope.allparamset = response;
           }
+        } 
+
+        $scope.onChangeParamSet=function(){
+          $scope.isExecParamSet=true;
+          var paramSetjson = {};
+          var paramInfoArray = [];
+          if ($scope.paramsetdata != null) {
+            for (var i = 0; i < $scope.paramsetdata.paramInfo.length; i++) {
+              var paramInfo = {};
+              paramInfo.paramSetId = $scope.paramsetdata.paramInfo[i].paramSetId;
+            
+              var paramSetValarray = [];
+              for (var j = 0; j < $scope.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
+                var paramSetValjson = {};
+                
+                paramSetValjson.paramId = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
+                paramSetValjson.paramName = $scope.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
+                paramSetValjson.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
+                paramSetValjson.ref = $scope.paramsetdata.paramInfo[i].paramSetVal[j].ref;
+                paramSetValarray[j] = paramSetValjson;
+                paramInfo.paramSetVal = paramSetValarray;
+                paramInfo.value = $scope.paramsetdata.paramInfo[i].paramSetVal[j].value;
+              }
+              paramInfoArray[i] = paramInfo;
+            }
+            $scope.paramtablecol = paramInfoArray[0].paramSetVal;
+            $scope.paramtable = paramInfoArray;
+            paramSetjson.paramInfoArray = paramInfoArray;
+            $scope.isTabelShow = true;
+          } 
+          else {
+            $scope.isTabelShow = false;
+          }
+        }
+            
+        $scope.selectAllRow = function () {
+          angular.forEach($scope.paramtable, function (stage) {
+            stage.selected = $scope.selectallattribute;
+          });
         }
 
-        $scope.executeWithExecParams = function () {
-          if ($scope.selectParamType == "paramlist") {
-            console.log($scope.selectParamList.paramInfo)
-            if ($scope.paramlistdata) {
-              var execParams = {};
-              var paramListInfo = [];
-              var paramInfo = {};
-              var paramInfoRef = {};
-              paramInfoRef.uuid = $scope.paramlistdata.uuid;
-              paramInfoRef.type = "paramlist";
-              paramInfo.ref = paramInfoRef;
-              //paramListInfo[0]=paramInfo;
-              for (var i = 0; i < $scope.selectParamList.paramInfo.length; i++) {
-                var paramListObj = {};
-                var ref = {};
-                ref.uuid = $scope.selectParamList.paramInfo[i].ref.uuid;
-                ref.type = $scope.selectParamList.paramInfo[i].ref.type;
-                paramListObj.ref = ref;
-                paramListObj.paramId = $scope.selectParamList.paramInfo[i].paramId;
-                paramListObj.paramName = $scope.selectParamList.paramInfo[i].paramName;
-                paramListObj.paramType = $scope.selectParamList.paramInfo[i].paramType;
-                paramListObj.paramValue = {};
-                var refParamValue = {};
-                refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
-                paramListObj.paramValue.ref = refParamValue;
-                if($scope.selectParamList.paramInfo[i].paramType =="date"){
-                  paramListObj.paramValue.value = $filter('date')($scope.selectParamList.paramInfo[i].paramValue, "yyyy-MM-dd");
-                }else{
-                  if($scope.selectParamList.paramInfo[i].paramType =="simple"){
-                  paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+        $scope.executeWithExecParamList=function(){
+          $scope.isExecParamList=false;    
+          $scope.isExecParamSet=false;
+          $scope.isExecParams=false;
+          $('#execParamModel').modal('hide');
+          var execParams={};
+          var paramListInfo=[];
+          if($scope.selectParamType =="paramlist"){
+            if($scope.paramListHolder.length>0){
+              for(var i=0;i<$scope.paramListHolder.length;i++){
+                var paramList={};
+                paramList.paramId=$scope.paramListHolder[i].paramId;
+              //  paramList.paramName=$scope.paramListHolder[i].paramName;
+                paramList.paramType=$scope.paramListHolder[i].paramType;
+                paramList.ref=$scope.paramListHolder[i].ref;
+                if($scope.paramListHolder[i].paramType =='attribute'){
+                  var attributeInfoArray=[];
+                  var attributeInfo={};
+                  var attributeInfoRef={}
+                  attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+                  attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfo.uuid;
+                // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfo.name
+                  attributeInfo.ref=attributeInfoRef;
+                  attributeInfo.attrId=$scope.paramListHolder[i].attributeInfo.attributeId;
+                  attributeInfoArray[0]=attributeInfo
+                  paramList.attributeInfo=attributeInfoArray;
+    
+                }
+                if($scope.paramListHolder[i].paramType =='attributes'){
+                  var attributeInfoArray=[];
+                  for(var j=0;j<$scope.paramListHolder[i].attributeInfoTag.length;j++){
+                    var attributeInfo={};
+                    var attributeInfoRef={}
+                    attributeInfoRef.type=$scope.paramListHolder[i].selectedParamValueType;
+                    attributeInfoRef.uuid=$scope.paramListHolder[i].attributeInfoTag[j].uuid
+                  // attributeInfoRef.name=$scope.paramListHolder[i].attributeInfoTag[j].datapodname
+                    attributeInfo.ref=attributeInfoRef;
+                    attributeInfo.attrId=$scope.paramListHolder[i].attributeInfoTag[j].attributeId;
+                    attributeInfo.attrType=$scope.paramListHolder[i].attributeInfoTag[j].attrType;
+                  // attributeInfo.attrName=$scope.paramListHolder[i].attributeInfoTag[j].name;
+                    attributeInfoArray[j]=attributeInfo
                   }
+                  paramList.attributeInfo=attributeInfoArray;
+                }
+
+                else if($scope.paramListHolder[i].paramType=='distribution' || $scope.paramListHolder[i].paramType=='datapod'){
+                  var ref={};
+                  var paramValue={};  
+                  ref.type=$scope.paramListHolder[i].selectedParamValueType;
+                  ref.uuid=$scope.paramListHolder[i].selectedParamValue.uuid;  
+                  paramValue.ref=ref;
+                  paramList.paramValue=paramValue;
+                }
+                else if($scope.paramListHolder[i].selectedParamValueType =="simple" &&  ['integer','string','double'].indexOf($scope.paramListHolder[i].paramType ) !=-1){
+                  var ref={};
+                  var paramValue={};  
+                  ref.type=$scope.paramListHolder[i].selectedParamValueType;
+                  paramValue.ref=ref;
+                  paramValue.value=$scope.paramListHolder[i].paramValue
+                  paramList.paramValue=paramValue; 
+                }
+                else if($scope.paramListHolder[i].selectedParamValueType =="simple" &&  ['date'].indexOf($scope.paramListHolder[i].paramType ) !=-1){
+                  var ref={};
+                  var paramValue={};  
+                  ref.type=$scope.paramListHolder[i].selectedParamValueType;
+                  paramValue.ref=ref;
+                  paramValue.value = $filter('date')($scope.paramListHolder[i].paramValue, "yyyy-MM-dd");
+                  paramList.paramValue=paramValue; 
                 }
                 
-                paramListInfo[i] = paramListObj;
-      
+                else if($scope.paramListHolder[i].selectedParamValueType =="list"){
+                  var ref={};
+                  var paramValue={};  
+                  ref.type='simple';
+                  paramValue.ref=ref;
+                  paramValue.value=$scope.paramListHolder[i].paramValue
+                  paramList.paramValue=paramValue;
+                }
+                paramListInfo[i]=paramList;
               }
-              execParams.paramListInfo = paramListInfo;
-            } else {
-              execParams = null;
+              execParams.paramListInfo=paramListInfo;
             }
-            $scope.paramlistdata = null;
-            $scope.selectParamType = null;
-          } else {
-            $scope.newDataList = [];
-            $scope.selectallattribute = false;
-            angular.forEach($scope.paramtable, function (selected) {
-              if (selected.selected) {
-                $scope.newDataList.push(selected);
-              }
-            });
-            var paramInfoArray = [];
-            if ($scope.newDataList.length > 0) {
-              var execParams = {}
-              var ref = {}
-              ref.uuid = $scope.paramsetdata.uuid;
-              ref.type = "paramset";
-              ref.version = $scope.paramsetdata.version;
-              for (var i = 0; i < $scope.newDataList.length; i++) {
-                var paraminfo = {};
-                paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-                paraminfo.ref = ref;
-                paramInfoArray[i] = paraminfo;
-              }
-            }
-            if (paramInfoArray.length > 0) {
-              execParams.paramInfo = paramInfoArray;
-            } else {
-              execParams = null
+            else{
+              execParams=null;
             }
           }
-          $('#responsive').modal('hide');
-      
-          $scope.executionmsg = "Report Submited Successfully"
-          notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = $scope.executionmsg
-          $scope.$emit('notify', notify);
-          console.log(JSON.stringify(execParams));
-          $scope.executeCall(execParams);
+          else{
+              $scope.newDataList = [];
+              $scope.selectallattribute = false;
+              angular.forEach($scope.paramtable, function (selected) {
+                if (selected.selected) {
+                  $scope.newDataList.push(selected);
+                }
+              });
+              var paramInfoArray = [];
+              if ($scope.newDataList.length > 0) {
+                var execParams = {}
+                var ref = {}
+                ref.uuid = $scope.paramsetdata.uuid;
+                ref.version = $scope.paramsetdata.version;
+                ref.type = 'paramset';
+                for (var i = 0; i < $scope.newDataList.length; i++) {
+                  var paraminfo = {};
+                  paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+                  paraminfo.ref = ref;
+                  paramInfoArray[i] = paraminfo;
+                }
+              }
+              if (paramInfoArray.length > 0) {
+                execParams.paramInfo=paramInfoArray;
+              } else {
+                execParams = null
+              }
+            }
+          console.log(JSON.stringify(execParams))
+          $scope.executeCall (execParams);
+          setTimeout(function(){
+          $scope.onExecute({isParamModelEnable:false});
+         },100);
         }
 
+        
         $scope.executeCall = function (data) {
-          CommonService.reportExecute($scope.obj.uuid, $scope.obj.version, data).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
-          var onSuccessReportExecute = function (response) {
+          CommonService.execute($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
+          var onSuccessExecute = function (response) {
             $scope.execData = response;
           }
           var onError = function (response) {

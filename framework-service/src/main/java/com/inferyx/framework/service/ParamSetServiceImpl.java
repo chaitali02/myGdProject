@@ -40,6 +40,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.User;
@@ -200,6 +201,25 @@ public class ParamSetServiceImpl {
 		dependsOnRef.setType(MetaType.paramlist);
 		dependsOnRef.setUuid(rule.getParamList().getRef().getUuid());
 		dependsOnRef.setVersion(rule.getParamList().getRef().getVersion());		
+		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
+		dependsOnRefHolder.setRef(dependsOnRef);
+		if(dependsOnRef.getVersion() == null)
+			paramSetList = findLatestByDependsOn(dependsOnRefHolder);
+		else
+			paramSetList = findOneByDependsOn(dependsOnRefHolder);
+		paramSetList = resolveName(paramSetList);
+	    }
+		return paramSetList;		
+	}
+  public List<ParamSet> getParamSetByReport (String ruleUUID, String ruleVersion) throws JsonProcessingException {
+	    List<ParamSet> paramSetList = new ArrayList<>();
+	    //com.inferyx.framework.domain.Rule rule = ruleServiceImpl.findLatestByUuid(ruleUUID);
+	    Report report = (Report) commonServiceImpl.getLatestByUuid(ruleUUID, MetaType.report.toString());
+	    if(report.getParamList() !=null){
+		MetaIdentifier dependsOnRef = new MetaIdentifier();
+		dependsOnRef.setType(MetaType.paramlist);
+		dependsOnRef.setUuid(report.getParamList().getRef().getUuid());
+		dependsOnRef.setVersion(report.getParamList().getRef().getVersion());		
 		MetaIdentifierHolder dependsOnRefHolder = new MetaIdentifierHolder();
 		dependsOnRefHolder.setRef(dependsOnRef);
 		if(dependsOnRef.getVersion() == null)

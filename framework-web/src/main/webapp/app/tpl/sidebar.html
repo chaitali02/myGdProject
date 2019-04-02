@@ -103,7 +103,7 @@
                 <span class="arrow"></span>
             </a>
             <ul class="sub-menu">
-                <li class="nav-item" data-ng-repeat="dataqualitydatasubmenu in Dataqualitydata.submenu | orderBy:'caption'" ng-click="deInitTabs()">
+                <li class="nav-item" data-ng-repeat="dataqualitydatasubmenu in Dataqualitydata.submenu" ng-click="deInitTabs()">
                     <a ui-sref="{{dataqualitydatasubmenu.name}}" class="nav-link">
                         <span class="title">{{dataqualitydatasubmenu.caption}}</span>
                         <span class="badge badge-success">{{metaStats[dataqualitydatasubmenu.type].count}}</span>
