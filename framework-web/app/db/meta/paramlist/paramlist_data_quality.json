@@ -1,0 +1,54 @@
+{
+  "uuid": "c37726b2-35e5-4d5c-8da8-fa75836946f9",
+  "version": "1554235564",
+  "name": "paramlist_data_quality",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Apr 02 16:06:04 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "business_date",
+      "paramType": "date",
+      "paramDispName": "business_date",
+      "paramDesc": "business_date",
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "2019-04-02"
+      },
+      "paramRef": null
+    }
+  ],
+  "paramListType": "dq",
+  "templateFlg": "Y",
+  "templateInfo": null
+}
