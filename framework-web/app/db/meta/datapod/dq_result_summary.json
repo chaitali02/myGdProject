@@ -916,10 +916,24 @@
             "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
-        }, 
+        },  
         {
             "attributeId" : 63,
             "displaySeq" : 63,
+            "name" : "param_info",
+            "type" : "varchar",
+            "desc" : "param_info",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "param_info",
+            "active" : "Y",
+            "length" : 500,
+            "piiFlag" : "N",
+            "cdeFlag" : "N"
+        }, 
+        {
+            "attributeId" : 64,
+            "displaySeq" : 64,
             "name" : "version",
             "type" : "integer",
             "desc" : "version",

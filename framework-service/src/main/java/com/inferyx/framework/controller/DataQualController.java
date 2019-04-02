@@ -75,12 +75,13 @@ public class DataQualController {
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
 	public DataQualExec execute(@RequestParam("uuid") String dataQualUUID, 
 			@RequestParam("version") String dataQualVersion,
+			@RequestBody(required=false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null, runMode);
+		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, execParams, null, null, null, runMode);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
 		dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);
