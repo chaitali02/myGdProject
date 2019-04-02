@@ -497,8 +497,8 @@ public class OracleExecutor implements IExecutor {
 					targetAttrList.add(attribute.getName());
 				}
 				
-				for(Attribute attribute : targetDatapod.getAttributes()) {
-					for(Map<String, String> sourceAttrDetails : sourceColDetails) {	
+				for(Map<String, String> sourceAttrDetails : sourceColDetails) {	
+					for(Attribute attribute : targetDatapod.getAttributes()) {
 						comparisonResultMap = compareAttr(comparisonResultMap, attribute, sourceAttrDetails, sourceAttrList, targetAttrList);					
 					}
 				}

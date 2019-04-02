@@ -563,8 +563,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		try {
 			long countRows = -1L;
 			
-			String targetFilePathUrl = helper.getPathByDataSource(targetDS);
-			String sourceFilePathUrl = helper.getPathByDataSource(sourceDS);
+			String targetFilePathUrl = targetDS.getPath();
+			String sourceFilePathUrl = sourceDS.getPath();
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
@@ -632,14 +632,40 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 //						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(sourceDataSet != null) {
-						tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
+						if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							tableName = sourceDS.getSid().concat(".").concat(sourceDataSet.getName());
+						} else {
+							tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());
+						}					
 //						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(!areAllAttrs && sourceDp != null) {
-						tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
+						if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							tableName = sourceDS.getSid().concat(".").concat(sourceDp.getName());
+						} else {
+							tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+						}					
 //						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(!areAllAttrs && targetDp != null) {
-						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
+//						if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+							tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+//						} else {
+//							if(targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//								tableName = targetDS.getSid().concat(".").concat(targetDp.getName());
+//							} else {
+//								tableName = targetDS.getDbname().concat(".").concat(targetDp.getName());
+//							}	
+//						}
 //						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), execParams, runMode);
+					} else if(areAllAttrs && sourceDp != null) {
+//						if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+							tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+//						} else {
+//							if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//								tableName = sourceDS.getSid().concat(".").concat(sourceDp.getName());
+//							} else {
+//								tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());
+//							}	
+//						}
 					}
 					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
 //				} else {
@@ -720,41 +746,64 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						saveMode = SaveMode.OVERWRITE.toString();
 					}
 					
-					String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
-					String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-					logger.info("temporary location: "+tempDirLocation);
 					
-					//writing to target				
-					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-																tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 					
-					if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-						try {
-							tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-							String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-							ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
-						} catch (Exception e) {
-//								e.printStackTrace();
-						} finally {
-							String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-							ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
-						}						
+					//writing to target		
+					if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName,
+								saveMode, ingest.getTargetFormat(), targetHeader);
 					} else {
-						try {
-							String targetDirName = ingest.getTargetDetail().getValue();
-							String targetDirPath = targetDS.getPath();
-							targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
-				
-							ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
-							tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-							String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-							ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
-						} catch (Exception e) {
-							// TODO: handle exception
-						} finally {
-							String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-							ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirLocation = tempDirPath.endsWith("/")
+								? "file://" + tempDirPath + ingestExec.getUuid() + "/" + ingestExec.getVersion() + "/"
+								: "file://" + tempDirPath.concat("/") + ingestExec.getUuid() + "/"
+										+ ingestExec.getVersion() + "/";
+						logger.info("temporary location: " + tempDirLocation);
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation, tableName,
+								saveMode, ingest.getTargetFormat(), targetHeader);
+
+						if (!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+							try {
+								tempDirLocation = tempDirPath.endsWith("/")
+										? tempDirPath + ingestExec.getUuid() + "/" + ingestExec.getVersion() + "/"
+										: tempDirPath.concat("/") + ingestExec.getUuid() + "/" + ingestExec.getVersion()
+												+ "/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation,
+										ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
+							} catch (Exception e) {
+								//e.printStackTrace();
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/")
+										? tempDirPath + ingestExec.getUuid()
+										: tempDirPath.concat("/") + ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}
+						} else {
+							try {
+								String targetDirName = ingest.getTargetDetail().getValue();
+								String targetDirPath = targetDS.getPath();
+								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/")
+										: (targetDirPath + "/" + targetDirName + "/");
+
+								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+								tempDirLocation = tempDirPath.endsWith("/")
+										? tempDirPath + ingestExec.getUuid() + "/" + ingestExec.getVersion() + "/"
+										: tempDirPath.concat("/") + ingestExec.getUuid() + "/" + ingestExec.getVersion()
+												+ "/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation,
+										ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+							} catch (Exception e) {
+// TODO: handle exception
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/")
+										? tempDirPath + ingestExec.getUuid()
+										: tempDirPath.concat("/") + ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}
 						}
+						
 					}
 					countRows = rsHolder.getCountRows();
 				} else if(ingestionType.equals(IngestionType.FILETOTABLE)) { 
@@ -767,7 +816,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String fileName = ingest.getSourceDetail().getValue();			
 						
 						//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
-						sourceFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
+						sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
 						if(sourceFilePathUrl.contains(".db")) {
 							sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
 						}
@@ -900,7 +949,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
 						sparkExecutor.registerAndPersistDataframe(rsHolder, targetDp, saveMode, targetFilePathUrl, tableName, targetHeader, false);
-//						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
+//						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
 //						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 //						logger.info("temporary location: "+tempDirLocation);
 //						
@@ -984,8 +1033,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("this is export block from Hive to HDFS");
 						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 						
-//						targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
-						targetFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
+//						targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+						targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
 						if(targetFilePathUrl.contains(".db")) {
 							targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
 						}
@@ -1063,7 +1112,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						tableName = sourceDp != null ? sourceDp.getName() : sourceDataSet.getName();
 						sqoopExecutor.execute(sqoopInput, inputParams);
 					} else {
-						//this is export block from Hive table to local file
+						//this is export block from table to local file
 
 						logger.info("this is export block from Hive table to local file");
 						String sourceDir = String.format("%s/%s", sourceDS.getPath(), (sourceDp != null ? sourceDp.getName() : sourceDataSet.getName()));
@@ -1112,14 +1161,15 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
-						String sql = ingestServiceImpl.generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
-						ResultSetHolder rsHolder = sparkExecutor.executeSqlByDatasource(sql, sourceDS, appUuid);
+						String sql = ingestServiceImpl.generateSqlByDatasource(sourceDS, sourceTableName, incrColName, incrLastValue, 0);
+						ResultSetHolder rsHolder = sparkExecutor.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
 						
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						
+//						query = ingestOperator.generateSQL(ingest, sourceTableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
 						//map schema to source mappedAttrs	
 						if(colAliaseNames != null) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+							rsHolder = sparkExecutor.mapSchema(rsHolder, null, colAliaseNames, tableName, false);
 						}
 						
 						//applying target schema to df
@@ -1128,7 +1178,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
 						}
-						rsHolder.getDataFrame().show(false);
 						//registering temp table of source
 //						sparkExecutor.registerDataFrameAsTable(rsHolder, tableName);
 						
@@ -1142,45 +1191,51 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
 						
-						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
-						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-						logger.info("temporary location: "+tempDirLocation);
-						
-//						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
-//								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-//										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
-						
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-														tableName, saveMode, ingest.getTargetFormat(), targetHeader);
-						
-						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-							try {
-								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
-							} catch (Exception e) {
-//								e.printStackTrace();
-							} finally {
-								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
-							}						
+						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl,
+									tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						} else {
-							try {
-								String targetDirName = ingest.getTargetDetail().getValue();
-								String targetDirPath = targetDS.getPath();
-								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
-					
-								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
-								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
-							} catch (Exception e) {
-								// TODO: handle exception
-							} finally {
-								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
-							}					
+							String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+							String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+							logger.info("temporary location: "+tempDirLocation);
+							
+//							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
+//									ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
+//											, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+							
+							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+															tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+							
+							if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+								try {
+									tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+									String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+									ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
+								} catch (Exception e) {
+//									e.printStackTrace();
+								} finally {
+									String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+									ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+								}						
+							} else {
+								try {
+									String targetDirName = ingest.getTargetDetail().getValue();
+									String targetDirPath = targetDS.getPath();
+									targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
+						
+									ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+									tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+									String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+									ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+								} catch (Exception e) {
+									// TODO: handle exception
+								} finally {
+									String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+									ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+								}					
+							}
 						}
+						
 						
 						//writing to target				
 //						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat());
