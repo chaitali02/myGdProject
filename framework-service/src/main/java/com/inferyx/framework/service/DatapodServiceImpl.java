@@ -1016,7 +1016,7 @@ public class DatapodServiceImpl {
 			
 			for(int k=0; k < attributes.size(); k++) {
 				Attribute attribute = attributes.get(k);
-				attribute.setDisplaySeq(k+1);
+				attribute.setDisplaySeq(k);
 			}
 			
 			targetDatapod.setAttributes(attributes);
