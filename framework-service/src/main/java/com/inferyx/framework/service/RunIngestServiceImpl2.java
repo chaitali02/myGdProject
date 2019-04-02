@@ -1161,14 +1161,15 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
-						String sql = ingestServiceImpl.generateSqlByDatasource(targetDS, sourceTableName, incrColName, incrLastValue, 0);
+						String sql = ingestServiceImpl.generateSqlByDatasource(sourceDS, sourceTableName, incrColName, incrLastValue, 0);
 						ResultSetHolder rsHolder = sparkExecutor.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);
 						
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						
+//						query = ingestOperator.generateSQL(ingest, sourceTableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
 						//map schema to source mappedAttrs	
-						if(colAliaseNames != null && !areAllAttrs) {
-							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+						if(colAliaseNames != null) {
+							rsHolder = sparkExecutor.mapSchema(rsHolder, null, colAliaseNames, tableName, false);
 						}
 						
 						//applying target schema to df
