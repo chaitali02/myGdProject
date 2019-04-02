@@ -504,7 +504,7 @@
             "attributeId" : 33,
             "displaySeq" : 33,
              "name" : "param_info",
-            "type" : "varchar",
+            "type" : "VARCHAR",
             "desc" : "param_info",
             "key" : "",
             "partition" : "N",
