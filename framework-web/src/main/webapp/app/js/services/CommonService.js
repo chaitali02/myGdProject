@@ -681,10 +681,17 @@
       var url;
       if (type == "rule") {
         url = "metadata/getParamSetByRule?ruleUuid=" + uuid+"&type="+type;
-      } else {
+      } else if(type =="train"){
         url = "metadata/getParamSetByTrain?trainUuid=" + uuid + "&trainVersion=" + version+"&type="+type;
       }
+      else if(type =="report"){
+        url = "metadata/getParamSetByReport?reportUuid=" + uuid + "&reportVersion=" + version+"&type="+type;
+      }
+      else{
+        return false;
+      }
       url += '&action=view'
+
       CommonFactory.httpGet(url).then(function(response) {
         onSuccess(response.data)
       });

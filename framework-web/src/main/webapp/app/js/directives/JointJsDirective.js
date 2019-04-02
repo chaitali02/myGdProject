@@ -3704,7 +3704,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       $scope.onChangeForAttributeInfo=function(data,type,index){
         $scope.paramListHolder[index].attributeInfoTag=null;
         $scope.getAllAttributeBySource(data,type,index);
-
       }
       
       $scope.getAllAttributeBySource=function(data,type,index,defaultValue){ 
