@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
                 <h4 class="modal-title">Run Params</h4>
             </div>
-            <form class="form-horizontal" name="myformExecParam" ng-submit="executeWithExecParams()" novalidate="novalidate">
+            <form class="form-horizontal" name="myformExecParam" ng-submit="executeWithExecParamList()" novalidate="novalidate">
                 <div class="modal-body">
                     <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
                         <div class="scroller" style="max-height:400px;min-height:300px; overflow-y: auto !important; width: auto;"
@@ -34,7 +34,7 @@
                                             </label>
                                             <div class="col-md-6">
                                                 <select class="form-control" ng-disabled="isModelDisable" select2
-                                                    ng-change="onSelectparamSet(null)" data-ng-model="paramsetdata"
+                                                    ng-change="onChangeParamSet(null)" data-ng-model="paramsetdata"
                                                     ng-options="r as r.name for r in allparamset | orderBy:'name'">
                                                     <option value="" style="color:red;">USE DEFAULT VALUE</option>
                                                 </select>
@@ -81,8 +81,6 @@
                                     <br>
                                     <!--Start Param Set-->
                                     <div ng-if="isExecParamSet==true">
-
-
                                         <div ng-show="isTabelShow" style="overflow-x: auto;">
                                             <table class=" row-border hover table  table-striped table-bordered">
                                                 <thead>
@@ -143,7 +141,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr ng-repeat="listHolder in selectParamList">
+                                                    <tr ng-repeat="listHolder in paramListHolder">
 
                                                         <td width="10%">
                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -185,8 +183,7 @@
 
                                                         <td width="20%">
                                                             <div style="width:150px !important">
-                                                                {{listHolder.selectedParamValueType}}
-                                                                <div ng-if="listHolder.selectedParamValueType =='simple' && ['integer','string'].indexOf(listHolder.selectedParamValueType) !=-1">
+                                                                <div ng-if="listHolder.selectedParamValueType =='simple' && ['integer','string','double'].indexOf(listHolder.paramType) !=-1">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <input ng-if="listHolder.paramType !='integer'"
                                                                             ng-disabled="isModelDisable" type="text"

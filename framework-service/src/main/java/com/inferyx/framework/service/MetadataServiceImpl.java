@@ -75,6 +75,7 @@ import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.DataStore;
@@ -1492,6 +1493,22 @@ public class MetadataServiceImpl {
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		if(report.getParamList() != null) {
 			MetaIdentifier plMI = report.getParamList().getRef();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
+		}
+		return plHolderList;
+	}
+	public List<ParamListHolder> getParamListByDq(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.dq.toString());
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(dataQual.getParamList() != null) {
+			MetaIdentifier plMI = dataQual.getParamList().getRef();
 			ParamListHolder plHolder = new ParamListHolder();
 			plHolder.setRef(plMI);
 			plHolderList.add(plHolder);

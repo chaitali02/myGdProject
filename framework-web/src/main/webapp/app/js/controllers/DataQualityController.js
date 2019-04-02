@@ -38,7 +38,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.isAdd = true;
   }
-
+ 
   $scope.isDestoryState = false;
   $scope.thresholdType = CF_THRESHOLDTYPE.thresholdType
   $scope.rhsNA = ['NULL', "NOT NULL"];
@@ -295,6 +295,12 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     }
   }
 
+
+  $scope.onChangeParamListOFRule = function () {
+		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
+		$scope.getParamByApp();
+	}
+
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.showactive = "true"
@@ -394,6 +400,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         $scope.thresholdInfo.highMax = 100;
         $scope.thresholdInfo.isPresent = false;
       }
+
+      if($scope.dataqualitydata.paramList != null && $scope.allparamlist !=null) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.dataqualitydata.paramList.ref.uuid;
+				defaultoption.name = $scope.dataqualitydata.paramList.ref.name;
+				$scope.allparamlist.defaultoption = defaultoption;
+      }
+      
       $scope.filterTableArray = response.filterInfo;
       $scope.getAllLatestActiveDependsOn($scope.dataqualitysourceType);
 
@@ -449,6 +463,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     var onGetSuccess = function (response) {
       $scope.isEditInprogess = false;
       $scope.dataqualitydata = response.dqdata;
+    
       if (response.dqdata.tags.length > 0) {
         $scope.tags = response.dqdata.tags;
 
@@ -506,6 +521,21 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       else {
         $scope.dataqualityoptions = null;
       }
+      
+      
+      //$scope.getAllLatestParamListByTemplate();
+      $scope.allparamlist.defaultoption=null;
+      setTimeout(function(){
+        if($scope.dataqualitydata.paramList != null && $scope.allparamlist !=null) {
+          var defaultoption = {};
+          defaultoption.uuid =  $scope.dataqualitydata.paramList.ref.uuid;
+          defaultoption.name = $scope.dataqualitydata.paramList.ref.name;
+          $scope.allparamlist.defaultoption = defaultoption;
+        }
+      },100);
+
+      
+     
 
       $scope.filterTableArray = response.filterInfo;
       $scope.getExpressionByType();
@@ -748,28 +778,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.filterTableArray = newDataList;
   }
 
-  /*$scope.onAttrFilterRowDown=function(index){	
-		var rowTempIndex=$scope.filterTableArray[index];
-    var rowTempIndexPlus=$scope.filterTableArray[index+1];
-		$scope.filterTableArray[index]=rowTempIndexPlus;
-		$scope.filterTableArray[index+1]=rowTempIndex;
-		if(index ==0){
-			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
-			$scope.filterTableArray[index].logicalOperator=""
-		}
-	}*/
-
-	/*$scope.onAttrFilterRowUp=function(index){
-		var rowTempIndex=$scope.filterTableArray[index];
-    var rowTempIndexMines=$scope.filterTableArray[index-1];
-		$scope.filterTableArray[index]=rowTempIndexMines;
-		$scope.filterTableArray[index-1]=rowTempIndex;
-		if(index ==1){
-			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
-			$scope.filterTableArray[index-1].logicalOperator=""
-		}
-	}*/
-
+  
   $scope.onFilterDrop = function (index) {
     if (index.targetIndex == 0) {
       $scope.filterTableArray[index.sourceIndex].logicalOperator = $scope.filterTableArray[index.targetIndex].logicalOperator;
@@ -858,7 +867,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.filterTableArray[index].isrhsDataset = false;
       $scope.filterTableArray[index].isrhsParamlist = true;
       $scope.filterTableArray[index].isrhsFunction = false;
-      $scope.getParamByApp();
+      if (typeof $stateParams.id == "undefined") {
+        $scope.getParamByApp();
+      }
 
     }
   }
@@ -884,8 +895,57 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         $scope.allparamlistParams = paramsArray;
       }
     }
+    $scope.getOneByUuidParamList();
   }
-
+  $scope.getOneByUuidParamList = function () {
+		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			DataqulityService.getLatestByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
+				then(function (response) { onSuccessParamList(response.data) });
+			var onSuccessParamList = function (response) {
+				var paramsArray = [];
+				for (var i = 0; i < response.params.length; i++) {
+					var paramsjson = {};
+					paramsjson.uuid = response.uuid;
+					paramsjson.name = response.name + "." + response.params[i].paramName;
+					paramsjson.attributeId = response.params[i].paramId;
+					paramsjson.attrType = response.params[i].paramType;
+					paramsjson.paramName = response.params[i].paramName;
+					paramsjson.caption = "dq." + paramsjson.paramName;
+					paramsArray[i] = paramsjson;
+				}
+				$scope.reportParamListParam = paramsArray
+				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
+					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.reportParamListParam);
+				else{
+					$scope.allparamlistParams =$scope.reportParamListParam;
+				}
+			}
+		}
+  }
+  $scope.getAllLatestParamListByTemplate = function () {
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "dq").then(function (response) {
+			onSuccessGetAllLatestParamListByTemplate(response.data)
+		});
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+      debugger
+			$scope.allparamlist = {};
+      $scope.allparamlist.options = response;
+      setTimeout(function(){
+        if ($scope.dataqualitydata.paramList != null) {
+          var defaultoption = {};
+          defaultoption.uuid = $scope.dataqualitydata.paramList.ref.uuid;
+          defaultoption.name = $scope.dataqualitydata.paramList.ref.name;
+          $scope.allparamlist.defaultoption = defaultoption;
+          $scope.getOneByUuidParamList();
+  
+        } else {
+          $scope.allparamlist.defaultoption = null;
+        }
+      },100);
+			
+		}
+	}
+	$scope.getAllLatestParamListByTemplate();
 
   $scope.OnChangeRIType = function () {
     if ($scope.selectedRIType) {
@@ -1027,16 +1087,18 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       dataqualityjosn.refIntegrityCheck = null;
     }
 
-    /*if (typeof $scope.refIntegrityCheckoption != "undefined" && $scope.refIntegrityCheckoption != null && $scope.refIntegrityCheckoption != "") {
-      ref.type = "datapod";
-      ref.uuid = $scope.selectrefIntegrityCheck.uuid;
-      refIntegrityCheck.ref = ref;
-      refIntegrityCheck.attrId = $scope.refIntegrityCheckoption.attributeId;
-      dataqualityjosn.refIntegrityCheck = refIntegrityCheck;
+    if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			var paramlist = {};
+			var ref = {};
+			ref.type = "paramlist";
+			ref.uuid = $scope.allparamlist.defaultoption.uuid;
+			paramlist.ref = ref;
+			dataqualityjosn.paramList = paramlist;
+		}
+		else {
+			dataqualityjosn.paramList = null;
+		}
 
-    } else {
-      dataqualityjosn.refIntegrityCheck = {};
-    }*/
 
     var filterInfoArray = [];
     if ($scope.filterTableArray != null) {

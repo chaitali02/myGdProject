@@ -1718,6 +1718,12 @@ public class RegisterService {
 		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByRule(ruleUuid, ruleVersion));
 		return result;
 	}
+	public String getParamSetByReport(String reportUuid, String reportVersion) throws JsonProcessingException {
+		String result = null;
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByReport(reportUuid, reportVersion));
+		return result;
+	}
 
 	public String getParamSetByParamList(String paramListUuid, String paramListVersion) throws JsonProcessingException {
 		String result = null;

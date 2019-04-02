@@ -461,6 +461,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
         "submenu": [
             { "name": "viewdataquality", "type": "dq", "uuid": "null", "caption": "Rule" },
             { "name": "viewdataqualitygroup", "type": "dqgroup", "uuid": "null", "caption": "Rule Group" },
+            { "name": "paramlistdq", "type": "paramlist", "typeCount": "paramlistdq", "uuid": "null", "caption": "Parameter List" },
             { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" },
             // { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
 
@@ -1796,6 +1797,13 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'paramlist', parantType: 'dag' }
 
         })
+        .state('paramlistdq', {
+            url: "/DataQuality/ParamList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Quality' },
+            params: { type: 'paramlist', parantType: 'dq' }
+
+        })
         .state('createparamlistdag', {
             url: "/BusinessRules/CreateParamListDag?id&mode&returnBack&version",
             templateUrl: "views/paramlist.html",
@@ -1839,6 +1847,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             templateUrl: "views/paramlist.html",
             data: { pageTitle: 'Data Visualization' },
             params: { type: 'paramlist', parantType: 'report' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ParamlistController.js',
+                            'js/services/ParamlistService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('createparamlistdq', {
+            url: "/DataQuality/CreateParamListDq?id&mode&returnBack&version",
+            templateUrl: "views/paramlist.html",
+            data: { pageTitle: 'Data Quality' },
+            params: { type: 'paramlist', parantType: 'dq' },
             controller: "",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {

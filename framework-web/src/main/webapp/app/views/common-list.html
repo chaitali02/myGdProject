@@ -441,7 +441,9 @@
               </div>
             </div>
           </div>
-
+          <div ng-if="isParamModelEnable">
+            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'dq'" on-execute="onExecute"></exec-param-directive>
+        </div>
 
           <div id="executeParamList" class="modal fade bs-modal-lg in" style="display: none;">
             <div class="modal-dialog" style="width:70%">
