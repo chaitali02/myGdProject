@@ -280,6 +280,19 @@
                         </select>
                       </div>
                     </div>
+                    
+                    <div class="form-group"  >
+                      <label class="col-md-3 control-label">Parameter List
+                      </label>
+                    
+                      <div class="col-md-6">
+                          <select class="form-control" select2 name="version"  ng-disabled="{{mode}}"
+                              ng-change="onChangeParamListOFRule()" data-ng-model="allparamlist.defaultoption"
+                              ng-options="r as r.name for r in allparamlist.options | orderBy:'name' track by r.uuid ">
+                              <option value="">-Select-</option>
+                          </select>
+                      </div>
+                  </div>
 
                     <div class="portlet light bordered">
                       <div class="portlet-title">

@@ -1326,6 +1326,9 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
         else if ($scope.parantType == 'report') {
           url = 'getParamListByReport'
         }
+        else if ($scope.parantType == 'dq') {
+          url = 'getParamListByDq'
+        }
         else if ($scope.parantType == 'dag') {
           url = 'getParamListByDag'
         }
