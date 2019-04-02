@@ -269,7 +269,10 @@ public class WorkbookUtil {
 					
 					for(ParamListHolder paramListHolder : reportExec.getExecParams().getParamListInfo()) {
 						String paramName = paramListHolder.getParamName();
-						String paramValue = paramListHolder.getParamValue().getValue();
+						String paramValue =null;
+						if(paramListHolder.getParamValue() !=null) {
+							paramValue=paramListHolder.getParamValue().getValue();
+						}
 						reportParameters.append(paramName).append(": ").append(paramValue).append(", ");
 					}
 			

@@ -934,7 +934,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // if($scope.select == 'rule') {  //|| $scope.select == 'train'
     //   $scope.getExecParamsSet();
     // }
-    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' || $scope.select == 'rule2' ){
+    debugger
+    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' || $scope.select == 'rule2' || $scope.select == 'dq' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
@@ -943,16 +944,21 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.isParamLsitTable=false;
       setTimeout(function(){    $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
       ; },100);
-      if($scope.select =='rule' || $scope.select =='dag' || $scope.select == 'report' || $scope.select =='rule2'){
+      if($scope.select =='rule' || $scope.select =='dag' || $scope.select == 'report' || $scope.select =='rule2' || $scope.select == 'dq'){
         $scope.isParamListRquired=false;
         CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
-          if(response.paramList !=null){
+          $scope.exeDetail=response;
+          if(response.paramList !=null && $scope.select != 'dq'){
             $('#responsive').modal({
               backdrop: 'static',
               keyboard: false
             });   
-          }else{
+          }
+          else if(response.paramList !=null && $scope.select == 'dq'){
+            $scope.isParamModelEnable=true;
+          }
+          else{
             $scope.executionmsg = $scope.caption + " Submited Successfully"
             notify.type = 'success',
             notify.title = 'Success',
@@ -1000,7 +1006,11 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       }
     }
   };
-
+  
+  $scope.onExecute=function(data){
+		$scope.isParamModelEnable=data.isParamModelEnable;
+  }
+  
   $scope.getDetailForUpload = function (data,index) {
     console.log(data.index)
     $scope.setActivity(data.uuid, data.version, $scope.select, "uplode");

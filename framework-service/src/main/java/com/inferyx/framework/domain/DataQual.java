@@ -42,6 +42,8 @@ public class DataQual extends BaseRule{
 	private MetaIdentifierHolder expressionCheck;
 	private CaseCheckType caseCheck;
 	private String passFailCheck;
+	private MetaIdentifierHolder paramList;
+
 	
 	
 	public MetaIdentifierHolder getDomainCheck() {
@@ -187,7 +189,17 @@ public class DataQual extends BaseRule{
 	/**
 	 * @param passFailCheck the passFailCheck to set
 	 */
+	
 	public void setPassFailCheck(String passFailCheck) {
 		this.passFailCheck = passFailCheck;
 	}
+	
+	public MetaIdentifierHolder getParamList() {
+		return paramList;
+	}
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
+	}
+	
+
 }
