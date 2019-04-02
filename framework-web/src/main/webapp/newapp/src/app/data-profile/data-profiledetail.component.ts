@@ -12,6 +12,11 @@ import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component'
+import { Subject, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { FilterInfoIO } from '../metadata/domainIO/domain.filterInfoIO';
+
+
 @Component({
   selector: 'app-profile',
   templateUrl: './data-profiledetail.template.html',
@@ -79,17 +84,17 @@ export class DataProfileDetailComponent {
   // isEditInprogess: boolean = false;
   // isFilterInprogess: boolean = false;
   // metaType = MetaType;
-  // moveTo: number;
-  // moveToEnable: boolean;
-  // count: any[];
-  // invalideMinRow: boolean = false;
-  // invalideMaxRow: boolean = false;
-  // txtQueryChangedFilter: Subject<string> = new Subject<string>();
-  // resetTableTopBottom: Subject<string> = new Subject<string>();
+  moveTo: number;
+  moveToEnable: boolean;
+  count: any[];
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
   // txtQueryChangedAttribute: Subject<string> = new Subject<string>();
   // rowIndex: any;
-  // topDisabled: boolean;
-  // bottomDisabled: boolean;
+  topDisabled: boolean;
+  bottomDisabled: boolean;
   // datasetNotEmpty: boolean = true;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
@@ -178,7 +183,38 @@ export class DataProfileDetailComponent {
       { 'value': 'NULL', 'label': 'NULL' },
       { 'value': 'NOT NULL', 'label': 'NOT NULL' }
     ]
-    this.filterTableArray = null;
+    this.profiledata.filterTableArray = null;
+
+
+    this.moveToEnable = false;
+    this.count = [];
+    this.txtQueryChangedFilter
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        console.log(parseInt(index) - 1);
+        for (const i in this.profiledata.filterTableArray) {
+          if (this.profiledata.filterTableArray[i].hasOwnProperty("selected"))
+            this.profiledata.filterTableArray[i].selected = false;
+        }
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.resetTableTopBottom
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
   }
 
 
@@ -761,18 +797,25 @@ export class DataProfileDetailComponent {
 		}
   }
   addRow() {
-    if (this.profiledata.filterTableArray == null) {
+    var filertable = new FilterInfoIO;
+
+    if (this.profiledata.filterTableArray == null || this.profiledata.filterTableArray.length == 0) {
       this.profiledata.filterTableArray = [];
+      filertable.logicalOperator = '';
     }
-    var len = this.profiledata.filterTableArray.length + 1
-    var filertable = {};
-    filertable["logicalOperator"] = ""
-    filertable["lhsType"] = "integer"
-    filertable["lhsAttribute"] = ""
-    filertable["operator"] = ""
-    filertable["rhsType"] = "integer"
-    filertable["rhsAttribute"] = ""
+    else{
+      filertable.logicalOperator = this.logicalOperators[1].label;
+    }
+    // var len = this.profiledata.filterTableArray.length + 1
+    // filertable.logicalOperator = ""
+    filertable.lhsType = "integer";
+    filertable.lhsAttribute = null;
+    filertable.operator = this.operators[0].label;
+    filertable.rhsType = "integer"
+    filertable.rhsAttribute = null
     this.profiledata.filterTableArray.splice(this.profiledata.filterTableArray.length, 0, filertable);
+    this.count = [];
+    this.checkSelected(false, this.profiledata.filterTableArray.length - 1);
   }
   removeRow() {
     let newDataList = [];
@@ -785,6 +828,8 @@ export class DataProfileDetailComponent {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
+    this.count = [];
+    this.checkSelected(false, null);
     this.profiledata.filterTableArray = newDataList;
   }
   checkAllFilterRow() {
@@ -794,6 +839,7 @@ export class DataProfileDetailComponent {
     else {
       this.selectedAllFitlerRow = false;
     }
+    this.checkSelected(false, null);
     this.profiledata.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
@@ -1028,7 +1074,112 @@ export class DataProfileDetailComponent {
       this.profiledata.filterTableArray.splice(this.dragIndex,1)
       this.profiledata.filterTableArray.splice(this.dropIndex,0,item)
       this.iSSubmitEnable=true
+    }    
+  }
+
+
+  updateArray(new_index, range, event) {
+    for (let i = 0; i < this.profiledata.filterTableArray.length; i++) {
+      if (this.profiledata.filterTableArray[i].selected) {
+
+        if (new_index < 0) {
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index >= this.profiledata.filterTableArray.length) {
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index == null) { }
+        else {
+          let old_index = i;
+          this.array_move(this.profiledata.filterTableArray, old_index, new_index);
+          if (range) {
+
+            if (new_index == 0 || new_index == 1) {
+              this.profiledata.filterTableArray[0].logicalOperator = "";
+              if (!this.profiledata.filterTableArray[1].logicalOperator) {
+                this.profiledata.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
+            }
+            if (new_index == this.profiledata.filterTableArray.length - 1) {
+              this.profiledata.filterTableArray[0].logicalOperator = "";
+              if (this.profiledata.filterTableArray[new_index].logicalOperator == "") {
+                this.profiledata.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
+            }
+            this.txtQueryChangedFilter.next(new_index);
+          }
+          else if (new_index == 0 || new_index == 1) {
+            this.profiledata.filterTableArray[0].logicalOperator = "";
+            if (!this.profiledata.filterTableArray[1].logicalOperator) {
+              this.profiledata.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.profiledata.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          else if (new_index == this.profiledata.filterTableArray.length - 1) {
+            this.profiledata.filterTableArray[0].logicalOperator = "";
+            if (this.profiledata.filterTableArray[new_index].logicalOperator == "") {
+              this.profiledata.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.profiledata.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          break;
+        }
+      }
     }
-    
+  }
+
+  array_move(arr, old_index, new_index) {
+
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+  }
+
+  checkSelected(flag: any, index: any) {
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else
+      this.count.pop();
+
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.profiledata.filterTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
   }
 }

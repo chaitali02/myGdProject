@@ -1,12 +1,12 @@
-import { BaseEntity } from './domain.baseEntity';
 import { AttributeRefHolder } from './domain.attributeRefHolder';
 import { MetaIdentifierHolder } from './domain.metaIdentifierHolder';
 import { BaseRule } from './domain.baseRule';
+import { FilterInfo } from './domain.filterInfo';
 
 
-export class Profile extends BaseEntity{
+export class Profile extends BaseRule{
 
-    private dependsOn : MetaIdentifierHolder;
-	private attributeInfo : AttributeRefHolder[];
-
+    dependsOn : MetaIdentifierHolder;
+	attributeInfo : AttributeRefHolder[];
+    filterInfo : Array<FilterInfo>;
 }

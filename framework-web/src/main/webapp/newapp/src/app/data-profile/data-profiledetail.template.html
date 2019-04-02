@@ -175,30 +175,33 @@
                               rows="2" style="resize:none;"></textarea>
                           </div>
                         </div>
-                        <!-- <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                          <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                            <div class="btn-group">
+                              <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.active"
+                                name="active" [checked]="active"></ui-switch>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.locked" name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                          <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                            <div class="btn-group">
+                              <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.locked"
+                                name="locked" [checked]="locked"></ui-switch>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                          <div class="btn-group">
-                            <ui-switch  [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.published " name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                          <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                            <div class="btn-group">
+                              <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="profiledata.published "
+                                name="published" [checked]="published"></ui-switch>
+                            </div>
                           </div>
                         </div>
-                      </div> -->
                         <div class="row">
                           <label class="control-label col-md-3"></label>
                           <div class="col-md-4" style="padding-top: 2%;">
@@ -259,6 +262,53 @@
                             <div class="caption">
                               Filter
                             </div>
+
+
+                            <div class="actions">
+                              <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                <div class="x_title">
+                                  <div class="actions pull-right" style="position:relative;padding-right: 5px;">
+                                    <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"
+                                      data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                      data-close-others="true" aria-expanded="false" [attr.disabled]="(moveToEnable == false) ?'disabled' : null">
+                                      <span class="fa fa-arrows" aria-hidden="true" style="margin-right: 5px;"></span>
+                                      <i class="fa fa-angle-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                                      <li (click)="updateArray(0, '')">
+                                        <a href="javascript:;" [attr.disabled]="topDisabled == true ? 'disabled' : null">Top</a>
+                                      </li>
+                                      <li class="divider" style="margin: 0px;"> </li>
+                                      <li (click)="updateArray(profiledata.filterTableArray.length-1, '')">
+                                        <a href="javascript:;" [attr.disabled]="bottomDisabled == true ? 'disabled' : null">Bottom</a>
+                                      </li>
+                                      <li class="divider" style="margin: 0px;"> </li>
+                                      <li>
+                                        <div class="form-group" style="margin: 1%;" *ngIf="profiledata.filterTableArray">
+                                          <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{profiledata.filterTableArray.length}}"
+                                            name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo-1, 'range', $event)"
+                                            focus-me="true" />
+                                        </div>
+                                      </li>
+                                      <div *ngIf="invalideMinRow">
+                                        <li class="divider" style="margin: 0px;"> </li>
+                                        <li style="color:red">
+                                          Please enter the minimum no of 0.
+                                        </li>
+                                      </div>
+                                      <div *ngIf="invalideMaxRow">
+                                        <li class="divider" style="margin: 0px;"> </li>
+                                        <li style="color:red">
+                                          Please enter the minimum no of {{profiledata.filterTableArray.length}}
+                                        </li>
+                                      </div>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
                           </div>
                           <div class="portlet-body form">
                             <div class="x_title" style="padding:10px;">
@@ -292,7 +342,7 @@
 
                                     <td style="text-align:center;Vertical-align:middle;">
                                       <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                        name="selected" [disabled]="mode == 'true'" />
+                                        name="selected" [disabled]="mode == 'true'" (change)="checkSelected(data.selected, i)" />
                                     </td>
                                     <td>
                                       <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
