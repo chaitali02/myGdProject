@@ -143,7 +143,7 @@ public class AdminController {
 											   @RequestParam(value = "fileType") String fileType,
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "action", required = false) String action)
-											throws IOException, JSONException, ParseException {
+											throws IOException, JSONException, ParseException, IllegalStateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String result = null;
 		if(fileType.equalsIgnoreCase(FileType.ZIP.toString())){
 			ObjectMapper mapper=new ObjectMapper();

@@ -68,7 +68,7 @@ public class OperatorController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		rowLimit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.result.row.limit"));
 		return operatorServiceImpl.getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
 	}
 

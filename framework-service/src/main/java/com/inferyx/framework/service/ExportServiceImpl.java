@@ -106,7 +106,7 @@ public class ExportServiceImpl implements Serializable {
 	}
 	
 	public String writeObjectToFile(Export exp) throws ZipException, JsonGenerationException, JsonMappingException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
-		String directoryPath = Helper.getPropertyValue("framework.mg.export.path");
+		String directoryPath = commonServiceImpl.getConfigValue("framework.mg.export.path");
 		directoryPath = directoryPath.endsWith("/") ? "" : directoryPath.concat("/");
 		ZipOutputStream zos = null; 
 		File file = null;
@@ -159,7 +159,7 @@ public class ExportServiceImpl implements Serializable {
 			    }
 				if(export.getIncludeDep().equalsIgnoreCase("y")) {
 					//System.out.println("\n");
-					int level = Integer.parseInt(Helper.getPropertyValue("framework.dependency.level"));
+					int level = Integer.parseInt(commonServiceImpl.getConfigValue("framework.dependency.level"));
 					String metaUuid = ((BaseEntity)object).getUuid();
 					if(uuidInZipSet.add(metaUuid)) {
 						if(level>0)
@@ -189,8 +189,8 @@ public class ExportServiceImpl implements Serializable {
 		
 		return filePath;
 	}
-	public File writeObjectToFile(BaseEntity baseEntity) throws JsonProcessingException, IOException {
-		String directoryPath = Helper.getPropertyValue("framework.mg.export.path");
+	public File writeObjectToFile(BaseEntity baseEntity) throws JsonProcessingException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String directoryPath = commonServiceImpl.getConfigValue("framework.mg.export.path");
 		directoryPath = directoryPath.endsWith("/") ? "" : directoryPath.concat("/");
 		ObjectMapper objectMapper  = new ObjectMapper();
 		String uuid = baseEntity.getUuid();
@@ -353,9 +353,9 @@ public class ExportServiceImpl implements Serializable {
 		}else 
 			return commonServiceImpl.getOneByUuidAndVersion(uuid, version, type);
 	}
-	public HttpServletResponse download(String uuid, HttpServletResponse response) {
+	public HttpServletResponse download(String uuid, HttpServletResponse response) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		try {
-			String dirPath = Helper.getPropertyValue("framework.mg.export.path");
+			String dirPath = commonServiceImpl.getConfigValue("framework.mg.export.path");
 			dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");
 	        	String filePath = dirPath.concat(uuid).concat(".zip");
 	            File file = new File(filePath);

@@ -456,7 +456,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 			String filePath = String.format("/%s/%s/%s", predict.getUuid(), predict.getVersion(), predictExec.getVersion());
 			String tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
 
-			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
+			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), commonServiceImpl.getConfigValue("framework.model.predict.path"), filePath);
 
 			Object result = null;
 			long count = -1L;
@@ -490,10 +490,10 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					
 					String mappedFeatureAttrSql = modelServiceImpl.generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, null, tableName);	
 
-//					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
-					String defaultDir = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
+//					final String URI = commonServiceImpl.getConfigValue("framework.hdfs.URI");
+					String defaultDir = commonServiceImpl.getConfigValue("framework.model.predict.path")+filePath+"/";
 					String modelFileName = dataStore.getLocation();
-					String savePredict = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
+					String savePredict = commonServiceImpl.getConfigValue("framework.model.predict.path")+filePath+"/"+"output";
 					filePathUrl = savePredict;
 
 					modelServiceImpl.deleteFileOrDirIfExists(defaultDir);
@@ -552,7 +552,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
-						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
+						String saveFileName = commonServiceImpl.getConfigValue("framework.model.predict.path")+filePath+"/"+"input";
 						
 						File saveFile = new File(saveFileName);
 						if(!saveFile.exists()) {
@@ -578,7 +578,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 								&& !predict.getRowIdentifier().isEmpty()
 								&& rowIdentifierCols != null 
 								&& !rowIdentifierCols.isEmpty()) {
-							inputSourceFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input_source";
+							inputSourceFileName = commonServiceImpl.getConfigValue("framework.model.predict.path")+filePath+"/"+"input_source";
 							logger.info("Saved source file name : " + inputSourceFileName);
 							
 							File inputSourceFile = new File(inputSourceFileName);

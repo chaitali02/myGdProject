@@ -381,7 +381,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		List<Map<String, Object>> data = null;
 		try {
-			int maxLimit = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+			int maxLimit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion,
 					MetaType.vizpod.toString());
 			limit = maxLimit;
@@ -788,7 +788,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			ExecParams execParams, String download, int offset, int limit, HttpServletResponse response, int rowLimit,
 			String sortBy, String order, String requestId, RunMode runMode, Layout layout) throws Exception {
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
@@ -812,7 +812,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			int rowLimit, String sortBy, String order, String requestId, RunMode runMode, Layout layout)
 			throws Exception {
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),

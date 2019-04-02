@@ -511,7 +511,7 @@ public class DataStoreServiceImpl {
 //			throw new RuntimeException("Datastore is not available for this datapod.");
 //			
 //		}
-//		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+//		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 //		if(rows > maxRows) {
 //			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 //			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
@@ -1150,7 +1150,7 @@ public class DataStoreServiceImpl {
 			throw new Exception();
 		}
 		
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows ,null);

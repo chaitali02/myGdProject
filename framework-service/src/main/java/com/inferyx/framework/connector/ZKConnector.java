@@ -4,15 +4,19 @@
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
 import org.apache.zookeeper.ZooKeeper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author joy
@@ -23,6 +27,8 @@ public class ZKConnector {
 	
 	@Resource
 	ConcurrentHashMap<String, ZooKeeper> zkConnMap;
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 
 	/**
 	 * 
@@ -31,8 +37,8 @@ public class ZKConnector {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public ConnectionHolder getConnection(Datasource ds) throws IOException {
-		String connectionString = ds.getHost() + ":" + Helper.getPropertyValue("framework.kafka.topic.port");
+	public ConnectionHolder getConnection(Datasource ds) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String connectionString = ds.getHost() + ":" + commonServiceImpl.getConfigValue("framework.kafka.topic.port");
 		ConnectionHolder connHolder = new ConnectionHolder();
 		if (zkConnMap.containsKey(connectionString)) {
 			connHolder.setConObject(zkConnMap.get(connectionString));

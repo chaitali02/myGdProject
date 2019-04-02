@@ -34,6 +34,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Message;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.PrivilegeServiceImpl;
@@ -53,6 +54,8 @@ public class UserActivityPrivilegeFilter extends GenericFilterBean {
 	RegisterService registerServiceImpl;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(UserActivityPrivilegeFilter.class);
 	@SuppressWarnings({ "unchecked" })
@@ -60,7 +63,7 @@ public class UserActivityPrivilegeFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		try {
-			String value = Helper.getPropertyValue("framework.api.checkPriv");
+			String value = commonServiceImpl.getConfigValue("framework.api.checkPriv");
 			if(value.equalsIgnoreCase("true")) {
 				HttpServletRequest req = (HttpServletRequest) request;
 				HttpServletResponse resp = (HttpServletResponse) response;

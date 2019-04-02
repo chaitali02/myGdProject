@@ -673,7 +673,7 @@ public class DatapodServiceImpl {
 				throw new Exception("CSV file name contains white space or special character");
 			}
 			
-			String directory = Helper.getPropertyValue("framework.file.upload.path");
+			String directory = commonServiceImpl.getConfigValue("framework.file.upload.path");
 			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
 		
 		
@@ -1086,9 +1086,9 @@ public class DatapodServiceImpl {
 		attrRefHolder.setAttrId(attributeId);
 		attrRefHolder.setRef(new MetaIdentifier(MetaType.datapod, datapodUuid, datapodVersion));
 		attrRefHolderList.add(attrRefHolder);
-		String limitValue = Helper.getPropertyValue("framework.histogram.sample.size");
+		String limitValue = commonServiceImpl.getConfigValue("framework.histogram.sample.size");
 		int limit = Integer.parseInt(limitValue);
-		String resultLimitValue = Helper.getPropertyValue("framework.histogram.result.size");
+		String resultLimitValue = commonServiceImpl.getConfigValue("framework.histogram.result.size");
 		int resultLimit = Integer.parseInt(resultLimitValue);
 		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode);
 	}
@@ -1202,7 +1202,7 @@ public class DatapodServiceImpl {
 			throw new RuntimeException("Datastore is not available for this datapod.");
 			
 		}
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();

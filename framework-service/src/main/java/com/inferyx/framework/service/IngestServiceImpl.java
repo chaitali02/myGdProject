@@ -816,7 +816,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException {
+	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsUuid, dsVersion, MetaType.datasource.toString());
 		List<String> topicList = null;
 		try {

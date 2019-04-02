@@ -83,7 +83,7 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-//		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+//		rowLimit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.result.row.limit"));
 //		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), trainExecUUID,
 //				trainExecVersion);
 //		Model model =  (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
@@ -215,7 +215,7 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		rowLimit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.result.row.limit"));
 		return modelExecServiceImpl.getPredictResults(predictExecUUID, predictExecVersion, rowLimit);
 	}
 	
@@ -225,7 +225,7 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "rowLimit", required = false, defaultValue = "1000") int rowLimit) throws Exception {
-		rowLimit = Integer.parseInt(Helper.getPropertyValue("framework.result.row.limit"));
+		rowLimit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.result.row.limit"));
 		return modelExecServiceImpl.getSimulateResults(simulateExecUUID, simulateExecVersion, rowLimit);
 	}
 	
@@ -350,7 +350,7 @@ public class ModelController {
 									   @RequestParam(value = "extension") String extension,
 									   @RequestParam(value = "fileType") String fileType,
 									   @RequestParam(value = "type", required = false) String type,
-									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException {
+									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
 	

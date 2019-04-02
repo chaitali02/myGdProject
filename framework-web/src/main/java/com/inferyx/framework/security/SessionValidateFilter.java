@@ -11,6 +11,8 @@
 package com.inferyx.framework.security;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -50,47 +52,70 @@ public class SessionValidateFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException { 
-		if(Helper.getPropertyValue("framework.session.validate").equalsIgnoreCase("true")) {
-			HttpServletRequest req = (HttpServletRequest) request;
-	    	HttpServletResponse res =(HttpServletResponse) response;
-	    	String requestedUrl = req.getRequestURL().toString();
-	    	logger.info("Requested URL: "+requestedUrl);
-	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    	if(authentication != null){
-	    		//logger.info("User name : " + authentication.getName());
-	    	}    	
-	    	HttpSession session = req.getSession(false);
-	    	if(session == null) {
-	    		if(requestedUrl.toLowerCase().contains("app".toLowerCase()) 
-	    				|| requestedUrl.toLowerCase().contains("/metadata/validateUser".toLowerCase()) ) {
+		try {
+			if(commonServiceImpl.getConfigValue("framework.session.validate").equalsIgnoreCase("true")) {
+				HttpServletRequest req = (HttpServletRequest) request;
+				HttpServletResponse res =(HttpServletResponse) response;
+				String requestedUrl = req.getRequestURL().toString();
+				logger.info("Requested URL: "+requestedUrl);
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				if(authentication != null){
+					//logger.info("User name : " + authentication.getName());
+				}    	
+				HttpSession session = req.getSession(false);
+				if(session == null) {
+					if(requestedUrl.toLowerCase().contains("app".toLowerCase()) 
+							|| requestedUrl.toLowerCase().contains("/metadata/validateUser".toLowerCase()) ) {
 //	    				|| requestedUrl.toLowerCase().contains("/security/logoutSession".toLowerCase())) {
 //	    			logger.info("session is null 1.0");
-	    			chain.doFilter(request, response);
-	    		} else {
+						chain.doFilter(request, response);
+					} else {
 //	    			logger.info("session is null 1.1");
-	    			try {
-	    				Message message = new Message("419", MessageStatus.FAIL.toString(), "Session expired.");
-						//Message savedMessage = messageServiceImpl.save(message);
-						//PrintWriter out = response.getWriter();
-						String messageJson = new ObjectMapper().writeValueAsString(message);
-						res.setContentType("application/json");
-						//response.setCharacterEncoding("UTF-8");
-						res.setStatus(419);
-						//out.print(messageJson);
-						///out.flush();
-						res.getOutputStream().write(messageJson.getBytes());
-						//response.getOutputStream().flush();
-						res.getOutputStream().close(); 
-	    			}catch (Exception e) {
-						// TODO: handle exception
-	    				e.printStackTrace();
-					}	   			
-	    		}
-	    	} else {
-	        	chain.doFilter(request, response);
-	    	}
-		} else {
-			chain.doFilter(request, response);
+						try {
+							Message message = new Message("419", MessageStatus.FAIL.toString(), "Session expired.");
+							//Message savedMessage = messageServiceImpl.save(message);
+							//PrintWriter out = response.getWriter();
+							String messageJson = new ObjectMapper().writeValueAsString(message);
+							res.setContentType("application/json");
+							//response.setCharacterEncoding("UTF-8");
+							res.setStatus(419);
+							//out.print(messageJson);
+							///out.flush();
+							res.getOutputStream().write(messageJson.getBytes());
+							//response.getOutputStream().flush();
+							res.getOutputStream().close(); 
+						}catch (Exception e) {
+							// TODO: handle exception
+							e.printStackTrace();
+						}	   			
+					}
+				} else {
+			    	chain.doFilter(request, response);
+				}
+			} else {
+				chain.doFilter(request, response);
+			}
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

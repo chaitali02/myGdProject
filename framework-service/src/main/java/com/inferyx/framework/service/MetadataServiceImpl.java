@@ -2041,27 +2041,27 @@ public class MetadataServiceImpl {
 //		if(type.equalsIgnoreCase(MetaType.profile.toString()))
 //			{
 //			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+//					commonServiceImpl.getConfigValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
 //			return dp;
 //			}
 //		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
 //			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+//					commonServiceImpl.getConfigValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
 //			return dp;
 //		}
 //		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
 //			Datapod dp =null;
 //			if(resultType ==null) {
 //				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+//						commonServiceImpl.getConfigValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
 //			}
 //			else if(resultType.equals("summary")) {
 //				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+//						commonServiceImpl.getConfigValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
 //			}
 //			else if(resultType.equals("detail")) {
 //				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+//						commonServiceImpl.getConfigValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
 //			}
 //			return dp;
 //		}
@@ -2069,11 +2069,11 @@ public class MetadataServiceImpl {
 //			Datapod dp =null;
 //			if(resultType.equals("summary")) {
 //				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+//						commonServiceImpl.getConfigValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
 //			}
 //			else if(resultType.equals("detail")) {
 //				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+//						commonServiceImpl.getConfigValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
 //			}
 //			return dp;
 //		}
@@ -2175,7 +2175,7 @@ public class MetadataServiceImpl {
 		}
 	}
 	
-	public String getConfigValueByName(String configName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, FileNotFoundException, IOException {
+	/*public String getConfigValueByName(String configName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, FileNotFoundException, IOException {
 		List<Config> appConfigList = getAppConfigByCurrentApp();
 		for (Config config : appConfigList) {
 			if (config.getConfigName().equals(configName)) {
@@ -2185,8 +2185,8 @@ public class MetadataServiceImpl {
 				}
 			}
 		}
-		return Helper.getPropertyValue(configName);
-	}
+		return commonServiceImpl.getConfigValue(configName);
+	}*/
 
 	public FileRefHolder uploadOrgLogo(MultipartFile multiPartFile, String fileName, String uuid, String type)
 			throws Exception {
@@ -2203,7 +2203,7 @@ public class MetadataServiceImpl {
 			fileName_Uuid = uuid + "." + fileExtention;
 
 		}
-		String directoryPath = Helper.getPropertyValue("framework.image.logo.Path");
+		String directoryPath = commonServiceImpl.getConfigValue("framework.image.logo.Path");
 		MetaIdentifier metaIdentifier = new MetaIdentifier(MetaType.organization, uuid, Helper.getVersion());
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(metaIdentifier);
 		UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
@@ -2237,7 +2237,7 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;

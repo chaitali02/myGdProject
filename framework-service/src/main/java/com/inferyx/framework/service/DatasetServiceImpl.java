@@ -94,7 +94,7 @@ public class DatasetServiceImpl {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
 		//logger.info(" Start datasetSample ");
 		long startTime  = System.currentTimeMillis();
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
@@ -275,7 +275,7 @@ public class DatasetServiceImpl {
 	
 	
 	public HttpServletResponse download(String datasetUuid, String datasetVersion, String format,int rows,RunMode runMode, HttpServletResponse response, Layout layout) throws Exception {
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);

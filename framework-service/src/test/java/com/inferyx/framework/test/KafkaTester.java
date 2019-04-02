@@ -2,6 +2,8 @@ package com.inferyx.framework.test;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -174,8 +176,15 @@ public class KafkaTester implements Serializable {
 	 * @param kafkaExecutor
 	 * @param ds
 	 * @throws IOException
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public static void printTopics(KafkaExecutor kafkaExecutor, Datasource ds) throws IOException {
+	public static void printTopics(KafkaExecutor kafkaExecutor, Datasource ds) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		kafkaExecutor.getTopics(ds).forEach(System.out::println);
 	}
 	

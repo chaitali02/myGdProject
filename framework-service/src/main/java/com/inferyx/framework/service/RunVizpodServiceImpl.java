@@ -334,7 +334,7 @@ public class RunVizpodServiceImpl implements Callable<TaskHolder> {
 			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
 			
 			String tableName = String.format("%s_%s_%s", vizpod.getUuid().replaceAll("-", "_"), vizpod.getVersion(), vizExec.getVersion());
-			String defautlDir = String.format("%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.dashboard.Path"));
+			String defautlDir = String.format("%s%s", hdfsInfo.getHdfsURL(), commonServiceImpl.getConfigValue("framework.dashboard.Path"));
 			defautlDir = defautlDir.endsWith("/") ? defautlDir : defautlDir.concat("/");
 			String filePath = String.format("%s/%s/%s", vizpod.getUuid(), vizpod.getVersion(), vizExec.getVersion());
 			String filePathUrl = defautlDir.concat(filePath);

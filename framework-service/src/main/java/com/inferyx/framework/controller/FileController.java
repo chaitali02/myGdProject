@@ -13,6 +13,7 @@ package com.inferyx.framework.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 
 import org.codehaus.jettison.json.JSONException;
@@ -67,7 +68,7 @@ public class FileController {
 									   @RequestParam(value = "extension") String extension,
 									   @RequestParam(value = "fileType") String fileType,
 									   @RequestParam(value = "type", required = false) String type,
-									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException {
+									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 	 return modelServiceImpl.upload(file, extension, fileType, fileName, type);
 	}
 	

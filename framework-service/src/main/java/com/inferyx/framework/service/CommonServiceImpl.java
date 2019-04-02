@@ -3825,7 +3825,7 @@ public class CommonServiceImpl<T> {
 	}
 
 	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType)
-			throws FileNotFoundException, IOException, JSONException, ParseException {
+			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
@@ -4172,9 +4172,9 @@ public class CommonServiceImpl<T> {
 	}
 
 	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType, String uuid)
-			throws FileNotFoundException, IOException, JSONException, ParseException {
+			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 
-		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
+		String directoryPath = getConfigValue("framework.file.comment.upload.path");
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
 

@@ -249,7 +249,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 				reportExec.getResult().getRef().getVersion());
 		
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
@@ -310,7 +310,7 @@ public class ReportServiceImpl extends RuleTemplate {
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(limit < 1) {
 			limit = maxRows;
 		}
@@ -333,7 +333,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 //		format = Helper.mapFileFormat(report.getFormat());
 //		
-//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String filePathUrl = Helper.getDocumentFilePath(commonServiceImpl.getConfigValue("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
 //		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
 //		
 //		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
@@ -535,14 +535,14 @@ public class ReportServiceImpl extends RuleTemplate {
 		logger.info("sending success notification...");
 		Notification notification = new Notification();
 
-		String subject = Helper.getPropertyValue("framework.email.subject");
+		String subject = commonServiceImpl.getConfigValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "COMPLETED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
-		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		String contextPath = commonServiceImpl.getConfigValue("framework.webserver.contextpath");
 		if(contextPath.startsWith("")) {
 			contextPath = "";
 		} else {
@@ -550,18 +550,18 @@ public class ReportServiceImpl extends RuleTemplate {
 			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
 		}
 		
-		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), contextPath, reportExec.getUuid(), reportExec.getVersion(), roleUuid, appUuid);
+		String resultUrl = commonServiceImpl.getConfigValue("framework.url.report.result.success");
+		resultUrl = MessageFormat.format(resultUrl, commonServiceImpl.getConfigValue("framework.webserver.host"),
+				commonServiceImpl.getConfigValue("framework.webserver.port"), contextPath, reportExec.getUuid(), reportExec.getVersion(), roleUuid, appUuid);
 
-		String message = Helper.getPropertyValue("framework.email.body");
+		String message = commonServiceImpl.getConfigValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
 				int rowLimit = report.getLimit();
-				int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+				int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 				if(rowLimit < 1) {
 					rowLimit = maxRows;
 				}
@@ -579,7 +579,7 @@ public class ReportServiceImpl extends RuleTemplate {
 					throw new RuntimeException("Format not provided ...");
 				}
 				
-				String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+				String filePathUrl = Helper.getDocumentFilePath(commonServiceImpl.getConfigValue("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
 				String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
 				
 				Map<String, String> emailAttachment = new HashMap<>();
@@ -659,18 +659,18 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 	
 	public boolean sendFailureNotification(SenderInfo senderInfo, Report report, ReportExec reportExec)
-			throws FileNotFoundException, IOException {
+			throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("sending fail notification...");
 		Notification notification = new Notification();
 
-		String subject = Helper.getPropertyValue("framework.email.subject");
+		String subject = commonServiceImpl.getConfigValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "FAILURE", "Report", report.getName(), "FAILED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
-		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		String contextPath = commonServiceImpl.getConfigValue("framework.webserver.contextpath");
 		if(contextPath.startsWith("")) {
 			contextPath = "";
 		} else {
@@ -678,11 +678,11 @@ public class ReportServiceImpl extends RuleTemplate {
 			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
 		}
 		
-		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), contextPath, roleUuid, appUuid);
+		String resultUrl = commonServiceImpl.getConfigValue("framework.url.report.result.failure");
+		resultUrl = MessageFormat.format(resultUrl, commonServiceImpl.getConfigValue("framework.webserver.host"),
+				commonServiceImpl.getConfigValue("framework.webserver.port"), contextPath, roleUuid, appUuid);
 
-		String message = Helper.getPropertyValue("framework.email.body");
+		String message = commonServiceImpl.getConfigValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 
@@ -792,7 +792,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		}
 		
 		int rowLimit = report.getLimit();
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(rowLimit < 1) {
 			rowLimit = maxRows;
 		}
@@ -814,7 +814,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 //		format = Helper.mapFileFormat(report.getFormat());
 //		
-//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String filePathUrl = Helper.getDocumentFilePath(commonServiceImpl.getConfigValue("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
 //		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
 //		
 //		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
@@ -923,7 +923,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(limit < 1) {
 			limit = maxRows;
 		}
@@ -945,7 +945,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 //		format = Helper.mapFileFormat(format);		
 //		
-//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String filePathUrl = Helper.getDocumentFilePath(commonServiceImpl.getConfigValue("framework.file.download.path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
 //		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
 //		
 //		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
@@ -1038,7 +1038,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Datastore is not available.");
 		}
 		
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (!skipLimitCheck && limit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
