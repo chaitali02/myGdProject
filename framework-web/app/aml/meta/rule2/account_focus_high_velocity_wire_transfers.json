@@ -1,7 +1,8 @@
 {
-  "uuid": "0e312954-bdd2-43ef-9e88-04f709e156a2",
-  "version": "1552910339",
-  "name": "Account Focus - All Round Dollar Wire Transfers",
+  "id": "5ca340533749ab166aeb2beb",
+  "uuid": "fb18c845-f004-4b01-a0b7-fc99894ae9a4",
+  "version": "1554202707",
+  "name": "Account Focus - High Velocity Wire Transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 17:28:59 IST 2019",
+  "createdOn": "Tue Apr 02 16:28:27 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -29,6 +30,7 @@
     }
   ],
   "publicFlag": "N",
+  "abortCondition": null,
   "sourceInfo": {
     "ref": {
       "type": "datapod",
@@ -59,9 +61,9 @@
         {
           "ref": {
             "type": "formula",
-            "uuid": "7eca606a-b789-4826-a91d-42511d8c1a08",
+            "uuid": "87d4def4-0d88-4e3a-8771-0e2c836d65e2",
             "version": null,
-            "name": "fm_lookback_date_round_amount_transfers"
+            "name": "fm_lookback_date_high_trans_velocity"
           },
           "attributeId": null,
           "value": null,
@@ -136,21 +138,21 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 20,
+              "attributeId": 55,
               "value": null,
-              "attributeName": "all_wire_transfers_round_amount_count",
+              "attributeName": "all_wire_trans_velocity_ratio",
               "attributeType": null
             },
             {
               "ref": {
                 "type": "paramlist",
-                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+                "uuid": "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
                 "version": null,
-                "name": "paramlist_round_amount_transfers"
+                "name": "paramlist_high_trans_velocity"
               },
               "attributeId": 0,
               "value": null,
-              "attributeName": "trans_count",
+              "attributeName": "trans_velocity",
               "attributeType": null
             }
           ]
@@ -158,56 +160,15 @@
       ],
       "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 0.5
-    },
-    {
-      "criteriaId": "1",
-      "criteriaName": "Transaction Value",
-      "activeFlag": "Y",
-      "criteriaFilter": [
-        {
-          "display_seq": "0",
-          "logicalOperator": "",
-          "operator": ">=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-                "version": null,
-                "name": "account_summary_daily"
-              },
-              "attributeId": 20,
-              "value": null,
-              "attributeName": "all_wire_transfers_round_amount_count",
-              "attributeType": null
-            },
-            {
-              "ref": {
-                "type": "paramlist",
-                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
-                "version": null,
-                "name": "paramlist_round_amount_transfers"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "trans_amount_usd",
-              "attributeType": null
-            }
-          ]
-        }
-      ],
-      "score": 1,
-      "filter_critria": null,
-      "criteriaWeight": 0.5
+      "criteriaWeight": 1
     }
   ],
   "paramList": {
     "ref": {
       "type": "paramlist",
-      "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+      "uuid": "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
       "version": null,
-      "name": "paramlist_round_amount_transfers"
+      "name": "paramlist_high_trans_velocity"
     },
     "value": null
   }
