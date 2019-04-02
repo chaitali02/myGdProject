@@ -65,7 +65,7 @@ CREATE TABLE dq_result_summary
      threshold_limit       INT(10), 
      threshold_ind         VARCHAR(50), 
      score                 DECIMAL(10,4),
-     param_info            VARCHAR(1000),
+     param_info            VARCHAR(500),
      version               INT(10), 
      INDEX (version), 
      INDEX (rule_uuid, datapod_uuid) 
