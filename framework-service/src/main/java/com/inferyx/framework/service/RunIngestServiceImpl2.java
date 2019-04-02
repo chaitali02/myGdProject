@@ -746,10 +746,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						saveMode = SaveMode.OVERWRITE.toString();
 					}
 					
-					
-					
 					//writing to target		
 					if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+						targetFilePathUrl = targetDS.getPath();
+						if(!targetFilePathUrl.endsWith("/")) {
+							targetFilePathUrl = targetFilePathUrl.concat("/");
+						}
+						targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
+						
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName,
 								saveMode, ingest.getTargetFormat(), targetHeader);
 					} else {
@@ -1192,6 +1196,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						
 						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+							targetFilePathUrl = targetDS.getPath();
+							if(!targetFilePathUrl.endsWith("/")) {
+								targetFilePathUrl = targetFilePathUrl.concat("/");
+							}
+							targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
 							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl,
 									tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						} else {
