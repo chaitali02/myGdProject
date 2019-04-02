@@ -757,7 +757,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName,
 								saveMode, ingest.getTargetFormat(), targetHeader);
 					} else {
-						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
 						String tempDirLocation = tempDirPath.endsWith("/")
 								? "file://" + tempDirPath + ingestExec.getUuid() + "/" + ingestExec.getVersion() + "/"
 								: "file://" + tempDirPath.concat("/") + ingestExec.getUuid() + "/"

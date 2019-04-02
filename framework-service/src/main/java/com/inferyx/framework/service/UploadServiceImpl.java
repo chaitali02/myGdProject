@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,7 +88,7 @@ public class UploadServiceImpl {
 	}
 
 	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType)
-			throws FileNotFoundException, IOException, JSONException, ParseException {
+			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
@@ -133,7 +134,7 @@ public class UploadServiceImpl {
 			fileName_Uuid = uuid + "." + fileExtention;
 
 		}
-		String directoryPath = Helper.getPropertyValue("framework.image.logo.Path");
+		String directoryPath = commonServiceImpl.getConfigValue("framework.image.logo.Path");
 		MetaIdentifier metaIdentifier = new MetaIdentifier(MetaType.organization, uuid, Helper.getVersion());
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(metaIdentifier);
 		UploadExec uploadExec = create(dependsOn);
@@ -251,7 +252,7 @@ public class UploadServiceImpl {
 			// originalFileName.lastIndexOf("."));
 
 			// String directoryLocation =
-			// Helper.getPropertyValue("framework.image.logo.Path");
+			// commonServiceImpl.getConfigValue("framework.image.logo.Path");
 			// MetaIdentifier metaIdentifier = new MetaIdentifier(MetaType.organization,
 			// uuid, Helper.getVersion());
 			// MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(metaIdentifier);

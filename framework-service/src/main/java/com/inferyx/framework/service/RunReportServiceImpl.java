@@ -270,7 +270,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
 					
 			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
-			String reportDefaultPath = Helper.getPropertyValue("framework.report.Path");
+			String reportDefaultPath = commonServiceImpl.getConfigValue("framework.report.Path");
 			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
 			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
 
@@ -295,7 +295,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);
 			
 			//sending report execution status through email
-			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+			if(commonServiceImpl.getConfigValue("framework.email.enable").equalsIgnoreCase("Y")) {
 				if(senderInfo != null && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (reportExec.getUuid()) {
 						if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
@@ -311,7 +311,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			
 			//sending report execution status through email 
 			try {
-				if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+				if(commonServiceImpl.getConfigValue("framework.email.enable").equalsIgnoreCase("Y")) {
 					if(senderInfo != null && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 						reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
 					}

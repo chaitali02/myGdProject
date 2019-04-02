@@ -2060,16 +2060,22 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 		ReportSerivce.submit(reportJson, 'report', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+			/*if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
 				$scope.ruleId = response.data;
 				$scope.showParamlistPopup();
-			} //End if
-			else if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption == null) {
+			} *///End if
+			//else 
+			if ($scope.checkboxModelexecution == "YES") {
 				ReportSerivce.getOneById(response.data, "report").then(function (response) {
 					onSuccessGetOneById(response.data)
 				});
 				var onSuccessGetOneById = function (result) {
-					$scope.reportExecute(result);
+					if($scope.allparamlist.defaultoption == null){
+						$scope.reportExecute(result);
+				    }else{
+						$scope.isParamModelEnable=true;
+						$scope.exeDetail=result;
+					}
 				}
 			}
 			else {
@@ -2107,6 +2113,16 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.selectParamList = null;
 		$scope.paramTypes = null;
 		$scope.selectParamType = null;
+	}
+
+	$scope.onExecute=function(data){
+	//	$scope.isParamModelEnable=data.isParamModelEnable;
+		$scope.dataLoading = false;
+		notify.type = 'success',
+		notify.title = 'Success',
+		notify.content = 'Report Saved and Submitted Successfully'
+		$scope.$emit('notify', notify);
+		$scope.close();
 	}
 
 	$scope.reportExecute = function (modeldetail) {

@@ -45,6 +45,7 @@ public class SessionCounter implements HttpSessionListener{
         session.setAttribute("session-counter", this);        
         int limit = 100;
 		try {
+			//This method called only for filter
 			limit = Integer.parseInt(Helper.getPropertyValue("framework.security.session.counter"));
 		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();

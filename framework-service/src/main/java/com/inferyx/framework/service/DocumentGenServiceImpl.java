@@ -42,6 +42,8 @@ public class DocumentGenServiceImpl {
 	private WorkbookUtil workbookUtil;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private CommonServiceImpl commonServiceImpl;
 	
 	public boolean createDocument(Document document) throws IOException {
 		if(document.getDocumentType().equalsIgnoreCase(FileType.PDF.toString())) {
@@ -63,7 +65,7 @@ public class DocumentGenServiceImpl {
 			createFilePathIfNotExists(filePathUrl, document.getFileName());
 			
 			if(!StringUtils.isBlank(document.getOrgLogoName())) {
-				String logoDefaultPath = metadataServiceImpl.getConfigValueByName("framework.image.logo.Path");
+				String logoDefaultPath = commonServiceImpl.getConfigValue("framework.image.logo.Path");
 				logoDefaultPath = logoDefaultPath.endsWith("/") ? logoDefaultPath : logoDefaultPath.concat("/");
 				String logoRelativePath = document.getOrgLogoName();
 				if(logoRelativePath.startsWith("/")) {

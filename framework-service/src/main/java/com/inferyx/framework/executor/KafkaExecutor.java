@@ -4,6 +4,8 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,7 +48,7 @@ public class KafkaExecutor<T, K> {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public List<String> getTopics(Datasource ds) throws IOException {
+	public List<String> getTopics(Datasource ds) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		ConnectionHolder connHolder = zkConnector.getConnection(ds);
 		List<String> topics = null;
 		if (!(connHolder.getConObject() instanceof ZooKeeper)) {

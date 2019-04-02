@@ -165,6 +165,7 @@ import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.StorageContext;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
@@ -177,7 +178,8 @@ public class Helper {
 	@Autowired
 	static
 	MetadataServiceImpl metadataServiceImpl;
-
+	@Autowired
+	private static CommonServiceImpl commonServiceImpl;
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
 	}
@@ -666,6 +668,7 @@ public class Helper {
 //		return getPropertyValue(configName);
 //	}
 
+	//This method is specifically kept for Filter assembly    
 	public static String getPropertyValue(String key) throws FileNotFoundException, IOException {
 		Properties property = new Properties();
 		InputStream stream = Helper.class.getClassLoader().getResourceAsStream("framework.properties");
@@ -903,37 +906,37 @@ public class Helper {
 		return null;
 	}
 	
-	public static String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException {
+	public static String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(fileType != null)
 			switch (fileType) {
-				case SCRIPT : return getPropertyValue("framework.model.script.path");				
-				case CSV : return getPropertyValue("framework.file.upload.path");
-				case LOG : return getPropertyValue("framework.model.log.path");
-				case ZIP : return getPropertyValue("framework.file.zip.location");		
-				case XLS : return getPropertyValue("framework.file.download.path");		
-				case LOGOIMG : return getPropertyValue("framework.image.logo.Path");
-				case AVTARIMG : return getPropertyValue("framework.image.avtar.Path");
+				case SCRIPT : return commonServiceImpl.getConfigValue("framework.model.script.path");
+				case CSV : return commonServiceImpl.getConfigValue("framework.file.upload.path");
+				case LOG : return commonServiceImpl.getConfigValue("framework.model.log.path");
+				case ZIP : return commonServiceImpl.getConfigValue("framework.file.zip.location");		
+				case XLS : return commonServiceImpl.getConfigValue("framework.file.download.path");		
+				case LOGOIMG : return commonServiceImpl.getConfigValue("framework.image.logo.Path");
+				case AVTARIMG : return commonServiceImpl.getConfigValue("framework.image.avtar.Path");
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			default:
 				break;
 			}
 		return null;
 	}
-	public static String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException {
+	public static String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(fileType != null || type!=null )
 			if(type!=null&&type.equalsIgnoreCase(MetaType.comment.toString()) )	
 			{
-				return getPropertyValue("framework.file.comment.upload.path");
+				return commonServiceImpl.getConfigValue("framework.file.comment.upload.path");
 			}else if(fileType.equalsIgnoreCase("script")){
-				return getPropertyValue("framework.model.script.path");
+				return commonServiceImpl.getConfigValue("framework.model.script.path");
 			}else if(fileType.equalsIgnoreCase("csv")){
-				return getPropertyValue("framework.file.upload.path");
+				return commonServiceImpl.getConfigValue("framework.file.upload.path");
 			}else if(fileType.equalsIgnoreCase("zip")){
-				return getPropertyValue("framework.file.zip.location");
+				return commonServiceImpl.getConfigValue("framework.file.zip.location");
 			}else if(fileType.equalsIgnoreCase("log")){
-				return getPropertyValue("framework.model.log.path");
+				return commonServiceImpl.getConfigValue("framework.model.log.path");
 			}else if(fileType.equalsIgnoreCase("xsl")){
-				return getPropertyValue("framework.file.download.path");
+				return commonServiceImpl.getConfigValue("framework.file.download.path");
 			}
 		return null;
 	}

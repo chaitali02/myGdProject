@@ -1247,20 +1247,27 @@ public class DagServiceImpl {
 	 * @param dagExec
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
 	public boolean sendSuccessNotification(SenderInfo senderInfo, Dag dag, DagExec dagExec)
-			throws FileNotFoundException, IOException {
+			throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("sending success notification...");
 		Notification notification = new Notification();
 
-		String subject = Helper.getPropertyValue("framework.email.subject");
+		String subject = commonServiceImpl.getConfigValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "SUCCESS", "Dag", dag.getName(), "COMPLETED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
-		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		String contextPath = commonServiceImpl.getConfigValue("framework.webserver.contextpath");
 		if(contextPath.startsWith("")) {
 			contextPath = "";
 		} else {
@@ -1268,12 +1275,12 @@ public class DagServiceImpl {
 			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
 		}
 		
-		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
+		String resultUrl = commonServiceImpl.getConfigValue("framework.url.dag.result");
+		resultUrl = MessageFormat.format(resultUrl, commonServiceImpl.getConfigValue("framework.webserver.host"),
+				commonServiceImpl.getConfigValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
-		String message = Helper.getPropertyValue("framework.email.body");
+		String message = commonServiceImpl.getConfigValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		notification.setSenderInfo(senderInfo);
@@ -1285,19 +1292,26 @@ public class DagServiceImpl {
 	 * @param dag
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	 */
-	public boolean sendFailureNotification(SenderInfo senderInfo, Dag dag, DagExec dagExec) throws FileNotFoundException, IOException {
+	public boolean sendFailureNotification(SenderInfo senderInfo, Dag dag, DagExec dagExec) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("sending fail notification...");
 		Notification notification = new Notification();
 		
-		String subject = Helper.getPropertyValue("framework.email.subject");
+		String subject = commonServiceImpl.getConfigValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "FAILURE", "Dag", dag.getName(), "FAILED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
-		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		String contextPath = commonServiceImpl.getConfigValue("framework.webserver.contextpath");
 		if(contextPath.startsWith("")) {
 			contextPath = "";
 		} else {
@@ -1305,12 +1319,12 @@ public class DagServiceImpl {
 			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
 		}
 		
-		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
+		String resultUrl = commonServiceImpl.getConfigValue("framework.url.dag.result");
+		resultUrl = MessageFormat.format(resultUrl, commonServiceImpl.getConfigValue("framework.webserver.host"),
+				commonServiceImpl.getConfigValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
-		String message = Helper.getPropertyValue("framework.email.body");
+		String message = commonServiceImpl.getConfigValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		

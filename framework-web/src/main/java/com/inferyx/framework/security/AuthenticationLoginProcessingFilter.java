@@ -71,6 +71,7 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			logger.info("AuthenticationLoginProcessingFilter.doFilter: Authorization missing or incorrect");
 			return;
 		}
+		//This method called only for filter
 		int limit = Integer.parseInt(Helper.getPropertyValue("framework.security.session.counter"));
 		if(SessionCounter.getActiveSessionNumber() == limit) {
 			SecurityContextHolder.clearContext();

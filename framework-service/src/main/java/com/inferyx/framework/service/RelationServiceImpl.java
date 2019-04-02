@@ -121,7 +121,7 @@ public class RelationServiceImpl {
 	public List<Map<String, Object>> getSample(String relUuid, String relVersion, int rows, ExecParams execParams,
 			RunMode runMode) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		long startTime  = System.currentTimeMillis();
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();

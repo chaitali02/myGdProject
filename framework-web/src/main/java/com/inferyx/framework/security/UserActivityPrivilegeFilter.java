@@ -60,6 +60,7 @@ public class UserActivityPrivilegeFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		try {
+			//This method called only for filter
 			String value = Helper.getPropertyValue("framework.api.checkPriv");
 			if(value.equalsIgnoreCase("true")) {
 				HttpServletRequest req = (HttpServletRequest) request;
