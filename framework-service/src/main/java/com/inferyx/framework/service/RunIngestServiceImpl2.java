@@ -820,7 +820,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String fileName = ingest.getSourceDetail().getValue();			
 						
 						//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
-						sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
+						sourceFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
 						if(sourceFilePathUrl.contains(".db")) {
 							sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
 						}
