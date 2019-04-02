@@ -977,11 +977,13 @@ public class DatapodServiceImpl {
 //				} 
 //				
 				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
+				Integer precision = StringUtils.isBlank(compareMetaData.getSourcePrecision()) ? null : Integer.parseInt(compareMetaData.getSourcePrecision());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
 					attribute.setAttributeId(i);
 					attribute.setLength(length);
 					attribute.setType(compareMetaData.getSourceType());
+					attribute.setPrecision(precision);
 					attributes.add(attribute);
 				} else {
 					Attribute attribute = new Attribute();
@@ -993,6 +995,7 @@ public class DatapodServiceImpl {
 					attribute.setPartition("N");
 					attribute.setAttributeId(i);
 					attribute.setActive("Y");
+					attribute.setPrecision(precision);
 					
 					attributes.add(attribute);
 				}

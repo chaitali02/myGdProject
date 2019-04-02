@@ -1,8 +1,8 @@
 {
-	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73060",
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73061",
 	"version" : "1464977196",
-	"name" : "file_upload_s3",
-	"desc" : "S3 Data Source to upload file",
+	"name" : "file_data_s3",
+	"desc" : "S3 Data Source to store data in parquet file",
 	"createdBy" : {
 		"ref" : {
 			"type" : "user",
@@ -29,6 +29,6 @@
 	"port" : "",
 	"username" : "",
 	"password" : "",
-	"path" : "s3n://inferyx/user/hive/warehouse/framework/upload/",
+	"path" : "s3n://inferyx/user/hive/warehouse/framework/data/",
 	"sessionParameters" : ""
 }

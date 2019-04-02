@@ -258,13 +258,14 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Types
+                                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
                                                        <span class="required" aria-required="true"> * </span>
                                                     </label>
                                                     <div class="col-md-6">
+                                                        
                                                         <select
-                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types | orderBy : 'caption'"
-                                                        ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type)">
+                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types"
+                                                        ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type,true)">
                                                     </select>
                                                     </div>
                                                 </div>
@@ -292,7 +293,7 @@
                                                     <span class="required" aria-required="true"> * </span>
                                                 </label>
                                                 <div class="col-md-2 col-sm-2 col-xs-12">
-                                                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType"
+                                                    <select class="form-control" ng-disabled="{{mode}} || isSourceTypeDisable"data-ng-model="selectSourceType"
                                                         ng-options="r for r in SourceTypes" ng-change="selectType()"
                                                         required>
                                                     </select>
@@ -307,20 +308,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-group" ng-if="report.type =='dq'">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Info
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Attribute Filter
                                                 </label>
                                                 <div class="col-md-6">
-                                                  <tags-input class="tag-scroll" ng-model="attributeRefTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+                                                  <tags-input class="tag-scroll" ng-model="$parent.attributeRefTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
                                                     add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
                                                     <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                                                       load-on-empty="true">
                                                     </auto-complete>
                                                   </tags-input>
                                                 </div>
-                                                <!-- <div class="col-md-1">
+                                                <div class="col-md-1">
                                                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                                                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
-                                                </div> -->
+                                                </div>
                                             </div>
 
                                             <div class="form-group">

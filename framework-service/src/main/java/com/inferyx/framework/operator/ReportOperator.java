@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -99,7 +100,7 @@ public class ReportOperator implements IOperator {
 		return generateSelect(report, refKeyMap, otherParams, execParams, runMode)
 		.concat(getFrom())
 		.concat(generateFrom(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-		.concat(generateWhere())
+		.concat(generateWhere(report))
 		.concat(generateFilter(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 		.concat(generateGroupBy(report, refKeyMap, otherParams, execParams))
 		.concat(generateHaving(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
@@ -166,8 +167,24 @@ public class ReportOperator implements IOperator {
 		return builder.toString();
 	}
 
-	public String generateWhere () {
-		return ConstantsUtil.WHERE_1_1;
+	public String generateWhere(Report report) {
+		StringBuilder whereBuilder = new StringBuilder();
+
+		if (!report.getType().equals(MetaType.dq.toString()))
+			return ConstantsUtil.WHERE_1_1;
+		else {
+			if(report.getAttributeFilterInfo().size()>0) {
+			whereBuilder.append(ConstantsUtil.AND).append(ConstantsUtil.CONCAT).append(ConstantsUtil.BRACKET_OPEN)
+					.append("datapod_uuid,'-',attribute_id").append(ConstantsUtil.BRACKET_CLOSE).append(ConstantsUtil.IN)
+					.append(ConstantsUtil.BRACKET_OPEN).append(commaSepFilter(report.getAttributeFilterInfo()))
+					.append(ConstantsUtil.BRACKET_CLOSE);
+			return ConstantsUtil.WHERE_1_1 + whereBuilder;
+			}else {
+				return ConstantsUtil.WHERE_1_1;
+
+			}
+		}
+
 	}
 
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
@@ -209,4 +226,17 @@ public class ReportOperator implements IOperator {
 	    }*/
 		return ConstantsUtil.BLANK;
 	}
+	
+	private String commaSepFilter(List<AttributeRefHolder> list) {
+		StringBuilder attrStr = new StringBuilder();
+		String attrs = null;
+		if (list == null || list.isEmpty()) {
+			return null;
+		}
+		for (AttributeRefHolder attributeRefHolder : list) {
+			attrStr.append(ConstantsUtil.SINGLE_QUOTE).append(attributeRefHolder.getRef().getUuid()).append("-").append(attributeRefHolder.getAttrId()).append(ConstantsUtil.SINGLE_QUOTE).append(ConstantsUtil.COMMA);
+		}
+		attrs = attrStr.toString();
+		return attrs.substring(0, attrs.length() - 2);
+	}	
 }

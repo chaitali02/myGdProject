@@ -92,7 +92,8 @@ public class FormulaOperator {
 				if(!sourceAttr.getValue().equals("("))
 					builder.append(" ");
 				builder.append(sourceAttr.getValue());
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
+			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
+				
 				builder.append(" ");
 				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
 				if (value != null) {
@@ -108,27 +109,7 @@ public class FormulaOperator {
 					builder.append(value);
 
 				}
-			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams == null) {
-				builder.append(" ");
-//				String value = null;
-//				ParamList paramList = (ParamList) daoRegister.getRefObject(sourceAttr.getRef());
-//				value = paramListServiceImpl.sql(sourceAttr.getAttributeId(), paramList);
-//				builder.append(value);
-				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
-				if(value != null) {
-					boolean isNumber = Helper.isNumber(value);			
-					if(!isNumber) {
-						value = "'"+value+"'";
-					}
-				}
-				if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString()) && builder.toString().contains("date_sub(")
-						&& builder.lastIndexOf(",") != -1) {
-					builder.append("INTERVAL " + value + " DAY");
-				} else {
-					builder.append(value);
-
-				}
-			}  
+			}   
 			if (sourceAttr.getRef().getType() == MetaType.function) {
 //				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
 				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getRef().getUuid(), sourceAttr.getRef().getVersion(), sourceAttr.getRef().getType().toString(), "N");

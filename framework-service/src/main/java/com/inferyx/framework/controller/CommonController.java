@@ -390,6 +390,12 @@ public class CommonController<T> {
 		return commonServiceImpl.getOrgInfoByCurrentApp();
 	}
 	
+	@RequestMapping(value = "/getDatapodForDq", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getDatapodForDq(
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws Exception  {
+		return commonServiceImpl.getDatapodForDq();
+	}
 	
 	
 }

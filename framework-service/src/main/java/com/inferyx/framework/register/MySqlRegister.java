@@ -126,13 +126,16 @@ public class MySqlRegister {
 							attr.setKey(null);
 						}
 						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
+						if(rs.getString("DECIMAL_DIGITS") != null) {
+							attr.setPrecision(Integer.parseInt(rs.getString("DECIMAL_DIGITS")));
+						} 
 						attr.setPartition("N");
 						attr.setActive("Y");
 						attr.setDispName(colName);
 						attrList.add(attr);
 					}
 					
-					ResultSetHolder resultSetHolder=(ResultSetHolder) mySqlExecutor.executeSqlByDatasource("select count(*) from " + tableName, datasource, null);
+					ResultSetHolder resultSetHolder=(ResultSetHolder) mySqlExecutor.executeSqlByDatasource("SELECT count(*) FROM " + tableName, datasource, null);
 					ResultSet resultSet=resultSetHolder.getResultSet();
 					int count = 0;
 					while (resultSet.next()) {
