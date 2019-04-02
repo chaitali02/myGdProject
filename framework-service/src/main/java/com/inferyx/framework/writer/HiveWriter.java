@@ -48,7 +48,7 @@ public class HiveWriter implements IWriter {
 //				String[] columnList = sb.substring(0, sb.length() - 1).toString().split(",");
 //				logger.info("Partition column list: " + Arrays.asList(columnList));
 //				rsHolder.sqlContext().sql("set hive.exec.dynamic.partition.mode="
-//						+ Helper.getPropertyValue("hive.exec.dynamic.partition.mode"));
+//						+ commonServiceImpl.getConfigValue("hive.exec.dynamic.partition.mode"));
 //				// String partitionMode =
 //				// commonServiceImpl.getSessionParametresPropertyValue("hive.exec.dynamic.partition.mode",
 //				// "nonstrict");

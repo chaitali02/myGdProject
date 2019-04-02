@@ -471,7 +471,7 @@ public class ModelServiceImpl {
 			
 			//model.setName(scriptName.substring(0, scriptName.lastIndexOf(".")-1));
 						
-			scriptPath = Helper.getPropertyValue("framework.model.script.path")+"/" + scriptName;
+			scriptPath = commonServiceImpl.getConfigValue("framework.model.script.path")+"/" + scriptName;
 			//model.setScriptName(scriptLocation);
 			File scriptFile = new File(scriptPath);
 			customScriptFile.transferTo(scriptFile);
@@ -491,7 +491,7 @@ public class ModelServiceImpl {
 		return scriptPath;
 	}
 	
-	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
@@ -524,8 +524,8 @@ public class ModelServiceImpl {
 
 	public List<String> executeScript(String type, String scriptName, String execUuid, String execVersion, List<String> arguments) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Train train = (Train) commonServiceImpl.getDomainFromDomainExec(MetaType.trainExec.toString(), execUuid, execVersion);
-//		String logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
-		String scriptPath = Helper.getPropertyValue("framework.algo.script.path")+"/"+scriptName;
+//		String logPath = commonServiceImpl.getConfigValue("framework.model.log.path") + "/" + execUuid + "_" + execVersion + "_"+ train.getVersion()+".log";
+		String scriptPath = commonServiceImpl.getConfigValue("framework.algo.script.path")+"/"+scriptName;
 //		
 		logger.info("Script path to run : " + scriptPath);
 		
@@ -545,11 +545,11 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException {
+	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
 			MetaIdentifierHolder dependsOn = trainExec.getDependsOn();
-			filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
+			filePath = commonServiceImpl.getConfigValue("framework.model.train.path") + "/" + trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion() + ".log";
 		}
 		FileInputStream fstream = new FileInputStream(filePath);
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(fstream));
@@ -567,7 +567,7 @@ public class ModelServiceImpl {
 		return logList;
 	}
 	
-	public String readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public String readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type, "N");
 			MetaIdentifierHolder execDependsOn = trainExec.getDependsOn();
@@ -576,9 +576,9 @@ public class ModelServiceImpl {
 			MetaIdentifierHolder trainDependsOn = train.getDependsOn();
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(trainDependsOn.getRef().getUuid(), trainDependsOn.getRef().getVersion(), MetaType.model.toString(),"N");
 			if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + train.getUuid().replaceAll("-", "_") + "_" + train.getVersion() + "_" + trainExec.getVersion() + ".result";
+				filePath = commonServiceImpl.getConfigValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + train.getUuid().replaceAll("-", "_") + "_" + train.getVersion() + "_" + trainExec.getVersion() + ".result";
 			} else {
-				filePath = Helper.getPropertyValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.result";
+				filePath = commonServiceImpl.getConfigValue("framework.model.train.path") + "/" + train.getUuid() + "/" + train.getVersion() + "/" + trainExec.getVersion()  + "/" + "model.result";
 			}
 		}
 		//FileInputStream fstream = new FileInputStream("/user/hive/warehouse/framework/model/train/3dfc4042_00db_48f5_a075_572c5aead3ca/1530799218/1531305060/3dfc4042_00db_48f5_a075_572c5aead3ca_1530799218_1531305060.result");
@@ -608,12 +608,12 @@ public class ModelServiceImpl {
 		else if(location.contains(hdfsInfo.getHdfsURL()) && location.contains("/stages"))
 			location = StringUtils.substringBetween(location, hdfsInfo.getHdfsURL(), "/stages");
 		
-		if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/bestModel/stages"))
-			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/bestModel/stages");
-		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")) && location.contains("/stages"))
-			location = StringUtils.substringBetween(location, Helper.getPropertyValue("framework.model.train.path"), "/stages");
-		else if(location.contains(Helper.getPropertyValue("framework.model.train.path")))
-			location = location.replaceAll(Helper.getPropertyValue("framework.model.train.path"), "");
+		if(location.contains(commonServiceImpl.getConfigValue("framework.model.train.path")) && location.contains("/bestModel/stages"))
+			location = StringUtils.substringBetween(location, commonServiceImpl.getConfigValue("framework.model.train.path"), "/bestModel/stages");
+		else if(location.contains(commonServiceImpl.getConfigValue("framework.model.train.path")) && location.contains("/stages"))
+			location = StringUtils.substringBetween(location, commonServiceImpl.getConfigValue("framework.model.train.path"), "/stages");
+		else if(location.contains(commonServiceImpl.getConfigValue("framework.model.train.path")))
+			location = location.replaceAll(commonServiceImpl.getConfigValue("framework.model.train.path"), "");
 		
 		if(location.startsWith("/") && location.endsWith("/"))
 			title = location.substring(1, location.length()-1);
@@ -630,7 +630,7 @@ public class ModelServiceImpl {
 
 			response.setHeader("filename",""+fileName + ".pmml");
 			
-			File file = new File(Helper.getPropertyValue("framework.model.train.path") +"/"+location + "/" + fileName + ".pmml");
+			File file = new File(commonServiceImpl.getConfigValue("framework.model.train.path") +"/"+location + "/" + fileName + ".pmml");
 
 			if (file.exists()) {
 				DownloadExec downloadExec = new DownloadExec();
@@ -711,7 +711,7 @@ public class ModelServiceImpl {
 //			
 //			String modelName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());
 //			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), simulateExec.getVersion());	
-//			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.simulate.path"), filePath);
+//			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), commonServiceImpl.getConfigValue("framework.model.simulate.path"), filePath);
 //			
 //			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 //			Object result = null;
@@ -1099,7 +1099,7 @@ public class ModelServiceImpl {
 				 * 
 				 */
 //				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-//					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//					logPath = commonServiceImpl.getConfigValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
 //					logger.info(" Custom log path : " + logPath);
 //				}
 //				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
@@ -1120,7 +1120,7 @@ public class ModelServiceImpl {
 			trainExec.setAppInfo(train.getAppInfo());	
 			//iModelExecDao.save(modelExec);
 //			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-//				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//				logPath = commonServiceImpl.getConfigValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
 //				logger.info(" Custom log path : " + logPath);                                                                                                         
 //				customLogger.writeLog(this.getClass(), 
 //						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
@@ -1226,7 +1226,7 @@ public class ModelServiceImpl {
 		runTrainServiceImpl.setModelType(model.getType());
 		runTrainServiceImpl.setModelServiceImpl(this);
 		if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) 
-			runTrainServiceImpl.setLogPath(Helper.getPropertyValue("framework.model.train.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log");
+			runTrainServiceImpl.setLogPath(commonServiceImpl.getConfigValue("framework.model.train.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log");
 		runTrainServiceImpl.setExecFactory(execFactory);
 		runTrainServiceImpl.setSecurityServiceImpl(securityServiceImpl);
 		runTrainServiceImpl.setTrainExec(trainExec);
@@ -1255,7 +1255,7 @@ public class ModelServiceImpl {
 		String fileName = trainExec.getUuid() + "_" + trainExec.getVersion() + "_" + dependsOn.getRef().getVersion()
 				+ ".log";
 
-		String filePath = Helper.getPropertyValue("framework.model.log.path") + "/" + fileName;
+		String filePath = commonServiceImpl.getConfigValue("framework.model.log.path") + "/" + fileName;
 
 		try {
 			response.setContentType("text/plain");
@@ -1794,7 +1794,7 @@ public class ModelServiceImpl {
 						otherParams.put(paramListHolder.getParamName(), paramListHolder.getParamValue().getValue());
 					}					
 
-					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
+					String defaultDir = commonServiceImpl.getConfigValue("framework.model.train.path")+filePath+"/";
 					
 					Map<String, String> trainSetDetails = null;	
 					Datapod trainSetDp = null;
@@ -1816,7 +1816,7 @@ public class ModelServiceImpl {
 							trainSetDetails.put("trainSetDsType", trainSetDpDs.getType().toLowerCase());
 							if(trainSetDpDs.getType().equalsIgnoreCase(MetaType.file.toString())) {								
 								String trainPath = String.format("/%s/%s/%s", trainSetDp.getUuid(), trainSetDp.getVersion(), trainExec.getVersion());
-								String trainSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+								String trainSetDefaultPath = hdfsInfo.getHdfsURL().concat(commonServiceImpl.getConfigValue("framework.schema.Path"));
 								trainSetDefaultPath = trainSetDefaultPath.endsWith("/") ? trainSetDefaultPath : trainSetDefaultPath.concat("/");
 								trainSetSavePath = String.format("%s%s",trainSetDefaultPath, trainPath);
 								
@@ -1852,7 +1852,7 @@ public class ModelServiceImpl {
 						testSetDetails.put("testSetDsType", testSetDpDs.getType().toLowerCase());
 						if(testSetDpDs.getType().equalsIgnoreCase(MetaType.file.toString())) {
 							String testPath = String.format("/%s/%s/%s", testSetDp.getUuid(), testSetDp.getVersion(), trainExec.getVersion());
-							String testSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+							String testSetDefaultPath = hdfsInfo.getHdfsURL().concat(commonServiceImpl.getConfigValue("framework.schema.Path"));
 							testSetDefaultPath = testSetDefaultPath.endsWith("/") ? testSetDefaultPath : testSetDefaultPath.concat("/");
 							testSetSavePath = String.format("%s%s",testSetDefaultPath, testPath);
 							
@@ -1909,7 +1909,7 @@ public class ModelServiceImpl {
 					String inputSourceFileName = null;					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = MetaType.file.toString().toLowerCase();
-						String trainInputPath = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
+						String trainInputPath = commonServiceImpl.getConfigValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + trainInputPath);
 						
 						File trainInPathFile = new File(trainInputPath);
@@ -1934,7 +1934,7 @@ public class ModelServiceImpl {
 								&& !train.getRowIdentifier().isEmpty()
 								&& rowIdentifierCols != null 
 								&& !rowIdentifierCols.isEmpty()) {
-							inputSourceFileName = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input_source";
+							inputSourceFileName = commonServiceImpl.getConfigValue("framework.model.train.path")+filePath+"/"+"input_source";
 							logger.info("Saved source file name : " + inputSourceFileName);
 							
 							File inputSourceFile = new File(inputSourceFileName);
@@ -2751,7 +2751,7 @@ public class ModelServiceImpl {
 
 	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows,
 			String setType, RunMode runMode, HttpServletResponse response, Layout layout) throws Exception {
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rows > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),

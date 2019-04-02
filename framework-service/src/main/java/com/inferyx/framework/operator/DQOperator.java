@@ -828,7 +828,7 @@ public class DQOperator implements IParsable {
 	
 	public String generateAllCheckDetailFilter() {
 		try {
-			String filterValue = metadataServiceImpl.getConfigValueByName("framework.dataqual.detail.log"); // pass/fail/all
+			String filterValue = commonServiceImpl.getConfigValue("framework.dataqual.detail.log"); // pass/fail/all
 			if (StringUtils.isBlank(filterValue)) {
 				return " (1=1) ";
 			} else {
@@ -856,7 +856,7 @@ public class DQOperator implements IParsable {
 
 	public String getAllCheckDetailLimit() {
 		try {
-			String limitValue = metadataServiceImpl.getConfigValueByName("framework.dataqual.detail.limit"); // pass/fail/all
+			String limitValue = commonServiceImpl.getConfigValue("framework.dataqual.detail.limit"); // pass/fail/all
 			if (!StringUtils.isBlank(limitValue)) {
 				return LIMIT.concat(limitValue);
 			} else {

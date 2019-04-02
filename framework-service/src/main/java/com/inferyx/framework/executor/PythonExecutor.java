@@ -75,6 +75,7 @@ import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 
 //import py4j.GatewayServer;
 
@@ -86,6 +87,8 @@ import com.inferyx.framework.factory.ConnectionFactory;
 public class PythonExecutor implements IExecutor {
 	@Autowired
 	protected ConnectionFactory connectionFactory;
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 
 	static final Logger logger = Logger.getLogger(PythonExecutor.class);
 	CustomLogger customLogger = new CustomLogger();
@@ -236,7 +239,7 @@ public class PythonExecutor implements IExecutor {
 	public List<String> executTFScript(String scriptPath, String clientContext, List<String> arguments) throws Exception {
 		logger.info("Before executing tf script ");
 		try {
-			String pythonDirPath = Helper.getPropertyValue("framework.python.exec");	
+			String pythonDirPath = commonServiceImpl.getConfigValue("framework.python.exec");	
 			String command = pythonDirPath.concat(" ").concat(scriptPath);
 			
 			/*

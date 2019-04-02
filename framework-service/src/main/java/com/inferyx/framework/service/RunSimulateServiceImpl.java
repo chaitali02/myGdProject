@@ -450,7 +450,7 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 			String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(),
 					simulateExec.getVersion());
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(),
-					Helper.getPropertyValue("framework.model.simulate.path"), filePath);
+					commonServiceImpl.getConfigValue("framework.model.simulate.path"), filePath);
 
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Object result = null;

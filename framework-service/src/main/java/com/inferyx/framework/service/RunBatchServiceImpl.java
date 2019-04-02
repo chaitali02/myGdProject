@@ -303,7 +303,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Batch execution FAILED.", dependsOn);
 			throw new Exception((message != null) ? message : "Batch execution FAILED.");
 		} finally {
-			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+			if(commonServiceImpl.getConfigValue("framework.email.enable").equalsIgnoreCase("Y")) {
 				SenderInfo senderInfo = batch.getSenderInfo();
 				if(senderInfo != null) {
 					Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());

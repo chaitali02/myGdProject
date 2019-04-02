@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class AdminServiceImpl {
 	    return new File(new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()), relativeFilePath);
 	}
 
-	public String upload(MultipartFile multiPartFile, String filename, String fileType) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public String upload(MultipartFile multiPartFile, String filename, String fileType) throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 
 		FileType fType = Helper.getFileType(fileType);
 		String directoryPath = Helper.getFileDirectoryByFileType(fType);
