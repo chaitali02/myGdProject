@@ -448,6 +448,13 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return registerService.getParamSetByRule(ruleUuid, ruleVersion);
 	}
+	@RequestMapping(value = "/getParamSetByReport", method = RequestMethod.GET)
+	public @ResponseBody String getParamSetByReport(@RequestParam("reportUuid") String reportUuid,
+			@RequestParam(value = "reportVersion", required = false) String reportVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return registerService.getParamSetByReport(reportUuid, reportVersion);
+	}
 
 	@RequestMapping(value = "/getParamSetByAlgorithm", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByAlgorithm(@RequestParam("algorithmUuid") String algorithmUuid,
