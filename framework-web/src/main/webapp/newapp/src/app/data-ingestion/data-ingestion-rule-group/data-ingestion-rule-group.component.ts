@@ -287,7 +287,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     }
     else {
       this.msgs = [];
-     // this.isSubmit = "false"
+      // this.isSubmit = "false"
       this.IsProgerssShow = "false";
       this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ingest Rule Group Saved Successfully' });
       setTimeout(() => { this.goBack() }, 1000);
