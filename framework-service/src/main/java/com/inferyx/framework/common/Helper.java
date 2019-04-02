@@ -668,13 +668,14 @@ public class Helper {
 //		return getPropertyValue(configName);
 //	}
 
-	/*public static String getPropertyValue(String key) throws FileNotFoundException, IOException {
+	//This method is specifically kept for Filter assembly    
+	public static String getPropertyValue(String key) throws FileNotFoundException, IOException {
 		Properties property = new Properties();
 		InputStream stream = Helper.class.getClassLoader().getResourceAsStream("framework.properties");
 		property.load(stream);
 		//logger.info(property.getProperty(key));
 		return property.getProperty(key);
-	}*/
+	}
 	
 	public static Set<Entry<Object, Object>>  getPropertiesList() throws FileNotFoundException, IOException {
 		Properties property = new Properties();

@@ -11,9 +11,7 @@
 package com.inferyx.framework.security;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.util.Base64;
 
 import javax.servlet.FilterChain;
@@ -73,34 +71,8 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			logger.info("AuthenticationLoginProcessingFilter.doFilter: Authorization missing or incorrect");
 			return;
 		}
-		int limit = 0;
-		try {
-			limit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.security.session.counter"));
-		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InvocationTargetException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NoSuchMethodException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (NullPointerException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		//This method called only for filter
+		int limit = Integer.parseInt(Helper.getPropertyValue("framework.security.session.counter"));
 		if(SessionCounter.getActiveSessionNumber() == limit) {
 			SecurityContextHolder.clearContext();
 

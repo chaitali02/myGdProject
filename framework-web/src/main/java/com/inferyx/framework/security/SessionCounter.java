@@ -11,8 +11,6 @@
 package com.inferyx.framework.security;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -27,15 +25,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 
 
 public class SessionCounter implements HttpSessionListener{
 	@Autowired
 	private static SystemServiceImpl systemServiceImpl;
-	@Autowired
-	CommonServiceImpl commonServiceImpl;
 	
 	private static ConcurrentHashMap<String, HttpSession> sessionMap = new ConcurrentHashMap<>();
     public static final String COUNTER = "session-counter";
@@ -43,15 +38,16 @@ public class SessionCounter implements HttpSessionListener{
     public static final Logger  logger = Logger.getLogger(SessionCounter.class);
     
 	@Override
-	public void sessionCreated(HttpSessionEvent event) throws NumberFormatException {
+	public void sessionCreated(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
 		logger.info("New session is created: "+session.toString());
         sessionMap.put(session.getId(), session);
         session.setAttribute("session-counter", this);        
         int limit = 100;
 		try {
-			limit = Integer.parseInt(commonServiceImpl.getConfigValue("framework.security.session.counter"));
-		} catch (IOException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+			//This method called only for filter
+			limit = Integer.parseInt(Helper.getPropertyValue("framework.security.session.counter"));
+		} catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
         if(sessionMap.size() == limit) {
