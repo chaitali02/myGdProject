@@ -602,7 +602,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
 						
-						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
 						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 						logger.info("temporary location: "+tempDirLocation);
 						
@@ -651,7 +651,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						String fileName = ingest.getSourceDetail().getValue();			
 						
 						//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
-						sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
+						sourceFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
 						if(sourceFilePathUrl.contains(".db")) {
 							sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
 						}
@@ -744,8 +744,8 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						logger.info("this is export block from Hive to HDFS");
 						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
 						
-//						targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
-						targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
+//						targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
+						targetFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
 						if(targetFilePathUrl.contains(".db")) {
 							targetFilePathUrl = targetFilePathUrl.replaceAll(".db", "");
 						}
@@ -871,7 +871,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
 						
-						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
 						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
 						logger.info("temporary location: "+tempDirLocation);
 						

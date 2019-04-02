@@ -218,12 +218,33 @@ public class PDFUtil {
 				cell.setAlign(HorizontalAlignment.CENTER);
 				cell.setFillColor(new Color(36, 92, 148));
 			}
+			
+			if(keySubList.size() < numCellsPerPage) {
+				final int paddingCells = numCellsPerPage - keySubList.size();
+				for(int i=0; i < paddingCells; i++) {
+					Cell<PDPage> cell = headerRow.createCell(cellSize, "-NA-");
+					cell.setFont(boldFont);
+					cell.setTextColor(Color.WHITE);
+					cell.setFontSize(10);
+//					cell.setFillColor(Color.WHITE);
+					cell.setAlign(HorizontalAlignment.CENTER);
+					cell.setFillColor(new Color(36, 92, 148));
+				}
+				
+			}
 			baseTable.addHeaderRow(headerRow);
 
 			for (final Map<String, Object> row : data) {
 				Row<PDPage> tableRow = baseTable.createRow(12);
 				for (String colName : keySubList) {
 					Cell<PDPage> cell = tableRow.createCell(cellSize, row.get(colName).toString());
+				}
+				
+				if(keySubList.size() < numCellsPerPage) {
+					final int paddingCells = numCellsPerPage - keySubList.size();
+					for(int i=0; i < paddingCells; i++) {
+						Cell<PDPage> cell = tableRow.createCell(cellSize, "");
+					}
 				}
 			}
 

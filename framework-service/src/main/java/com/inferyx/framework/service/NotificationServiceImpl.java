@@ -29,6 +29,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
@@ -41,6 +42,9 @@ import com.inferyx.framework.domain.SenderInfo;
  */
 @Service
 public class NotificationServiceImpl {
+	
+	@Autowired
+	CommonServiceImpl commonServiceImpl;
 
 	static final Logger logger = Logger.getLogger(NotificationServiceImpl.class);
 		
@@ -143,12 +147,12 @@ public class NotificationServiceImpl {
 		logger.info("inside prepareAndSenEMail method.");
 		try {
 			if(notification != null && notification.getSenderInfo() != null) {
-				notification.setFrom(Helper.getPropertyValue("framework.email.from"));
-				notification.setPassword(Helper.getPropertyValue("frameowrk.email.password"));
-				notification.setHost(Helper.getPropertyValue("framework.email.host"));
-				notification.setPort(Helper.getPropertyValue("framework.email.port"));
-//				notification.setSubject(Helper.getPropertyValue("framework.email.subject"));
-//				notification.setMessage(Helper.getPropertyValue("framework.email.body"));
+				notification.setFrom(commonServiceImpl.getConfigValue("framework.email.from"));
+				notification.setPassword(commonServiceImpl.getConfigValue("frameowrk.email.password"));
+				notification.setHost(commonServiceImpl.getConfigValue("framework.email.host"));
+				notification.setPort(commonServiceImpl.getConfigValue("framework.email.port"));
+//				notification.setSubject(commonServiceImpl.getConfigValue("framework.email.subject"));
+//				notification.setMessage(commonServiceImpl.getConfigValue("framework.email.body"));
 				return sendNotification(notification);
 			} else {
 				throw new RuntimeException("No credentials avilable to send mail.");

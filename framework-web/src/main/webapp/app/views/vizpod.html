@@ -258,8 +258,8 @@
 											<ui-select  name ="nodeIcon" ng-model="vizpoddata.colorPalette"  theme="" ng-disabled="{{mode}}"   on-select="onChangeColorPalette(vizpoddata.colorPalette)" append-to-body="true">
 												<ui-select-match  >
 													<div style="margin-top:0px;">
-														<span  ng-if="vizpoddata.colorPalette !='Random'" style="background-color:{{code}};width:10px;padding-right:20px;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
-														<span  ng-if="vizpoddata.colorPalette =='Random'">{{vizpoddata.colorPalette}}</span>
+														<span  ng-if="vizpoddata.colorPalette !='Standard' " style="background-color:{{code}};width:10px;padding-right:20px;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
+														<span  ng-if="vizpoddata.colorPalette =='Standard' ">{{vizpoddata.colorPalette}}</span>
 
 													</div>
 												</ui-select-match>

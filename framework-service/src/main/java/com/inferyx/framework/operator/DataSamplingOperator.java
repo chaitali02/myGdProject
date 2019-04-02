@@ -188,7 +188,7 @@ public class DataSamplingOperator implements IOperator, Serializable {
 		rsHolder.setTableName(tableName);
 		if(destDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 				|| destDS.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-			String defaultPath = "file://".concat(Helper.getPropertyValue("framework.schema.Path"));
+			String defaultPath = "file://".concat(commonServiceImpl.getConfigValue("framework.schema.Path"));
 			defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
 			String filePathUrl = String.format("%s/%s/%s/%s", defaultPath, locationDatapod.getUuid(), locationDatapod.getVersion(), baseExec.getVersion());
 			sparkExecutor.registerAndPersistDataframe(rsHolder, locationDatapod, SaveMode.Append.toString(), filePathUrl, null, "true", false);

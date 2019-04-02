@@ -269,7 +269,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
-			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+			if(commonServiceImpl.getConfigValue("framework.email.enable").equalsIgnoreCase("Y")) {
 				SenderInfo senderInfo = dag.getSenderInfo();
 				if(senderInfo != null) {	
 					Status latestStatus = Helper.getLatestStatus(dagExec.getStatusList());

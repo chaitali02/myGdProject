@@ -97,13 +97,12 @@
               <i class=" fa fa-upload" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-
-
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
               ng-class="(showGraphDiv ||isEditInprogess ==true || isEditVeiwError ==true) ? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
+          
             <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false || (isDataInpogress ==true))? 'currentpage':'notcurrentpage'"
               ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata):isShowDatastore ==true ? showDatastrores(datapoddata):broadcastRefreshData()"
               data-toggle="tooltip" data-placement="top" tooltip>
@@ -175,7 +174,7 @@
               <h3 style="font-size:14px;color:red">{{datamessage}}</h3>
             </div>
 
-            <div ng-if="!isDataInpogress ">
+            <div ng-if="!isDataInpogress && !isDataError">
               <div class="row">
                 <div class="col-md-6 col-sm-6">
                   <div class="dataTables_length" id="sample_1_length">

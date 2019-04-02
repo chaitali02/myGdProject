@@ -829,8 +829,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onChipsRemove = function (index, filterIndex) {
-    debugger
-
     $scope.filterTag.splice(index, 1);
     $scope.selectedAttributeValue[filterIndex] = null;
     var noSelect = { "id": null, "value": "-Select-" }
@@ -1141,7 +1139,10 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         filterinfoArray.push(filterInfo);
         if(data.vizpod.vizpodInfo.groups.length >0 &&  ["bar-chart","line-chart"].indexOf(data.vizpod.vizpodInfo.type)!=-1){
           var filterInfo1={};
-          filterInfo1.ref=filterInfo.ref;
+          var ref={};
+          ref.uuid= data.vizpod.vizpodInfo.groups[0].ref.uuid;
+          ref.type= data.vizpod.vizpodInfo.groups[0].ref.type;
+          filterInfo1.ref=ref;
           filterInfo1.attrId=data.vizpod.vizpodInfo.groups[0].attributeId;
           filterInfo1.value=data.vizpod.dataPoint[data.dataobj.x][data.vizpod.vizpodInfo.groups[0].attributeName];
           filterinfoArray.push(filterInfo1);

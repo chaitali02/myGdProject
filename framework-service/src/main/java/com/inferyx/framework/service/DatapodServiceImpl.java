@@ -673,7 +673,7 @@ public class DatapodServiceImpl {
 				throw new Exception("CSV file name contains white space or special character");
 			}
 			
-			String directory = Helper.getPropertyValue("framework.file.upload.path");
+			String directory = commonServiceImpl.getConfigValue("framework.file.upload.path");
 			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
 		
 		
@@ -966,21 +966,26 @@ public class DatapodServiceImpl {
 		
 		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, targetDS, sourceTableName);
 		List<Attribute> attributes = new ArrayList<>();
-		int i = 0;
+		List<Attribute> newAttrList = new ArrayList<>();
+		
+		int maxAttrId = 0;
+		for(Attribute attribute : targetDatapod.getAttributes()) {
+			if(maxAttrId <= attribute.getAttributeId()){
+				maxAttrId = attribute.getAttributeId();
+			}
+		}
+		
 		for(CompareMetaData compareMetaData : comparisonResult) {
 			String propertyName = compareMetaData.getSourceAttribute();
 			if(propertyName != null && !propertyName.isEmpty()) {
 				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
-//				String attrType = compareMetaData.getSourceType().toLowerCase();
-//				if(attrType.contains("type")) {
-//					attrType = attrType.replaceAll("type", "");
-//				} 
-//				
+
 				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
 				Integer precision = StringUtils.isBlank(compareMetaData.getSourcePrecision()) ? null : Integer.parseInt(compareMetaData.getSourcePrecision());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
-					attribute.setAttributeId(i);
+//					attribute.setAttributeId(i);
+//					attribute.setDisplaySeq(i);
 					attribute.setLength(length);
 					attribute.setType(compareMetaData.getSourceType());
 					attribute.setPrecision(precision);
@@ -993,17 +998,27 @@ public class DatapodServiceImpl {
 					attribute.setLength(length);
 					attribute.setType(compareMetaData.getSourceType());
 					attribute.setPartition("N");
-					attribute.setAttributeId(i);
+					attribute.setAttributeId(++maxAttrId);
 					attribute.setActive("Y");
 					attribute.setPrecision(precision);
 					
-					attributes.add(attribute);
+					newAttrList.add(attribute);
 				}
-				i++;
 			}
 		}
 		
-		if(!attributes.isEmpty()) {
+		if(!attributes.isEmpty()) {	
+			if(!newAttrList.isEmpty()) {
+				for(Attribute attribute : newAttrList) {
+					attributes.add(attribute);
+				}
+			}
+			
+			for(int k=0; k < attributes.size(); k++) {
+				Attribute attribute = attributes.get(k);
+				attribute.setDisplaySeq(k);
+			}
+			
 			targetDatapod.setAttributes(attributes);
 			targetDatapod.setId(null);
 			targetDatapod.setVersion(null);
@@ -1089,9 +1104,9 @@ public class DatapodServiceImpl {
 		attrRefHolder.setAttrId(attributeId);
 		attrRefHolder.setRef(new MetaIdentifier(MetaType.datapod, datapodUuid, datapodVersion));
 		attrRefHolderList.add(attrRefHolder);
-		String limitValue = Helper.getPropertyValue("framework.histogram.sample.size");
+		String limitValue = commonServiceImpl.getConfigValue("framework.histogram.sample.size");
 		int limit = Integer.parseInt(limitValue);
-		String resultLimitValue = Helper.getPropertyValue("framework.histogram.result.size");
+		String resultLimitValue = commonServiceImpl.getConfigValue("framework.histogram.result.size");
 		int resultLimit = Integer.parseInt(resultLimitValue);
 		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode);
 	}
@@ -1205,7 +1220,7 @@ public class DatapodServiceImpl {
 			throw new RuntimeException("Datastore is not available for this datapod.");
 			
 		}
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();

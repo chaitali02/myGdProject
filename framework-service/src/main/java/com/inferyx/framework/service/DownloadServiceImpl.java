@@ -113,7 +113,7 @@ public class DownloadServiceImpl {
 			}
 			
 			String filePathUrl = Helper.getDocumentFilePath(
-					metadataServiceImpl.getConfigValueByName(defaultPathKey), metaObject.getUuid(),
+					commonServiceImpl.getConfigValue(defaultPathKey), metaObject.getUuid(),
 					metaObject.getVersion(), execVersion, metaObject.getName(), format, true);
 			String fileName = Helper.getDocumentFileName(metaObject.getName(), execVersion, format);
 

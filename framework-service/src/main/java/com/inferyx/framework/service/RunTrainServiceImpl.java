@@ -624,8 +624,8 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 				trainResult.setAlgorithm(algorithm.getName());
 				trainResult.setAlgoType(model.getType());
 
-//				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
-				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.model.train.path"), filePath);
+//				String filePathUrl = String.format("%s%s%s", commonServiceImpl.getConfigValue("framework.hdfs.URI"), commonServiceImpl.getConfigValue("framework.model.train.path"), filePath);
+				String filePathUrl = String.format("%s%s%s", commonServiceImpl.getConfigValue("framework.model.train.path"), filePath);
 				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
 				String trainingSetPath = null;
 				if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
@@ -717,7 +717,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 					testLocationDS = commonServiceImpl.getDatasourceByObject(testLocationDP);
 					String tLPath = String.format("/%s/%s/%s", testLocationDP.getUuid(), testLocationDP.getVersion(), trainExec.getVersion());
 					
-					String testSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+					String testSetDefaultPath = hdfsInfo.getHdfsURL().concat(commonServiceImpl.getConfigValue("framework.schema.Path"));
 					testSetDefaultPath = testSetDefaultPath.endsWith("/") ? testSetDefaultPath : testSetDefaultPath.concat("/");
 					testLPathFilePathUrl = String.format("%s%s",testSetDefaultPath, tLPath);
 
@@ -737,7 +737,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 					trainLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(),null, train.getTrainLocation().getRef().getType().toString());
 					trainLocationDS = commonServiceImpl.getDatasourceByObject(trainLocationDP);
 					String tLPath = String.format("/%s/%s/%s", trainLocationDP.getUuid(), trainLocationDP.getVersion(), trainExec.getVersion());
-					String trainSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+					String trainSetDefaultPath = hdfsInfo.getHdfsURL().concat(commonServiceImpl.getConfigValue("framework.schema.Path"));
 					trainSetDefaultPath = trainSetDefaultPath.endsWith("/") ? trainSetDefaultPath : trainSetDefaultPath.concat("/");
 					trainLPathFilePathUrl = String.format("%s%s", trainSetDefaultPath, tLPath);
 
@@ -1000,8 +1000,8 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
 					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
 				// Save the data as csv
-				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
-				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
+				String saveFileName = commonServiceImpl.getConfigValue("framework.model.train.path")+"/csv/"+tableName;
+				String modelFileName = commonServiceImpl.getConfigValue("framework.model.train.path")+"/"+model.getName();
 				IExecutor exec = execFactory.getExecutor(datasource.getType());
 				exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
 				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();

@@ -461,7 +461,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
         "submenu": [
             { "name": "viewdataquality", "type": "dq", "uuid": "null", "caption": "Rule" },
             { "name": "viewdataqualitygroup", "type": "dqgroup", "uuid": "null", "caption": "Rule Group" },
-            { "name": "paramlistdq", "type": "paramlist", "typeCount": "paramlistdq", "uuid": "null", "caption": "Parameter List" },
+            { "name": "paramlistdq", "type": "paramlistdq", "typeCount": "paramlistdq", "uuid": "null", "caption": "Parameter List" },
             { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" },
             // { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
 

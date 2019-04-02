@@ -411,12 +411,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	};
 
 	$scope.getGridStyleDatastore = function () {
+		console.log($scope.filteredRowsDatastore.length)
 		var style = {
 			'margin-top': '10px',
 			'margin-bottom': '10px',
 		}
 		if ($scope.filteredRowsDatastore && $scope.filteredRowsDatastore.length > 0) {
-			style['height'] = (($scope.filteredRowsDatastore.length < 10 ? $scope.filteredRowsDatastore.length * 50 : 400) + 50) + 'px';
+			style['height'] = (($scope.filteredRowsDatastore.length < 5 ? $scope.filteredRowsDatastore.length * 40 : 200) + 40) + 'px';
 		}
 		else {
 			style['height'] = "100px";
@@ -515,7 +516,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.gridOptionsDatapod.onRegisterApi = function (gridApi) {
 		$scope.gridApi = gridApi;
 		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-		debugger;
+		
 	};
 
 	$scope.getGridStyle = function () {
@@ -847,7 +848,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isDataError = true;
 			$scope.msgclass = "errorMsg"
 			$scope.datamessage = "Some Error Occurred";
-			$scope.isDataInpogress = true;
+			$scope.isDataInpogress = false;
 			$scope.spinner = false;
 		}
 	}

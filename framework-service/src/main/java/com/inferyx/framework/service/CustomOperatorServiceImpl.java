@@ -397,7 +397,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			RunMode runMode, Layout layout) throws Exception {
 		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid,
 				operatorExecVersion, MetaType.operatorExec.toString());
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
 			

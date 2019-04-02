@@ -6,7 +6,7 @@
         }
     },
     "cache" : "Y",
- "attributes" : [ 
+    "attributes" : [ 
         {
             "attributeId" : 0,
             "displaySeq" : 0,
@@ -22,7 +22,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 2,
+            "attributeId" : 1,
             "displaySeq" : 1,
             "name" : "rule_exec_version",
             "type" : "integer",
@@ -36,7 +36,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 3,
+            "attributeId" : 2,
             "displaySeq" : 2,
             "name" : "rule_exec_time",
             "type" : "varchar",
@@ -50,7 +50,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 4,
+            "attributeId" : 3,
             "displaySeq" : 3,
             "name" : "rule_uuid",
             "type" : "varchar",
@@ -64,7 +64,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 5,
+            "attributeId" : 4,
             "displaySeq" : 4,
             "name" : "rule_version",
             "type" : "integer",
@@ -78,7 +78,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 6,
+            "attributeId" : 5,
             "displaySeq" : 5,
             "name" : "rule_name",
             "type" : "varchar",
@@ -92,7 +92,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 7,
+            "attributeId" : 6,
             "displaySeq" : 6,
             "name" : "rule_desc",
             "type" : "varchar",
@@ -106,7 +106,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 8,
+            "attributeId" : 7,
             "displaySeq" : 7,
             "name" : "datapod_uuid",
             "type" : "varchar",
@@ -120,7 +120,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 9,
+            "attributeId" : 8,
             "displaySeq" : 8,
             "name" : "datapod_version",
             "type" : "integer",
@@ -134,7 +134,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 10,
+            "attributeId" : 9,
             "displaySeq" : 9,
             "name" : "datapod_name",
             "type" : "varchar",
@@ -148,7 +148,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 11,
+            "attributeId" : 10,
             "displaySeq" : 10,
             "name" : "datapod_desc",
             "type" : "varchar",
@@ -162,7 +162,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 12,
+            "attributeId" : 11,
             "displaySeq" : 11,
             "name" : "attribute_id",
             "type" : "varchar",
@@ -176,7 +176,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 13,
+            "attributeId" : 12,
             "displaySeq" : 12,
             "name" : "attribute_name",
             "type" : "varchar",
@@ -190,7 +190,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 14,
+            "attributeId" : 13,
             "displaySeq" : 13,
             "name" : "attribute_desc",
             "type" : "varchar",
@@ -204,7 +204,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 15,
+            "attributeId" : 14,
             "displaySeq" : 14,
             "name" : "pii_flag",
             "type" : "varchar",
@@ -213,12 +213,12 @@
             "partition" : "N",
             "dispName" : "pii_flag",
             "active" : "Y",
-            "length" : 50,
+            "length" : 1,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 16,
+            "attributeId" : 15,
             "displaySeq" : 15,
             "name" : "cde_flag",
             "type" : "varchar",
@@ -227,12 +227,12 @@
             "partition" : "N",
             "dispName" : "cde_flag",
             "active" : "Y",
-            "length" : 50,
+            "length" : 1,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 17,
+            "attributeId" : 16,
             "displaySeq" : 16,
             "name" : "null_pass_count",
             "type" : "integer",
@@ -246,7 +246,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 18,
+            "attributeId" : 17,
             "displaySeq" : 17,
             "name" : "null_fail_count",
             "type" : "integer",
@@ -260,7 +260,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 19,
+            "attributeId" : 18,
             "displaySeq" : 18,
             "name" : "null_score",
             "type" : "decimal",
@@ -269,12 +269,12 @@
             "partition" : "N",
             "dispName" : "null_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 20,
+            "attributeId" : 19,
             "displaySeq" : 19,
             "name" : "value_pass_count",
             "type" : "integer",
@@ -288,7 +288,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 21,
+            "attributeId" : 20,
             "displaySeq" : 20,
             "name" : "value_fail_count",
             "type" : "integer",
@@ -302,7 +302,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 22,
+            "attributeId" : 21,
             "displaySeq" : 21,
             "name" : "value_score",
             "type" : "decimal",
@@ -311,12 +311,12 @@
             "partition" : "N",
             "dispName" : "value_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 23,
+            "attributeId" : 22,
             "displaySeq" : 22,
             "name" : "range_pass_count",
             "type" : "integer",
@@ -330,7 +330,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 24,
+            "attributeId" : 23,
             "displaySeq" : 23,
             "name" : "range_fail_count",
             "type" : "integer",
@@ -344,7 +344,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 25,
+            "attributeId" : 24,
             "displaySeq" : 24,
             "name" : "range_score",
             "type" : "decimal",
@@ -353,12 +353,12 @@
             "partition" : "N",
             "dispName" : "range_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 26,
+            "attributeId" : 25,
             "displaySeq" : 25,
             "name" : "datatype_pass_count",
             "type" : "integer",
@@ -372,7 +372,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 27,
+            "attributeId" : 26,
             "displaySeq" : 26,
             "name" : "datatype_fail_count",
             "type" : "integer",
@@ -386,7 +386,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 28,
+            "attributeId" : 27,
             "displaySeq" : 27,
             "name" : "datatype_score",
             "type" : "decimal",
@@ -395,12 +395,12 @@
             "partition" : "N",
             "dispName" : "datatype_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 29,
+            "attributeId" : 28,
             "displaySeq" : 28,
             "name" : "format_pass_count",
             "type" : "integer",
@@ -414,7 +414,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 30,
+            "attributeId" : 29,
             "displaySeq" : 29,
             "name" : "format_fail_count",
             "type" : "integer",
@@ -428,7 +428,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 31,
+            "attributeId" : 30,
             "displaySeq" : 30,
             "name" : "format_score",
             "type" : "decimal",
@@ -437,12 +437,12 @@
             "partition" : "N",
             "dispName" : "format_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 32,
+            "attributeId" : 31,
             "displaySeq" : 31,
             "name" : "length_pass_count",
             "type" : "integer",
@@ -456,7 +456,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 33,
+            "attributeId" : 32,
             "displaySeq" : 32,
             "name" : "length_fail_count",
             "type" : "integer",
@@ -470,7 +470,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 34,
+            "attributeId" : 33,
             "displaySeq" : 33,
             "name" : "length_score",
             "type" : "decimal",
@@ -479,12 +479,12 @@
             "partition" : "N",
             "dispName" : "length_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 35,
+            "attributeId" : 34,
             "displaySeq" : 34,
             "name" : "refint_pass_count",
             "type" : "integer",
@@ -498,7 +498,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 36,
+            "attributeId" : 35,
             "displaySeq" : 35,
             "name" : "refint_fail_count",
             "type" : "integer",
@@ -512,7 +512,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 37,
+            "attributeId" : 36,
             "displaySeq" : 36,
             "name" : "refint_score",
             "type" : "decimal",
@@ -521,12 +521,12 @@
             "partition" : "N",
             "dispName" : "refint_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 38,
+            "attributeId" : 37,
             "displaySeq" : 37,
             "name" : "dup_pass_count",
             "type" : "integer",
@@ -540,7 +540,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 39,
+            "attributeId" : 38,
             "displaySeq" : 38,
             "name" : "dup_fail_count",
             "type" : "integer",
@@ -554,7 +554,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 40,
+            "attributeId" : 39,
             "displaySeq" : 39,
             "name" : "dup_score",
             "type" : "decimal",
@@ -563,12 +563,12 @@
             "partition" : "N",
             "dispName" : "dup_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 41,
+            "attributeId" : 40,
             "displaySeq" : 40,
             "name" : "custom_pass_count",
             "type" : "integer",
@@ -582,7 +582,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 42,
+            "attributeId" : 41,
             "displaySeq" : 41,
             "name" : "custom_fail_count",
             "type" : "integer",
@@ -596,7 +596,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 43,
+            "attributeId" : 42,
             "displaySeq" : 42,
             "name" : "custom_score",
             "type" : "decimal",
@@ -605,12 +605,12 @@
             "partition" : "N",
             "dispName" : "custom_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 44,
+            "attributeId" : 43,
             "displaySeq" : 43,
             "name" : "domain_pass_count",
             "type" : "integer",
@@ -624,7 +624,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 45,
+            "attributeId" : 44,
             "displaySeq" : 44,
             "name" : "domain_fail_count",
             "type" : "integer",
@@ -638,7 +638,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 46,
+            "attributeId" : 45,
             "displaySeq" : 45,
             "name" : "domain_score",
             "type" : "decimal",
@@ -647,12 +647,12 @@
             "partition" : "N",
             "dispName" : "domain_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 47,
+            "attributeId" : 46,
             "displaySeq" : 46,
             "name" : "blankspace_pass_count",
             "type" : "integer",
@@ -666,7 +666,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 48,
+            "attributeId" : 47,
             "displaySeq" : 47,
             "name" : "blankspace_fail_count",
             "type" : "integer",
@@ -680,7 +680,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 49,
+            "attributeId" : 48,
             "displaySeq" : 48,
             "name" : "blankspace_score",
             "type" : "decimal",
@@ -689,12 +689,12 @@
             "partition" : "N",
             "dispName" : "blankspace_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 50,
+            "attributeId" : 49,
             "displaySeq" : 49,
             "name" : "expression_pass_count",
             "type" : "integer",
@@ -708,7 +708,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 51,
+            "attributeId" : 50,
             "displaySeq" : 50,
             "name" : "expression_fail_count",
             "type" : "integer",
@@ -722,7 +722,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 52,
+            "attributeId" : 51,
             "displaySeq" : 51,
             "name" : "expression_score",
             "type" : "decimal",
@@ -731,12 +731,12 @@
             "partition" : "N",
             "dispName" : "expression_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 53,
+            "attributeId" : 52,
             "displaySeq" : 52,
             "name" : "case_pass_count",
             "type" : "integer",
@@ -750,7 +750,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 54,
+            "attributeId" : 53,
             "displaySeq" : 53,
             "name" : "case_fail_count",
             "type" : "integer",
@@ -764,7 +764,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 55,
+            "attributeId" : 54,
             "displaySeq" : 54,
             "name" : "case_score",
             "type" : "decimal",
@@ -773,12 +773,12 @@
             "partition" : "N",
             "dispName" : "case_score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 56,
+            "attributeId" : 55,
             "displaySeq" : 55,
             "name" : "total_row_count",
             "type" : "integer",
@@ -792,7 +792,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 57,
+            "attributeId" : 56,
             "displaySeq" : 56,
             "name" : "total_pass_count",
             "type" : "integer",
@@ -806,7 +806,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 58,
+            "attributeId" : 57,
             "displaySeq" : 57,
             "name" : "total_fail_count",
             "type" : "integer",
@@ -820,7 +820,7 @@
             "cdeFlag" : "N"
         }, 
         {
-            "attributeId" : 1,
+            "attributeId" : 58,
             "displaySeq" : 58,
             "name" : "total_fail_percentage",
             "type" : "decimal",
@@ -829,7 +829,7 @@
             "partition" : "N",
             "dispName" : "total_fail_percentage",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 
@@ -885,7 +885,7 @@
             "partition" : "N",
             "dispName" : "score",
             "active" : "Y",
-            "length" : 5,
+            "length" : 10,
             "piiFlag" : "N",
             "cdeFlag" : "N"
         }, 

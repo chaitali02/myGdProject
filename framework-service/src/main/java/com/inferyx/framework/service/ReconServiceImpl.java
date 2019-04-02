@@ -197,7 +197,7 @@ public class ReconServiceImpl extends RuleTemplate {
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
 			String requestId, RunMode runMode, Layout layout) throws Exception {
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 

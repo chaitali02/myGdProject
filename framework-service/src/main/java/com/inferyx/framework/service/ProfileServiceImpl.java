@@ -617,7 +617,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			String download, int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy,
 			String order, String requestId, RunMode runMode, Layout layout) throws Exception {
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
@@ -686,7 +686,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		for (Profile profile : profileObjectList) {
 			try {
 				try {
-				String utcTimeZoneId = Helper.getPropertyValue("framework.utc.timezone.id");
+				String utcTimeZoneId = commonServiceImpl.getConfigValue("framework.utc.timezone.id");
 				Calendar cal = Calendar
 						.getInstance(TimeZone.getTimeZone(utcTimeZoneId != null && !StringUtils.isBlank(utcTimeZoneId) ? utcTimeZoneId : "1230"));
 				if (startDate == null && StringUtils.isEmpty(startDate)) {

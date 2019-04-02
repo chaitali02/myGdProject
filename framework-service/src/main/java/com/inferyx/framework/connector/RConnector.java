@@ -11,6 +11,8 @@
 package com.inferyx.framework.connector;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -60,8 +62,8 @@ public class RConnector implements IConnector {
 		ConnectionHolder conholder = new ConnectionHolder();
 		try {
 			// Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			String rHost = Helper.getPropertyValue("framework.r.host");
-			String rPort = Helper.getPropertyValue("framework.r.port");
+			String rHost = commonServiceImpl.getConfigValue("framework.r.host");
+			String rPort = commonServiceImpl.getConfigValue("framework.r.port");
 			RConnection rCon = null;
 			if ((rHost != null && rPort != null) && (!StringUtils.isBlank(rHost) && !StringUtils.isBlank(rPort))) {
 				int port = Integer.parseInt(rPort);
@@ -98,6 +100,18 @@ public class RConnector implements IConnector {
 //						Thread.currentThread().getStackTrace()[1].getLineNumber());
 			
 			throw new IOException(e.getCause().getMessage());
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return conholder;
 	}

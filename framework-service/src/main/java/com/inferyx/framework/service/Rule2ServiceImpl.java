@@ -577,7 +577,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
 			String requestId, RunMode runMode,String resultType, Layout layout) throws Exception {
 
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
@@ -947,7 +947,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ruleExec.toString(), "N");
 		try {
 			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString(), "N");
+					commonServiceImpl.getConfigValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString(), "N");
 
 			limit = offset + limit;
 			offset = offset + 1;
@@ -972,7 +972,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 //			} else {
 //				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 //						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					String dafaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
 //					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
 //					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
 //							ruleExec.getVersion());
@@ -1026,7 +1026,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			List<Map<String, Object>> data = new ArrayList<>();
 
 			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString(), "N");
+					commonServiceImpl.getConfigValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString(), "N");
 
 			limit = offset + limit;
 			offset = offset + 1;
@@ -1051,7 +1051,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 //			} else {
 //				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 //						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					String dafaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
 //					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
 //					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
 //							ruleExec.getVersion());

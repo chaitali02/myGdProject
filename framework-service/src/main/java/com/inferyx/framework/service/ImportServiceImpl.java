@@ -96,9 +96,9 @@ public class ImportServiceImpl {
 		return imp;
 	}
 	
-	public Export uploadFile(MultipartFile multiPartFile, String filename) throws IllegalStateException, IOException {
+	public Export uploadFile(MultipartFile multiPartFile, String filename) throws IllegalStateException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		ObjectMapper objmapper=new  ObjectMapper();
-		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		String dirPath = commonServiceImpl.getConfigValue("framework.mg.import.path");
 		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");
 		String filePath = dirPath.concat(filename);
 		File dest = new File(filePath);
@@ -123,7 +123,7 @@ public class ImportServiceImpl {
 	
 	@SuppressWarnings("unused")
 	public String saveMetaInfoDependencies(Import imprt, String fileName) throws IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		String dirPath = commonServiceImpl.getConfigValue("framework.mg.import.path");
 		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");			
 			String filePath = dirPath.concat(fileName).concat(".zip");
 			ZipFile zipFile = new ZipFile(filePath);
@@ -145,7 +145,7 @@ public class ImportServiceImpl {
 										logger.info("Found metaType \"simple\"");
 									}
 									else {
-										int level = Integer.parseInt(Helper.getPropertyValue("framework.dependency.level"));
+										int level = Integer.parseInt(commonServiceImpl.getConfigValue("framework.dependency.level"));
 											if(level>0) {											
 												boolean isPresent = checkDependency(uuid, version, metaType);
 												if(!isPresent) {
@@ -240,7 +240,7 @@ public class ImportServiceImpl {
 									logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
 							}else {
 								logger.info("No json file available of the object \""+uuid+" \" inside "/*+ imprt.getName()*/+".zip file.");
-								//int defaultLevel = Integer.parseInt(Helper.getPropertyValue("framework.dependency.level"));
+								//int defaultLevel = Integer.parseInt(commonServiceImpl.getConfigValue("framework.dependency.level"));
 							}
 						}						
 					}
@@ -493,7 +493,7 @@ public class ImportServiceImpl {
 	}
 	@SuppressWarnings("unused")
 	public String validateMetaInfoDependencies(Import imprt, String fileName) throws IOException, ParseException, JSONException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		String dirPath = Helper.getPropertyValue("framework.mg.import.path");
+		String dirPath = commonServiceImpl.getConfigValue("framework.mg.import.path");
 		dirPath = dirPath.endsWith("/") ? "" : dirPath.concat("/");	
 		String filePath = dirPath.concat(fileName).concat(".zip");
 			ZipFile zipFile = new ZipFile(filePath);
@@ -516,7 +516,7 @@ public class ImportServiceImpl {
 									logger.info("Found metaType \"simple\"");
 								}
 								else {										
-									int level = Integer.parseInt(Helper.getPropertyValue("framework.dependency.level"));
+									int level = Integer.parseInt(commonServiceImpl.getConfigValue("framework.dependency.level"));
 									if(level>0) {
 										boolean isPresent = checkDependency(uuid, version, metaType);
 										if(!isPresent) {

@@ -50,11 +50,16 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
@@ -82,6 +87,7 @@ import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.FormulaOperator;
@@ -125,6 +131,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private IngestOperator ingestOperator;	
 	@Autowired
 	private DatasetOperator datasetOperator;
+	@Autowired
+	private ConnectionFactory connectionFactory;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -308,7 +316,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						if(ingest.getTargetExtn() == null && ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							targetFileOrDirList = getMatchingDirNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
 						} else {
-							targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat());
+							targetFileOrDirList = getMatchingFileNames(targetDS.getPath(), targetFileOrDirName, ingest.getTargetExtn(), ingest.getIgnoreCase(), ingest.getTargetFormat(), sourceDS);
 						}
 						
 						for(String fileName : targetFileOrDirList) {
@@ -319,14 +327,22 @@ public class IngestServiceImpl extends RuleTemplate {
 					}
 					
 					//get source files matching the criteria
-					List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat());
+					List<String> fileNameList = getMatchingFileNames(sourceDS.getPath(), ingest.getSourceDetail().getValue(), ingest.getSourceExtn(), ingest.getIgnoreCase(), ingest.getSourceFormat(), sourceDS);
 					if(fileNameList == null || fileNameList.isEmpty()) {
 						throw new RuntimeException("File(s) \'"+ingest.getSourceDetail().getValue()+ingest.getSourceFormat().toLowerCase()+"\' not exist.");
 					}
 					
-					List<String> fileInfo = new ArrayList<>();
-					String sourceDir = "file://".concat(sourceDS.getPath());
+					String sourceDir = null;
+					if (sourceDS.getAccess().equals(ExecContext.S3.toString())) {
+						sourceDir = sourceDS.getPath();
+						if(!sourceDir.startsWith("s3n://")) {
+							sourceDir = "s3n://".concat(sourceDS.getPath());
+						}
+					} else {
+						sourceDir = "file://".concat(sourceDS.getPath());
+					}
 					String sourceFileLocation = "";
+					List<String> fileInfo = new ArrayList<>();
 					for(String fileName : fileNameList) {
 						String fileLocation = sourceDir.endsWith("/") ? sourceDir.concat(fileName) : sourceDir.concat("/").concat(fileName);
 						fileInfo.add(fileLocation);
@@ -405,10 +421,37 @@ public class IngestServiceImpl extends RuleTemplate {
 		return attrName;
 	}
 
-	public List<String> getMatchingFileNames(String filePath, String fileName, String fileExtn, String ignoreCase, String fileFormat) throws JsonProcessingException, ParseException {
+	public List<String> getMatchingFileNames(String filePath, String fileName, String fileExtn, String ignoreCase, String fileFormat, Datasource fileDatasource) throws ParseException, IOException {
 		logger.info("filePath : fileName : fileExtn : fileFormat : " + filePath + ":" + fileName + ":" + fileExtn + ":" + fileFormat);
-		File folder = new File(filePath);
-		File[] listOfFiles = folder.listFiles();
+		
+		File[] listOfFiles = null;
+        if (fileDatasource.getAccess().equals(ExecContext.S3.toString())) {
+        	String[] arrOfStr = fileDatasource.getPath().split("s3n://", 2);
+        	arrOfStr = arrOfStr[1].split("/", 2);
+        	String bucket_name = arrOfStr[0];
+        	String folderPath = arrOfStr[1];
+			IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+        	AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		    ListObjectsV2Result result = s3.listObjectsV2(bucket_name,folderPath);
+	        List<S3ObjectSummary> objects = result.getObjectSummaries();		        
+	        int i = 0;
+	        listOfFiles = new File[objects.size()];
+	        for (S3ObjectSummary os: objects) {
+	        	String s3FilePath = os.getKey();
+	        	if(!s3FilePath.startsWith("/")) {
+	        		s3FilePath = "/".concat(s3FilePath);
+	        	}
+	        	File file = new File(s3FilePath);
+	        	listOfFiles[i] = file;	        	
+	        	i++;
+	            System.out.println("* " + s3FilePath);
+	        }
+        } else {
+        	File folder = new File(filePath);
+    		listOfFiles = folder.listFiles();	        	
+        }
+		
 		List<String> fileNameList = new ArrayList<String>();
 		boolean isCaseSensitive = getCaseSensitivity(ignoreCase);
 
@@ -816,7 +859,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException {
+	public List<String> getTopicList(String dsUuid, String dsVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsUuid, dsVersion, MetaType.datasource.toString());
 		List<String> topicList = null;
 		try {
