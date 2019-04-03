@@ -40,6 +40,8 @@ import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -228,6 +230,7 @@ public class DQOperator implements IParsable {
 	private String ROWKEY_NAME = "rowkey_name";
 	private String ROWKEY_VALUE = "rowkey_value";
 	private String EMPTY = "";
+	private String PARAM_INFO = "param_info";
 	private String VERSION = "version";
 	private String DATAPOD_NAME = "datapod_name";
 	private String ATTRIBUTE_NAME = "attribute_name";
@@ -364,6 +367,10 @@ public class DQOperator implements IParsable {
 		}
 		select = select.concat(AS).concat(ATTRIBUTE_VAL).concat(COMMA)
 				.concat(generateCase(dq, tableName, attributeName)).concat(COMMA);
+		//added code for paramInfo
+		select = select.concat(pipeSepAttrsParamList(dataQualExec.getExecParams()).concat(AS)
+				.concat(PARAM_INFO).concat(COMMA));
+		
 		select = select.concat(dataQualExec.getVersion()).concat(AS).concat(VERSION);
 		return select;
 	}
@@ -508,6 +515,37 @@ public class DQOperator implements IParsable {
 		}
 		attrs = attrStr.toString();
 		attrs = attrs.substring(0, attrs.length() - 1);
+		attrs = attrs.concat(")");
+		return attrs;
+	}
+	
+	private String pipeSepAttrsParamList(ExecParams execParams)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		StringBuilder attrStr = new StringBuilder();
+		String attrs = null;
+	    int count=0;
+		if (execParams==null  ) {
+			return " '  ' " ;
+		}
+//		metadataServiceImpl.getParamValue(execParams,);
+		//,'|',
+		attrStr.append(ConstantsUtil.CONCAT).append(ConstantsUtil.BRACKET_OPEN);
+		for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+			count++;
+			attrStr.append(ConstantsUtil.SINGLE_QUOTE).append(paramListHolder.getParamName())
+					.append(ConstantsUtil.SINGLE_QUOTE).append(ConstantsUtil.COMMA).append(ConstantsUtil.SINGLE_QUOTE)
+					.append(":").append(ConstantsUtil.SINGLE_QUOTE).append(ConstantsUtil.COMMA)
+					.append(ConstantsUtil.SINGLE_QUOTE).append(paramListHolder.getParamValue().getValue())
+					.append(ConstantsUtil.SINGLE_QUOTE);
+					if(count <execParams.getParamListInfo().size()) {
+						attrStr.append(ConstantsUtil.COMMA).append(ConstantsUtil.SINGLE_QUOTE)
+					.append("|").append(ConstantsUtil.SINGLE_QUOTE).append(ConstantsUtil.COMMA);
+					}
+					}
+		
+		attrs = attrStr.toString();
+		//attrs = attrs.substring(0, attrs.length() - 7);
 		attrs = attrs.concat(")");
 		return attrs;
 	}
@@ -777,6 +815,7 @@ public class DQOperator implements IParsable {
 											.append(CASE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N)
 											.append(BRACKET_CLOSE) 
 											.append(THEN_N_Y).append(ALL_CHECK_PASS).append(COMMA)
+											.append(PARAM_INFO).append(COMMA)
 											.append(VERSION).append(FROM).append(BRACKET_OPEN)
 											.append(detailSql).append(BRACKET_CLOSE).append(BLANK).append(DQ_RESULT_READY_ALIAS);
 		
@@ -818,6 +857,7 @@ public class DQOperator implements IParsable {
 				  							.append(EXPRESSION_CHECK_PASS).append(COMMA)
 				  							.append(CASE_CHECK_PASS).append(COMMA)
 											.append(ALL_CHECK_PASS).append(COMMA)
+											.append(PARAM_INFO).append(COMMA)
 											.append(VERSION).append(FROM).append(BRACKET_OPEN)
 											.append(allCheckFlagSql).append(BRACKET_CLOSE).append(BLANK).append(DQ_RESULT_ALL_CHECK_DETAIL)
 											.append(BLANK).append(WHERE).append(BLANK).append(generateAllCheckDetailFilter())
@@ -978,6 +1018,7 @@ public class DQOperator implements IParsable {
 					
 				  .append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
 				  .append(SCORE).append(COMMA)
+				  .append(PARAM_INFO).append(COMMA)
 				  .append(VERSION)//.append(COMMA)
 //				  .append(STD_DEV_FAIL.toLowerCase())
 				  .append(FROM).append(BRACKET_OPEN)
@@ -1084,7 +1125,7 @@ public class DQOperator implements IParsable {
 				.append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT)
 				.append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
 				
-				
+				.append(PARAM_INFO).append(COMMA)
 				  .append(VERSION).append(COMMA);
 		if (dq.getThresholdInfo().getType() != null 
 				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
@@ -1213,7 +1254,7 @@ public class DQOperator implements IParsable {
 			
 				.append(COUNT).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
 					.append(SUM).append(BRACKET_OPEN).append(CASE_WHEN).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_Y).append("THEN 1 ELSE 0 END").append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
-					.append(VERSION).append(FROM).append(BRACKET_OPEN)
+					.append(PARAM_INFO).append(COMMA).append(VERSION).append(FROM).append(BRACKET_OPEN)
 					.append(summarySql1).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
 
 		sql = sql.append(GROUP_BY)
@@ -1231,6 +1272,7 @@ public class DQOperator implements IParsable {
 					.append(ATTRIBUTE_DESC).append(COMMA)
 					.append(PII_FLAG).append(COMMA)
 					.append(CDE_FLAG).append(COMMA)
+					.append(PARAM_INFO).append(COMMA)
 					.append(VERSION);
 		
 		return sql.toString();
@@ -1282,6 +1324,7 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(CASE_CHECK_PASS, SINGLE_QUOTED_N, CASE_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_Y, ALL_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_N, ALL_CHECK_F)).append(COMMA)
+					.append(PARAM_INFO).append(COMMA)
 					.append(VERSION).append(FROM).append(BRACKET_OPEN)
 					.append(resSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
 		return select.toString();

@@ -876,7 +876,7 @@ DatavisualizationModule.directive('graphDirective', function (CommonService, dag
 });
 
 
-DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootScope, sortFactory) {
+DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootScope, sortFactory,COLORPALETTE) {
   return {
     scope: {
       data: "=",
@@ -887,8 +887,12 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
     },
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
-        $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"];
+        $scope.chartcolor =  COLORPALETTE.Random_4;//["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"];
         var data =$scope.data;
+        if($scope.objdetail.vizpodInfo.colorPalette !=null &&  $scope.objdetail.vizpodInfo.colorPalette !="Standard" ){
+          var str=$scope.objdetail.vizpodInfo.colorPalette.replace(" ", "_");
+          $scope.chartcolor=COLORPALETTE[str];
+        }
         $scope.objdetail.dataPoint=data;
         var keyPro ;
         if($scope.column.keys[0].ref.type !='formula'){
@@ -1008,7 +1012,7 @@ DatavisualizationModule.directive('scoreCard', function (COLORPALETTE) {
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
        var colorCodeArray= COLORPALETTE.Random_4;
-       if($scope.data.vizpodInfo.colorPalette !=null && $scope.data.vizpodInfo.colorPalette !="Random" ){
+       if($scope.data.vizpodInfo.colorPalette !=null &&  $scope.data.vizpodInfo.colorPalette !="Standard" ){
           var str=$scope.data.vizpodInfo.colorPalette.replace(" ", "_");
           colorCodeArray=COLORPALETTE[str];
         }

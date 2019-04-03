@@ -746,10 +746,14 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						saveMode = SaveMode.OVERWRITE.toString();
 					}
 					
-					
-					
 					//writing to target		
 					if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+						targetFilePathUrl = targetDS.getPath();
+						if(!targetFilePathUrl.endsWith("/")) {
+							targetFilePathUrl = targetFilePathUrl.concat("/");
+						}
+						targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
+						
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName,
 								saveMode, ingest.getTargetFormat(), targetHeader);
 					} else {
@@ -816,7 +820,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String fileName = ingest.getSourceDetail().getValue();			
 						
 						//sourceFilePathUrl = String.format("%s/%s/%s", "hdfs://"+sourceDS.getHost()+":8020", sourceDS.getPath(), fileName);
-						sourceFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
+						sourceFilePathUrl = String.format("%s/%s/%s", commonServiceImpl.getConfigValue("hive.fs.default.name"), sourceDS.getPath(), fileName);
 						if(sourceFilePathUrl.contains(".db")) {
 							sourceFilePathUrl = sourceFilePathUrl.replaceAll(".db", "");
 						}
@@ -1192,6 +1196,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						
 						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
+							targetFilePathUrl = targetDS.getPath();
+							if(!targetFilePathUrl.endsWith("/")) {
+								targetFilePathUrl = targetFilePathUrl.concat("/");
+							}
+							targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
 							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl,
 									tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						} else {

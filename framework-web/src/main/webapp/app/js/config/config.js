@@ -89,7 +89,7 @@ InferyxApp.constant('COLORPALETTE',{
     Palette_1:["#4a4e4d", "#0e9aa7","#3da4ab", "#f6cd61" ,"#fe8a71"],
     Palette_2:["#008744","#0057e7","#d62d20","#ffa700","#29a8ab"],
     Palette_3:["#edc951","#eb6841","#cc2a36","#4f372d","#00a0b0"],
-    Random_4:["#7dcea0", "#3598dc","#32c5d2","#8E44AD","#f8c471", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"] //Don't change key value
+    Random_4:["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"] //Don't change key value
  });
 
 InferyxApp.constant('CF_SAMPLE',{

@@ -1,6 +1,6 @@
 {
   "uuid": "925e968d-3866-4639-a370-7929efed3a00",
-  "version": "1554148072",
+  "version": "1554235075",
   "name": "rpt_data_quality_summary",
   "desc": "Data Quality Summary",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Apr 01 15:47:52 EDT 2019",
+  "createdOn": "Tue Apr 02 15:57:55 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -34,7 +34,39 @@
   "headerAlign": "CENTER",
   "footer": "Internal Use Only",
   "footerAlign": "CENTER",
-  "filterInfo": null,
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "LIKE",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+            "version": null,
+            "name": "dq_result_summary"
+          },
+          "attributeId": 63,
+          "value": null,
+          "attributeName": "param_info",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "4bc0c430-a49d-4ef1-be85-ad3c0e2457ec",
+            "version": null,
+            "name": "paramlist_Deutsche Admin"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
   "dependsOn": {
     "ref": {
       "type": "datapod",
@@ -59,7 +91,7 @@
         },
         "value": null,
         "attrId": "15",
-        "attrName": "datapod_name",
+        "attrName": "cde_flag",
         "attrType": "varchar",
         "attrUnitType": null,
         "function": null
@@ -79,7 +111,7 @@
         },
         "value": null,
         "attrId": "3",
-        "attrName": "attribute_name",
+        "attrName": "rule_uuid",
         "attrType": "varchar",
         "attrUnitType": null,
         "function": null
@@ -99,7 +131,7 @@
         },
         "value": null,
         "attrId": "11",
-        "attrName": "rule_name",
+        "attrName": "attribute_id",
         "attrType": "varchar",
         "attrUnitType": null,
         "function": null
@@ -119,7 +151,7 @@
         },
         "value": null,
         "attrId": "8",
-        "attrName": "rule_exec_time",
+        "attrName": "datapod_version",
         "attrType": "varchar",
         "attrUnitType": null,
         "function": null
@@ -139,7 +171,7 @@
         },
         "value": null,
         "attrId": "56",
-        "attrName": "total_row_count",
+        "attrName": "total_pass_count",
         "attrType": "integer",
         "attrUnitType": null,
         "function": null
@@ -159,7 +191,7 @@
         },
         "value": null,
         "attrId": "57",
-        "attrName": "total_pass_count",
+        "attrName": "total_fail_count",
         "attrType": "integer",
         "attrUnitType": null,
         "function": null
@@ -179,7 +211,7 @@
         },
         "value": null,
         "attrId": "58",
-        "attrName": "total_fail_count",
+        "attrName": "total_fail_percentage",
         "attrType": "integer",
         "attrUnitType": null,
         "function": null
@@ -199,7 +231,7 @@
         },
         "value": null,
         "attrId": "1",
-        "attrName": "total_fail_percentage",
+        "attrName": "rule_exec_version",
         "attrType": "decimal",
         "attrUnitType": null,
         "function": null

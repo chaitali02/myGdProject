@@ -966,21 +966,26 @@ public class DatapodServiceImpl {
 		
 		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, targetDS, sourceTableName);
 		List<Attribute> attributes = new ArrayList<>();
-		int i = 0;
+		List<Attribute> newAttrList = new ArrayList<>();
+		
+		int maxAttrId = 0;
+		for(Attribute attribute : targetDatapod.getAttributes()) {
+			if(maxAttrId <= attribute.getAttributeId()){
+				maxAttrId = attribute.getAttributeId();
+			}
+		}
+		
 		for(CompareMetaData compareMetaData : comparisonResult) {
 			String propertyName = compareMetaData.getSourceAttribute();
 			if(propertyName != null && !propertyName.isEmpty()) {
 				boolean containsProperty = isPropertyInAttributeList(propertyName, targetDatapod.getAttributes());
-//				String attrType = compareMetaData.getSourceType().toLowerCase();
-//				if(attrType.contains("type")) {
-//					attrType = attrType.replaceAll("type", "");
-//				} 
-//				
+
 				Integer length = compareMetaData.getSourceLength().isEmpty() ? null : Integer.parseInt(compareMetaData.getSourceLength());
 				Integer precision = StringUtils.isBlank(compareMetaData.getSourcePrecision()) ? null : Integer.parseInt(compareMetaData.getSourcePrecision());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
-					attribute.setAttributeId(i);
+//					attribute.setAttributeId(i);
+//					attribute.setDisplaySeq(i);
 					attribute.setLength(length);
 					attribute.setType(compareMetaData.getSourceType());
 					attribute.setPrecision(precision);
@@ -993,17 +998,27 @@ public class DatapodServiceImpl {
 					attribute.setLength(length);
 					attribute.setType(compareMetaData.getSourceType());
 					attribute.setPartition("N");
-					attribute.setAttributeId(i);
+					attribute.setAttributeId(++maxAttrId);
 					attribute.setActive("Y");
 					attribute.setPrecision(precision);
 					
-					attributes.add(attribute);
+					newAttrList.add(attribute);
 				}
-				i++;
 			}
 		}
 		
-		if(!attributes.isEmpty()) {
+		if(!attributes.isEmpty()) {	
+			if(!newAttrList.isEmpty()) {
+				for(Attribute attribute : newAttrList) {
+					attributes.add(attribute);
+				}
+			}
+			
+			for(int k=0; k < attributes.size(); k++) {
+				Attribute attribute = attributes.get(k);
+				attribute.setDisplaySeq(k);
+			}
+			
 			targetDatapod.setAttributes(attributes);
 			targetDatapod.setId(null);
 			targetDatapod.setVersion(null);

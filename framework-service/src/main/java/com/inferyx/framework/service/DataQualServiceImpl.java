@@ -167,11 +167,14 @@ public class DataQualServiceImpl extends RuleTemplate {
 		iDataQualDao.save(dataQual);
 	}
 
-	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
+	public DataQualExec create(String dataQualUUID, String dataQualVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
 			List<String> datapodList, DagExec dagExec ,RunMode mode) throws Exception {
 		try {
-			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null,
+			DataQualExec dataQualExec = (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null,
 					refKeyMap, datapodList, dagExec, mode);
+			dataQualExec.setExecParams(execParams);
+			commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec);
+			return dataQualExec;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -411,7 +414,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.dqExec.toString(), "N");
+				MetaType.dqExec.toString(), "Y");
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
