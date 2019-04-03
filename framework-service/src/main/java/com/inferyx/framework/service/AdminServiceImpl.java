@@ -53,6 +53,8 @@ public class AdminServiceImpl {
 	ConcurrentHashMap taskThreadMap;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;	
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(AdminServiceImpl.class);
 
@@ -127,7 +129,7 @@ public class AdminServiceImpl {
 	public String upload(MultipartFile multiPartFile, String filename, String fileType) throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 
 		FileType fType = Helper.getFileType(fileType);
-		String directoryPath = Helper.getFileDirectoryByFileType(fType);
+		String directoryPath = helper.getFileDirectoryByFileType(fType);
 		String location = directoryPath + "/" + filename;
 		File dest = new File(location);
 		multiPartFile.transferTo(dest);

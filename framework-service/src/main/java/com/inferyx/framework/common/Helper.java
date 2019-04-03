@@ -179,7 +179,10 @@ public class Helper {
 	static
 	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
-	private static CommonServiceImpl commonServiceImpl;
+	private  CommonServiceImpl commonServiceImpl;
+	
+
+
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
 	}
@@ -902,11 +905,14 @@ public class Helper {
 				case "zip" : return FileType.ZIP;
 				case "log" : return FileType.LOG;
 				case "xsl" : return FileType.XLS;
+				case "logoimg" : return FileType.LOGOIMG;
+				case "avtarimg" : return FileType.AVTARIMG;
+				case "vizpodimg" : return FileType.VIZPODIMG;
 			}
 		return null;
 	}
 	
-	public static String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getFileDirectoryByFileType(FileType fileType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(fileType != null)
 			switch (fileType) {
 				case SCRIPT : return commonServiceImpl.getConfigValue("framework.model.script.path");
@@ -914,15 +920,17 @@ public class Helper {
 				case LOG : return commonServiceImpl.getConfigValue("framework.model.log.path");
 				case ZIP : return commonServiceImpl.getConfigValue("framework.file.zip.location");		
 				case XLS : return commonServiceImpl.getConfigValue("framework.file.download.path");		
-				case LOGOIMG : return commonServiceImpl.getConfigValue("framework.image.logo.Path");
-				case AVTARIMG : return commonServiceImpl.getConfigValue("framework.image.avtar.Path");
+				case LOGOIMG : return commonServiceImpl.getConfigValue("framework.images.logo.Path");
+				case AVTARIMG : return commonServiceImpl.getConfigValue("framework.images.avtar.Path");
+				case VIZPODIMG : return commonServiceImpl.getConfigValue("framework.images.vizpod.Path");
+
 			//	case COMMENT :return getPropertyValue("framework.file.comment.upload.path");	
 			default:
 				break;
 			}
 		return null;
 	}
-	public static String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public  String getFileDirectoryByFileType(String fileType,String type) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(fileType != null || type!=null )
 			if(type!=null&&type.equalsIgnoreCase(MetaType.comment.toString()) )	
 			{

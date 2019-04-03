@@ -15,5 +15,5 @@ package com.inferyx.framework.domain;
  *
  */
 public enum FileType {
-	SCRIPT, LOG, ZIP, CSV, XLS, TSV, PSV, PARQUET, EXCEL, PDF, LOGOIMG, AVTARIMG 
+	SCRIPT, LOG, ZIP, CSV, XLS, TSV, PSV, PARQUET, EXCEL, PDF, LOGOIMG, AVTARIMG, VIZPODIMG 
 }
