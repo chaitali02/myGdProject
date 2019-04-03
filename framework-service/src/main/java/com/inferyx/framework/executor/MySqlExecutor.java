@@ -627,10 +627,8 @@ public class MySqlExecutor implements IExecutor {
 				List<String> sourceAttrList = new ArrayList<>();
 				List<String> targetAttrList = new ArrayList<>();
 				List<Map<String, String>> sourceColDetails = new ArrayList<>();
-				while(rs.next()) {					
+				while(rs.next()) {						
 					sourceAttrList.add(rs.getString("COLUMN_NAME"));
-			/*		int type=Integer.parseInt(rs.getString("DATA_TYPE"));
-					String a=Helper.getSqlTypeName(type);*/
 					Map<String, String> sourceAttrDetails = new HashMap<>();
 					sourceAttrDetails.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
 					sourceAttrDetails.put("TYPE_NAME",Helper.getSqlTypeName(Integer.parseInt(rs.getString("DATA_TYPE"))));
@@ -658,7 +656,7 @@ public class MySqlExecutor implements IExecutor {
 					
 					comparison.setTargetAttribute(attribute.getName());
 					comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
-					comparison.setTargetType(attribute.getType());
+					comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 					
 					comparison.setStatus("");	
 					comparisonResultMap.put(attribute.getName(), comparison);
@@ -698,7 +696,7 @@ public class MySqlExecutor implements IExecutor {
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
-			comparison.setTargetType(attribute.getType());
+			comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 			comparison.setTargetPrecision(attrPrecision);
 			
 			comparison.setStatus(status);
@@ -711,7 +709,7 @@ public class MySqlExecutor implements IExecutor {
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
-			comparison.setTargetType(attribute.getType());
+			comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 			comparison.setTargetPrecision(attrPrecision);
 			
 			comparison.setStatus(Compare.DELETED.toString());
