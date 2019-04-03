@@ -905,9 +905,9 @@ public class Helper {
 				case "zip" : return FileType.ZIP;
 				case "log" : return FileType.LOG;
 				case "xsl" : return FileType.XLS;
-				case "logoimg" : return FileType.LOGOIMG;
-				case "avtarimg" : return FileType.AVTARIMG;
-				case "vizpodimg" : return FileType.VIZPODIMG;
+				case "logo" : return FileType.LOGOIMG;
+				case "avtar" : return FileType.AVTARIMG;
+				case "vizpod" : return FileType.VIZPODIMG;
 			}
 		return null;
 	}
