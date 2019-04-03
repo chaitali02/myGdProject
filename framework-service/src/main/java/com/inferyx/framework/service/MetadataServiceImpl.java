@@ -1584,7 +1584,7 @@ public class MetadataServiceImpl {
 						break;
 					}
 				}
-				
+				if(appParamList!=null)
 				for(Param param2 : appParamList.getParams()) {
 					if((StringUtils.isBlank(paramName) && param2.getParamId().equalsIgnoreCase(attributeId.toString())) 
 							|| param2.getParamName().equals(paramName)) {
