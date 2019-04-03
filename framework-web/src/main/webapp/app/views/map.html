@@ -48,14 +48,7 @@
 						 data-placement="top" tooltip ng-click="enableEdit(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-						 data-placement="top" tooltip ng-click="enableEdit(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
-							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-						</a>
-						<a title="View" data-toggle="tooltip" data-placement="top" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-						 tooltip ng-click="showView(mapdata.uuid,mapdata.version)" ng-hide="isAdd" style="height:16px;">
-							<span class="glyphicon glyphicon-file" style="color: white;"></span>
-						</a> -->
+						
 						<a title="Knowledge Graph" data-toggle="tooltip" ng-show="isDependencyShow" ng-class="(showFrom==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 data-placement="top" tooltip data-ng-click="showGraph(mapdata.uuid,mapdata.version)" style="height:14px;">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>

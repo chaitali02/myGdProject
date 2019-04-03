@@ -75,7 +75,7 @@
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowCompareMetaData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="showCompareMetaData(datapoddata)" style="height:16px;">
+              ng-hide="isAdd" data-ng-click="showCompareMetaData(datapoddata,false)" style="height:16px;">
               <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
@@ -104,7 +104,7 @@
             </a>
           
             <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false || (isDataInpogress ==true))? 'currentpage':'notcurrentpage'"
-              ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata):isShowDatastore ==true ? showDatastrores(datapoddata):broadcastRefreshData()"
+              ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata,true):isShowDatastore ==true ? showDatastrores(datapoddata):broadcastRefreshData()"
               data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>

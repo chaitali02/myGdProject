@@ -70,7 +70,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar',"long","vector"];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar',"long","vector","date"];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -903,8 +903,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		
 	};
 
-    $scope.showCompareMetaData=function(data){
-		if($scope.isShowCompareMetaData){
+    $scope.showCompareMetaData=function(data , isRefersh){
+		if($scope.isShowCompareMetaData && isRefersh==false){
 			return false
 		}
 		if($scope.checkIsInrogess () ==false){
