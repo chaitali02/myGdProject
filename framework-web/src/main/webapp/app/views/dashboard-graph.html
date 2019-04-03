@@ -143,7 +143,8 @@
               <!--Start C3 Graph Code-->
               <div ng-repeat="row in sectionRows">
                   <!-- style="min-height:440px;" -->
-                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 4 ? 12/(row.columns.length) : '3')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
+                  <!-- col-md-{{datacol.fullWidth?'12':(row.columns.length < 4 ? 12/(row.columns.length) : '3')}}  -->
+                <div  ng-class="getColWidth(row,datacol)" class="{{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
                   <!-- style="min-height:420px;" -->
                   <div class="portlet light bordered  chartBox">
                     
@@ -162,11 +163,11 @@
                           ng-show="hideIcon" >  
                        <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
-                       <a  ng-hide="['score-card'].indexOf(datacol.vizpodDetails.type) !=-1" ng-click="downloadFile(datacol.vizExecInfo)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download Data" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">  
+                       <a  ng-hide="['score-card','image'].indexOf(datacol.vizpodDetails.type) !=-1" ng-click="downloadFile(datacol.vizExecInfo)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download Data" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">  
                         <i class="fa fa-download" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
                        
-                        <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" ng-hide="['score-card'].indexOf(datacol.vizpodDetails.type) !=-1" uib-tooltip="{{datacol.vizpodDetails.showtooltiptitle}}" ng-click="datacol.fullWidth =!datacol.fullWidth;fullScreenVizpod($parent.$index,$index)" >
+                        <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" ng-hide="['score-card','image'].indexOf(datacol.vizpodDetails.type) !=-1" uib-tooltip="{{datacol.vizpodDetails.showtooltiptitle}}" ng-click="datacol.fullWidth =!datacol.fullWidth;fullScreenVizpod($parent.$index,$index)" >
                           <i class="{{datacol.vizpodDetails.iconclass}}" aria-hidden="true"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="refreshVizpod(datacol.rowNo,datacol.colNo)" data-original-title="" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">
@@ -190,7 +191,10 @@
                           <div class="bounce2"></div>
                           <div class="bounce3"></div>
                         </div>
-
+                         
+                        <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['image'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
+                          <image-directive data="datacol"></image-directiive>
+                        </div>
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['bar-chart','line-chart','area-chart'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length >0 && !IsVizpodDetailShow && datacol.isChartShow">
                           <div class="{{datacol.vizpodDetails.id}}" multi-series-chart data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" on-right-click="selectData" objdetail="datacol">
                           </div>
@@ -202,7 +206,7 @@
                           <form-card data="datacol"></form-card>
                         </div>
 
-                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.vizpodDetails.type !='score-card' && datacol.vizpodDetails.type !='form-card' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='image' && datacol.vizpodDetails.type !='heat-map' && datacol.vizpodDetails.type !='score-card' && datacol.vizpodDetails.type !='form-card' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
                            
                           <c3chart chartGroup="chart" bindto-id="{{datacol.vizpodDetails.id}}" chart-data="datacol.vizpodDetails.datapoints" chart-columns="datacol.vizpodDetails.datacolumns" chart-x="datacol.vizpodDetails.datax" enable-zoom="true" callback-function="handleCallbackGroup">
                             <chart-bar ratio="0.5" />
@@ -299,7 +303,7 @@
               <span class="caption-subject bold">{{VizpodDetail.name}}</span>
             </div>
             <div class="actions">
-              <a  ng-click="downloadFile({uuid:VizpodDetail.vizpodInfo.uuid,version:VizpodDetail.vizpodInfo.version})" class="btn btn-circle btn-icon-only btn-default fa  fa-download" ng-click="backVizpodSummary()" tooltip-placement="{{showtooltip}}" uib-tooltip="Download" ng-show="hideIcon">
+              <a  ng-click="downloadFileDetail({uuid:VizpodDetail.vizpodInfo.uuid,version:VizpodDetail.vizpodInfo.version})" class="btn btn-circle btn-icon-only btn-default fa  fa-download" ng-click="backVizpodSummary()" tooltip-placement="{{showtooltip}}" uib-tooltip="Download" ng-show="hideIcon">
               </a>
               <a class="btn btn-circle btn-icon-only btn-default" ng-click="backVizpodSummary()" tooltip-placement="{{showtooltip}}" uib-tooltip="Back" ng-show="hideIcon">
                   <i class="fa fa-time" aria-hidden="true"></i>
@@ -351,6 +355,10 @@
     <div ng-if="isDownloadDirective">
       <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" save-on-refresh="dashboardExecData.dashboard.saveOnRefresh" on-downloade="onDownloaed"></download-directive>
     </div>
+    <div ng-if="isDownloadDetailDirective">
+      <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" body="vizpodbody" on-downloade="onDownloaed"></download-directive>
+    </div>
+    
     <!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
       <div class="modal-dialog" style="width:40%">
         <div class="modal-content" style="resize: both;overflow: auto;">

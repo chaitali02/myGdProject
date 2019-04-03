@@ -618,13 +618,36 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
     //console.log(JSON.stringify($scope.sectionRows));
   }
-  $scope.getColWidth = function (row) {
+  $scope.getColWidth = function (row, col) {
+    
     var count = 0;
+    var classNo=3;
     angular.forEach(row.columns, function (val) {
-      if (!val.fullWidth)
+      if(val.vizpodDetails.type =="image"){
         count++;
+      } 
     })
-    return (count <= 4 ? 12 / (count || 1) : '3')
+    if(count ==0){
+      classNo=12/(row.columns.length);
+    }
+    else if(count >=4 || row.columns.length >=4){
+      classNo='3';
+    }
+    else{
+      var len=row.columns.length-count;
+      var tempNo =len*4;
+      if(col.vizpodDetails.type=="image")
+        classNo='4';
+      else{
+        classNo=12-tempNo;
+      }
+    }
+    if(col.fullWidth){
+      classNo=12;
+    }
+    //console.log(classNo)
+   
+    return "col-md-"+classNo;//row.columns.length < 4 ? 12/(row.columns.length) : '3'; //(count <= 4 ? 12 / (count || 1) : '3')
   }
   $scope.showDashboardGraph = function (uuid, version) {
     if($scope.checkIsInrogess () ==false){
@@ -1118,7 +1141,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.actionEvent = function (d, i, data) {
-    
+    $scope.vizpodbody=null;
     var filterinfoArray = []
     var vizpodbody = {}
     var filterInfo = {};
@@ -1159,7 +1182,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     else {
       vizpodbody = null;
     }
-
+    $scope.vizpodbody=vizpodbody;
     $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody, data)
 
   }
@@ -1578,10 +1601,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   // }
 
   $scope.onDownloaed=function(data){
+    
 		console.log(data);
 		$scope.isDownloadDatapod=data.isDownloadInprogess;
 		$scope.isDownloadDatapod=data.isDownloadInprogess;
-		$scope.isDownloadDirective=data.isDownloadDirective;
+    $scope.isDownloadDirective=data.isDownloadDirective;
+    $scope.isDownloadDetailDirective=data.isDownloadDirective;
 	}
   $scope.downloadFile = function (data) {
     if($scope.checkIsInrogess () ==false){
@@ -1592,6 +1617,22 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.download.version=data.version;
     $scope.download.type="dashboard";
     $scope.isDownloadDirective=true;
+    // $('#downloadSample').modal({
+    //   backdrop: 'static',
+    //   keyboard: false
+    // });
+
+  };
+
+  $scope.downloadFileDetail = function (data) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+    $scope.download.data = data;
+    $scope.download.uuid=data.uuid;
+    $scope.download.version=data.version;
+    $scope.download.type="vizpoddetail";
+    $scope.isDownloadDetailDirective=true;
     // $('#downloadSample').modal({
     //   backdrop: 'static',
     //   keyboard: false
