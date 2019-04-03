@@ -1619,6 +1619,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		targetDatasourceRef.type = "datasource";
 		targetDatasource.ref = targetDatasourceRef;
 		ingestJson.targetDatasource = targetDatasource;
+		
 		ingestJson.targetFormat = $scope.selectedTargetFormate;
 		var targetDetails = {};
 		var targetDetailsRef = {};
