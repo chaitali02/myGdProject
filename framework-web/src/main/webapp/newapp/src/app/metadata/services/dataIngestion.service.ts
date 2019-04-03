@@ -203,7 +203,7 @@ export class DataIngestionService {
 							dataIngestIO.filterInfo = filterInfoArray;
 						}
 					} else {
-						dataIngestIO.filterInfo = null;
+						dataIngestIO.filterInfo = [];
 					}
 
 					if (response.attributeMap) {
