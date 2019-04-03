@@ -1515,24 +1515,27 @@ public class RegisterService {
 		        	i++;
 		            System.out.println("* " + os.getKey());
 		        }
-	        }
-	        else
+	        } else {
 	        	listOfFiles = folder.listFiles(fileNameFilter);
+	        }
 	     	
 //			List<String> fileList = new ArrayList<String>();
 			Map<String, String> tablesWithPath = new Hashtable<>();
 			for (int i = 0; i < listOfFiles.length; i++) {
 //				File file = new File("s3://"+bucket_name+"/"+listOfFiles[i]);
-				if (listOfFiles[i].toString().contains(".")) {
-					String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
-					fileName=fileName.toLowerCase();
-					logger.info(fileName);
-					String path = datasource.getPath() + listOfFiles[i].getName();
-					tablesWithPath.put(fileName, path);
-				}
-				else {
-					logger.info("Directory " + listOfFiles[i].getName());
-					}								
+				try {
+					if (listOfFiles[i].toString().contains(".")) {
+						String fileName = listOfFiles[i].getName().substring(0, listOfFiles[i].getName().indexOf("."));
+						fileName=fileName.toLowerCase();
+						logger.info(fileName);
+						String path = datasource.getPath() + listOfFiles[i].getName();
+						tablesWithPath.put(fileName, path);
+					} else {
+						logger.info("Directory " + listOfFiles[i].getName());
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}								
 			}
 //			for (int i = 0; i < listOfFiles.length; i++) {
 //				if (listOfFiles[i].isFile()) {

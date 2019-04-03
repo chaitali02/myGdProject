@@ -69,6 +69,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -5332,7 +5333,22 @@ public class CommonServiceImpl<T> {
 			throws IOException, SdkClientException, AmazonServiceException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
 		ConnectionHolder conHolder = connector.getConnection();
-		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();		
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		List<String> keyList = getS3ObjectsKey(bucketName, objectKey);
+
+		// adding object/folder objectKey_$folder$ to delete, if object/folder not exist
+		// then it won't throw an exception
+		String s3TempFolder = (objectKey.endsWith("/") ? objectKey.substring(0, objectKey.lastIndexOf("/")) : objectKey)
+				.concat("_$folder$");
+		keyList.add(s3TempFolder);
+
+		// deleting all files inside object/folder objectKey along with object
+		// s3TempFolder
+		for (String key : keyList) {
+			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
+		}
+
+		// deleting object/folder objectKey
 		s3.deleteObject(new DeleteObjectRequest(bucketName, objectKey));
 		return true;
 	}
@@ -5342,29 +5358,44 @@ public class CommonServiceImpl<T> {
 		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
-		CopyObjectRequest copyObjRequest = new CopyObjectRequest(sourceBucketName, sourceObjKey, targetBucketName,
-				targetObjKey);
-		CopyObjectResult copyObjectResult = s3.copyObject(copyObjRequest);
+		CopyObjectResult copyObjectResult = s3
+				.copyObject(new CopyObjectRequest(sourceBucketName, sourceObjKey, targetBucketName, targetObjKey));
 		if (copyObjectResult != null) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	public String findS3ObjectByExtension(String bucketName, String folderLocation, String extension)  throws IOException, SdkClientException, AmazonServiceException {
+
+	public String findS3ObjectByExtension(String bucketName, String folderLocation, String extension)
+			throws IOException, SdkClientException, AmazonServiceException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
 		ListObjectsV2Result objectsV2Result = s3.listObjectsV2(bucketName, folderLocation);
 		List<S3ObjectSummary> objectSummaries = objectsV2Result.getObjectSummaries();
-		for(S3ObjectSummary objectSummary : objectSummaries) {
+		for (S3ObjectSummary objectSummary : objectSummaries) {
 			String objPath = objectSummary.getKey();
-			System.out.println("* "+objPath);
-			if(objPath.toLowerCase().endsWith(extension.toLowerCase())) {
+			logger.info(objPath);
+			if (objPath.toLowerCase().endsWith(extension.toLowerCase())) {
 				return objPath;
 			}
 		}
 		return null;
+	}
+
+	public List<String> getS3ObjectsKey(String bucketName, String folderLocation) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		ListObjectsV2Result objectsV2Result = s3.listObjectsV2(bucketName, folderLocation);
+		List<S3ObjectSummary> objectSummaries = objectsV2Result.getObjectSummaries();
+		List<String> objectKeyList = new ArrayList<>();
+		for (S3ObjectSummary objectSummary : objectSummaries) {
+			String objPath = objectSummary.getKey();
+			logger.info(objPath);
+			objectKeyList.add(objPath);
+		}
+		return objectKeyList;
 	}
 }
