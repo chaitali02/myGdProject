@@ -63,6 +63,15 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.CopyObjectResult;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -72,6 +81,8 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.connector.ConnectionHolder;
+import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
@@ -225,6 +236,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.StorageContext;
+import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
@@ -517,9 +529,8 @@ public class CommonServiceImpl<T> {
 	private PropertiesFactoryBean frameworkProperties;
 	@Autowired
 	UploadServiceImpl uploadServiceImpl;
-
-	
-	
+	@Autowired
+	private ConnectionFactory connectionFactory;
 	
 	public IngestServiceImpl getIngestServiceImpl() {
 		return ingestServiceImpl;
@@ -5316,5 +5327,68 @@ public class CommonServiceImpl<T> {
 			baseEntities.add((BaseEntity) getOneByUuidAndVersion(detailUuid, null, MetaType.datapod.toString()));
 
 		return baseEntities;
+	}
+	
+	public boolean deleteS3Object(String bucketName, String objectKey)
+			throws IOException, SdkClientException, AmazonServiceException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		List<String> keyList = getS3ObjectsKey(bucketName, objectKey);
+
+		// deleting all files inside object/folder objectKey 
+		for (String key : keyList) {
+			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
+		}
+
+		// deleting object/folder objectKey
+		s3.deleteObject(new DeleteObjectRequest(bucketName, objectKey));
+		return true;
+	}
+
+	public boolean copyS3Object(String sourceBucketName, String sourceObjKey, String targetBucketName,
+			String targetObjKey) throws IOException, SdkClientException, AmazonServiceException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		CopyObjectResult copyObjectResult = s3
+				.copyObject(new CopyObjectRequest(sourceBucketName, sourceObjKey, targetBucketName, targetObjKey));
+		if (copyObjectResult != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public String findS3ObjectByExtension(String bucketName, String folderLocation, String extension)
+			throws IOException, SdkClientException, AmazonServiceException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		ListObjectsV2Result objectsV2Result = s3.listObjectsV2(bucketName, folderLocation);
+		List<S3ObjectSummary> objectSummaries = objectsV2Result.getObjectSummaries();
+		for (S3ObjectSummary objectSummary : objectSummaries) {
+			String objPath = objectSummary.getKey();
+			logger.info(objPath);
+			if (objPath.toLowerCase().endsWith(extension.toLowerCase())) {
+				return objPath;
+			}
+		}
+		return null;
+	}
+
+	public List<String> getS3ObjectsKey(String bucketName, String folderLocation) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.S3.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
+		ListObjectsV2Result objectsV2Result = s3.listObjectsV2(bucketName, folderLocation);
+		List<S3ObjectSummary> objectSummaries = objectsV2Result.getObjectSummaries();
+		List<String> objectKeyList = new ArrayList<>();
+		for (S3ObjectSummary objectSummary : objectSummaries) {
+			String objPath = objectSummary.getKey();
+			logger.info(objPath);
+			objectKeyList.add(objPath);
+		}
+		return objectKeyList;
 	}
 }

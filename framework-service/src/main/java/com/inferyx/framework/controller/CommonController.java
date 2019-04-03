@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -397,5 +399,15 @@ public class CommonController<T> {
 		return commonServiceImpl.getDatapodForDq();
 	}
 	
+	@RequestMapping(value = "/deleteS3Object", method = RequestMethod.GET)
+	public boolean deleteS3Object(@RequestParam(value = "bucketName") String bucketName,
+			@RequestParam(value = "objectKey") String objectKey) throws AmazonServiceException, SdkClientException, IOException {
+		return commonServiceImpl.deleteS3Object(bucketName, objectKey);
+	}
 	
+	@RequestMapping(value = "/getS3ObjectsKey", method = RequestMethod.GET)
+	public List<String> getS3ObjectsKey(@RequestParam(value = "bucketName") String bucketName,
+			@RequestParam(value = "folderPath") String folderPath) throws AmazonServiceException, SdkClientException, IOException {
+		return commonServiceImpl.getS3ObjectsKey(bucketName, folderPath);
+	}
 }

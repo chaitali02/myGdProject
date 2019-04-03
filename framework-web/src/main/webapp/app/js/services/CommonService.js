@@ -103,6 +103,15 @@
         responseType: 'arraybuffer'
       }).then(function (response) { return response })
     };
+    factory.downloadFilePost = function (url,data) {
+    	var fullUrl = baseUrl + url
+      return $http({
+        url: fullUrl,
+        method: "POST",
+        data:JSON.stringify(data),
+        responseType: 'arraybuffer'
+      }).then(function (response) { return response })
+    };
 
     factory.findBaseEntityStatusByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
       var url = $location.absUrl().split("app")[0]
@@ -1336,20 +1345,35 @@
     return deferred.promise;
   }
   
-  this.downloadFile=function(url){
+  this.downloadFile=function(url,data){
     var deferred = $q.defer();
+      if(data ==null){
       CommonFactory.downloadFile(url).then(function(response){onSuccess(response)},function(response){onError(response)});
         var onSuccess=function(response){
-          deferred.resolve({
-              data:response
-           });
+            deferred.resolve({
+                data:response
+            });
         }
         var onError = function (response) {
           deferred.reject({
-            data: response
-          })
+              data: response
+            })
         }
-       return deferred.promise;
+      }
+      else{
+        CommonFactory.downloadFilePost(url,data).then(function(response){onSuccess(response)},function(response){onError(response)});
+        var onSuccess=function(response){
+            deferred.resolve({
+                data:response
+            });
+        }
+        var onError = function (response) {
+          deferred.reject({
+              data: response
+            })
+        }
+      }
+      return deferred.promise;
   }
    
   });
