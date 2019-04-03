@@ -1209,7 +1209,8 @@ public class Helper {
 	
 	public String getPathByDataSource(Datasource datasource) {
 //		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
-		return String.format("%s/%s", datasource.getPath());
+//		return String.format("%s/%s", datasource.getPath());
+		return datasource.getPath();
 	}
 	
 	public static Pattern getRegexByFileInfo(String fileName, String fileExtn, String fileFormat, boolean isCaseSensitive) {
