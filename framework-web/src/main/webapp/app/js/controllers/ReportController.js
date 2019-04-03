@@ -246,9 +246,17 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			}
 		}
 	}
-
+	
+	
 	$scope.onExecute=function(data){
 		$scope.isParamModelEnable=data.isParamModelEnable;
+		if(data.isExecutionInprogess){
+			$scope.message = "Report Submitted Successfully"
+			notify.type = 'success',
+			notify.title = 'Success',
+			notify.content = $scope.message;
+			$scope.$emit('notify', notify);
+		}
 	}
 
 	/*$scope.onChangeParamType = function () {

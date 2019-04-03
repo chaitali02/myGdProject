@@ -2204,12 +2204,13 @@ InferyxApp.directive('execParamDirective', function (CommonService,$filter) {
           console.log(JSON.stringify(execParams))
           $scope.executeCall (execParams);
           setTimeout(function(){
-          $scope.onExecute({isParamModelEnable:false});
+          $scope.onExecute({isParamModelEnable:false,isExecutionInprogess:true});
          },100);
         }
 
         
         $scope.executeCall = function (data) {
+          
           CommonService.execute($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
           var onSuccessExecute = function (response) {
             $scope.execData = response;
