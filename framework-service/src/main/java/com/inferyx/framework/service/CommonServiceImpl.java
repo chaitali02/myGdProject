@@ -5336,14 +5336,7 @@ public class CommonServiceImpl<T> {
 		AmazonS3 s3 = (AmazonS3) conHolder.getConObject();
 		List<String> keyList = getS3ObjectsKey(bucketName, objectKey);
 
-		// adding object/folder objectKey_$folder$ to delete, if object/folder not exist
-		// then it won't throw an exception
-		String s3TempFolder = (objectKey.endsWith("/") ? objectKey.substring(0, objectKey.lastIndexOf("/")) : objectKey)
-				.concat("_$folder$");
-		keyList.add(s3TempFolder);
-
-		// deleting all files inside object/folder objectKey along with object
-		// s3TempFolder
+		// deleting all files inside object/folder objectKey 
 		for (String key : keyList) {
 			s3.deleteObject(new DeleteObjectRequest(bucketName, key));
 		}

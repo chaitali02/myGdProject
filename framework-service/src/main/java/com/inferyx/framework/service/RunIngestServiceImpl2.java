@@ -1219,7 +1219,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						}
 						
 						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {							
-							String tempDirName = "temp_dir".concat("_").concat(ingestExec.getUuid());
+							String tempDirName = "temp_dir".concat("/").concat(ingestExec.getUuid());
 							String defaultPath = targetDS.getPath();
 							defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
 							String tempDir = defaultPath.concat(tempDirName).concat("/");
