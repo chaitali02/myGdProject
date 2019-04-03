@@ -238,6 +238,11 @@ public class JoinKeyOperator {
 			} else {
 				return generateRHSOperand(operandValue, filterInfo, filterSource);
 			}			
+		} else if ((filterInfo.getOperator().trim().equalsIgnoreCase("LIKE") 
+					|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT LIKE")) 
+				&& !filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.simple)) {
+				operandValue.set(1, operandValue.get(1).replaceAll("^'", "'%").replaceAll("'$", "%'"));
+				return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
 		} else {
 			if(operandValue.size() == 1)
 				return String.format("(%s %s)", operandValue.get(0), filterInfo.getOperator());
