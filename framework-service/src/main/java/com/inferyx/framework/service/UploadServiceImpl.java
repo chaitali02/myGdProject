@@ -64,6 +64,8 @@ public class UploadServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private Helper helper;
 
 	public UploadExec create(MetaIdentifierHolder dependsOn) throws Exception {
 		LOGGER.info("Creating uploadExec ...");
@@ -92,7 +94,7 @@ public class UploadServiceImpl {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
-		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String directoryLocation = helper.getFileDirectoryByFileType(type);
 		String metaUuid = null;
 		String metaVersion = null;
 		if (fileName == null) {
@@ -172,14 +174,14 @@ public class UploadServiceImpl {
 		String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 		String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));
 		FileType type = Helper.getFileType(fileType);
-		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String directoryLocation = helper.getFileDirectoryByFileType(type);
 		String fileLocation = null;
 		String metaUuid = null;
 		String metaVersion = null;
 		UploadExec uploadExec = null;
 		MetaIdentifier metaIdentifier = null;
 		MetaIdentifierHolder dependsOn = null;
-		String locationUi = Helper.getFileDirectoryByFileType(type) + "/" + fileName;
+		String locationUi = helper.getFileDirectoryByFileType(type) + "/" + fileName;
 
 		if (uuid != null && !uuid.isEmpty() && !fileType.equalsIgnoreCase("script")) {
 			fileName = uuid + "." + fileExtention;

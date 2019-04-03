@@ -11,7 +11,11 @@
 package com.inferyx.framework.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +64,8 @@ public class DownloadServiceImpl {
 	private DocumentGenServiceImpl documentGenServiceImpl;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private Helper helper;
 
 	public DownloadExec create(MetaIdentifierHolder dependsOn) throws Exception {
 		LOGGER.info("Creating downloadExec ...");
@@ -231,6 +238,62 @@ public class DownloadServiceImpl {
 			throw new RuntimeException("Unsupported file format provided ...");
 		}
 
+		return response;
+	}
+
+	public HttpServletResponse download(String fileType, String filePath, HttpServletResponse response)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		
+		
+		try {
+			FileType type = Helper.getFileType(fileType);
+
+			String directoryLocation = helper.getFileDirectoryByFileType(type);
+			filePath = directoryLocation + "/" + filePath;
+			File file = new File(filePath);
+			if (file.exists()) {
+				String mimeType = null;// context.getMimeType(file.getPath());
+
+				if (mimeType == null) {
+					mimeType = "application/octet-stream";
+				}
+
+				response.setContentType(mimeType);
+				response.setContentLength((int) file.length());
+				response.setContentType("application/xml charset=utf-16");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename", filePath);
+				ServletOutputStream os = response.getOutputStream();
+				FileInputStream fis = new FileInputStream(file);
+				Long fileSize = file.length();
+				byte[] buffer = new byte[fileSize.intValue()];
+				int b = -1;
+
+				while ((b = fis.read(buffer)) != -1) {
+					os.write(buffer, 0, b);
+				}
+
+				fis.close();
+				os.close();
+			} else {
+				response.setStatus(300);
+				throw new FileNotFoundException("Requested " + filePath + " file not found!!");
+			}
+		} catch (
+
+		IOException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Requested " + filePath + " file not found!!", null);
+			throw new IOException((message != null) ? message : "Requested " + filePath + " file not found!!");
+		}
 		return response;
 	}
 }

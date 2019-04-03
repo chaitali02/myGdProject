@@ -130,6 +130,7 @@ public class VizpodController {
 				null, null, runMode, layout);
 		return null;
 	}
+	
 	@RequestMapping(value = "/downloadSample", method = RequestMethod.GET)
 	public HttpServletResponse downloadSample(@RequestParam(value = "uuid") String vizpodUuid,
 			@RequestParam(value = "version") String vizpodVersion,
@@ -148,7 +149,23 @@ public class VizpodController {
 		return null;
 	}
 	
-	
+	@RequestMapping(value = "/downloadSampleDetail", method = RequestMethod.POST)
+	public HttpServletResponse downloadSampleDetail(@RequestParam(value = "uuid") String vizpodUuid,
+			@RequestParam(value = "version") String vizpodVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestBody(required = false) ExecParams execParams,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		vizpodServiceImpl.downloadSampleDetail(vizpodUuid, vizpodVersion, format, execParams
+				, null, 0, rows, response, rows, null,
+				null, null, runMode, layout);
+		return null;
+	}
 
 	@RequestMapping(value = "/getVizpodResultDetails", method = RequestMethod.POST)
 	public List<Map<String, Object>> getVizpodResultDetails(@RequestParam(value = "uuid") String vizpodUuid,
@@ -163,7 +180,7 @@ public class VizpodController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return vizpodServiceImpl.getVizpodResultDetails(vizpodUuid, vizpodVersion, execParams, null, rows, offset,
+		return vizpodServiceImpl.getVizpodResultDetails(vizpodUuid, vizpodVersion, execParams, null, offset,
 				limit, sortBy, order, requestId, runMode);
 	}
 

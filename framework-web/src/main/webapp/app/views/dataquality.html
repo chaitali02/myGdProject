@@ -964,6 +964,9 @@
       </div>
     </div>
   </div>
+  <div ng-if="isParamModelEnable">
+    <exec-param-directive uuid="execDetail.uuid" version="execDetail.version" meta-type="'dq'" on-execute="onExecute"></exec-param-directive>
+</div>
 </div>
 
 <style>

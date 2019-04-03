@@ -531,8 +531,6 @@ public class CommonServiceImpl<T> {
 	@Autowired
 	private ConnectionFactory connectionFactory;
 	
-	
-	
 	public IngestServiceImpl getIngestServiceImpl() {
 		return ingestServiceImpl;
 	}
@@ -3844,7 +3842,7 @@ public class CommonServiceImpl<T> {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
-		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String directoryLocation = helper.getFileDirectoryByFileType(type);
 		String metaUuid = null;
 		String metaVersion = null;
 		if (fileName == null) {
@@ -3889,7 +3887,7 @@ public class CommonServiceImpl<T> {
 		try {
 			FileType type = Helper.getFileType(fileType);
 
-			String directoryLocation = Helper.getFileDirectoryByFileType(type);
+			String directoryLocation = helper.getFileDirectoryByFileType(type);
 			String filePath = directoryLocation + "/" + fileName;
 			File file = new File(filePath);
 			if (file.exists()) {
@@ -4382,7 +4380,7 @@ public class CommonServiceImpl<T> {
 				UploadExec uploadExec = uploadServiceImpl.create(dependsOn);
 
 				FileType type1 = Helper.getFileType(fileType);
-				String directoryPath = Helper.getFileDirectoryByFileType(fileType, type);
+				String directoryPath = helper.getFileDirectoryByFileType(fileType, type);
 				String originalFileName = multipartFile.getOriginalFilename();
 				String fileExtention = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 				String filename1 = originalFileName.substring(0, originalFileName.lastIndexOf("."));

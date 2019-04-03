@@ -72,11 +72,10 @@ import com.inferyx.framework.service.CommonServiceImpl;
 @Component
 public class Helper {
 	static Logger logger = Logger.getLogger(Helper.class);
-
 	@Autowired
-	private Engine engine;
+	Engine engine;
 	@Autowired
-	private static CommonServiceImpl<?> commonServiceImpl;
+	private CommonServiceImpl<?> commonServiceImpl;
 
 	public static String getNextUUID() {
 		return UUID.randomUUID().toString();
@@ -88,7 +87,7 @@ public class Helper {
 	}
 
 	public static String getCurrentTimeStamp() {
-		String timestamp = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new Date());
+		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new Date());
 		return timestamp;
 	}
 
@@ -1178,11 +1177,17 @@ public class Helper {
 				return FileType.LOG;
 			case "xsl":
 				return FileType.XLS;
+			case "logo":
+				return FileType.LOGOIMG;
+			case "avtar":
+				return FileType.AVTARIMG;
+			case "vizpod":
+				return FileType.VIZPODIMG;
 			}
 		return null;
 	}
 
-	public static String getFileDirectoryByFileType(FileType fileType)
+	public String getFileDirectoryByFileType(FileType fileType)
 			throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (fileType != null)
@@ -1198,9 +1203,12 @@ public class Helper {
 			case XLS:
 				return commonServiceImpl.getConfigValue("framework.file.download.path");
 			case LOGOIMG:
-				return commonServiceImpl.getConfigValue("framework.image.logo.Path");
+				return commonServiceImpl.getConfigValue("framework.images.logo.Path");
 			case AVTARIMG:
-				return commonServiceImpl.getConfigValue("framework.image.avtar.Path");
+				return commonServiceImpl.getConfigValue("framework.images.avtar.Path");
+			case VIZPODIMG:
+				return commonServiceImpl.getConfigValue("framework.images.vizpod.Path");
+
 			// case COMMENT :return getPropertyValue("framework.file.comment.upload.path");
 			default:
 				break;
@@ -1208,7 +1216,7 @@ public class Helper {
 		return null;
 	}
 
-	public static String getFileDirectoryByFileType(String fileType, String type)
+	public String getFileDirectoryByFileType(String fileType, String type)
 			throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if (fileType != null || type != null)
@@ -1585,7 +1593,8 @@ public class Helper {
 
 	public String getPathByDataSource(Datasource datasource) {
 //		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
-		return String.format("%s/%s", datasource.getPath());
+//		return String.format("%s/%s", datasource.getPath());
+		return datasource.getPath();
 	}
 
 	public static Pattern getRegexByFileInfo(String fileName, String fileExtn, String fileFormat,
@@ -1779,8 +1788,6 @@ public class Helper {
 			mappedDTypes.add("vector");
 			mappedDTypes.add("array");
 			return mappedDTypes;
-		case "DATE":
-			mappedDTypes.add("date");
 		default:
 			return mappedDTypes;
 		}

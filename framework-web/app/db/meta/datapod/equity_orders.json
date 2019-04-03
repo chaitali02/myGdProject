@@ -130,7 +130,7 @@
       "displaySeq": null,
       "name": "root_order_identifier",
       "type": "VARCHAR",
-      "desc": "Identifier of the order from which this order's parent-child order hierarchy originated",
+      "desc": "Identifier of the order from which this orders parent-child order hierarchy originated",
       "expression": null,
       "key": null,
       "partition": "N",

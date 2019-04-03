@@ -828,6 +828,29 @@ public class VizpodServiceImpl extends RuleTemplate {
 				false, "framework.file.download.path", null, vizpodHolder, null);
 		return response;
 	}
+	
+	public HttpServletResponse downloadSampleDetail(String vizpodUuid, String vizpodVersion,
+			String format, ExecParams execParams, String download, int offset, int limit, HttpServletResponse response,
+			int rowLimit, String sortBy, String order, String requestId, RunMode runMode, Layout layout)
+			throws Exception {
+
+		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.download.maxrows"));
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+		}
+
+		List<Map<String, Object>> results = getVizpodResultDetails(vizpodUuid, vizpodVersion, execParams, null, offset,
+				limit, sortBy, order, requestId, runMode);
+
+		MetaIdentifierHolder vizpodHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion));
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion)), layout, null,
+				false, "framework.file.download.path", null, vizpodHolder, null);
+		return response;
+	}
 
 	/**
 	 * @param vizpodUuid
@@ -962,7 +985,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 
 
 	public List<Map<String, Object>> getVizpodResultDetails(String vizpodUuid, String vizpodVersion,
-			ExecParams execParams, Object vizExec, int rows, int offset, int limit, String sortBy, String order,
+			ExecParams execParams, Object vizExec, int offset, int limit, String sortBy, String order,
 			String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();

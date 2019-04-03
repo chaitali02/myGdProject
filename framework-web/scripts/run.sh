@@ -16,8 +16,9 @@ mkdir -p /user/hive/warehouse/framework/data/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework/data/
 
 
-mkdir /user/hive/warehouse/framework/image
-mkdir /user/hive/warehouse/framework/image/logo
+mkdir /user/hive/warehouse/framework/images
+mkdir /user/hive/warehouse/framework/images/logo
+mkdir /user/hive/warehouse/framework/images/vizpod
 mkdir /user/hive/warehouse/framework/train
 mkdir /user/hive/warehouse/framework/predict
 mkdir /user/hive/warehouse/framework/simulate

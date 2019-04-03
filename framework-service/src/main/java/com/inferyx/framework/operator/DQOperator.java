@@ -719,7 +719,7 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, RunMode runMode)
+	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, DataQualExec dataQualExec, RunMode runMode)
 			throws Exception {
 		if (dq.getFilterInfo() == null || dq.getFilterInfo().isEmpty()) {
 			return "";
@@ -727,7 +727,7 @@ public class DQOperator implements IParsable {
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, dq.getUuid(), dq.getVersion()));
 
 		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dq);
-		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null, filterSource, null, usedRefKeySet, null, false, false, runMode, mapSourceDS);
+		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null, filterSource, null, usedRefKeySet, dataQualExec.getExecParams(), false, false, runMode, mapSourceDS);
 
 		return filterStr; //filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 
@@ -741,7 +741,7 @@ public class DQOperator implements IParsable {
 			return null;
 		}
 		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
-				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
+				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, dataQualExec, runMode));
 		select = generateallCheckFlag(select, dq, dataQualExec);
 
 		if (summaryFlag == null || summaryFlag == "N")
