@@ -69,7 +69,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,6 +77,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
+import com.inferyx.framework.common.EncryptionUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
@@ -529,6 +529,8 @@ public class CommonServiceImpl<T> {
 	private PropertiesFactoryBean frameworkProperties;
 	@Autowired
 	UploadServiceImpl uploadServiceImpl;
+	@Autowired
+	EncryptionUtil encryptionUtil;
 	@Autowired
 	private ConnectionFactory connectionFactory;
 	
@@ -2546,6 +2548,12 @@ public class CommonServiceImpl<T> {
 					metaIdentifierHolderList);
 			// }
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
+			
+			if (metaType == MetaType.user) {
+				String password = encryptionUtil.encrypt(Helper.getDomainClass(metaType).getMethod("getPassword").invoke(metaObj).toString(), ConstantsUtil.SECRET);
+				Helper.getDomainClass(metaType).getMethod("setPassword", String.class).invoke(metaObj, password);
+			}
+			Helper.getDomainClass(metaType).getMethod("setBaseEntity").invoke(metaObj);
 
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
 			objDet = (BaseEntity) (iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));

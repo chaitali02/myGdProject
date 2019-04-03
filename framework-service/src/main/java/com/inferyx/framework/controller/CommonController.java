@@ -35,6 +35,8 @@ import com.amazonaws.SdkClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.EncryptionUtil;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -65,6 +67,8 @@ public class CommonController<T> {
 	ImportServiceImpl importServiceImpl;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	EncryptionUtil encryptionUtil;
 	
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	String result = null;

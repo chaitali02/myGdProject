@@ -34,6 +34,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.EncryptionUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.IUserDao;
@@ -82,6 +84,8 @@ public class SessionServiceImpl {
 	RegisterService registerService;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
+    @Autowired
+    EncryptionUtil encryptionUtil;
 	
 	static final Logger logger = Logger.getLogger(SessionServiceImpl.class);
 	
@@ -109,6 +113,8 @@ public class SessionServiceImpl {
 		String username = userDO.getName();
 		String userPassword = userDO.getPassword();
 		String flag = userDO.getActive();
+		
+		password = encryptionUtil.encrypt(password, ConstantsUtil.SECRET);
 		
 		/*MultiValueMap map = securityServiceImpl.getRolePrivInfo();
 		session.setAttribute("mapRolePriv", map);*/
