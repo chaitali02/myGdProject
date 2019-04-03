@@ -50,15 +50,20 @@ public class LoggingAspect {
 	 * Pointcuts*
 	 */	
 //	@Pointcut("within(com.inferyx.framework.security.UserActivityPrivilegeFilter)")
-	@Pointcut("within(com.inferyx.framework.controller1.*)")
-	public void aroundPointcut() {}
+	
+	/****************************Unused*******************************/
+	/*@Pointcut("within(com.inferyx.framework.controller1.*)")
+	public void aroundPointcut() {}*/
+	
 	
 	/*@Pointcut("within(com.inferyx.framework.service.SecurityServiceImpl.getAppInfo())")
 	public void afterThrowing() {}*/
 	/*
 	 * Aspects*
 	 */
-	  @Around("aroundPointcut()")
+	
+	/****************************Unused*******************************/
+	 /* @Around("aroundPointcut()")
 	  public Object logTimeMethod(ProceedingJoinPoint joinPoint) throws Throwable {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		  
@@ -85,9 +90,10 @@ public class LoggingAspect {
 			logger.info("ServletRequestAttributes instance requestAttributes is \""+null+"\"");	
 	    
 	    return retVal;
-	  }
-	 
-	  public long getTotalTime(String startTime, String endTime, DateFormat dateFormat) throws ParseException {
+	  }*/
+	
+	/****************************Unused*******************************/
+	/*  public long getTotalTime(String startTime, String endTime, DateFormat dateFormat) throws ParseException {
 		  long totalTime = 0;
 		  if((startTime != null) && (endTime != null) && (dateFormat != null)) {
 			  long start = dateFormat.parse(startTime).getTime();
@@ -95,7 +101,7 @@ public class LoggingAspect {
 			  totalTime = end - start;
 		  }
 		  return totalTime;
-	  }
+	  }*/
 	  
 	  /*@AfterThrowing(pointcut = "execution(com.inferyx.framework.service.SecurityServiceImpl.getAppInfo())", throwing = "e")
 	  public void getAppInfo(JoinPoint joinPoint, Exception e) {

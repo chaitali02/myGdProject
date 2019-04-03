@@ -40,8 +40,8 @@ public class HiveInfo {
 	}*/
 	
 	
-
-	public HiveConf getHiveConfiguration() throws IOException {
+/************************************Unused******************************/
+	/*public HiveConf getHiveConfiguration() throws IOException {
 		Resource resource = new ClassPathResource("/framework.properties");
 		Properties prop = PropertiesLoaderUtils.loadProperties(resource);
         HiveConf hiveConf = new HiveConf();        
@@ -79,5 +79,5 @@ public class HiveInfo {
 			}
 		
         return hiveConf;
-    }
+    }*/
 }

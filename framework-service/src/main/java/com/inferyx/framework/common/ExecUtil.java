@@ -18,7 +18,8 @@ import com.inferyx.framework.domain.Status;
 
 public class ExecUtil {
 	
-	public static List<Status> createStatus (List<Status> statusList, Status.Stage status) {
+	/***************************Unused***************************/
+	/*public static List<Status> createStatus (List<Status> statusList, Status.Stage status) {
 		if (statusList == null) {
 			statusList = new ArrayList<>();
 		}
@@ -29,5 +30,5 @@ public class ExecUtil {
 		statusList.add(new Status(status, new Date()));
 		return statusList;
 	}
-
+*/
 }

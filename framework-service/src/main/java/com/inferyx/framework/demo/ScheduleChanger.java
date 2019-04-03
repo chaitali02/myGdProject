@@ -20,12 +20,14 @@ public class ScheduleChanger {
    private DynamicSchedule dynamicSchedule;
 
 //   @Scheduled(fixedDelay=30000)
-   public void change() {
+  
+   /**************************Unused***********************/
+   /* public void change() {
 	  System.out.println("Inside ScheduleChanger");
       Random rnd = new Random();
       int nextTimeout = rnd.nextInt(30000);
       System.out.println("Changing poll time to: " + nextTimeout);
       //dynamicSchedule.reset(nextTimeout);
-   }
+   }*/
 
 }

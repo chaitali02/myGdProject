@@ -189,17 +189,19 @@ public class Helper {
 		return (Long.toString(Instant.now().getEpochSecond()));
 	}
 	
-	public static String getCurrentTimeStamp(){
+	/************************Unused************************/
+	/*public static String getCurrentTimeStamp(){
 		String timestamp = new java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z").format(new Date());
 		return timestamp;
-	}
+	}*/
 
 	public static Date getCurrentDate(){
 		Date date = new Date();
 		return date;
 	}
 	
-	public static Key getKeyFromPath(String filePath) {
+	/***************************Unused**************************/
+	/*public static Key getKeyFromPath(String filePath) {
 		if (filePath ==  null) {
 			logger.error("file path is null");
 			return new OrderKey();
@@ -208,7 +210,7 @@ public class Helper {
 		String[] list = filePath.split("/");
 		
 		return new OrderKey(list[list.length-3], list[list.length-2]);
-	}
+	}*/
 	
 	public static String genTableName(String filePath) {
 		if (filePath ==  null) {
@@ -650,12 +652,13 @@ public class Helper {
 		return stage2;
 	}
 	
-	public static MetaIdentifier getMetaIdentifier (BaseEntity baseEntity, MetaType type) {
+	/************************Unused************************/
+	/*public static MetaIdentifier getMetaIdentifier (BaseEntity baseEntity, MetaType type) {
 		if (baseEntity == null) {
 			return null;
 		}
 		return new MetaIdentifier(type, baseEntity.getUuid(), baseEntity.getVersion(), baseEntity.getName());
-	}
+	}*/
 	
 //	public static String getConfigValue(String configName) throws IllegalAccessException, IllegalArgumentException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException, InvocationTargetException {
 //		List<Config> appConfigList = metadataServiceImpl.getAppConfigByCurrentApp();
@@ -1069,7 +1072,8 @@ public class Helper {
 	 * @param type
 	 * @return MetaType
 	 */
-	public MetaType getGroupExecTypeByRuleExecType (MetaType type) {
+	/***********************************Unused************************************/
+	/*public MetaType getGroupExecTypeByRuleExecType (MetaType type) {
 		if(type == null)
 			return null;
 		switch(type) {
@@ -1079,14 +1083,15 @@ public class Helper {
 		case recongroupExec : return MetaType.reconExec;
 		default : return null;
 		}
-	}
+	}*/
 	
 	/**
 	 * 
 	 * @param type
 	 * @return MetaType
 	 */
-	public MetaType getRuleExecTypeByGroupExecType (MetaType type) {
+	/***************************Unused*************************/
+	/*public MetaType getRuleExecTypeByGroupExecType (MetaType type) {
 		if(type == null)
 			return null;
 		switch(type) {
@@ -1096,7 +1101,7 @@ public class Helper {
 		case reconExec : return MetaType.recongroupExec;
 		default : return null;
 		}
-	}
+	}*/
 	
 	/**
 	 * 
@@ -1153,7 +1158,8 @@ public class Helper {
 		return NumberUtils.isCreatable(str);
 	}
 	
-	public static boolean isDate(String str) {
+	/*********************Unused**********************/
+	/*public static boolean isDate(String str) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat();
 		try {
 			dateFormat.parse(str);
@@ -1163,7 +1169,7 @@ public class Helper {
 //				e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 	
 	public static IngestionType getIngestionType(String ingestionType) {
 		if(ingestionType != null) {
@@ -1191,13 +1197,14 @@ public class Helper {
 		return null;
 	}
 	
-	public static SaveMode getSparkSaveMode(com.inferyx.framework.enums.SaveMode saveMode) {
+	/***************************Unused*************************/
+	/*public static SaveMode getSparkSaveMode(com.inferyx.framework.enums.SaveMode saveMode) {
 		switch(saveMode) {
 		case APPEND : return SaveMode.Append;
 		case OVERWRITE : return SaveMode.Overwrite;
 		default : return null;
 		}
-	}
+	}*/
 	
 	public String getPathByDataSource(Datasource datasource) {
 //		return String.format("%s/%s", hdfsInfo.getHdfsURL(), datasource.getPath());
@@ -1289,7 +1296,8 @@ public class Helper {
 		}
 	}
 
-	public static String mapMySQLDTypeByDatapodDtype(String dataType) {
+	/*************************Unused***********************/
+	/*public static String mapMySQLDTypeByDatapodDtype(String dataType) {
 		switch(dataType.toLowerCase()) {
 			case "varchar" : return "STRING";
 			case "char" : return "VARCHAR";
@@ -1302,7 +1310,7 @@ public class Helper {
 			case "decimal" : return "DECIMAL";
 			default : return "STRING";
 		}
-	}
+	}*/
 	
 	public static List<String> getMappedDataTypes(String dataType) {
 		List<String> mappedDTypes = new ArrayList<>();

@@ -35,9 +35,11 @@ import com.inferyx.framework.domain.TaskExec;
 public class DagExecUtil {
 	static Logger logger=Logger.getLogger(DagExecUtil.class);
 	
-	public static MetaIdentifier createRefFromKey(Key key, MetaType type){
+	
+	/*******************************Unused**************************/
+	/*public static MetaIdentifier createRefFromKey(Key key, MetaType type){
 		return new MetaIdentifier(type, key.getUUID(), key.getVersion(), key.getName());
-	}
+	}*/
 	
 	public static List<Status> createInitialStatus(List<Status> statusList){
 		if (statusList == null) {
@@ -101,7 +103,8 @@ public class DagExecUtil {
 		return null;
 	}
 	
-	public static TaskExec getTaskExecFromStageExec(StageExec stageExec, String taskId){
+	/******************************Unused******************************/
+	/*public static TaskExec getTaskExecFromStageExec(StageExec stageExec, String taskId){
 		List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 		if (taskExecList == null || taskExecList.isEmpty()) {
 			return null;
@@ -115,7 +118,7 @@ public class DagExecUtil {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -123,7 +126,9 @@ public class DagExecUtil {
 	 * @param taskId
 	 * @return
 	 */
-	public static TaskExec getTaskExecFromDagExec(DagExec dagExec, String taskId){
+	
+	/****************************Unused*****************************/
+	/*public static TaskExec getTaskExecFromDagExec(DagExec dagExec, String taskId){
 		List<TaskExec> taskExecList = null;
 		List<StageExec> stageExecList = null;
 		stageExecList = DagExecUtil.castToStageExecList(dagExec.getStages());
@@ -142,7 +147,7 @@ public class DagExecUtil {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -291,7 +296,9 @@ public class DagExecUtil {
 	 * @param execParams
 	 * @return
 	 */
-	public static ExecParams cloneTaskExecParams (ExecParams execParams) {
+	
+	/**************************Unused******************************/
+	/*public static ExecParams cloneTaskExecParams (ExecParams execParams) {
 		ExecParams taskExecParams = new ExecParams();
 		
 		taskExecParams.setRefKeyList(new ArrayList<>());
@@ -300,7 +307,7 @@ public class DagExecUtil {
 		taskExecParams.setExecutionContext(new ExecutionContext());
 		taskExecParams.setOtherParams(execParams.getOtherParams());
 		return taskExecParams;
-	}
+	}*/
 	
 	/**
 	 * 

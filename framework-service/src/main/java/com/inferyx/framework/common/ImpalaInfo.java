@@ -26,7 +26,8 @@ import com.inferyx.framework.executor.ExecContext;
 @Component
 public class ImpalaInfo {
 
-	public ImpalaInfo getImpalaConfiguration() throws IOException {
+/****************************Unused******************************/
+	/*	public ImpalaInfo getImpalaConfiguration() throws IOException {
 		Resource resource = new ClassPathResource("/framework.properties");
 		Properties prop = PropertiesLoaderUtils.loadProperties(resource);
 		// impala confi object
@@ -61,6 +62,6 @@ public class ImpalaInfo {
 
 		return null;
 
-	}
+	}*/
 
 }

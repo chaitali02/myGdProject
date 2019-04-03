@@ -50,25 +50,29 @@ public class ControllerValidation {
 	/*
 	 * Pointcuts*
 	 */
-	@Pointcut("within(com.inferyx.framework.controller.*)")
-	public void controllerValidationPointcut() {}
+	/***********************Unused***********************/
+	/*@Pointcut("within(com.inferyx.framework.controller.*)")
+	public void controllerValidationPointcut() {}*/
 	
 	
 	
 	/*
 	 * Aspects*
 	 */
-	@AfterReturning(
+	/***********************Unused***********************/
+
+	/*@AfterReturning(
 		    pointcut="controllerValidationPointcut()", 
-		    returning="returnValue")
-	public void aspectReturing(JoinPoint joinPoint, Object returnValue) throws Throwable {
+		    returning="returnValue")*/
+	
+	/*public void aspectReturing(JoinPoint joinPoint, Object returnValue) throws Throwable {
 		//System.out.println("\n\n");         
 		//logger.info("Inside AfterReturningAspect.aspectReturing() method.");
 		logger.info("inserted after : " + joinPoint.getSignature());
 		if((returnValue == null) 
 				|| returnValue.equals("null") 
-				/*|| returnValue.equals("[]")
-				|| returnValue.equals("[ ]")*/) {
+				|| returnValue.equals("[]")
+				|| returnValue.equals("[ ]")) {
 			logger.info("Null value returned.");
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {
@@ -94,10 +98,11 @@ public class ControllerValidation {
 			}else
 				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 		}else
-			logger.info("Method returned \"non-null vlue\"."/*+"returnValuealue: >>----->> "+returnValue*/);
-	}
+			logger.info("Method returned \"non-null vlue\"."+"returnValuealue: >>----->> "+returnValue);
+	}*/
 	
-	@AfterThrowing("controllerValidationPointcut()")
+	/***********************Unused***********************/
+	/*@AfterThrowing("controllerValidationPointcut()")
 	public void afterThrowingAdvice(JoinPoint joinPoint) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		logger.info("ControllerValidation...");  
 		logger.info("Method Signature: "  + joinPoint.getSignature()); 
@@ -124,7 +129,7 @@ public class ControllerValidation {
 		}else
 			logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
 	}
-	
+	*/
 	/*@Before("controllerValidationPointcut()")
 	public void validaterequest(JoinPoint joinPoint) throws JSONException, ParseException, IOException {
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

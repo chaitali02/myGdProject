@@ -17,11 +17,12 @@ public class ScheduledProcessor {
 
    private final AtomicInteger counter = new AtomicInteger();
 
-   public void process() {
+   /******************Unused***********************/
+   /*public void process() {
       System.out.println("processing next 10 at " + new Date());
       for (int i = 0; i < 10; i++) {
          System.out.println("Counter : " + counter.incrementAndGet());
       }
-   }
+   }*/
 
 }

@@ -513,7 +513,7 @@ public class MetadataUtil {
 //		// private constructor to defeat instantiation
 //	}
 	
-	public Object getRefObject(MetaIdentifier ref) throws JsonProcessingException {
+/*	public Object getRefObject(MetaIdentifier ref) throws JsonProcessingException {
 		return commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 //		OrderKey key = new OrderKey(ref.getUuid(), ref.getVersion());
 //		//Set<OrderKey> keySets = null;
@@ -1116,7 +1116,7 @@ public class MetadataUtil {
 //			}
 //	//	logger.error("Meta not found");
 //		return null;
-	}
+	//}*/
 
 //	public IVizpodExecDao getiVizpodExecDao() {
 //		return iVizpodExecDao;

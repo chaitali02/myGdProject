@@ -26,7 +26,8 @@ public class CustomLogger {
 
 	private static final Logger logger = Logger.getLogger(CustomLogger.class);
 
-	public void writeLog(Class<?> loggerClass, String msg, String filePath, int lineNumber) {
+	/*****************************Unused********************************/
+	/*public void writeLog(Class<?> loggerClass, String msg, String filePath, int lineNumber) {
 		logger.info("Inside custom logger class.");
 		Logger customLogger = Logger.getLogger(loggerClass);
 		Appender fileAppender = null;
@@ -43,9 +44,11 @@ public class CustomLogger {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
-	public void writeErrorLog(Class<?> loggerClass, Object obj, String filePath, int lineNumber) {
+	
+	/********************************Unused***************************/
+	/*public void writeErrorLog(Class<?> loggerClass, Object obj, String filePath, int lineNumber) {
 		logger.info("Inside custom logger class.");
 		Logger customLogger = Logger.getLogger(loggerClass);
 		Appender fileAppender = null;
@@ -60,5 +63,5 @@ public class CustomLogger {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 }
