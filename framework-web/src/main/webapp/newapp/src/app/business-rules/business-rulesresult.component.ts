@@ -249,9 +249,8 @@ export class BusinessRulesResultComponent {
       );
     this.restartShow = false;
     this.restartDialogBox = false;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
-    }, 1000);
+
+    
   }
 
   cancelRestartDialogBox() {

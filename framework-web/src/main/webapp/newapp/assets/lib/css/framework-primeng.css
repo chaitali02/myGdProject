@@ -12,7 +12,6 @@
 }
 .pdropdown-border
  {
- /* border:1px solid #f008dc; */
   border:1px solid #c2cad8;
   border-radius: 3px;
 }
@@ -50,12 +49,16 @@
 .selected-list .c-btn{  
   padding: 0% 0% 0% 1.5% !important;
 }
+.selected-list .c-list{
+  padding-top: 3px !important;
+}
 .selected-list .c-list .c-token{
   background: #e0e0e0 !important;
   font-weight: 600;
   margin-right: 5px;
-  margin-top: 5px !important;
   border: 1px solid #acacac;
+  float: none !important;
+  display: inline-block !important;
 }
 .selected-list .c-list .c-token .c-label{
   color: #585858 !important;
