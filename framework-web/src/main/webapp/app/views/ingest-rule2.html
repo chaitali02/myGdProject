@@ -47,16 +47,7 @@
                             data-ng-click="enableEdit(ingestData.uuid,ingestData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
-                        <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="enableEdit(ingestData.uuid,ingestData.version)">
-                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="showview(ingestData.uuid,ingestData.version)">
-                            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a> -->
+                       
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
                             tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showGraph()">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -277,15 +268,26 @@
                                                 </select>
                                                 <input type="hidden" name="sourceds" ng-model="selectedSourceDatasource.uuid" required>
                                             </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
-
-                                            </label>
-
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select title="Type" class="form-control" data-ng-disabled="isSourceFormateDisable || {{mode}}" data-ng-model="selectedSourceFormate"
-                                                    data-ng-options="r for r in sourceFormate" ng-change="onChangeFormate()">
-                                                </select>
-
+                                            
+                                            <div ng-if="isSourceFormateDisable">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
+                                                    
+                                                </label>
+                                                <div class="col-md-2 col-sm-2 col-xs-12" >
+                                                    <select title="Type" class="form-control" data-ng-disabled="true" data-ng-model="$parent.selectedSourceFormate"
+                                                        data-ng-options="r for r in sourceFormate" ng-change="onChangeFormate()">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div ng-if="!isSourceFormateDisable">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
+                                                    <span class="required" aria-required="true"> * </span>
+                                                </label>
+                                                <div class="col-md-2 col-sm-2 col-xs-12" >
+                                                    <select title="Type" class="form-control" data-ng-disabled="{{mode}}" data-ng-model="$parent.selectedSourceFormate"
+                                                        data-ng-options="r for r in sourceFormate" ng-change="onChangeFormate()" required>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-if="selectedSourceType =='FILE'">
@@ -393,13 +395,25 @@
                                                 </select>
                                                 <input type="hidden" name="targetds" ng-model="selectedTargetDatasource.uuid" required>
                                             </div>
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
 
-                                            </label>
-                                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select title="Type" class="form-control" data-ng-disabled="isTargetFormateDisable || {{mode}}" data-ng-model="selectedTargetFormate"
-                                                    data-ng-options="r for r in targetFormate" ng-change="onChangeTargetFormate()">
-                                                </select>
+                                            <div ng-if="isTargetFormateDisable">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.5%;margin-left:-13px; padding-right: 0px;">Format
+                                                </label>
+                                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                                    <select title="Type" class="form-control" data-ng-disabled="true" data-ng-model="$parent.selectedTargetFormate"
+                                                        data-ng-options="r for r in targetFormate" ng-change="onChangeTargetFormate()">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div ng-if="!isTargetFormateDisable">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.5%;margin-left:-13px; padding-right: 0px;">Format
+                                                    <span class="required" aria-required="true"> * </span>
+                                                </label>
+                                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                                    <select title="Type" class="form-control" data-ng-disabled="isTargetFormateDisable || {{mode}}" data-ng-model="$parent.selectedTargetFormate"
+                                                        data-ng-options="r for r in targetFormate" ng-change="onChangeTargetFormate()" required>
+                                                    </select>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -526,7 +540,7 @@
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                                                <th style="width:8%;text-align:center;">Move</th>
+                                                                <!-- <th style="width:8%;text-align:center;">Move</th> -->
                                                             </tr>
                                                         </thead>
 
@@ -700,20 +714,18 @@
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <div style="text-align: center;">
                                                                         <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
-                                                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                                                         </a>
                                                                         <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
-                                                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                                                         </a>
                                                                         </div>
                                                                     </span>
-                                                                </td>
+                                                                </td> -->
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -776,7 +788,7 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <div>
+                                                <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
                                                     <table class=" row-border hover table  table-striped table-bordered">
                                                         <thead>
                                                             <tr>

@@ -1008,7 +1008,14 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   };
   
   $scope.onExecute=function(data){
-		$scope.isParamModelEnable=data.isParamModelEnable;
+    $scope.isParamModelEnable=data.isParamModelEnable;
+    if(data.isExecutionInprogess){
+			message = $scope.caption + " Submited Successfully";
+			notify.type = 'success',
+			notify.title = 'Success',
+      notify.content = message;
+      $scope.$emit('notify', notify);
+		}
   }
   
   $scope.getDetailForUpload = function (data,index) {

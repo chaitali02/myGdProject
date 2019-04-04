@@ -426,6 +426,16 @@ public class DataQualServiceImpl extends RuleTemplate {
 					usedRefKeySet, otherParams, runMode));
 			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+
+//			Datapod srcDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//				dataQual.getDependsOn().getRef().getUuid(), dataQual.getDependsOn().getRef().getVersion(),
+//				MetaType.datapod.toString(), "Y");
+//			dataQualExec.setSrcDatasource(srcDatapod.getDatasource());
+//			Datapod tgtDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//				getTargetSummaryDp().getUuid(), getTargetSummaryDp().getVersion(),
+//				MetaType.datapod.toString(), "Y");
+//			dataQualExec.setTgtDatasource(tgtDatapod.getDatasource());
+			
 			logger.info(String.format("DQ Result sql for DQExec : %s is : %s", execUuid, dataQualExec.getExec()));
 			synchronized (dataQualExec.getUuid()) {
 //				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
@@ -487,60 +497,64 @@ public class DataQualServiceImpl extends RuleTemplate {
 		if (!execContext.equals(ExecContext.FILE) || !execContext.equals(ExecContext.spark)) {
 			filterBuilder.append(" AND version = " + execVersion);
 		}
-		String sql = "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'PASS' as result_type, count(nullCheck_pass) AS count FROM "
-				+ tableName + " WHERE nullCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'PASS' as result_type, count(valueCheck_pass) AS count FROM "
-				+ tableName + " WHERE valueCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'PASS' as result_type, count(rangeCheck_pass) AS count FROM "
-				+ tableName + " WHERE rangeCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'PASS' as result_type, count(dataTypeCheck_pass) AS count FROM "
-				+ tableName + " WHERE dataTypeCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'PASS' as result_type, count(dataFormatCheck_pass) AS count FROM "
-				+ tableName + " WHERE dataFormatCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'PASS' as result_type, count(lengthCheck_pass) AS count FROM "
-				+ tableName + " WHERE lengthCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'PASS' as result_type, count(refIntegrityCheck_pass) AS count FROM "
-				+ tableName + " WHERE refIntegrityCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'PASS' as result_type, count(dupCheck_pass) AS count FROM "
-				+ tableName + " WHERE dupCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'PASS' as result_type, count(customCheck_pass) AS count FROM "
-				+ tableName + " WHERE customCheck_pass = 'Y' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'FAIL' as result_type, count(nullCheck_pass) AS count FROM "
-				+ tableName + " WHERE nullCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'FAIL' as result_type, count(valueCheck_pass) AS count FROM "
-				+ tableName + " WHERE valueCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'FAIL' as result_type, count(rangeCheck_pass) AS count FROM "
-				+ tableName + " WHERE rangeCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'FAIL' as result_type, count(dataTypeCheck_pass) AS count FROM "
-				+ tableName + " WHERE dataTypeCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'FAIL' as result_type, count(dataFormatCheck_pass) AS count FROM "
-				+ tableName + " WHERE dataFormatCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'FAIL' as result_type, count(lengthCheck_pass) AS count FROM "
-				+ tableName + " WHERE lengthCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'FAIL' as result_type, count(refIntegrityCheck_pass) AS count FROM "
-				+ tableName + " WHERE refIntegrityCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'FAIL' as result_type, count(dupCheck_pass) AS count FROM "
-				+ tableName + " WHERE dupCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
-				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'FAIL' as result_type, count(customCheck_pass) AS count FROM "
-				+ tableName + " WHERE customCheck_pass = 'N' " + filterBuilder.toString()
-				+ " GROUP BY datapodname, attributeId, attributename ";
+		
+		String sql = "SELECT datapod_name, attribute_id, attribute_name, check_type, check_pass_count, check_fail_count, score FROM "
+				+ tableName + " WHERE 1=1 " + filterBuilder.toString();
+		
+//		String sql = "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'PASS' as result_type, count(nullCheck_pass) AS count FROM "
+//				+ tableName + " WHERE nullCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'PASS' as result_type, count(valueCheck_pass) AS count FROM "
+//				+ tableName + " WHERE valueCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'PASS' as result_type, count(rangeCheck_pass) AS count FROM "
+//				+ tableName + " WHERE rangeCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'PASS' as result_type, count(dataTypeCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dataTypeCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'PASS' as result_type, count(dataFormatCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dataFormatCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'PASS' as result_type, count(lengthCheck_pass) AS count FROM "
+//				+ tableName + " WHERE lengthCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'PASS' as result_type, count(refIntegrityCheck_pass) AS count FROM "
+//				+ tableName + " WHERE refIntegrityCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'PASS' as result_type, count(dupCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dupCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'PASS' as result_type, count(customCheck_pass) AS count FROM "
+//				+ tableName + " WHERE customCheck_pass = 'Y' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'FAIL' as result_type, count(nullCheck_pass) AS count FROM "
+//				+ tableName + " WHERE nullCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'FAIL' as result_type, count(valueCheck_pass) AS count FROM "
+//				+ tableName + " WHERE valueCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'FAIL' as result_type, count(rangeCheck_pass) AS count FROM "
+//				+ tableName + " WHERE rangeCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'FAIL' as result_type, count(dataTypeCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dataTypeCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'FAIL' as result_type, count(dataFormatCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dataFormatCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'FAIL' as result_type, count(lengthCheck_pass) AS count FROM "
+//				+ tableName + " WHERE lengthCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'FAIL' as result_type, count(refIntegrityCheck_pass) AS count FROM "
+//				+ tableName + " WHERE refIntegrityCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'FAIL' as result_type, count(dupCheck_pass) AS count FROM "
+//				+ tableName + " WHERE dupCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+//				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'FAIL' as result_type, count(customCheck_pass) AS count FROM "
+//				+ tableName + " WHERE customCheck_pass = 'N' " + filterBuilder.toString()
+//				+ " GROUP BY datapodname, attributeId, attributename ";
 		return sql;
 	}
 
@@ -555,9 +569,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 		String tableName = null;
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-			tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
-					runMode);
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			tableName = "dq_result_summary_dashboard";
+			
+//			tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),runMode);
+			Datapod datapod = dataStoreServiceImpl.getDatapodByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+			Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;
 			IExecutor exec = null;
 			// String sql = null;
@@ -573,7 +590,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());			
 			exec = execFactory.getExecutor(execContext.toString());
 			appUuid = commonServiceImpl.getApp().getUuid();
-			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
+			data = exec.executeAndFetchByDatasource(getSummarySql(tableName, dqExec.getVersion(), execContext),datasource, appUuid);
+//			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
 		} catch (Exception e) {
 			logger.error("Exception in DataQualServiceImpl", e);
 			e.printStackTrace();
@@ -612,7 +630,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 				MetaType.dqExec.toString());
 		try {
 //			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//					commonServiceImpl.getConfigValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
+//					Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
 
 			limit = offset + limit;
 			offset = offset + 1;
@@ -638,7 +656,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 //			} else {
 //				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 //						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-//					String dafaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
 //					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
 //					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
 //							dqExec.getVersion());
@@ -673,7 +691,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 				MetaType.dqExec.toString());
 		try {
 //			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-//					commonServiceImpl.getConfigValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
+//					Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
 			
 			limit = offset + limit;
 			offset = offset + 1;
@@ -699,7 +717,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 //			} else {
 //				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 //						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-//					String dafaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
 //					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
 //					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
 //							dqExec.getVersion());

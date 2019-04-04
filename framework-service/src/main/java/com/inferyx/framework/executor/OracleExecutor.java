@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
@@ -509,7 +508,7 @@ public class OracleExecutor implements IExecutor {
 					
 					comparison.setTargetAttribute(attribute.getName());
 					comparison.setTargetLength(attribute.getLength() != null ? attribute.getLength().toString() : "");
-					comparison.setTargetType(attribute.getType());
+					comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 					
 					comparison.setStatus("");	
 					comparisonResultMap.put(attribute.getName(), comparison);
@@ -544,7 +543,7 @@ public class OracleExecutor implements IExecutor {
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
-			comparison.setTargetType(attribute.getType());
+			comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 			comparison.setTargetPrecision(attrPrecision);
 			
 			comparison.setStatus(status);
@@ -557,7 +556,7 @@ public class OracleExecutor implements IExecutor {
 			
 			comparison.setTargetAttribute(attribute.getName());
 			comparison.setTargetLength(attrLength);
-			comparison.setTargetType(attribute.getType());
+			comparison.setTargetType(Helper.getAttributeDataType(attribute.getType()));
 			comparison.setTargetPrecision(attrPrecision);
 			
 			comparison.setStatus(Compare.DELETED.toString());

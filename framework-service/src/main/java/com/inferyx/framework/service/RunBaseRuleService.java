@@ -64,6 +64,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected BaseRuleExec baseRuleExec;
 	protected HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
+//	protected DatapodServiceImpl datapodServiceImpl;
 	protected BaseRule baseRule;
 	protected ExecutorFactory execFactory;
 	protected Authentication authentication;
@@ -83,6 +84,15 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected DatapodServiceImpl datapodService;
 
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);
+
+	
+//	public DatapodServiceImpl getDatapodServiceImpl() {
+//		return datapodServiceImpl;
+//	}
+//
+//	public void setDatapodServiceImpl(DatapodServiceImpl datapodServiceImpl) {
+//		this.datapodServiceImpl = datapodServiceImpl;
+//	}
 
 	/**
 	 * @return the datasource
@@ -537,6 +547,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			executor = execFactory.getExecutor(execContext.toString());
 
 			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
+//			tableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey.getUuid(), datapodKey.getVersion(), runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 
@@ -575,6 +586,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				datapodKey = summaryDatapodKey;
 				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
 				tableName = genTableNameByRule(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+//				tableName = datapodServiceImpl.getTableNameByDatapodKey(summaryDatapodKey.getUuid(), summaryDatapodKey.getVersion(), runMode);
 				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
@@ -673,6 +685,40 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		//		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
 //		String executionEngine = commonServiceImpl.getConfigValue("framework." + ruleType.toString() + ".execution.engine");
 //		logger.info("framework execution engine : " + executionEngine);
+
+//		logger.info("Execution engine : " + execContext);
+//		Datasource srcDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(baseRuleExec.getSrcDatasource().getRef().getUuid(),
+//				baseRuleExec.getSrcDatasource().getRef().getVersion(), targetDsMI.getType().toString(), "N");
+//		Datasource tgtDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(baseRuleExec.getTgtDatasource().getRef().getUuid(),
+//				baseRuleExec.getTgtDatasource().getRef().getVersion(), targetDsMI.getType().toString(), "N");
+//
+//		if (srcDatasource.getType().equals(ExecContext.FILE.toString()) && tgtDatasource.getType().equals(StorageContext.FILE.toString())) { //For Spark + Spark
+//				rsHolder = executor.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
+//						SaveMode.APPEND.toString(), true, appUuid);
+//		}
+//				
+//		else if (!srcDatasource.getType().equals(ExecContext.FILE.toString()) && !tgtDatasource.getType().equals(StorageContext.FILE.toString())
+//					&& srcDatasource.getId().toString().equals(tgtDatasource.getId().toString())) {
+//			String sql = helper.buildInsertQuery(srcDatasource.getType(), tableName, targetDp, execSql);
+//			executor = execFactory.getExecutor(srcDatasource.getType());			
+//			rsHolder = executor.executeSqlByDatasource(sql, srcDatasource, appUuid);
+//		}
+//		else {
+//			rsHolder = executor.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+//			if (tgtDatasource.getType().equals(StorageContext.FILE.toString())) { //For Mysql + Spark
+//				executor = execFactory.getExecutor(ExecContext.spark.toString());
+//				rsHolder = executor.registerAndPersist(rsHolder, tableName, filePath, targetDp,SaveMode.APPEND.toString(),null);
+//			}
+//			else { //For Spark + Mysql
+//				if(tgtDatasource.getType().equals(StorageContext.ORACLE))
+//					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+//				else
+//					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+//				rsHolder.setTableName(tableName);
+//				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+//			}
+//		}
+		
 		logger.info("Execution engine : " + execContext);
 		if (execContext.equals(ExecContext.FILE) && storageContext.equals(StorageContext.FILE)) { //For Spark + Spark
 				rsHolder = executor.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,

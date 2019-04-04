@@ -269,8 +269,7 @@ public class DataStoreServiceImpl {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	/*******************************Unused***********************************/
-	/*public Datapod getDatapodByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public Datapod getDatapodByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		DataStore dataStore = null;
 		Datapod datapod = null;
 		dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
@@ -288,7 +287,7 @@ public class DataStoreServiceImpl {
 //		}
 		return datapod;
 	}
-	*/
+	
 	public String getTableNameByDatastoreKey(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws Exception {
 
 		DataStore dataStore =  (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());

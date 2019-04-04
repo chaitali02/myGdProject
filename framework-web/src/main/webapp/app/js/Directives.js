@@ -1780,7 +1780,8 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
         onDownloade: "=",
         version: "=",
         saveOnRefresh:"=?",
-        resultType:"=?"
+        resultType:"=?",
+        body:"=?"
       },
       link: function (scope, element, attr,$location) {
         scope.download={};
@@ -1799,12 +1800,25 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           backdrop: 'static',
           keyboard: false
         });
+        if(typeof scope.body =="undefined"){
+          scope.body=null;
+        }
+        scope.cancel=function(){
+          setTimeout(function(){
+            scope.onDownloade({
+              isDownloadInprogess:false,
+              isDownloadDirective:false
+            },10);
+          })
+        }
+
         scope.submitDownload=function(){
           $('#downloadSample').modal("hide");
+          setTimeout(function(){
           scope.onDownloade({
             isDownloadInprogess:true,
-            isDownloadDirective:true
-          })
+            isDownloadDirective:false
+          })},100)
           var url;
           if(scope.metaType=="datapod")
             url= scope.download.type+"/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate;
@@ -1843,12 +1857,15 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           }
           else if(scope.metaType=="vizpod"){
               url= "vizpod/downloadSample?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
-            }
+          }
+          else if(scope.metaType=="vizpoddetail"){
+            url= "vizpod/downloadSampleDetail?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
           if(scope.download.selectFormate =="PDF"){
             url=url+"&layout="+scope.download.selectLayout
           }
 
-          CommonService.downloadFile(url)
+          CommonService.downloadFile(url,scope.body)
               .then(function (response) { onSuccess(response.data) }, function(response){onError(response.data)});
             var onSuccess = function (response) { 
               scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
@@ -2204,12 +2221,13 @@ InferyxApp.directive('execParamDirective', function (CommonService,$filter) {
           console.log(JSON.stringify(execParams))
           $scope.executeCall (execParams);
           setTimeout(function(){
-          $scope.onExecute({isParamModelEnable:false});
+          $scope.onExecute({isParamModelEnable:false,isExecutionInprogess:true});
          },100);
         }
 
         
         $scope.executeCall = function (data) {
+          
           CommonService.execute($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
           var onSuccessExecute = function (response) {
             $scope.execData = response;

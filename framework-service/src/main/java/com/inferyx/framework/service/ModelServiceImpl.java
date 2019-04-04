@@ -203,6 +203,8 @@ public class ModelServiceImpl {
 	private ImputeOperator imputeOperator;
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(ModelServiceImpl.class);
 	CustomLogger customLogger = new CustomLogger();
@@ -479,7 +481,7 @@ public class ModelServiceImpl {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
-		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String directoryLocation = helper.getFileDirectoryByFileType(type);
 		String metaUuid = null;
 		String metaVersion = null;
 		if(fileName == null) {

@@ -1096,3 +1096,62 @@ DatavisualizationModule.directive('formCard', function (COLORPALETTE) {
     templateUrl: 'views/from-card-template.html',
   }; //End Return
 });
+
+DatavisualizationModule.directive('imageDirective', function (CommonService) {
+  return {
+    scope: {
+      data:"="
+    },
+    link: function ($scope, element, attrs) {
+      $scope.$watch('data', function (newValue, oldValue) {
+        $scope.fatchImage=function(path){
+          var url="file/download?fileType=VIZPOD&fileName="+path;
+          CommonService.downloadFile(url)
+          .then(function (response) { onSuccess(response.data) }, function(response){onError(response.data)});
+          var onSuccess = function (response) {  
+            headers =response.headers();
+            var filename = headers['filename'];
+            var contentType = headers['content-type'];
+            var linkElement = document.createElement('a');
+            try {
+              var blob = new Blob([response.data], { type: contentType });
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                  $('.image-preview')
+                  .attr('src', e.target.result)
+                  .show();
+              };
+              reader.readAsDataURL(blob);
+            } 
+            catch (ex) {
+              console.log(ex);
+            }
+          }
+          var onError =function (data) {
+            console.log(data);
+          }
+        }
+
+        $scope.imageDetail={};
+        if($scope.data.vizpodDetails.datapoints.length >0 && $scope.data.vizpodDetails.datapoints.length ==1){
+          $scope.imageDetail.isSingleValue=true;
+          var path=$scope.data.vizpodDetails.datapoints[0][$scope.data.vizpodInfo.values[0].attributeName];
+          $scope.imageDetail.path=path;
+          $scope.imageDetail.keysClo=$scope.data.vizpodInfo.keys[0].attributeName;
+          $scope.imageDetail.keysValue=$scope.data.vizpodDetails.datapoints[0][$scope.data.vizpodInfo.keys[0].attributeName];
+          if($scope.data.vizpodInfo.values[0].ref.type =="formula"){
+            path=$scope.data.vizpodDetails.datapoints[0][$scope.data.vizpodInfo.values[i].ref.name];
+            $scope.imageDetail.keysValue=$scope.data.vizpodDetails.datapoints[0][$scope.data.vizpodInfo.keys[0].ref.name];            
+          }
+          $scope.fatchImage(path);
+        }
+        else{
+          $scope.imageDetail.isSingleValue=false;
+        }
+
+   
+      }); //End Watch
+    }, //End link
+    templateUrl: 'views/image-directive-template.html',
+  }; //End Return
+});

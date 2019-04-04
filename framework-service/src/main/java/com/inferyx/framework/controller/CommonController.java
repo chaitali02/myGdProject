@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
@@ -29,9 +30,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.EncryptionUtil;
 import com.inferyx.framework.domain.Application;
 
 import com.inferyx.framework.domain.BaseEntity;
@@ -58,6 +63,8 @@ public class CommonController<T> {
 	RegisterService registerService;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	EncryptionUtil encryptionUtil;
 	
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	String result = null;
@@ -392,5 +399,15 @@ public class CommonController<T> {
 		return commonServiceImpl.getDatapodForDq();
 	}
 	
+	@RequestMapping(value = "/deleteS3Object", method = RequestMethod.GET)
+	public boolean deleteS3Object(@RequestParam(value = "bucketName") String bucketName,
+			@RequestParam(value = "objectKey") String objectKey) throws AmazonServiceException, SdkClientException, IOException {
+		return commonServiceImpl.deleteS3Object(bucketName, objectKey);
+	}
 	
+	@RequestMapping(value = "/getS3ObjectsKey", method = RequestMethod.GET)
+	public List<String> getS3ObjectsKey(@RequestParam(value = "bucketName") String bucketName,
+			@RequestParam(value = "folderPath") String folderPath) throws AmazonServiceException, SdkClientException, IOException {
+		return commonServiceImpl.getS3ObjectsKey(bucketName, folderPath);
+	}
 }

@@ -54,5 +54,7 @@ public class ConstantsUtil {
 	public static final String EXEC_PARAMS = "EXEC_PARAMS";
 	public static final String BRACKET_OPEN = "( ";
 	public static final String BRACKET_CLOSE = " ) ";
+	// Secret
+	public static final String SECRET = "s3cret!";
 	
 }

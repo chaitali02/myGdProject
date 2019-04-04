@@ -625,7 +625,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 				trainResult.setAlgoType(model.getType());
 
 //				String filePathUrl = String.format("%s%s%s", commonServiceImpl.getConfigValue("framework.hdfs.URI"), commonServiceImpl.getConfigValue("framework.model.train.path"), filePath);
-				String filePathUrl = String.format("%s%s%s", commonServiceImpl.getConfigValue("framework.model.train.path"), filePath);
+				String filePathUrl = String.format("%s%s", commonServiceImpl.getConfigValue("framework.model.train.path"), filePath);
 				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
 				String trainingSetPath = null;
 				if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {

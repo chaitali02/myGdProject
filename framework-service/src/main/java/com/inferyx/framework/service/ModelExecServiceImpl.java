@@ -133,7 +133,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUuid, modelVersion,
 				MetaType.model.toString());
 		String fileName = model.getScriptName();
-		String directoryLocation = Helper.getFileDirectoryByFileType(FileType.SCRIPT);
+		String directoryLocation = helper.getFileDirectoryByFileType(FileType.SCRIPT);
 		String filePath = directoryLocation + "/" + fileName;
 		File file = new File(filePath);
 		String fileContent = null;

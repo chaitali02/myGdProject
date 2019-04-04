@@ -155,6 +155,8 @@ public class MetadataServiceImpl {
 	UploadServiceImpl uploadServiceImpl;
 	@Autowired
 	RegisterService registerService;
+	@Autowired
+	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(MetadataServiceImpl.class);
 //	private static final String GET = "get";
@@ -1578,7 +1580,7 @@ public class MetadataServiceImpl {
 						break;
 					}
 				}
-				
+				if(appParamList!=null)
 				for(Param param2 : appParamList.getParams()) {
 					if((StringUtils.isBlank(paramName) && param2.getParamId().equalsIgnoreCase(attributeId.toString())) 
 							|| param2.getParamName().equals(paramName)) {
@@ -2254,7 +2256,7 @@ public class MetadataServiceImpl {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
-		String directoryLocation = Helper.getFileDirectoryByFileType(type);
+		String directoryLocation = helper.getFileDirectoryByFileType(type);
 		String metaUuid = null;
 		String metaVersion = null;
 		if(fileName == null) {

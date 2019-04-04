@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Logger;
@@ -748,14 +749,35 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					
 					//writing to target		
 					if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
-						targetFilePathUrl = targetDS.getPath();
-						if(!targetFilePathUrl.endsWith("/")) {
-							targetFilePathUrl = targetFilePathUrl.concat("/");
-						}
-						targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
+						String tempDirName = "temp_dir".concat("/").concat(ingestExec.getUuid());
+						String defaultPath = targetDS.getPath();
+						defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
+						String tempDir = defaultPath.concat(tempDirName).concat("/");
 						
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName,
-								saveMode, ingest.getTargetFormat(), targetHeader);
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDir,
+								tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+						
+						String[] arrOfStr = defaultPath.split("s3n://", 2);
+			        	arrOfStr = arrOfStr[1].split("/", 2);
+			        	String bucket_name = arrOfStr[0];
+			        	String folderPath = arrOfStr[1];
+			        	folderPath = folderPath.endsWith("/") ? folderPath : folderPath.concat("/");
+			        	String tempDirPath = folderPath.concat(tempDirName).concat("/");
+			        	
+						String objPath = commonServiceImpl.findS3ObjectByExtension(bucket_name, tempDirPath, ingest.getTargetExtn());
+						targetFilePathUrl = folderPath.concat(ingest.getTargetDetail().getValue()).concat(".").concat(ingest.getTargetExtn().toLowerCase());
+						if(!StringUtils.isBlank(objPath)) {
+							tempDirPath = tempDirPath.endsWith("/") ? tempDirPath.substring(0, tempDirPath.lastIndexOf("/")) : tempDirPath;
+							if(commonServiceImpl.copyS3Object(bucket_name, objPath, bucket_name, targetFilePathUrl)) {
+								commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+							} else {
+								commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+								throw new RuntimeException("Can not write into AWS");
+							}
+						} else {
+							commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+							throw new NullPointerException("Can not write into AWS");
+						}
 					} else {
 						String tempDirPath = commonServiceImpl.getConfigValue("framework.temp.path");
 						String tempDirLocation = tempDirPath.endsWith("/")
@@ -1150,7 +1172,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							}
 							else {
 								logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
-							}						targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
+							}						
+							targetFilePathUrl = targetFilePathUrl.concat(targetFileName);
 							targetFilePathUrl = targetDS.getPath().concat(targetFileName);
 						}					
 						
@@ -1195,14 +1218,36 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
 						
-						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {
-							targetFilePathUrl = targetDS.getPath();
-							if(!targetFilePathUrl.endsWith("/")) {
-								targetFilePathUrl = targetFilePathUrl.concat("/");
-							}
-							targetFilePathUrl = targetFilePathUrl.concat(ingest.getTargetDetail().getValue());
-							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl,
+						if(targetDS.getAccess().equalsIgnoreCase(ExecContext.S3.toString())) {							
+							String tempDirName = "temp_dir".concat("/").concat(ingestExec.getUuid());
+							String defaultPath = targetDS.getPath();
+							defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
+							String tempDir = defaultPath.concat(tempDirName).concat("/");
+							
+							rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDir,
 									tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+							
+							String[] arrOfStr = defaultPath.split("s3n://", 2);
+				        	arrOfStr = arrOfStr[1].split("/", 2);
+				        	String bucket_name = arrOfStr[0];
+				        	String folderPath = arrOfStr[1];
+				        	folderPath = folderPath.endsWith("/") ? folderPath : folderPath.concat("/");
+				        	String tempDirPath = folderPath.concat(tempDirName).concat("/");
+				        	
+							String objPath = commonServiceImpl.findS3ObjectByExtension(bucket_name, tempDirPath, ingest.getTargetExtn());
+							targetFilePathUrl = folderPath.concat(ingest.getTargetDetail().getValue()).concat(".").concat(ingest.getTargetExtn().toLowerCase());
+							if(!StringUtils.isBlank(objPath)) {
+								tempDirPath = tempDirPath.endsWith("/") ? tempDirPath.substring(0, tempDirPath.lastIndexOf("/")) : tempDirPath;
+								if(commonServiceImpl.copyS3Object(bucket_name, objPath, bucket_name, targetFilePathUrl)) {
+									commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+								} else {
+									commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+									throw new RuntimeException("Can not write into AWS");
+								}
+							} else {
+								commonServiceImpl.deleteS3Object(bucket_name, tempDirPath);
+								throw new NullPointerException("Can not write into AWS");
+							}
 						} else {
 							String tempDirPath = Helper.getPropertyValue("framework.temp.path");
 							String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";

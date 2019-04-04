@@ -923,11 +923,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 		}
   }
   $scope.getAllLatestParamListByTemplate = function () {
-		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "dq").then(function (response) {
-			onSuccessGetAllLatestParamListByTemplate(response.data)
-		});
+    CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "dq")
+      .then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data)});
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
-      debugger
 			$scope.allparamlist = {};
       $scope.allparamlist.options = response;
       setTimeout(function(){
@@ -1235,40 +1233,52 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.dataLoading = false;
       $scope.changemodelvalue()
       if (options.execution == "YES") {
-        DataqulityService.getOneById(response.data, "dq").then(function (response) {
-          onSuccessGetOneById(response.data)
-        });
+        DataqulityService.getOneById(response.data, "dq")
+          .then(function (response) { onSuccessGetOneById(response.data)});
         var onSuccessGetOneById = function (result) {
-          DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function (response) {
-            onSuccess(response.data)
-          });
-          var onSuccess = function (response) {
-            $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute;
-            notify.type = 'success',
+          if($scope.allparamlist.defaultoption ==null){
+            DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function (response) { onSuccess(response.data)});
+            var onSuccess = function (response) {
+              $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute;
+              notify.type = 'success',
               notify.title = 'Success',
               notify.content = $scope.saveMessage
-            $scope.$emit('notify', notify);
-            $scope.okDQRuleSave();
+              $scope.$emit('notify', notify);
+              $scope.okDQRuleSave();
+            }
+          }else{
+            $scope.execDetail=result.data;
+            $scope.isParamModelEnable=true;
           }
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
         $scope.saveMessage = CF_SUCCESS_MSG.dqSave;
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = $scope.saveMessage
+        notify.title = 'Success',
+        notify.content = $scope.saveMessage
         $scope.$emit('notify', notify);
         $scope.okDQRuleSave();
       } //End Else
     } //End Submit Api Function
     var onError = function (response) {
       notify.type = 'error',
-        notify.title = 'Error',
-        notify.content = "Some Error Occurred"
+      notify.title = 'Error',
+      notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
     }
   } //End Submit Function
-
+   
+  $scope.onExecute=function(data){
+    $scope.isParamModelEnable=data.isParamModelEnable;
+    if(data.isExecutionInprogess){
+			$scope.message = CF_SUCCESS_MSG.dqSaveExecute;
+			notify.type = 'success',
+			notify.title = 'Success',
+      notify.content = $scope.message;
+      $scope.$emit('notify', notify);
+		}
+	}
 
   $scope.changemodelvalue = function () {
     $scope.isshowmodel = sessionStorage.isshowmodel
@@ -1658,16 +1668,10 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
           });
           var onSuccess = function (response) {
             $scope.dataLoading = false;
-            $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSaveExecute;//"DQ Rule Groups Saved and Submitted Successfully"
-            // if ($scope.isshowmodel == "true") {
-            //   $('#dqrulegroupsave').modal({
-            //     backdrop: 'static',
-            //     keyboard: false
-            //   });
-            // } //End Inner If
+            $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSaveExecute;
             notify.type = 'success',
-              notify.title = 'Success',
-              notify.content = $scope.saveMessage
+            notify.title = 'Success',
+            notify.content = $scope.saveMessage
             $scope.$emit('notify', notify);
             $scope.okDqGroupSave();
           }
@@ -1675,16 +1679,11 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSave;//"DQ Rule Groups Saved Successfully"
-        // if ($scope.isshowmodel == "true") {
-        //   $('#dqrulegroupsave').modal({
-        //     backdrop: 'static',
-        //     keyboard: false
-        //   });
-        // } //End Inner If
+        $scope.saveMessage = CF_SUCCESS_MSG.dqGroupSave;
+       
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = $scope.saveMessage
+        notify.title = 'Success',
+        notify.content = $scope.saveMessage
         $scope.$emit('notify', notify);
         $scope.okDqGroupSave();
       } //End Else
