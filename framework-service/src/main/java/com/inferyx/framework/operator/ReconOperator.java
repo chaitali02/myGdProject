@@ -365,8 +365,9 @@ public class ReconOperator {
 			.append(distinctFlg != null && distinctFlg.equalsIgnoreCase("Y") ? " DISTINCT " : "")
 			.append(attrName)
 			.append(BRACKET_CLOSE);
-		}else
-			throw new Exception("Wrong function type.");
+		} else {
+			throw new Exception("Incorrect function type.");
+		}
 		return val.toString();
 	}
 
