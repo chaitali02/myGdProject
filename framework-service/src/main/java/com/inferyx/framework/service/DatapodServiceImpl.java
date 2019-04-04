@@ -983,6 +983,7 @@ public class DatapodServiceImpl {
 				Integer precision = StringUtils.isBlank(compareMetaData.getSourcePrecision()) ? null : Integer.parseInt(compareMetaData.getSourcePrecision());
 				if(containsProperty) {
 					Attribute attribute = getAttributeByName(propertyName, targetDatapod.getAttributes());
+					attribute.setName(propertyName);
 //					attribute.setAttributeId(i);
 //					attribute.setDisplaySeq(i);
 					attribute.setLength(length);
