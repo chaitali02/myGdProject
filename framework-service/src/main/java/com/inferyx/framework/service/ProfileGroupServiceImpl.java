@@ -10,21 +10,14 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.dao.IProfileGroupDao;
-import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -32,37 +25,13 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	@Autowired
-	IProfileGroupDao iProfileGroupDao;
-	@Autowired 
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired 
-	MongoTemplate mongoTemplate;
-	@Autowired 
-	ProfileServiceImpl profileServiceImpl;
-	@Autowired
-	IProfileGroupExecDao iProfileGroupExecDao;
-	@Autowired 
-	ProfileExecServiceImpl profileExecServiceImpl;
-	@Autowired
 	ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
-	@Autowired
-	ThreadPoolTaskExecutor metaExecutor;
-	@Autowired
-	ThreadPoolTaskExecutor metaGroupExecutor;
-	@Autowired
-	RegisterService registerService;
 
 	static final Logger logger = Logger.getLogger(ProfileGroupServiceImpl.class);
 
@@ -130,6 +99,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @param version
 	 * @throws Exception
 	 */
+	
 	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//ProfileGroupExec profileGroupExec= profileGroupExecServiceImpl.findOneByUuidAndVersion(uuid, version);
 		ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.profilegroupExec.toString());
@@ -143,7 +113,8 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public Status restart(BaseExec baseExec) throws Exception {
+	/****************************Unused***************************/
+	/*public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profilegroupExec, MetaType.profileExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -151,7 +122,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}
+	}*/
 
 
 	/**

@@ -10,41 +10,19 @@
  *******************************************************************************/
 package com.inferyx.framework.aspect;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.codehaus.jettison.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.domain.Message;
-import com.inferyx.framework.domain.Session;
+import org.aspectj.lang.annotation.Aspect;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.inferyx.framework.service.MessageServiceImpl;
-import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.SessionServiceImpl;
 
 @Aspect
 public class ControllerValidation {
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
-	@Autowired
-	SessionServiceImpl sessionServiceImpl;
 	
 	public static final Logger logger = Logger.getLogger(ControllerValidation.class);
 	/*

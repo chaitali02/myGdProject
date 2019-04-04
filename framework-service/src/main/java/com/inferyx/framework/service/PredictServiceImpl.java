@@ -3,21 +3,13 @@
  */
 package com.inferyx.framework.service;
 
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Status;
 
 /**
  * @author joy
@@ -25,8 +17,7 @@ import com.inferyx.framework.domain.Status;
  */
 public class PredictServiceImpl {
 	
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
+	
 	@Resource(name="taskThreadMap")
 	protected ConcurrentHashMap<?, ?> taskThreadMap;
 	
@@ -49,8 +40,11 @@ public class PredictServiceImpl {
 	 * @param version
 	 * @param execType
 	 */
+	
+	
+	/**************************Unused****************************/
 	public void kill (String uuid, String version, MetaType execType) {
-		BaseExec baseExec = null;
+	/*	BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
 		} catch (JsonProcessingException e2) {
@@ -92,14 +86,15 @@ public class PredictServiceImpl {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
 	/**
 	 * Set status of BaseExec to RESUME if status is PAUSE
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void RESUME (String uuid, String version, MetaType execType) {
+		/**************************Unused****************************/
+	/*public void RESUME (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -119,14 +114,15 @@ public class PredictServiceImpl {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
 	/**
 	 * Set status of BaseExec to PAUSE if status is KILLED, PENDING, or RESUME 
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void PAUSE (String uuid, String version, MetaType execType) {
+	/**************************Unused****************************/
+		/*public void PAUSE (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -145,7 +141,8 @@ public class PredictServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 
+  }
 }

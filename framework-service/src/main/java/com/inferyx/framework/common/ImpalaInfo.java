@@ -10,18 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Component;
-
-import com.inferyx.framework.executor.ExecContext;
 
 @Component
 public class ImpalaInfo {

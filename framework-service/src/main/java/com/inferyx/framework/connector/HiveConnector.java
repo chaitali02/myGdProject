@@ -24,14 +24,12 @@ import org.springframework.stereotype.Component;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.SecurityServiceImpl;
 
 @Component
 public class HiveConnector implements IConnector {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
+	
 
 	@Override
 	public ConnectionHolder getConnection() throws IOException {

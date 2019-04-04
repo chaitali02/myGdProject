@@ -3,31 +3,12 @@
  */
 package com.inferyx.framework.datascience.distribution;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.Metadata;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
-import org.aspectj.org.eclipse.jdt.core.util.IExceptionAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.Distribution;
-import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.RowObj;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
+
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.factory.RowObjFactory;
 
 /**
  * @author joy
@@ -38,8 +19,6 @@ public class SparkMLRandDistribution extends RandomDistribution {
 	
 	@Autowired
 	protected Helper helper;
-	@Autowired
-	protected RowObjFactory rowObjFactory;
 	@Autowired
 	private ExecutorFactory execFactory;
 

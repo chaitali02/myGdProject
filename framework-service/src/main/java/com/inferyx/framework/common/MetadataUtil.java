@@ -12,8 +12,7 @@ package com.inferyx.framework.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.MetaIdentifier;
+
 import com.inferyx.framework.service.CommonServiceImpl;
 
 

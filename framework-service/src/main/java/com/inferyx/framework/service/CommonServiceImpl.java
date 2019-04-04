@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -42,7 +41,6 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
@@ -69,100 +67,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.dao.IActivityDao;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IAppConfigDao;
-import com.inferyx.framework.dao.IApplicationDao;
-import com.inferyx.framework.dao.IAttributeDomainDao;
-import com.inferyx.framework.dao.IBatchDao;
-import com.inferyx.framework.dao.IBatchExecDao;
-import com.inferyx.framework.dao.ICommentDao;
-import com.inferyx.framework.dao.IConditionDao;
-import com.inferyx.framework.dao.IDagDao;
-import com.inferyx.framework.dao.IDagExecDao;
-import com.inferyx.framework.dao.IDashboardDao;
-import com.inferyx.framework.dao.IDashboardExecDao;
-import com.inferyx.framework.dao.IDataQualDao;
-import com.inferyx.framework.dao.IDataQualExecDao;
-import com.inferyx.framework.dao.IDataQualGroupDao;
-import com.inferyx.framework.dao.IDataQualGroupExecDao;
-import com.inferyx.framework.dao.IDataStoreDao;
-import com.inferyx.framework.dao.IDatapodDao;
-import com.inferyx.framework.dao.IDatasetDao;
-import com.inferyx.framework.dao.IDatasourceDao;
-import com.inferyx.framework.dao.IDeployExecDao;
-import com.inferyx.framework.dao.IDimensionDao;
-import com.inferyx.framework.dao.IDistributionDao;
-import com.inferyx.framework.dao.IDownloadDao;
-import com.inferyx.framework.dao.IEdgeDao;
-import com.inferyx.framework.dao.IExportDao;
-import com.inferyx.framework.dao.IExpressionDao;
-import com.inferyx.framework.dao.IFilterDao;
-import com.inferyx.framework.dao.IFormulaDao;
-import com.inferyx.framework.dao.IFunctionDao;
-import com.inferyx.framework.dao.IGraphpodDao;
-import com.inferyx.framework.dao.IGraphpodExecDao;
-import com.inferyx.framework.dao.IGroupDao;
-import com.inferyx.framework.dao.IImportDao;
-import com.inferyx.framework.dao.IIngestDao;
-import com.inferyx.framework.dao.IIngestExecDao;
-import com.inferyx.framework.dao.IIngestGroupDao;
-import com.inferyx.framework.dao.IIngestGroupExecDao;
-import com.inferyx.framework.dao.ILoadDao;
-import com.inferyx.framework.dao.ILoadExecDao;
-import com.inferyx.framework.dao.ILogDao;
-import com.inferyx.framework.dao.ILovDao;
-import com.inferyx.framework.dao.IMapDao;
-import com.inferyx.framework.dao.IMapExecDao;
-import com.inferyx.framework.dao.IMeasureDao;
-import com.inferyx.framework.dao.IMessageDao;
-import com.inferyx.framework.dao.IMetaDao;
-import com.inferyx.framework.dao.IModelDao;
-import com.inferyx.framework.dao.IModelExecDao;
-import com.inferyx.framework.dao.IOperatorDao;
-import com.inferyx.framework.dao.IOperatorExecDao;
-import com.inferyx.framework.dao.IOperatorTypeDao;
-import com.inferyx.framework.dao.IOrganizationDao;
-import com.inferyx.framework.dao.IParamListDao;
-import com.inferyx.framework.dao.IParamSetDao;
-import com.inferyx.framework.dao.IPredictDao;
-import com.inferyx.framework.dao.IPredictExecDao;
-import com.inferyx.framework.dao.IPrivilegeDao;
-import com.inferyx.framework.dao.IProcessExecDao;
-import com.inferyx.framework.dao.IProfileDao;
-import com.inferyx.framework.dao.IProfileExecDao;
-import com.inferyx.framework.dao.IProfileGroupDao;
-import com.inferyx.framework.dao.IProfileGroupExecDao;
-import com.inferyx.framework.dao.IReconDao;
-import com.inferyx.framework.dao.IReconExecDao;
-import com.inferyx.framework.dao.IReconGroupDao;
-import com.inferyx.framework.dao.IReconGroupExecDao;
-import com.inferyx.framework.dao.IRelationDao;
-import com.inferyx.framework.dao.IReportDao;
-import com.inferyx.framework.dao.IReportExecDao;
-import com.inferyx.framework.dao.IRoleDao;
-import com.inferyx.framework.dao.IRule2Dao;
-import com.inferyx.framework.dao.IRule2ExecDao;
-import com.inferyx.framework.dao.IRuleDao;
-import com.inferyx.framework.dao.IRuleExecDao;
-import com.inferyx.framework.dao.IRuleGroupDao;
-import com.inferyx.framework.dao.IRuleGroupExecDao;
-import com.inferyx.framework.dao.IScheduleDao;
-import com.inferyx.framework.dao.ISessionDao;
-import com.inferyx.framework.dao.ISimulateDao;
-import com.inferyx.framework.dao.ISimulateExecDao;
-import com.inferyx.framework.dao.ITagDao;
-import com.inferyx.framework.dao.ITrainDao;
-import com.inferyx.framework.dao.ITrainExecDao;
-import com.inferyx.framework.dao.ITrainResultDao;
-import com.inferyx.framework.dao.IUploadDao;
-import com.inferyx.framework.dao.IUserDao;
-import com.inferyx.framework.dao.IVertexDao;
-import com.inferyx.framework.dao.IVizpodDao;
-import com.inferyx.framework.dao.IVizpodExecDao;
+
 import com.inferyx.framework.domain.Address;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
@@ -170,7 +76,6 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.Config;
@@ -180,7 +85,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.Feature;
@@ -240,827 +144,44 @@ public class CommonServiceImpl<T> {
 	@Autowired
 	RelationServiceImpl relationServiceImpl;
 	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	IModelDao iModelDao;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
-	@Autowired
-	IDatapodDao iDatapodDao;
-	@Autowired
-	IRuleDao iRuleDao;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	ILoadDao iLoadDao;
-	@Autowired
-	IFunctionDao iFunctionDao;
-	@Autowired
-	IMapDao iMapDao;
-	@Autowired
-	IActivityDao iActivityDao;
-	@Autowired
-	IAlgorithmDao iAlgorithmDao;
-	@Autowired
-	IApplicationDao iApplicationDao;
-	@Autowired
-	IConditionDao iConditionDao;
-	@Autowired
-	IDagDao iDagDao;
-	@Autowired
-	IDagExecDao iDagExecDao;
-	@Autowired
-	IDashboardDao iDashboardDao;
-	@Autowired
-	IDatasetDao iDatasetDao;
-	@Autowired
-	IDataStoreDao iDataStoreDao;
-	@Autowired
-	IDimensionDao iDimensionDao;
-	@Autowired
-	IExpressionDao iExpressionDao;
-	@Autowired
-	IFilterDao iFilterDao;
-	@Autowired
-	IFormulaDao iFormulaDao;
-	@Autowired
-	IGroupDao iGroupDao;
-	@Autowired
-	ILoadExecDao iLoadExecDao;
-	@Autowired
-	IMeasureDao iMeasureDao;
-	@Autowired
-	IModelExecDao iModelExecDao;
-	@Autowired
-	IParamListDao iParamListDao;
-	@Autowired
-	IParamSetDao iParamSetDao;
-	@Autowired
-	IPrivilegeDao iPrivilegeDao;
-	@Autowired
-	IProfileDao iProfileDao;
-	@Autowired
-	IProfileExecDao iProfileExecDao;
-	@Autowired
-	IProfileGroupDao iProfileGroupDao;
-	@Autowired
-	IProfileGroupExecDao iProfileGroupExecDao;
-	@Autowired
-	IRelationDao iRelationDao;
-	@Autowired
-	IRoleDao iRoleDao;
-	@Autowired
-	IRuleExecDao iRuleExecDao;
-	@Autowired
-	IRuleGroupExecDao iRuleGroupExecDao;
-	@Autowired
-	IRuleGroupDao iRuleGroupDao;
-	@Autowired
-	ISessionDao iSessionDao;
-	@Autowired
-	IUserDao iUserDao;
-	@Autowired
-	IVizpodDao iVizpodDao;
-	@Autowired
-	IVizpodExecDao iVizpodExecDao;
-	@Autowired
-	IDataQualDao iDataQualDao;
-	@Autowired
-	IDataQualGroupDao iDataQualGroupDao;
-	@Autowired
-	IDataQualGroupExecDao iDataQualGroupExecDao;
-	@Autowired
-	IMetaDao iMetaDao;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired
-	IDataQualExecDao iDataQualExecDao;
-	// @Autowired
-	// MetadataUtil miUtil;
-	@Autowired
-	GraphInfo graphFlag;
-	@Autowired
-	IVertexDao iVertexDao;
-	@Autowired
-	IEdgeDao iEdgeDao;
-	@Autowired
-	IMapExecDao iMapExecDao;
-	@Autowired
-	GraphServiceImpl graphServiceImpl;
-	@Autowired
-	IImportDao iImportDao;
-	@Autowired
-	IExportDao iExportDao;
-	@Autowired
-	ExportServiceImpl exportServiceImpl;
-	@Autowired
 	ImportServiceImpl importServiceImpl;
-	@Autowired
-	IMessageDao iMessageDao;
-	@Autowired
-	RuleServiceImpl ruleServiceImpl;
-	@Autowired
-	RuleExecServiceImpl ruleExecServiceImpl;
-	@Autowired
-	RuleGroupServiceImpl ruleGroupServiceImpl;
-	@Autowired
-	RuleGroupExecServiceImpl ruleGroupExecServiceImpl;
-	@Autowired
-	DataQualServiceImpl dataQualServiceImpl;
-	@Autowired
-	DataQualExecServiceImpl dataQualExecServiceImpl;
-	@Autowired
-	DataQualGroupServiceImpl dataQualGroupServiceImpl;
-	@Autowired
-	DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
-	@Autowired
-	MapServiceImpl mapServiceImpl;
-	@Autowired
-	MapExecServiceImpl mapExecServiceImpl;
-	@Autowired
-	ProfileServiceImpl profileServiceImpl;
-	@Autowired
-	ProfileExecServiceImpl profileExecServiceImpl;
-	@Autowired
-	ProfileGroupServiceImpl profileGroupServiceImpl;
-	@Autowired
-	ProfileGroupExecServiceImpl profileGroupExecServiceImpl;
 	@Autowired
 	DagExecServiceImpl dagExecServiceImpl;
 	@Autowired
 	LogServiceImpl logServiceImpl;
 	@Autowired
-	ILogDao iLogDao;
-	@Autowired
 	MessageServiceImpl messageServiceImpl;
 	@SuppressWarnings("rawtypes")
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
-	@Autowired
-	DataFrameService dataFrameService;
 	CustomLogger customLogger = new CustomLogger();
-	@Autowired
-	DownloadExec downloadExec;
 	@Autowired
 	UploadExec uploadExec;
 	@Autowired
-	IDownloadDao iDownloadDao;
-	@Autowired
-	IUploadDao iUploadDao;
-	@Autowired
 	protected ExecutorFactory execFactory;
-	@Autowired
-	IPredictDao iPredictDao;
-	@Autowired
-	IPredictExecDao iPredictExecDao;
-	@Autowired
-	ISimulateDao iSimulateDao;
-	@Autowired
-	ISimulateExecDao iSimulateExecDao;
-	@Autowired
-	ITrainDao iTrainDao;
-	@Autowired
-	ITrainExecDao iTrainExecDao;
-	@Autowired
-	IReconExecDao iReconExecDao;
-	@Autowired
-	IReconDao iReconDao;
-	@Autowired
-	IReconGroupDao iReconGroupDao;
-	@Autowired
-	IReconGroupExecDao iReconGroupExecDao;
-	@Autowired
-	ReconServiceImpl reconServiceImpl;
-	@Autowired
-	ReconExecServiceImpl reconExecServiceImpl;
-	@Autowired
-	ReconGroupServiceImpl reconGroupServiceImpl;
-	@Autowired
-	ReconGroupExecServiceImpl reconGroupExecServiceImpl;
-	@Autowired
-	IDistributionDao iDistributionDao;
-	@Autowired
-	IAppConfigDao iAppConfigDao;
-	@Autowired
-	IOperatorTypeDao iOperatorTypeDao;
-	@Autowired
-	IOperatorExecDao iOperatorExecDao;
-	@Autowired
-	IOperatorDao iOperatorDao;
-	@Autowired
-	ICommentDao iCommentDao;
-	@Autowired
-	ITagDao iTagDao;
-	@Autowired
-	Helper helper;
-	@Autowired
-	ILovDao iLovDao;
-	@Autowired
-	IGraphpodDao iGraphpodDao;
-	@Autowired
-	IGraphpodExecDao iGraphpodExecDao;
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	DatasetOperator datasetOperator;
 	@Autowired
 	RuleOperator ruleOperator;
 	@Autowired
-	IReportDao iReportDao;
-	@Autowired
-	IReportExecDao iReportExecDao;
-	@Autowired
-	IBatchDao iBatchDao;
-	@Autowired
-	IBatchExecDao iBatchExecDao;
-	@Autowired
-	IScheduleDao iScheduleDao;
-	@Autowired
-	IIngestDao iIngestDao;
-	@Autowired
-	IIngestExecDao iIngestExecDao;
-	@Autowired
-	IIngestGroupDao iIngestGroupDao;
-	@Autowired
-	IIngestGroupExecDao iIngestGroupExecDao;
-	@Autowired
-	IngestExecServiceImpl ingestExecServiceImpl;
-	@Autowired
-	IngestServiceImpl ingestServiceImpl;	
-	@Autowired
-	IngestGroupServiceImpl ingestGroupServiceImpl;	
-	@Autowired
-	ITrainResultDao iTrainResultDao;
-	@Autowired
-	IDeployExecDao iDeployExecDao;
-	@Autowired
-	IProcessExecDao iProcessExecDao;
-	@Autowired
-	IOrganizationDao iOrganizationDao;
-	@Autowired
-	SessionHelper sessionHelper;
-	@Autowired
-	private IDashboardExecDao iDashboardExecDao;
-	@Autowired
-	IRule2Dao iRule2Dao;
-	@Autowired
-	IRule2ExecDao iRule2ExecDao;
-	@Autowired
-	private IAttributeDomainDao iAttributeDomainDao;	
+	Helper helper;	
 	@Autowired
 	private PropertiesFactoryBean frameworkProperties;
 	@Autowired
 	UploadServiceImpl uploadServiceImpl;
 	
-	
-	
-	public IngestServiceImpl getIngestServiceImpl() {
-		return ingestServiceImpl;
-	}
-
-	public void setIngestServiceImpl(IngestServiceImpl ingestServiceImpl) {
-		this.ingestServiceImpl = ingestServiceImpl;
-	}
-
-	public IngestGroupServiceImpl getIngestGroupServiceImpl() {
-		return ingestGroupServiceImpl;
-	}
-
-	public void setIngestGroupServiceImpl(IngestGroupServiceImpl ingestGroupServiceImpl) {
-		this.ingestGroupServiceImpl = ingestGroupServiceImpl;
-	}
-	
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iAttributeDomainDao
-	 */
-	public IAttributeDomainDao getiAttributeDomainDao() {
-		return iAttributeDomainDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iAttributeDomainDao the iAttributeDomainDao to set
-	 */
-	public void setiAttributeDomainDao(IAttributeDomainDao iAttributeDomainDao) {
-		this.iAttributeDomainDao = iAttributeDomainDao;
-	}
-
-	public IRule2ExecDao getiRule2ExecDao() {
-		return iRule2ExecDao;
-	}
-
-	public void setiRule2ExecDao(IRule2ExecDao iRule2ExecDao) {
-		this.iRule2ExecDao = iRule2ExecDao;
-	}
-
-	public IRule2Dao getiRule2Dao() {
-		return iRule2Dao;
-	}
-
-	public void setiRule2Dao(IRule2Dao iRule2Dao) {
-		this.iRule2Dao = iRule2Dao;
-	}
-
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iDashboardExecDao
-	 */
-	public IDashboardExecDao getiDashboardExecDao() {
-		return iDashboardExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iDashboardExecDao the iDashboardExecDao to set
-	 */
-	public void setiDashboardExecDao(IDashboardExecDao iDashboardExecDao) {
-		this.iDashboardExecDao = iDashboardExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iProcessExecDao
-	 */
-	public IOrganizationDao getiOrganizationDao() {
-		return iOrganizationDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iProcessExecDao
-	 *            the iProcessExecDao to set
-	 */
-	public void setiOrganizationDao(IOrganizationDao iOrganizationDao) {
-		this.iOrganizationDao = iOrganizationDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iProcessExecDao
-	 */
-	public IProcessExecDao getiProcessExecDao() {
-		return iProcessExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iProcessExecDao
-	 *            the iProcessExecDao to set
-	 */
-	public void setiProcessExecDao(IProcessExecDao iProcessExecDao) {
-		this.iProcessExecDao = iProcessExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iDeployExecDao
-	 */
-	public IDeployExecDao getiDeployExecDao() {
-		return iDeployExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iDeployExecDao
-	 *            the iDeployExecDao to set
-	 */
-	public void setiDeployExecDao(IDeployExecDao iDeployExecDao) {
-		this.iDeployExecDao = iDeployExecDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the iTrainResultDao
-	 */
-	public ITrainResultDao getiTrainResultDao() {
-		return iTrainResultDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param iTrainResultDao
-	 *            the iTrainResultDao to set
-	 */
-	public void setiTrainResultDao(ITrainResultDao iTrainResultDao) {
-		this.iTrainResultDao = iTrainResultDao;
-	}
-
-	public IIngestGroupDao getiIngestGroupDao() {
-		return iIngestGroupDao;
-	}
-
-	public void setiIngestGroupDao(IIngestGroupDao iIngestGroupDao) {
-		this.iIngestGroupDao = iIngestGroupDao;
-	}
-
-	public IIngestGroupExecDao getiIngestGroupExecDao() {
-		return iIngestGroupExecDao;
-	}
-
-	public void setiIngestGroupExecDao(IIngestGroupExecDao iIngestGroupExecDao) {
-		this.iIngestGroupExecDao = iIngestGroupExecDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the iIngestDao
-	 */
-	public IIngestDao getiIngestDao() {
-		return iIngestDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param iIgestDao
-	 *            the iIngestDao to set
-	 */
-	public void setiIngestDao(IIngestDao iIngestDao) {
-		this.iIngestDao = iIngestDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @return the iIngestExecDao
-	 */
-	public IIngestExecDao getiIngestExecDao() {
-		return iIngestExecDao;
-	}
-
-	/**
-	 *
-	 * @Ganesh
-	 *
-	 * @param iIngestExecDao
-	 *            the iIngestExecDao to set
-	 */
-	public void setiIngestExecDao(IIngestExecDao iIngestExecDao) {
-		this.iIngestExecDao = iIngestExecDao;
-	}
-
-	public IScheduleDao getiScheduleDao() {
-		return iScheduleDao;
-	}
-
-	public void setiScheduleDao(IScheduleDao iScheduleDao) {
-		this.iScheduleDao = iScheduleDao;
-	}
-
-	public IBatchDao getiBatchDao() {
-		return iBatchDao;
-	}
-
-	public void setiBatchDao(IBatchDao iBatchDao) {
-		this.iBatchDao = iBatchDao;
-	}
-
-	public IBatchExecDao getiBatchExecDao() {
-		return iBatchExecDao;
-	}
-
-	public void setiBatchExecDao(IBatchExecDao iBatchExecDao) {
-		this.iBatchExecDao = iBatchExecDao;
-	}
-
-	public IReportExecDao getiReportExecDao() {
-		return iReportExecDao;
-	}
-
-	public void setiReportExecDao(IReportExecDao iReportExecDao) {
-		this.iReportExecDao = iReportExecDao;
-	}
-
-	public IReportDao getiReportDao() {
-		return iReportDao;
-	}
-
-	public void setiReportDao(IReportDao iReportDao) {
-		this.iReportDao = iReportDao;
-	}
-
-	public IGraphpodDao getiGraphpodDao() {
-		return this.iGraphpodDao;
-	}
-
-	public void setiGraphpodDao(IGraphpodDao iGraphpodDao) {
-		this.iGraphpodDao = iGraphpodDao;
-	}
-
-	public IGraphpodExecDao getiGraphpodExecDao() {
-		return this.iGraphpodExecDao;
-	}
-
-	public void setiGraphpodExecDao(IGraphpodExecDao iGraphpodExecDao) {
-		this.iGraphpodExecDao = iGraphpodExecDao;
-	}
-
-	public ILovDao getiLovDao() {
-		return iLovDao;
-	}
-
-	public void setiLovDao(ILovDao iLovDao) {
-		this.iLovDao = iLovDao;
-	}
-
-	public ITagDao getiTagDao() {
-		return iTagDao;
-	}
-
-	public void setiTagDao(ITagDao iTagDao) {
-		this.iTagDao = iTagDao;
-	}
-
-	public ICommentDao getiCommentDao() {
-		return iCommentDao;
-	}
-
-	public void setiCommentDao(ICommentDao iCommentDao) {
-		this.iCommentDao = iCommentDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iOperatorDao
-	 */
-	public IOperatorDao getiOperatorDao() {
-		return iOperatorDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iOperatorDao
-	 *            the iOperatorDao to set
-	 */
-	public void setiOperatorDao(IOperatorDao iOperatorDao) {
-		this.iOperatorDao = iOperatorDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iOperatorTypeDao
-	 */
-	public IOperatorTypeDao getiOperatorTypeDao() {
-		return iOperatorTypeDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iOperatorTypeDao
-	 *            the iOperatorTypeDao to set
-	 */
-	public void setiOperatorTypeDao(IOperatorTypeDao iOperatorTypeDao) {
-		this.iOperatorTypeDao = iOperatorTypeDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iOperatorExecDao
-	 */
-	public IOperatorExecDao getiOperatorExecDao() {
-		return iOperatorExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iOperatorExecDao
-	 *            the iOperatorExecDao to set
-	 */
-	public void setiOperatorExecDao(IOperatorExecDao iOperatorExecDao) {
-		this.iOperatorExecDao = iOperatorExecDao;
-	}
-
-	public IAppConfigDao getiAppConfigDao() {
-		return iAppConfigDao;
-	}
-
-	public void setiAppConfigDao(IAppConfigDao iAppConfigDao) {
-		this.iAppConfigDao = iAppConfigDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iDistributionDao
-	 */
-	public IDistributionDao getiDistributionDao() {
-		return iDistributionDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iDistributionDao
-	 *            the iDistributionDao to set
-	 */
-	public void setiDistributionDao(IDistributionDao iDistributionDao) {
-		this.iDistributionDao = iDistributionDao;
-	}
-
-	public ReconServiceImpl getReconServiceImpl() {
-		return reconServiceImpl;
-	}
-
-	public void setReconServiceImpl(ReconServiceImpl reconServiceImpl) {
-		this.reconServiceImpl = reconServiceImpl;
-	}
-
-	public ReconExecServiceImpl getReconExecServiceImpl() {
-		return reconExecServiceImpl;
-	}
-
-	public void setReconExecServiceImpl(ReconExecServiceImpl reconExecServiceImpl) {
-		this.reconExecServiceImpl = reconExecServiceImpl;
-	}
-
-	public ReconGroupServiceImpl getReconGroupServiceImpl() {
-		return reconGroupServiceImpl;
-	}
-
-	public void setReconGroupServiceImpl(ReconGroupServiceImpl reconGroupServiceImpl) {
-		this.reconGroupServiceImpl = reconGroupServiceImpl;
-	}
-
-	public ReconGroupExecServiceImpl getReconGroupExecServiceImpl() {
-		return reconGroupExecServiceImpl;
-	}
-
-	public void setReconGroupExecServiceImpl(ReconGroupExecServiceImpl reconGroupExecServiceImpl) {
-		this.reconGroupExecServiceImpl = reconGroupExecServiceImpl;
-	}
-
-	public IReconGroupDao getiReconGroupDao() {
-		return iReconGroupDao;
-	}
-
-	public void setiReconGroupDao(IReconGroupDao iReconGroupDao) {
-		this.iReconGroupDao = iReconGroupDao;
-	}
-
-	public IReconGroupExecDao getiReconGroupExecDao() {
-		return iReconGroupExecDao;
-	}
-
-	public void setiReconGroupExecDao(IReconGroupExecDao iReconGroupExecDao) {
-		this.iReconGroupExecDao = iReconGroupExecDao;
-	}
-
-	public IReconExecDao getiReconExecDao() {
-		return iReconExecDao;
-	}
-
-	public void setiReconExecDao(IReconExecDao iReconExecDao) {
-		this.iReconExecDao = iReconExecDao;
-	}
-
-	public IReconDao getiReconDao() {
-		return iReconDao;
-	}
-
-	public void setiReconDao(IReconDao iReconDao) {
-		this.iReconDao = iReconDao;
-	}
-
-	public ITrainExecDao getiTrainExecDao() {
-		return iTrainExecDao;
-	}
-
-	public void setiTrainExecDao(ITrainExecDao iTrainExecDao) {
-		this.iTrainExecDao = iTrainExecDao;
-	}
-
-	public ITrainDao getiTrainDao() {
-		return iTrainDao;
-	}
-
-	public void setiTrainDao(ITrainDao iTrainDao) {
-		this.iTrainDao = iTrainDao;
-	}
-
-	public ISimulateDao getiSimulateDao() {
-		return iSimulateDao;
-	}
-
-	public void setiSimulateDao(ISimulateDao iSimulateDao) {
-		this.iSimulateDao = iSimulateDao;
-	}
-
-	public ISimulateExecDao getiSimulateExecDao() {
-		return iSimulateExecDao;
-	}
-
-	public void setiSimulateExecDao(ISimulateExecDao iSimulateExecDao) {
-		this.iSimulateExecDao = iSimulateExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iPredictDao
-	 */
-	public IPredictDao getiPredictDao() {
-		return iPredictDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iPredictDao
-	 *            the iPredictDao to set
-	 */
-	public void setiPredictDao(IPredictDao iPredictDAo) {
-		this.iPredictDao = iPredictDAo;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the iPredictExecDao
-	 */
-	public IPredictExecDao getiPredictExecDao() {
-		return iPredictExecDao;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param iPredictExecDao
-	 *            the iPredictExecDao to set
-	 */
-	public void setiPredictExecDao(IPredictExecDao iPredictExecDao) {
-		this.iPredictExecDao = iPredictExecDao;
-	}
-
-	public IUploadDao getiUploadDao() {
-		return iUploadDao;
-	}
-
-	public void setiUploadDao(IUploadDao iUploadDao) {
-		this.iUploadDao = iUploadDao;
-	}
-
 	public UploadExec getUploadExec() {
 		return uploadExec;
 	}
 
 	public void setUploadExec(UploadExec uploadExec) {
 		this.uploadExec = uploadExec;
-	}
-
-	public IDownloadDao getiDownloadDao() {
-		return iDownloadDao;
-	}
-
-	public void setiDownloadDao(IDownloadDao iDownloadDao) {
-		this.iDownloadDao = iDownloadDao;
-	}
-
-	public DownloadExec getDownloadExec() {
-		return downloadExec;
-	}
-
-	public void setDownloadExec(DownloadExec downloadExec) {
-		this.downloadExec = downloadExec;
-	}
-
-	public ILogDao getiLogDao() {
-		return iLogDao;
-	}
-
-	public void setiLogDao(ILogDao iLogDao) {
-		this.iLogDao = iLogDao;
 	}
 
 	public LogServiceImpl getLogServiceImpl() {
@@ -1071,564 +192,12 @@ public class CommonServiceImpl<T> {
 		this.logServiceImpl = logServiceImpl;
 	}
 
-	public IMessageDao getiMessageDao() {
-		return iMessageDao;
-	}
-
-	public void setiMessageDao(IMessageDao iMessageDao) {
-		this.iMessageDao = iMessageDao;
-	}
-
-	public IImportDao getiImportDao() {
-		return iImportDao;
-	}
-
-	public void setiImportDao(IImportDao iImportDao) {
-		this.iImportDao = iImportDao;
-	}
-
-	public IExportDao getiExportDao() {
-		return iExportDao;
-	}
-
-	public void setiExportDao(IExportDao iExportDao) {
-		this.iExportDao = iExportDao;
-	}
-
-	public IVertexDao getiVertexDao() {
-		return iVertexDao;
-	}
-
-	public void setiVertexDao(IVertexDao iVertexDao) {
-		this.iVertexDao = iVertexDao;
-	}
-
-	public IEdgeDao getiEdgeDao() {
-		return iEdgeDao;
-	}
-
-	public void setiEdgeDao(IEdgeDao iEdgeDao) {
-		this.iEdgeDao = iEdgeDao;
-	}
-
-	public IMapExecDao getiMapExecDao() {
-		return iMapExecDao;
-	}
-
-	public void setiMapExecDao(IMapExecDao iMapExecDao) {
-		this.iMapExecDao = iMapExecDao;
-	}
-
-	public GraphInfo getGraphFlag() {
-		return graphFlag;
-	}
-
-	public void setGraphFlag(GraphInfo graphFlag) {
-		this.graphFlag = graphFlag;
-	}
-	//
-	// public MetadataUtil getMiUtil() {
-	// return miUtil;
-	// }
-	//
-	// public void setMiUtil(MetadataUtil miUtil) {
-	// this.miUtil = miUtil;
-	// }
-
-	public IDataQualExecDao getiDataQualExecDao() {
-		return iDataQualExecDao;
-	}
-
-	public void setiDataQualExecDao(IDataQualExecDao iDataQualExecDao) {
-		this.iDataQualExecDao = iDataQualExecDao;
-	}
-
-	public IDatasourceDao getiDatasourceDao() {
-		return iDatasourceDao;
-	}
-
-	public void setiDatasourceDao(IDatasourceDao iDatasourceDao) {
-		this.iDatasourceDao = iDatasourceDao;
-	}
-
-	public IMetaDao getiMetaDao() {
-		return iMetaDao;
-	}
-
-	public void setiMetaDao(IMetaDao iMetaDao) {
-		this.iMetaDao = iMetaDao;
-	}
-
-	public IDataQualDao getiDataQualDao() {
-		return iDataQualDao;
-	}
-
-	public void setiDataQualDao(IDataQualDao iDataQualDao) {
-		this.iDataQualDao = iDataQualDao;
-	}
-
-	public IDataQualGroupDao getiDataQualGroupDao() {
-		return iDataQualGroupDao;
-	}
-
-	public void setiDataQualGroupDao(IDataQualGroupDao iDataQualGroupDao) {
-		this.iDataQualGroupDao = iDataQualGroupDao;
-	}
-
-	public IDataQualGroupExecDao getiDataQualGroupExecDao() {
-		return iDataQualGroupExecDao;
-	}
-
-	public void setiDataQualGroupExecDao(IDataQualGroupExecDao iDataQualGroupExecDao) {
-		this.iDataQualGroupExecDao = iDataQualGroupExecDao;
-	}
-
 	public MongoTemplate getMongoTemplate() {
 		return mongoTemplate;
 	}
 
 	public void setMongoTemplate(MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
-	}
-
-	public ILoadDao getiLoadDao() {
-		return iLoadDao;
-	}
-
-	public void setiLoadDao(ILoadDao iLoadDao) {
-		this.iLoadDao = iLoadDao;
-	}
-
-	public IFunctionDao getiFunctionDao() {
-		return iFunctionDao;
-	}
-
-	public void setiFunctionDao(IFunctionDao iFunctionDao) {
-		this.iFunctionDao = iFunctionDao;
-	}
-
-	public IModelDao getiModelDao() {
-		return iModelDao;
-	}
-
-	public void setiModelDao(IModelDao iModelDao) {
-		this.iModelDao = iModelDao;
-	}
-
-	public IDatapodDao getiDatapodDao() {
-		return iDatapodDao;
-	}
-
-	public void setiDatapodDao(IDatapodDao iDatapodDao) {
-		this.iDatapodDao = iDatapodDao;
-	}
-
-	public IRuleDao getiRuleDao() {
-		return iRuleDao;
-	}
-
-	public void setiRuleDao(IRuleDao iRuleDao) {
-		this.iRuleDao = iRuleDao;
-	}
-
-	public IMapDao getiMapDao() {
-		return iMapDao;
-	}
-
-	public void setiMapDao(IMapDao iMapDao) {
-		this.iMapDao = iMapDao;
-	}
-
-	public IActivityDao getiActivityDao() {
-		return iActivityDao;
-	}
-
-	public void setiActivityDao(IActivityDao iActivityDao) {
-		this.iActivityDao = iActivityDao;
-	}
-
-	public IAlgorithmDao getiAlgorithmDao() {
-		return iAlgorithmDao;
-	}
-
-	public void setiAlgorithmDao(IAlgorithmDao iAlgorithmDao) {
-		this.iAlgorithmDao = iAlgorithmDao;
-	}
-
-	public IApplicationDao getiApplicationDao() {
-		return iApplicationDao;
-	}
-
-	public void setiApplicationDao(IApplicationDao iApplicationDao) {
-		this.iApplicationDao = iApplicationDao;
-	}
-
-	public IConditionDao getiConditionDao() {
-		return iConditionDao;
-	}
-
-	public void setiConditionDao(IConditionDao iConditionDao) {
-		this.iConditionDao = iConditionDao;
-	}
-
-	public IDagDao getiDagDao() {
-		return iDagDao;
-	}
-
-	public void setiDagDao(IDagDao iDagDao) {
-		this.iDagDao = iDagDao;
-	}
-
-	public IDagExecDao getiDagExecDao() {
-		return iDagExecDao;
-	}
-
-	public void setiDagExecDao(IDagExecDao iDagExecDao) {
-		this.iDagExecDao = iDagExecDao;
-	}
-
-	public IDashboardDao getiDashboardDao() {
-		return iDashboardDao;
-	}
-
-	public void setiDashboardDao(IDashboardDao iDashboardDao) {
-		this.iDashboardDao = iDashboardDao;
-	}
-
-	public IDatasetDao getiDatasetDao() {
-		return iDatasetDao;
-	}
-
-	public void setiDatasetDao(IDatasetDao iDatasetDao) {
-		this.iDatasetDao = iDatasetDao;
-	}
-
-	public IDataStoreDao getiDataStoreDao() {
-		return iDataStoreDao;
-	}
-
-	public void setiDataStoreDao(IDataStoreDao iDataStoreDao) {
-		this.iDataStoreDao = iDataStoreDao;
-	}
-
-	public IDimensionDao getiDimensionDao() {
-		return iDimensionDao;
-	}
-
-	public void setiDimensionDao(IDimensionDao iDimensionDao) {
-		this.iDimensionDao = iDimensionDao;
-	}
-
-	public IExpressionDao getiExpressionDao() {
-		return iExpressionDao;
-	}
-
-	public void setiExpressionDao(IExpressionDao iExpressionDao) {
-		this.iExpressionDao = iExpressionDao;
-	}
-
-	public IFilterDao getiFilterDao() {
-		return iFilterDao;
-	}
-
-	public void setiFilterDao(IFilterDao iFilterDao) {
-		this.iFilterDao = iFilterDao;
-	}
-
-	public IFormulaDao getiFormulaDao() {
-		return iFormulaDao;
-	}
-
-	public void setiFormulaDao(IFormulaDao iFormulaDao) {
-		this.iFormulaDao = iFormulaDao;
-	}
-
-	public IGroupDao getiGroupDao() {
-		return iGroupDao;
-	}
-
-	public void setiGroupDao(IGroupDao iGroupDao) {
-		this.iGroupDao = iGroupDao;
-	}
-
-	public ILoadExecDao getiLoadExecDao() {
-		return iLoadExecDao;
-	}
-
-	public void setiLoadExecDao(ILoadExecDao iLoadExecDao) {
-		this.iLoadExecDao = iLoadExecDao;
-	}
-
-	public IMeasureDao getiMeasureDao() {
-		return iMeasureDao;
-	}
-
-	public void setiMeasureDao(IMeasureDao iMeasureDao) {
-		this.iMeasureDao = iMeasureDao;
-	}
-
-	public IModelExecDao getiModelExecDao() {
-		return iModelExecDao;
-	}
-
-	public void setiModelExecDao(IModelExecDao iModelExecDao) {
-		this.iModelExecDao = iModelExecDao;
-	}
-
-	public IParamListDao getiParamListDao() {
-		return iParamListDao;
-	}
-
-	public void setiParamListDao(IParamListDao iParamListDao) {
-		this.iParamListDao = iParamListDao;
-	}
-
-	public IParamSetDao getiParamSetDao() {
-		return iParamSetDao;
-	}
-
-	public void setiParamSetDao(IParamSetDao iParamSetDao) {
-		this.iParamSetDao = iParamSetDao;
-	}
-
-	public IPrivilegeDao getiPrivilegeDao() {
-		return iPrivilegeDao;
-	}
-
-	public void setiPrivilegeDao(IPrivilegeDao iPrivilegeDao) {
-		this.iPrivilegeDao = iPrivilegeDao;
-	}
-
-	public IProfileDao getiProfileDao() {
-		return iProfileDao;
-	}
-
-	public void setiProfileDao(IProfileDao iProfileDao) {
-		this.iProfileDao = iProfileDao;
-	}
-
-	public IProfileExecDao getiProfileExecDao() {
-		return iProfileExecDao;
-	}
-
-	public void setiProfileExecDao(IProfileExecDao iProfileExecDao) {
-		this.iProfileExecDao = iProfileExecDao;
-	}
-
-	public IProfileGroupDao getiProfileGroupDao() {
-		return iProfileGroupDao;
-	}
-
-	public void setiProfileGroupDao(IProfileGroupDao iProfileGroupDao) {
-		this.iProfileGroupDao = iProfileGroupDao;
-	}
-
-	public IProfileGroupExecDao getiProfileGroupExecDao() {
-		return iProfileGroupExecDao;
-	}
-
-	public void setiProfileGroupExecDao(IProfileGroupExecDao iProfileGroupExecDao) {
-		this.iProfileGroupExecDao = iProfileGroupExecDao;
-	}
-
-	public IRelationDao getiRelationDao() {
-		return iRelationDao;
-	}
-
-	public void setiRelationDao(IRelationDao iRelationDao) {
-		this.iRelationDao = iRelationDao;
-	}
-
-	public IRoleDao getiRoleDao() {
-		return iRoleDao;
-	}
-
-	public void setiRoleDao(IRoleDao iRoleDao) {
-		this.iRoleDao = iRoleDao;
-	}
-
-	public IRuleExecDao getiRuleExecDao() {
-		return iRuleExecDao;
-	}
-
-	public void setiRuleExecDao(IRuleExecDao iRuleExecDao) {
-		this.iRuleExecDao = iRuleExecDao;
-	}
-
-	public IRuleGroupExecDao getiRuleGroupExecDao() {
-		return iRuleGroupExecDao;
-	}
-
-	public void setiRuleGroupExecDao(IRuleGroupExecDao iRuleGroupExecDao) {
-		this.iRuleGroupExecDao = iRuleGroupExecDao;
-	}
-
-	public IRuleGroupDao getiRuleGroupDao() {
-		return iRuleGroupDao;
-	}
-
-	public void setiRuleGroupDao(IRuleGroupDao iRuleGroupDao) {
-		this.iRuleGroupDao = iRuleGroupDao;
-	}
-
-	public ISessionDao getiSessionDao() {
-		return iSessionDao;
-	}
-
-	public void setiSessionDao(ISessionDao iSessionDao) {
-		this.iSessionDao = iSessionDao;
-	}
-
-	public IUserDao getiUserDao() {
-		return iUserDao;
-	}
-
-	public void setiUserDao(IUserDao iUserDao) {
-		this.iUserDao = iUserDao;
-	}
-
-	public IVizpodDao getiVizpodDao() {
-		return iVizpodDao;
-	}
-
-	public void setiVizpodDao(IVizpodDao iVizpodDao) {
-		this.iVizpodDao = iVizpodDao;
-	}
-
-	public IVizpodExecDao getiVizpodExecDao() {
-		return iVizpodExecDao;
-	}
-
-	public void setiVizpodExecDao(IVizpodExecDao iVizpodExecDao) {
-		this.iVizpodExecDao = iVizpodExecDao;
-	}
-
-	public RuleServiceImpl getRuleServiceImpl() {
-		return ruleServiceImpl;
-	}
-
-	public void setRuleServiceImpl(RuleServiceImpl ruleServiceImpl) {
-		this.ruleServiceImpl = ruleServiceImpl;
-	}
-
-	public RuleGroupServiceImpl getRuleGroupServiceImpl() {
-		return ruleGroupServiceImpl;
-	}
-
-	public void setRuleGroupServiceImpl(RuleGroupServiceImpl ruleGroupServiceImpl) {
-		this.ruleGroupServiceImpl = ruleGroupServiceImpl;
-	}
-
-	public DataQualServiceImpl getDataQualServiceImpl() {
-		return dataQualServiceImpl;
-	}
-
-	public void setDataQualServiceImpl(DataQualServiceImpl dataQualServiceImpl) {
-		this.dataQualServiceImpl = dataQualServiceImpl;
-	}
-
-	public DataQualGroupServiceImpl getDataQualGroupServiceImpl() {
-		return dataQualGroupServiceImpl;
-	}
-
-	public void setDataQualGroupServiceImpl(DataQualGroupServiceImpl dataQualGroupServiceImpl) {
-		this.dataQualGroupServiceImpl = dataQualGroupServiceImpl;
-	}
-
-	public MapServiceImpl getMapServiceImpl() {
-		return mapServiceImpl;
-	}
-
-	public void setMapServiceImpl(MapServiceImpl mapServiceImpl) {
-		this.mapServiceImpl = mapServiceImpl;
-	}
-
-	public ProfileServiceImpl getProfileServiceImpl() {
-		return profileServiceImpl;
-	}
-
-	public void setProfileServiceImpl(ProfileServiceImpl profileServiceImpl) {
-		this.profileServiceImpl = profileServiceImpl;
-	}
-
-	public ProfileGroupServiceImpl getProfileGroupServiceImpl() {
-		return profileGroupServiceImpl;
-	}
-
-	public void setProfileGroupServiceImpl(ProfileGroupServiceImpl profileGroupServiceImpl) {
-		this.profileGroupServiceImpl = profileGroupServiceImpl;
-	}
-
-	public RuleExecServiceImpl getRuleExecServiceImpl() {
-		return ruleExecServiceImpl;
-	}
-
-	public void setRuleExecServiceImpl(RuleExecServiceImpl ruleExecServiceImpl) {
-		this.ruleExecServiceImpl = ruleExecServiceImpl;
-	}
-
-	public RuleGroupExecServiceImpl getRuleGroupExecServiceImpl() {
-		return ruleGroupExecServiceImpl;
-	}
-
-	public void setRuleGroupExecServiceImpl(RuleGroupExecServiceImpl ruleGroupExecServiceImpl) {
-		this.ruleGroupExecServiceImpl = ruleGroupExecServiceImpl;
-	}
-
-	public DataQualExecServiceImpl getDataQualExecServiceImpl() {
-		return dataQualExecServiceImpl;
-	}
-
-	public void setDataQualExecServiceImpl(DataQualExecServiceImpl dataQualExecServiceImpl) {
-		this.dataQualExecServiceImpl = dataQualExecServiceImpl;
-	}
-
-	public DataQualGroupExecServiceImpl getDataQualGroupExecServiceImpl() {
-		return dataQualGroupExecServiceImpl;
-	}
-
-	public void setDataQualGroupExecServiceImpl(DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl) {
-		this.dataQualGroupExecServiceImpl = dataQualGroupExecServiceImpl;
-	}
-
-	public MapExecServiceImpl getMapExecServiceImpl() {
-		return mapExecServiceImpl;
-	}
-
-	public void setMapExecServiceImpl(MapExecServiceImpl mapExecServiceImpl) {
-		this.mapExecServiceImpl = mapExecServiceImpl;
-	}
-
-	public ProfileExecServiceImpl getProfileExecServiceImpl() {
-		return profileExecServiceImpl;
-	}
-
-	public void setProfileExecServiceImpl(ProfileExecServiceImpl profileExecServiceImpl) {
-		this.profileExecServiceImpl = profileExecServiceImpl;
-	}
-
-	public ProfileGroupExecServiceImpl getProfileGroupExecServiceImpl() {
-		return profileGroupExecServiceImpl;
-	}
-
-	public void setProfileGroupExecServiceImpl(ProfileGroupExecServiceImpl profileGroupExecServiceImpl) {
-		this.profileGroupExecServiceImpl = profileGroupExecServiceImpl;
-	}
-
-	public IngestExecServiceImpl getIngestExecServiceImpl() {
-		return ingestExecServiceImpl;
-	}
-
-	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
-		this.ingestExecServiceImpl = ingestExecServiceImpl;
-	}
-	
-	public GraphServiceImpl getGraphServiceImpl() {
-		return graphServiceImpl;
-	}
-
-	public void setGraphServiceImpl(GraphServiceImpl graphServiceImpl) {
-		this.graphServiceImpl = graphServiceImpl;
 	}
 
 	static final Logger logger = Logger.getLogger(CommonServiceImpl.class);
@@ -1674,7 +243,8 @@ public class CommonServiceImpl<T> {
 		return true;
 	}
 
-	public Datapod createDatapodFromCsv(String csvFilePath) throws Exception {
+	/*************************Unused***************************/
+	/*public Datapod createDatapodFromCsv(String csvFilePath) throws Exception {
 
 		// Apply a schema to an RDD of JavaBeans and register it as a table.
 		// DataFrame schemaPeople = sqlContext.createDataFrame(people,
@@ -1717,7 +287,7 @@ public class CommonServiceImpl<T> {
 			e.printStackTrace();
 		}
 		return dp;
-	}
+	}*/
 
 	public List<BaseEntity> getAll(String type) throws JsonProcessingException {
 		List<BaseEntity> newObjectList = new ArrayList<>();
@@ -2304,7 +874,8 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 
-	public boolean isExists(MetaType type, String id) {
+	/******************Unused********************/
+	/*public boolean isExists(MetaType type, String id) {
 		Object iDao = null;
 		try {
 			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
@@ -2314,7 +885,7 @@ public class CommonServiceImpl<T> {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	public List<BaseEntity> getAllLatest(String type, String active) throws JsonProcessingException, ParseException {
@@ -2715,12 +1286,13 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	/*********************Unused*****************************/
+	/*@SuppressWarnings("unchecked")
 	public T getiDAO(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException {
 		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(this);
 		return (T) iDao;
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
@@ -3406,7 +1978,9 @@ public class CommonServiceImpl<T> {
 		}
 	}
 
-	public boolean nonBlockingCompleteTaskThread(List<FutureTask<String>> taskList) {
+	
+	/************************Unused*************************/
+	/*public boolean nonBlockingCompleteTaskThread(List<FutureTask<String>> taskList) {
 		String outputThreadName = null;
 		boolean isComplete = true;
 		for (FutureTask<String> futureTask : taskList) {
@@ -3425,7 +1999,7 @@ public class CommonServiceImpl<T> {
 			}
 		}
 		return isComplete;
-	}
+	}*/
 
 	/**
 	 * Collect result and clear map
@@ -3826,7 +2400,8 @@ public class CommonServiceImpl<T> {
 		return resolveName(obj, metaType);
 	}
 
-	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType)
+	/************************Unused***************************/
+	/*public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType)
 			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
@@ -3856,9 +2431,10 @@ public class CommonServiceImpl<T> {
 				new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
 		save(MetaType.uploadExec.toString(), uploadExec);
 		return fileName;
-	}
+	}*/
 
-	public Object getDomainFromDomainExec(String execType, String execUuid, String execVersion)
+	/*************************Unused**************************/
+	/*public Object getDomainFromDomainExec(String execType, String execUuid, String execVersion)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException {
 		Object domainObject = null;
@@ -3868,7 +2444,7 @@ public class CommonServiceImpl<T> {
 		domainObject = getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(),
 				dependsOn.getRef().getType().toString());
 		return domainObject;
-	}
+	}*/
 
 	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -3925,8 +2501,8 @@ public class CommonServiceImpl<T> {
 		return response;
 	}
 
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/****************************Unused*************************/
+	/*@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		List objectList = new ArrayList();
@@ -3951,7 +2527,7 @@ public class CommonServiceImpl<T> {
 			finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
 		}
 		return finalObjectList;
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	public List<T> getAllLatestCompleteObjects(String type, String active)
@@ -4173,7 +2749,8 @@ public class CommonServiceImpl<T> {
 
 	}
 
-	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType, String uuid)
+	/***************************Unused******************************/
+	/*public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType, String uuid)
 			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 
 		String directoryPath = getConfigValue("framework.file.comment.upload.path");
@@ -4207,8 +2784,10 @@ public class CommonServiceImpl<T> {
 		}
 		return true;
 	}
-
-	@SuppressWarnings("unchecked")
+*/
+	
+	/****************************Unused******************************/
+	/*@SuppressWarnings("unchecked")
 	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response, String uuid)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
@@ -4274,7 +2853,7 @@ public class CommonServiceImpl<T> {
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
 		}
 		return response;
-	}
+	}*/
 
 	/**
 	 * 
@@ -4796,7 +3375,8 @@ public class CommonServiceImpl<T> {
 	 * @param tableName
 	 * @return
 	 */
-	public String getTrainingSql(String[] fieldArray, String label, String tableName) {
+/*******************************Unused**************************/
+	/*public String getTrainingSql(String[] fieldArray, String label, String tableName) {
 		String labelAlias = "label";
 		if (StringUtils.isBlank(label) || fieldArray == null || fieldArray.length <= 0) {
 			return " SELECT * FROM " + tableName;
@@ -4809,7 +3389,7 @@ public class CommonServiceImpl<T> {
 		sb.append(ConstantsUtil.FROM).append(tableName);
 		return sb.toString();
 	}
-
+*/
 	public Datasource getDatasourceByObject(Object object) throws JsonProcessingException {
 		if (object instanceof Datapod) {
 			return getDatasourceByDatapod((Datapod) object);
@@ -5091,7 +3671,8 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 
-	public String renameFileAndGetFilePathFromDir(String directory, String fileName, String fileExt) throws IOException {
+	/*************************Unused***************************/
+	/*public String renameFileAndGetFilePathFromDir(String directory, String fileName, String fileExt) throws IOException {
 		File folder = new File(directory);
 		for (File file : folder.listFiles()) {
 			String dirFileName = file.getName();
@@ -5106,7 +3687,7 @@ public class CommonServiceImpl<T> {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	public String getFileNameFromDir(String directory, String fileExt, String fileFormat) {
 		File folder = new File(directory);
@@ -5134,7 +3715,8 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 	
-	public String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
+	/*******************************Unused*****************************/
+	/*public String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
 		if (datapodKey.getType().equals(MetaType.rule)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
@@ -5161,7 +3743,7 @@ public class CommonServiceImpl<T> {
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 

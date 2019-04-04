@@ -20,7 +20,6 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.executor.IExecutor;

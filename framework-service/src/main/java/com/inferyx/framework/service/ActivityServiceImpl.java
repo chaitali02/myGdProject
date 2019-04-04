@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,16 +44,6 @@ public class ActivityServiceImpl {
 	IUserDao iUserDao;
 	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	DagExecServiceImpl dagExecImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	SessionServiceImpl sessionServiceImpl;
 	@Autowired

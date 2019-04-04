@@ -20,14 +20,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,7 +80,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
-import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.FileType;
@@ -97,7 +94,6 @@ import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Message;
-import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -146,11 +142,7 @@ public class MetadataServiceImpl {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	LoadServiceImpl loadServiceImpl;
-	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -204,11 +196,12 @@ public class MetadataServiceImpl {
 		return baseEntity;
 	}	
 	
-	public Meta findOne(String id) throws JsonProcessingException{
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+	 /*************************Unused****************************/
+/*	public Meta findOne(String id) throws JsonProcessingException{
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//return iMetadataDao.findOneById(appUuid,id);
 		return (Meta) commonServiceImpl.getOneById(id, MetaType.meta.toString());
-	}
+	}*/
 
 
 	@SuppressWarnings("unchecked")
@@ -1063,7 +1056,8 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
+	/********************************Unused************************************/
+	/*public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
 		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operator.toString(),"N");			
@@ -1085,7 +1079,7 @@ public class MetadataServiceImpl {
 			holderList.add(paramListHolder);
 		}
 		return holderList;
-	}
+	}*/
 	
 
 	@SuppressWarnings("unchecked")

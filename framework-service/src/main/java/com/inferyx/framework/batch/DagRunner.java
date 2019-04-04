@@ -16,13 +16,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.MetaIdentifierHolder;

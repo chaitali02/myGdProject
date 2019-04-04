@@ -70,12 +70,10 @@ import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.service.CommonServiceImpl;
 
 @Service
 public class OracleExecutor implements IExecutor {
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
+	
 	@Autowired
 	ConnectionFactory  connectionFactory;
 	@Autowired

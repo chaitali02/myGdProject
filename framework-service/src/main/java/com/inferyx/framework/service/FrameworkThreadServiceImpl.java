@@ -21,11 +21,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.dao.IUserDao;
-import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -43,8 +41,6 @@ public class FrameworkThreadServiceImpl {
 	IUserDao iUserDao;
 	@Autowired
 	CommonServiceImpl commonServiceImpl;
-	@Autowired
-	ActivityServiceImpl activityServiceImpl;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 

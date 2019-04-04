@@ -38,17 +38,9 @@ public class DatasetViewServiceImpl {
 	@Autowired
 	IDatasetDao iDatasetDao;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	MapServiceImpl mapServiceImpl;
-	@Autowired
 	FilterServiceImpl filterServiceImpl;
 	@Autowired
 	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired

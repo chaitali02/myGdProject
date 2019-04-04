@@ -10,13 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-import java.io.IOException;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.SimpleLayout;
+
 
 /**
  * @author Ganesh

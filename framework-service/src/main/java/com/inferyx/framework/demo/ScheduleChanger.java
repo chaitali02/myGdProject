@@ -3,10 +3,8 @@
  */
 package com.inferyx.framework.demo;
 
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**

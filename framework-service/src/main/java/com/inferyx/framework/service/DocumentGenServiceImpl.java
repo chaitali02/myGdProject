@@ -41,8 +41,6 @@ public class DocumentGenServiceImpl {
 	@Autowired
 	private WorkbookUtil workbookUtil;
 	@Autowired
-	private MetadataServiceImpl metadataServiceImpl;
-	@Autowired
 	private CommonServiceImpl commonServiceImpl;
 	
 	public boolean createDocument(Document document) throws IOException {

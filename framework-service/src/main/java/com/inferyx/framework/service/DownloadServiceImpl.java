@@ -57,9 +57,7 @@ public class DownloadServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private DocumentGenServiceImpl documentGenServiceImpl;
-	@Autowired
-	private MetadataServiceImpl metadataServiceImpl;
-
+	
 	public DownloadExec create(MetaIdentifierHolder dependsOn) throws Exception {
 		LOGGER.info("Creating downloadExec ...");
 		DownloadExec downloadExec = new DownloadExec();

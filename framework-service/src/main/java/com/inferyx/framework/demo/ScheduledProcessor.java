@@ -2,8 +2,6 @@
  * 
  */
 package com.inferyx.framework.demo;
-
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Component;

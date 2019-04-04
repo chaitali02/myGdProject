@@ -10,40 +10,19 @@
  *******************************************************************************/
 package com.inferyx.framework.aspect;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.time.StopWatch;
 import org.apache.log4j.Logger;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.inferyx.framework.domain.FrameworkThreadLocal;
-import com.inferyx.framework.domain.Log;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
-import com.inferyx.framework.domain.MetaType;
+import org.aspectj.lang.annotation.Aspect;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 @Aspect
 public class LoggingAspect {
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	SessionContext sessionContext;
+	
 	
 	public static final Logger logger = Logger.getLogger(LoggingAspect.class);
 	/*

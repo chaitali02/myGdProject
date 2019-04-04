@@ -26,8 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -43,17 +42,13 @@ import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.Batch;
-import com.inferyx.framework.domain.BatchExec;
-import com.inferyx.framework.domain.MetaIdentifier;
+
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.enums.RunMode;
+
 
 /**
  * @author Ganesh
@@ -63,18 +58,15 @@ import com.inferyx.framework.enums.RunMode;
 public class BatchSchedulerServiceImpl {
 	@Autowired
 	private BatchTriggerServiceImpl batchTriggerServiceImpl;
-	@Autowired
-	private BatchServiceImpl batchServiceImpl;
+	
 	@Autowired
 	private BatchViewServiceImpl batchViewServiceImpl;
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
+	
+	
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
@@ -344,7 +336,8 @@ public class BatchSchedulerServiceImpl {
 		}
 	}
 	
-	public void runBatches(){		
+	/***********************Unused************************/
+	/*public void runBatches(){		
 		//Set the next time the scheduler to start.
 		try {
 			List<Schedule> schedules = getCurrentSchedules(batchTriggerServiceImpl.getNextExecutionTime(), batchTriggerServiceImpl.getLastExecutionTime()); 
@@ -380,7 +373,7 @@ public class BatchSchedulerServiceImpl {
 				e.printStackTrace();
 			}
 		}
-   }
+   }*/
 
 	private void updateScheduleForNextRunTime(List<Schedule> schedules) throws Exception {
 		for(Schedule schedule : schedules) {
@@ -436,7 +429,8 @@ public class BatchSchedulerServiceImpl {
 		return schedules;
 	}
 	
-	public Schedule getSchedule(String uuid, String version, Date nextRunTime) {
+	/***************************Unused****************************/
+	/*public Schedule getSchedule(String uuid, String version, Date nextRunTime) {
 		Query query = new Query();
 		query.fields().exclude("_id");
 		query.fields().include("uuid");
@@ -469,7 +463,7 @@ public class BatchSchedulerServiceImpl {
 		} else {
 			return null;
 		}
-	}
+	}*/
 	
 	public void init() {
 		try {

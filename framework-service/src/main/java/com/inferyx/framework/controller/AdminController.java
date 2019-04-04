@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Export;
 import com.inferyx.framework.domain.FileType;
@@ -53,8 +52,7 @@ public class AdminController {
 	ImportServiceImpl importServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
+
 
 	@RequestMapping(value="/getTaskThreadMap", method=RequestMethod.GET)
     public ConcurrentHashMap getTaskThreadMap() throws Exception {

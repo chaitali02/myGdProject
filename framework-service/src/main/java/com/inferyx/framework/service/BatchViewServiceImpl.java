@@ -51,9 +51,7 @@ public class BatchViewServiceImpl {
     private GraphRegister<?> registerGraph;
     @Autowired
     private BatchSchedulerServiceImpl scheduleServiceImpl;
-//    @Autowired
-//    private BatchSchedulerServiceImpl batchSchedulerServiceImpl;
-	
+
 	static Logger logger = Logger.getLogger(BatchViewServiceImpl.class);
 	
 	public BatchView findOneByUuidAndVersion(String batchUuid, String batchVersion) throws JsonProcessingException {

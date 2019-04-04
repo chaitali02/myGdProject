@@ -12,11 +12,9 @@ package com.inferyx.framework.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.ILoadExecDao;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.LoadExec;
@@ -25,16 +23,7 @@ import com.inferyx.framework.domain.MetaType;
 
 @Service
 public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ILoadExecDao iLoadExecDao;
-	@Autowired
-	LoadServiceImpl loadServiceImpl;
+	
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
 

@@ -21,7 +21,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
@@ -41,23 +39,17 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ProfileExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupExecServiceImpl;
 import com.inferyx.framework.service.ProfileGroupServiceImpl;
 import com.inferyx.framework.service.ProfileServiceImpl;
-import com.inferyx.framework.service.RegisterService;
 import com.inferyx.framework.service.TaskHolder;
 
 @RestController
 @RequestMapping(value = "/profile")
 public class ProfileController {
 	
-	@Autowired 
-	ProfileOperator profileOperator;
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	ProfileExecServiceImpl profileExecServiceImpl;
 	@Autowired

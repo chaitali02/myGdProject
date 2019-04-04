@@ -926,7 +926,8 @@ public class SparkExecutor<T> implements IExecutor {
 		return strList;
 	}
 	
-	public List<Map<String, Object>> fetchModelResults2(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
+	/************************Unused************************/
+	/*public List<Map<String, Object>> fetchModelResults2(DataStore datastore, Datapod datapod, int rowLimit, String clientContext) throws Exception {
 		
 		List<Map<String, Object>> data = new ArrayList<>();
 		Dataset<Row> df = null;
@@ -958,7 +959,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 		return data;
 	}
-
+*/
 	@Override
 	public long loadAndRegister(Load load, String filePath, String dagExecVer, String loadExecVer,
 			String datapodTableName, Datapod datapod, String clientContext) throws Exception {
@@ -1915,21 +1916,23 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
-	public StructType createSchemaByModel(Model model) {
+	/***********************Unused*****************************/
+	/*public StructType createSchemaByModel(Model model) {
 		List<StructField> fieldList = new ArrayList<>();		
 		for(Feature feature : model.getFeatures()) {
 			fieldList.add(new StructField(feature.getName(), (DataType)getDataType(feature.getType()), true, Metadata.empty()));
 		}
 		return new StructType(fieldList.toArray(new StructField[fieldList.size()]));
-	}
+	}*/
 	
-	public StructType createSchemaByDatapod(Datapod datapod) {
+	/****************************Unused***************************/
+	/*public StructType createSchemaByDatapod(Datapod datapod) {
 		List<StructField> fieldList = new ArrayList<>();		
 		for(Attribute attribute : datapod.getAttributes()) {
 			fieldList.add(new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty()));
 		}
 		return new StructType(fieldList.toArray(new StructField[fieldList.size()]));
-	}
+	}*/
 	
 	public ResultSetHolder applyModelSchema(ResultSetHolder rsHolder, String sql, Model model, String tempTableName, boolean registerTempTable, String clientContext) throws IOException {
 		Dataset<Row> df = null;
@@ -2424,7 +2427,8 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public String createTableSchema(StructField[] fields, Datasource datasource, String tableName) {
+	/******************************Unused****************************/
+	/*public String createTableSchema(StructField[] fields, Datasource datasource, String tableName) {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		StringBuilder schema = new StringBuilder();
 		schema.append("CREATE TABLE IF NOT EXISTS ");
@@ -2439,13 +2443,14 @@ public class SparkExecutor<T> implements IExecutor {
 		schema = new StringBuilder(schema.toString().substring(0, schema.lastIndexOf(",")));
 		schema.append(" )");
 		return schema.toString();
-	}
+	}*/
 	
-	public String createTable(String sql, Datasource datasource) throws IOException {
+	/**********************Unused*************************/
+	/*public String createTable(String sql, Datasource datasource) throws IOException {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		exec.executeSql(sql, null);
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 
@@ -3469,7 +3474,8 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 	
-	public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
+	/******************************Unused***********************/	
+	/*public ResultSetHolder addVersionColToDf(ResultSetHolder rsHolder, String tableName, String version) throws IOException {
 
 		logger.info("inside method addVersionColToDf");
 		String[] columns = rsHolder.getDataFrame().columns();
@@ -3480,7 +3486,7 @@ public class SparkExecutor<T> implements IExecutor {
 			rsHolder.setDataFrame(rsHolder2.getDataFrame());
 		} 	
 		return rsHolder;
-	}
+	}*/
 
 	@Override
 	public ResultSetHolder executeSqlByDatasource(String sql, Datasource datasource, String clientContext)

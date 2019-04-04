@@ -34,25 +34,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
-import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ReconGroupServiceImpl;
 import com.inferyx.framework.service.ReconServiceImpl;
-import com.inferyx.framework.service.RegisterService;
 import com.inferyx.framework.service.TaskHolder;
 
 @RestController
 @RequestMapping(value = "/recon")
 public class ReconController {
 
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired

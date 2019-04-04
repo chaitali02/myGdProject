@@ -71,6 +71,7 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 		return super.execute(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, ingestGroupExec, runMode);
 	}
 	
+	
 	public void restart(String type, String uuid, String version, RunMode runMode) throws Exception {
 		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.ingestgroupExec.toString());
 		execute(ingestGroupExec.getDependsOn().getRef().getUuid(),ingestGroupExec.getDependsOn().getRef().getVersion(),null,ingestGroupExec, runMode);

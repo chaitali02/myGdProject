@@ -31,23 +31,9 @@ import com.inferyx.framework.register.GraphRegister;
 public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;	
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	protected IDataQualGroupExecDao iDataQualGroupExecDao;
-	@Autowired
-	DataQualGroupServiceImpl dataQualGroupServiceImpl;
-	@Autowired
-	DataQualExecServiceImpl dataQualExecServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DataQualGroupExecServiceImpl.class);	
 
@@ -63,7 +49,8 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		return DataQualGroupExecList;
 	}
 
-	public List<DataQualExec> resolveName(List<DataQualExec> DataQualExec) throws JsonProcessingException {
+	/**************************Unused***********************/
+	/*public List<DataQualExec> resolveName(List<DataQualExec> DataQualExec) throws JsonProcessingException {
 		List<DataQualExec> DataQualExecList = new ArrayList<>();
 		for(DataQualExec DataqualE : DataQualExec)	{
 			String createdByRefUuid = DataqualE.getCreatedBy().getRef().getUuid();
@@ -73,7 +60,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 			DataQualExecList.add(DataqualE);
 		}
 		return DataQualExecList;
-	}
+	}*/
 	
 	public List<DataQualGroupExec> finddqGroupExecBydqGroup(String dqGroupExecUUID,String dqGroupExecVersion) throws JsonProcessingException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -101,7 +88,8 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	public void kill (String uuid, String version) {
+	/*************************Unused****************************/
+	/*public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.dqgroupExec, MetaType.dqExec);
-	}	
+	}*/	
 }
