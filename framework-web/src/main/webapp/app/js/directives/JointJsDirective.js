@@ -790,6 +790,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
              $(".status[element-id=" + taskid + "] .statusTitle").text(dagMetaDataService.statusDefs[statusTask].caption);
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
              $(".status[element-id=" + taskid + "] .statusText").text(dagMetaDataService.statusDefs[statusTask].caption)//.substring(0,3) + "..");
+             $(".status[element-id=" + taskid + "]").attr("statusList",JSON.stringify(task.statusList));
+
              if(statusTask !=null){
               $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
              }
@@ -879,9 +881,15 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
              $("#task_Version").html(txt3);
            }
            $("#"+divid).show();
+           
            var status = jointElement.find('.status');
-           var startTime = status.attr("RUNNING");
+           var startTime = status.attr("PENDING");
            var endTime = status.attr("COMPLETED");
+           var statusList=status.attr("statusList");
+           if(statusList && statusList.length >0){
+            startTime=getStatsListObject(JSON.parse(statusList),"PENDING");
+             var endTime =getStatsListObject(JSON.parse(statusList),"COMPLETED");
+           }
            $scope.popoverData = {};
            $scope.popoverData.startTime = startTime || '-';
            $scope.popoverData.endTime = endTime || '-';
@@ -889,10 +897,23 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
            var intdate2= parseInt($scope.popoverData.endTime)
            var date1 = new Date(intdate1)
            var date2 = new Date(intdate2)
-           $scope.popoverData.timeDiff = moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
-           $scope.$apply();//this is required
+           $scope.popoverData.timeDiff='-'
+           if(endTime){
+             $scope.popoverData.timeDiff = moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
+           }
+          
          });//End mouseover
-         
+         function getStatsListObject(statusLsit,value){
+          var result=null
+          for(var i=0;i<statusLsit.length;i++){
+            var stage=statusLsit[i]["stage"];
+            if(stage == value){
+              result=statusLsit[i].createdOn;
+              break;
+            }  
+          }
+          return result;
+         }
          $scope.$on('generateGroupGraph',function (e,params) {
            $rootScope.showGroupDowne=true;
            $scope.allowReExecution = false;
