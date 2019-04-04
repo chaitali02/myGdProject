@@ -374,9 +374,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return (ProfileExec) execute(metaExecutor, profileExec, null, taskList, execParams, runMode);
 	}
 
-	public List<Map<String, Object>> getProfileResults(String profileExecUUID, String profileExecVersion, int offset,
+	public List<Map<String, Object>> getResults(String profileExecUUID, String profileExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
-		List<Map<String, Object>> data = new ArrayList<>();
+//		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			limit = offset + limit;
 			offset = offset + 1;
@@ -385,7 +385,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 					profileExecVersion, MetaType.profileExec.toString());
 			DataStore datastore = dataStoreServiceImpl.getDatastore(profileExec.getResult().getRef().getUuid(),
 					profileExec.getResult().getRef().getVersion());
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, profileExec.getVersion(),runMode);
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, profileExec.getVersion(),runMode);
 			
 			/*dataStoreServiceImpl.setRunMode(runMode);
 			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
@@ -438,7 +438,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
-		return data;
 	}
 	
 	/**
@@ -627,7 +626,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 
 		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecUuid, profileExecVersion, MetaType.profileExec.toString(), "N");
 		
-		List<Map<String, Object>> results = getProfileResults(profileExecUuid, profileExecVersion, offset, limit,
+		List<Map<String, Object>> results = getResults(profileExecUuid, profileExecVersion, offset, limit,
 				sortBy, order, requestId, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)), layout,
@@ -665,8 +664,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 		}
 
-		List<Profile> profileObjectList = new ArrayList<>();
-		profileObjectList = (List<Profile>) mongoTemplate.find(query, Profile.class);
+		List<Profile> profileObjectList = (List<Profile>) mongoTemplate.find(query, Profile.class);
 
 		Query query2 = new Query();
 		query2.fields().include("uuid");
@@ -757,7 +755,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 //				}				
 				
 				try {
-
 					String tableName = "dp_result_summary";
 					
 					if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
@@ -798,11 +795,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 //							}
 //						}
 //					}
-				}catch (Exception e) {
+				} catch(Exception e) {
 					// TODO: handle exception
 					continue;
 				}
-				
 			}
 			
 			String unionQuery = unionBuilder.toString();
