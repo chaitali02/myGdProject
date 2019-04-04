@@ -278,6 +278,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		baseRuleExec.setRunMode(runMode);
 		runBaseRuleService.setBaseRuleExec(baseRuleExec);
 		runBaseRuleService.setCommonServiceImpl(commonServiceImpl);
+//		runBaseRuleService.setDatapodServiceImpl(datapodServiceImpl);
 		runBaseRuleService.setName(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
 		runBaseRuleService.setDatapodKey(targetDatapodKey);
 		runBaseRuleService.setRuleExecType(execType);

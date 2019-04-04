@@ -25,7 +25,26 @@ public class BaseExec extends BaseEntity {
 	protected ExecParams execParams;	
 //	protected Message messageInfo;
 	protected RunMode runMode;
+//	protected MetaIdentifierHolder srcDatasource;
+//	protected MetaIdentifierHolder tgtDatasource;
 
+	
+//	public MetaIdentifierHolder getSrcDatasource() {
+//		return srcDatasource;
+//	}
+//
+//	public void setSrcDatasource(MetaIdentifierHolder srcDatasource) {
+//		this.srcDatasource = srcDatasource;
+//	}
+//
+//	public MetaIdentifierHolder getTgtDatasource() {
+//		return tgtDatasource;
+//	}
+//
+//	public void setTgtDatasource(MetaIdentifierHolder tgtDatasource) {
+//		this.tgtDatasource = tgtDatasource;
+//	}
+//
 	public RunMode getRunMode() {
 		return runMode;
 	}
