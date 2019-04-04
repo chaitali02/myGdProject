@@ -33,12 +33,14 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
                         { name:"90",caption:"3 Month"},
                         { name:"365",caption:"1 Year"},
                     ]
+
     $scope.getLatest=function(){
         ProfileService.getAllLatest("datapod").then(function(response){onSuccessGetAllDatapod(response.data)});
         var onSuccessGetAllDatapod=function(response){
             $scope.allDatapod=response   
         }
     }
+
     $scope.getLatest();
     
     $scope.resultSearchCriteriaRefresh=function(){
@@ -172,7 +174,7 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
             ProfileService.getResults(uuid,version,response.runMode).then(function(response){onSuccessGetResults(response.data)},function(response){onErrorGetProfileResults(response.data)});
             var onSuccessGetResults=function(response){
                 console.log(response[0])
-                
+                debugger
                 if(type=="soucre"){
                     $scope.isSPPProgress=false;
                     $scope.sourceOrignalData=response;
@@ -206,7 +208,7 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
     }
 
     $scope.getColumns=function(response){
-        var hideKey=["rownum","datapodUUID","datapodVersion","AttributeId","datapodName","attributeName"];
+        var hideKey=["rownum","datapod_uuid","datapodVersion","attribute_id","datapod_name","attribute_name"];
         var columns = [];
         angular.forEach(response[0],function (val,key) {
             if(hideKey.indexOf(key) ==-1)
@@ -219,7 +221,7 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
         var profileresult=[]
         if(response){
             for(var i=0;i<response.length;i++){
-                if($scope.searchForm.attribute.attributeId == response[i]["AttributeId"]){
+                if($scope.searchForm.attribute.attributeId == response[i]["attribute_id"]){
                     var profileresultdata={}
                     for(var j=0;j<columns.length;j++){
                         profileresultdata[columns[j]]=response[i][columns[j]];
@@ -310,16 +312,19 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
     $scope.chartcolor=["#f1948a","#c39bd3","#73c6b6","#d98880","#82e0aa","#f7dc6f","#bb8fce","#f8c471","#7fb3d5","#76d7c4","#7dcea0","#f0b27a","#e59866",,"#85c1e9"];
     $scope.profileAttrAttributes=[
                         //{ name:"All",caption:"All"},
-                        { name:"minval",caption:"minval" },
-                        { name:"maxVal",caption:"maxval" },
-                        { name:"avgVal",caption:"avgval" },
-                        { name:"medianVal",caption:"medianVal" },
-                        { name:"stdDev",caption:"stdDev" },
-                        { name:"numDistinct",caption:"numDistinct" },
-                        { name:"perDistinct",caption:"perDistinct" },
-                        { name:"numNull",caption:"numNull" },
-                        { name:"perNull",caption:"perNull" },
-                        { name:"sixSigma",caption:"sixSigma" },
+                        { name:"min_val",caption:"Min Value"},
+                        { name:"max_val",caption:"max Value"},
+                        { name:"avg_val",caption:"Avg Val" },
+                        { name:"median_val",caption:"Median Val"},
+                        { name:"std_dev",caption:"Std Dev"},
+                        { name:"num_distinct",caption:"Num Distinct" },
+                        { name:"perc_distinct",caption:"Perc Distinct" },
+                        { name:"num_null",caption:"Num Null" },
+                        { name:"perc_null",caption:"Perc Null" },
+                        { name:"min_length",caption:"Min Length" },
+                        { name:"max_length",caption:"Max Length" },
+                        { name:"avg_length",caption:"Avg Length" },
+                        { name:"num_duplicates",caption:"Num Duplicates" },
                         ]
     $scope.attrSourceSearchForm.selectSourceProfileAttr=$scope.profileAttrAttributes[0].name
     $scope.attrTargetSearchForm.selectTargetProfileAttr=$scope.profileAttrAttributes[0].name
@@ -423,14 +428,20 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
                 chartdata.id="chart"+i
                 if(i==0){
                 chartdata.title="Source";
-                chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
+                //chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
+                chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
+
                 }else{
                     chartdata.title="Target";
-                      chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
+                    //chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
+                    chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
+
                 }
                 chartdata.isProgress=false;
                 chartdata.datapoints=response[i].data;
-                chartdata.datax={"id":"createdOn"};
+                //chartdata.datax={"id":"createdOn"};
+                chartdata.datax={"id":"profile_exec_time"};
+
                 //chartdata.datacolumns=[];
                 //$scope.getChartColumn(response[i].data,i,$scope.attrSourceSearchForm.selectSourceProfileAttr)
                 chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
