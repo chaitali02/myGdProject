@@ -46,6 +46,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
@@ -758,6 +759,13 @@ public class ProfileServiceImpl extends RuleTemplate {
 				try {
 
 					String tableName = "dp_result_summary";
+					
+					if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+						MetaIdentifier dataStoreMI = profileExec.getResult().getRef();
+						DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString(), "N");
+						tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore, Helper.getExecutionMode(dataStore.getRunMode()));
+					}
+					
 //					String profileAttrType_new = null;
 //					switch(profileAttrType) {
 //					case "minval" : profileAttrType_new = "min_val";
