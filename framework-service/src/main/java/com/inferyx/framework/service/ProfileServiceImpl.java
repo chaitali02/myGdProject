@@ -46,7 +46,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
@@ -638,7 +637,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public List<Map<String, Object>> getProfileResults(String datapodUuid, String datapodVersion, String attributeId,
 			String profileAttrType, int numDays, String startDate, String endDate)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
-		List<Map<String, Object>> data = null;
+//		List<Map<String, Object>> data = null;
 //		List<Map<String, Object>> dataList = new ArrayList<>(); 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
 				MetaType.datapod.toString());
