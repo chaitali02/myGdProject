@@ -174,7 +174,7 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
             ProfileService.getResults(uuid,version,response.runMode).then(function(response){onSuccessGetResults(response.data)},function(response){onErrorGetProfileResults(response.data)});
             var onSuccessGetResults=function(response){
                 console.log(response[0])
-                debugger
+                
                 if(type=="soucre"){
                     $scope.isSPPProgress=false;
                     $scope.sourceOrignalData=response;

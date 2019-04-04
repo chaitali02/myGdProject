@@ -4,17 +4,18 @@ GLobal Directives
 
 // Route State Load Spinner(used on page or content load)
 var InferyxApp = angular.module("InferyxApp");
-// InferyxApp.directive('ngRightClick', function($parse) {
-//     return function(scope, element, attrs) {
-//         var fn = $parse(attrs.ngRightClick);
-//         element.bind('contextmenu', function(event) {
-//             scope.$apply(function() {
-//                 event.preventDefault();
-//                 fn(scope, {$event:event});
-//             });
-//         });
-//     };
-// });
+InferyxApp.directive('ngRightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
+    };
+});
+
 InferyxApp.directive('ngEsc', function () {
   return function (scope, element, attrs) {
       element.bind("keydown keypress keyup", function (event) {

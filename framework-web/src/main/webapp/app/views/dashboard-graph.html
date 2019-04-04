@@ -200,7 +200,7 @@
                           </div>
                         </div>
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['score-card'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
-                          <score-card data="datacol"></score-card>
+                          <score-card data="datacol" ng-right-click="selectDataScoreCard($event,datacol)"></score-card>
                         </div>
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['form-card'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
                           <form-card data="datacol"></form-card>
