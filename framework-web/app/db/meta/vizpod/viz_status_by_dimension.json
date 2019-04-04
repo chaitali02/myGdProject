@@ -1,6 +1,6 @@
 {
   "uuid": "b0a79a28-81fe-4725-9f85-3dcf35fb4111",
-  "version": "1553797063",
+  "version": "1554385052",
   "name": "viz_status_by_dimension",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Mar 28 14:17:43 EDT 2019",
+  "createdOn": "Thu Apr 04 09:37:32 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -68,7 +68,7 @@
         "name": "dq_result_summary_dashboard"
       },
       "attributeId": 7,
-      "function": null,
+      "function": "SUM",
       "value": null,
       "attributeName": "check_pass_count"
     },
@@ -80,7 +80,7 @@
         "name": "dq_result_summary_dashboard"
       },
       "attributeId": 8,
-      "function": null,
+      "function": "SUM",
       "value": null,
       "attributeName": "check_fail_count"
     }
