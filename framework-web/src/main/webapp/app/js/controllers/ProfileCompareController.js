@@ -313,7 +313,7 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
     $scope.profileAttrAttributes=[
                         //{ name:"All",caption:"All"},
                         { name:"min_val",caption:"Min Value"},
-                        { name:"max_val",caption:"max Value"},
+                        { name:"max_val",caption:"Max Value"},
                         { name:"avg_val",caption:"Avg Val" },
                         { name:"median_val",caption:"Median Val"},
                         { name:"std_dev",caption:"Std Dev"},
@@ -372,14 +372,14 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
         }
     }
 
-    $scope.onChangeSourceProfileAttributes=function(index){
+    /*$scope.onChangeSourceProfileAttributes=function(index){
       
         $scope.getChartColumn($scope.chartdata[index].datapoints,index,$scope.attrSourceSearchForm.selectSourceProfileAttr)
     }
     $scope.onChangeTargetProfileAttributes=function(index){
       
         $scope.getChartColumn($scope.chartdata[index].datapoints,index,$scope.attrTargetSearchForm.selectTargetProfileAttr)
-    }
+    }*/
 
     $scope.getChartColumn=function(datapoint,index,columns){
     
@@ -429,12 +429,13 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
                 if(i==0){
                 chartdata.title="Source";
                 //chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
-                chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
+                chartdata.datacolumns=[{"id":"profile_attribute","type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
 
                 }else{
                     chartdata.title="Target";
+                    debugger
                     //chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
-                    chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
+                    chartdata.datacolumns=[{"id":"profile_attribute","type":"bar","name":"profile_attribute","color":$scope.chartcolor[randomno]}];
 
                 }
                 chartdata.isProgress=false;
@@ -444,7 +445,7 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
 
                 //chartdata.datacolumns=[];
                 //$scope.getChartColumn(response[i].data,i,$scope.attrSourceSearchForm.selectSourceProfileAttr)
-                chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
+               // chartdata.datacolumns=[{"id":$scope.attrSourceSearchForm.selectSourceProfileAttr,"type":"bar","name":$scope.attrSourceSearchForm.selectSourceProfileAttr,"color":$scope.chartcolor[randomno]}];
                 $scope.chartdata[i]=chartdata;
             }
             
