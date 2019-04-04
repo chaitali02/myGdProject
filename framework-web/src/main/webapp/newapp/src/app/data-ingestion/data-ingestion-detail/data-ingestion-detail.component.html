@@ -237,12 +237,23 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3 col-sm-3 col-xs-6 col-lg-3">
-                        <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}">
+                        <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}"
+                          *ngIf="!enableInFileTable">
                           <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px'}"
                             [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
                             placeholder="--Select--" #sourceDsReq="ngModel" required>
                           </p-dropdown>
                         </div>
+
+
+                        <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}"
+                          *ngIf="enableInFileTable">
+                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
+                            placeholder="--Select--" #sourceDsReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+
                         <!-- <div [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}">
                           <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px','border':'1px solid red'}"
                             [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid" [styleClass]="ui.dropdown.border: yellow"
@@ -256,7 +267,7 @@
                         </div>
                       </div>
 
-                      <label class="col-md-1 control-label col-sm-1 col-lg-1 col-xs-2">Format</label>
+                      <label class="col-md-1 control-label col-sm-1 col-lg-1 col-xs-2" style="padding-right: 5px">Format</label>
                       <div class="col-md-2">
                         <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedSourceFormat" name="selectedSourceFormat"
                           [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="selectedSourceType !== 'FILE' || mode == 'true'"
@@ -322,7 +333,7 @@
                         </div>
                       </div>
 
-                      <label class="col-md-1 control-label">Name</label>
+                      <label class="col-md-1 control-label" style="padding-right: 5px">Name</label>
                       <div class="col-md-3">
                         <p-dropdown [options]="sourceTypeNameArray" [(ngModel)]="sourceTypeName" name="sourceTypeName"
                           [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
@@ -486,34 +497,33 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedTargetType == 'TABLE'">
-                      <label class="col-md-3 control-label">Save
-                        Mode
-                      </label>
-                      <div class="col-md-6">
-                        <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveModeReq" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="false" [disabled]="mode == 'true'" placeholder="--Select--" #saveModeReq="ngModel"
-                          required>
-                        </p-dropdown>
-                      </div>
-                    </div>
-
-                    <div class="form-group" *ngIf="selectedTargetType == 'FILE'">
-                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)}">Save
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['saveModeReq']?.invalid)}">Save
                         Mode
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)}">
-                          <p-dropdown [options]="saveModeArrayFile" [(ngModel)]="saveMode" name="saveModeFileReq"
-                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                            placeholder="--Select--" #saveModeFileReq="ngModel" required>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['saveModeReq']?.invalid)}">
+                          <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveModeReq" [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="false" [disabled]="mode == 'true'" placeholder="--Select--" #saveModeReq="ngModel"
+                            required>
                           </p-dropdown>
                         </div>
-                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)">
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['saveModeReq']?.invalid)">
                           <div class="help-block has-error error-msg">
                             This field is required
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group" *ngIf="selectedTargetType == 'FILE'">
+                      <label class="col-md-3 control-label">Save
+                        Mode
+                      </label>
+                      <div class="col-md-6">
+                        <p-dropdown [options]="saveModeArrayFile" [(ngModel)]="saveMode" name="saveMode" [style]="{'width':'100%','padding':'3px'}"
+                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--" >
+                        </p-dropdown>
                       </div>
                     </div>
 
@@ -665,21 +675,21 @@
                                     <ng-container *ngIf="data.operator == 'BETWEEN'">
                                       <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
                                       <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
 
                                     <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS'">
                                       <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
                                       <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                      <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                      <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
 
                                     <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">

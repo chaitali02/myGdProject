@@ -117,7 +117,7 @@ export class DataIngestionDetailComponent implements OnInit {
   locked: any;
   targetHeader: any;
   metaType = MetaType;
-  
+
   moveToEnable: boolean;
   count: any[];
   txtQueryChangedFilter: Subject<string> = new Subject<string>();
@@ -136,13 +136,14 @@ export class DataIngestionDetailComponent implements OnInit {
   isAdd: boolean = false;
   isGraphInprogess: boolean;
   isGraphError: boolean;
-  
+
   sourceHeader: boolean;
   datasetNotEmpty: boolean = true;
   checkAllFilter: boolean;
   datasetRowIndex: any;
   ignoreCase: boolean;
-  
+  enableInFileTable: boolean = false;
+
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
     //this.metaType = this.metaType;
     this.isSubmit = "false"
@@ -160,7 +161,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.showGraph = false;
     this.showForm = true;
     this.isHomeEnable = false;
-    
+
     this.breadcrumbDataFrom = [{
       "caption": "Data Ingestion",
       "routeurl": "/app/list/ingest"
@@ -395,6 +396,10 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onSuccessgetDatasourceForFile(response: Datasource[]) {
     if (this.selectedSourceType == "FILE") {
+
+      if (this.selectedSourceType == "FILE" && this.selectedTargetType == "TABLE") {
+        this.enableInFileTable = false
+      }
       let temp = [new AttributeIO];
       for (const i in response) {
         let obj = new AttributeIO;
@@ -495,15 +500,16 @@ export class DataIngestionDetailComponent implements OnInit {
             }
           }
 
-          for(let i=0;i<this.allSourceDatasource.length;i++){
-            if(this.allSourceDatasource[i].value.type == 'FILE'){
-              if(this.allSourceDatasource)
-              this.allTargetDatasource.push(this.allSourceDatasource[i]);
-              else{
-                this.allSourceDatasource=[];
+          for (let i = 0; i < this.allSourceDatasource.length; i++) {
+            if (this.allSourceDatasource[i].value.type == 'FILE') {
+              if (this.allSourceDatasource)
+                this.allTargetDatasource.push(this.allSourceDatasource[i]);
+              else {
+                this.allSourceDatasource = [];
                 this.allTargetDatasource.push(this.allSourceDatasource[i]);
               }
               this.allTargetDatasource.sort((a, b) => a.label.localeCompare(b.label.toString()));
+              this.enableInFileTable = true
             }
           }
         }
@@ -687,6 +693,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeSourceTypeName() {
+    this.selectedAutoMode = "";
     this.getAllAttributeBySource();
     this.getAllAttributeBySource1();
   }
@@ -920,7 +927,7 @@ export class DataIngestionDetailComponent implements OnInit {
     filertable.rhsAttribute = null
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
 
-    this.checkSelected(false,null);
+    this.checkSelected(false, null);
   }
 
   removeRow() {
@@ -1090,6 +1097,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeTargetNameTable() {
+    this.selectedAutoMode = "";
     this._dataInjectService.getAttributesByDatapod(this.metaType.DATAPOD, this.targetNameForTable.uuid).subscribe(
       response => {
         this.onSuccessgetAttributesByDatapodTable(response),
@@ -1139,6 +1147,7 @@ export class DataIngestionDetailComponent implements OnInit {
       }
       this.attributeTableArray = this.attributeTableArray;
     }
+    this.selectedAutoMode = "";
   }
 
   onChangeOperator(index: any) {
@@ -1237,11 +1246,15 @@ export class DataIngestionDetailComponent implements OnInit {
           mapInfo.sourceType = "datapod";
 
           mapInfo.sourceAttribute = temp[i].targetAttribute.attrName;
-          mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
-          mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
-          mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
-          mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
-          mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
+          let targetAttriObj = new AttributeIO();
+
+          targetAttriObj.uuid = temp[i].targetAttribute.uuid;
+          targetAttriObj.label = temp[i].targetAttribute.label;
+          targetAttriObj.type = temp[i].targetAttribute.type;
+          targetAttriObj.attrName = temp[i].targetAttribute.attrName;
+          targetAttriObj.attributeId = temp[i].targetAttribute.attributeId;
+
+          mapInfo.targetAttribute = targetAttriObj;
 
           mapInfo.IsTargetAttributeSimple = "false";
 
@@ -1390,10 +1403,10 @@ export class DataIngestionDetailComponent implements OnInit {
     this.onChangeRuleType();
 
     let sourceObj = new AttributeIO;
-    sourceObj.uuid = response.ingestRule.sourceDatasource.ref.uuid;
     sourceObj.label = response.ingestRule.sourceDatasource.ref.name;
+    sourceObj.uuid = response.ingestRule.sourceDatasource.ref.uuid;
     sourceObj.version = response.ingestRule.sourceDatasource.ref.version;
-    sourceObj.type = response.ingestRule.sourceDatasource.ref.type;
+    sourceObj.type = null;
     this.sourceDs = sourceObj;
     if (this.sourceDs.label == 'Stream') {
       this._dataInjectService.getTopicList(this.sourceDs.uuid, this.sourceDs.version).subscribe(
@@ -1409,10 +1422,10 @@ export class DataIngestionDetailComponent implements OnInit {
     if (response.ingestRule.sourceExtn != null) {
       this.sourceExtn = response.ingestRule.sourceExtn.toLowerCase();
     }
-    else{
+    else {
       this.sourceExtn = null;
     }
-     
+
     this.sourceHeader = this.appHelper.convertStringToBoolean(response.ingestRule.sourceHeader);
     this.sourceType = response.ingestRule.sourceDetail.ref.type;
     let sourceTypeNameObj = new AttributeIO();
@@ -1464,6 +1477,9 @@ export class DataIngestionDetailComponent implements OnInit {
     this.targetNameForTable = targetNameObj;
     this.onChangeTargetDs();
 
+    this.onChangeTargetNameTable();
+
+
     if (response.ingestRule.targetExtn != null) {
       this.targetExtn = response.ingestRule.targetExtn.toLowerCase();
     }
@@ -1499,6 +1515,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.filterTableArray = response.filterInfo
 
     if (response.attributeMap !== null) {
+
       this._dataInjectService.getAttributesByDatapod(this.sourceType, this.sourceTypeName.uuid)
         .subscribe(response => { this.onSuccessgetAttributesByDatapod(response) },
           error => console.log("Error::", +error))
@@ -1512,15 +1529,16 @@ export class DataIngestionDetailComponent implements OnInit {
           error => console.log("Error::", +error))
 
       this._commonService.getFormulaByType(this.targetNameForTable.uuid, this.metaType.DATAPOD)
-      .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
-  
+        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+          error => console.log("Error ::", error))
+
     }
     this.attributeTableArray = response.attributeMap;
-    console.log(JSON.stringify(this.attributeTableArray))
+    console.log(JSON.stringify(this.attributeTableArray));
+
     this.isEditInprogess = false;
   }
-  
+
   submitIngest() {
     this.isSubmit = "true"
     var upd_tag = 'N'
@@ -1619,7 +1637,7 @@ export class DataIngestionDetailComponent implements OnInit {
       ingestJson.splitBy = null;
     }
 
-    let filterInfoArray = []; 
+    let filterInfoArray = [];
     if (this.filterTableArray != null) {
       for (let i = 0; i < this.filterTableArray.length; i++) {
         let filterInfo = new FilterInfo();
@@ -1739,7 +1757,7 @@ export class DataIngestionDetailComponent implements OnInit {
     }
     ingestJson["filterInfo"] = filterInfoArray;
 
-    let attributeTableArray = []; 
+    let attributeTableArray = [];
     if (this.attributeTableArray != null) {
       for (let i = 0; i < this.attributeTableArray.length; i++) {
         let attributeInfo = new AttributeMap();
@@ -1755,30 +1773,30 @@ export class DataIngestionDetailComponent implements OnInit {
           sourceAttrObj.value = this.attributeTableArray[i].sourceAttribute;
         }
         if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = "attribute";
           sourceAttrObj.ref = refObj;
           sourceAttrObj.value = this.attributeTableArray[i].sourceAttribute;
         }
         else if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-           sourceAttrObj = new AttributeRefHolder();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new AttributeRefHolder();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "datapod";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
           sourceAttrObj.attrId = this.attributeTableArray[i].sourceAttribute.attributeId;
         }
         else if (this.attributeTableArray[i].sourceType == 'formula') {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "formula";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
         }
         else if (this.attributeTableArray[i].sourceType == 'function') {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "function";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
