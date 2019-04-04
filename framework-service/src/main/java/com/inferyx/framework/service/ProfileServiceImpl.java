@@ -772,7 +772,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 					default : profileAttrType_new = "min_val";
 					}
 					
-					String sql = "SELECT " + profileAttrType_new + " , as profile_attribute rule_exec_time as profile_exec_time FROM " + tableName + 
+					String sql = "SELECT " + profileAttrType_new + " as profile_attribute, rule_exec_time as profile_exec_time FROM " + tableName + 
 								" WHERE datapod_uuid = '" + datapodUuid + "' AND attribute_id = '" + attributeId + "'" +
 								" AND version = " + profileExec.getVersion();
 								;
