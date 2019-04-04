@@ -86,13 +86,13 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);
 
 	
-	public DatapodServiceImpl getDatapodServiceImpl() {
-		return datapodServiceImpl;
-	}
-
-	public void setDatapodServiceImpl(DatapodServiceImpl datapodServiceImpl) {
-		this.datapodServiceImpl = datapodServiceImpl;
-	}
+//	public DatapodServiceImpl getDatapodServiceImpl() {
+//		return datapodServiceImpl;
+//	}
+//
+//	public void setDatapodServiceImpl(DatapodServiceImpl datapodServiceImpl) {
+//		this.datapodServiceImpl = datapodServiceImpl;
+//	}
 
 	/**
 	 * @return the datasource
@@ -546,8 +546,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			execContext = commonServiceImpl.getExecContext(runMode);
 			executor = execFactory.getExecutor(execContext.toString());
 
-//			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
-			tableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey.getUuid(), datapodKey.getVersion(), runMode);
+			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
+//			tableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey.getUuid(), datapodKey.getVersion(), runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 
@@ -585,8 +585,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				
 				datapodKey = summaryDatapodKey;
 				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-//				tableName = genTableNameByRule(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
-				tableName = datapodServiceImpl.getTableNameByDatapodKey(summaryDatapodKey.getUuid(), summaryDatapodKey.getVersion(), runMode);
+				tableName = genTableNameByRule(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+//				tableName = datapodServiceImpl.getTableNameByDatapodKey(summaryDatapodKey.getUuid(), summaryDatapodKey.getVersion(), runMode);
 				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
