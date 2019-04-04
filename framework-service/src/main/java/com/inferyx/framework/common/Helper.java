@@ -1966,4 +1966,9 @@ public class Helper {
 			return null;
 		}
 	}
+	
+	public static String getCurrentDateByFormat() {
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		return formatter.format(new Date());
+	}
 }
