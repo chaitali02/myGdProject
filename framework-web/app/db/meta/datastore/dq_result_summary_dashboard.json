@@ -16,7 +16,7 @@
     "persistMode" : "DISK_ONLY",
     "numRows" : NumberLong(0),
     "uuid" : "e8f090a9-3cb1-433d-b660-f21156692efa",
-    "version" : "1553790639",
+    "version" : "1554340811",
     "name" : "dq_result_summary_dashboard",
     "createdBy" : {
         "ref" : {
