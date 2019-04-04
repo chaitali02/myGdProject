@@ -1,6 +1,6 @@
 {
   "uuid": "a97d9e14-1923-4c90-b97f-67233a9589c2",
-  "version": "1554147696",
+  "version": "1554383456",
   "name": "Equity Executions",
   "desc": "Data Quality Report for critical data elements under equity execution feed",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Apr 01 15:41:36 EDT 2019",
+  "createdOn": "Thu Apr 04 09:10:56 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -34,7 +34,39 @@
   "headerAlign": "CENTER",
   "footer": "Confidential Document - Internal Use Only",
   "footerAlign": "CENTER",
-  "filterInfo": null,
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "LIKE",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+            "version": null,
+            "name": "dq_result_summary"
+          },
+          "attributeId": 63,
+          "value": null,
+          "attributeName": "param_info",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "60c44573-30e8-4fa2-8a3d-12efc2377438",
+            "version": null,
+            "name": "paramlist_data_quality"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
   "dependsOn": {
     "ref": {
       "type": "datapod",
@@ -58,7 +90,7 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "3",
+        "attrId": "12",
         "attrName": "attribute_name",
         "attrType": "varchar",
         "attrUnitType": null,
@@ -78,9 +110,9 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "4",
-        "attrName": "attribute_desc",
-        "attrType": "VARCHAR",
+        "attrId": "10",
+        "attrName": "datapod_desc",
+        "attrType": "varchar",
         "attrUnitType": null,
         "function": null
       }
@@ -98,9 +130,9 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "12",
+        "attrId": "6",
         "attrName": "rule_desc",
-        "attrType": "VARCHAR",
+        "attrType": "varchar",
         "attrUnitType": null,
         "function": null
       }
@@ -118,9 +150,9 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "58",
+        "attrId": "57",
         "attrName": "total_fail_count",
-        "attrType": "INTEGER",
+        "attrType": "integer",
         "attrUnitType": null,
         "function": null
       }
@@ -138,7 +170,7 @@
           "name": "dq_result_summary"
         },
         "value": null,
-        "attrId": "1",
+        "attrId": "58",
         "attrName": "total_fail_percentage",
         "attrType": "decimal",
         "attrUnitType": null,
@@ -216,7 +248,15 @@
     "notifyOnFailure": "Y",
     "sendAttachment": "Y"
   },
-  "paramList": null,
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "60c44573-30e8-4fa2-8a3d-12efc2377438",
+      "version": null,
+      "name": "paramlist_data_quality"
+    },
+    "value": null
+  },
   "limit": -1,
   "format": "PDF",
   "layout": "LANDSCAPE",
