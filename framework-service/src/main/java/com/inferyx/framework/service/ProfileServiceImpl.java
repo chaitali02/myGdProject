@@ -635,12 +635,11 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return response;
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	public List<Map<String, Object>> getProfileResults(String datapodUuid, String datapodVersion, String attributeId,
 			String profileAttrType, int numDays, String startDate, String endDate)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
-		List<Map<String, Object>> data = new ArrayList<>();
-		List<Map<String, Object>> dataList = new ArrayList<>(); 
+//		List<Map<String, Object>> data = null;
+//		List<Map<String, Object>> dataList = new ArrayList<>(); 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
 				MetaType.datapod.toString());
 		String attributeName = datapod.getAttributeName(Integer.parseInt(attributeId));
@@ -681,7 +680,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		query2.fields().include("statusList");
 		query2.fields().include("appInfo");
 
-		List<ProfileExec> profileExecObjListNew = new ArrayList<>();
+//		List<ProfileExec> profileExecObjListNew = new ArrayList<>();
 
 		for (Profile profile : profileObjectList) {
 			try {
@@ -716,31 +715,37 @@ public class ProfileServiceImpl extends RuleTemplate {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+			ExecContext execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			IExecutor exec = execFactory.getExecutor(execContext.toString());
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+			StringBuilder unionBuilder = new StringBuilder();
 			List<ProfileExec> profileExecObjList = new ArrayList<>();
 			profileExecObjList = (List<ProfileExec>) mongoTemplate.find(query2, ProfileExec.class);
 			for (ProfileExec profileExec : profileExecObjList) {
 
-				profileExecObjListNew.add(profileExec);
-				DataStore profileExecDatastore = null;
-				MetaIdentifierHolder resultHolder = profileExec.getResult();
-				String runMode = "";
-				try {
-					profileExecDatastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
-							resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(),
-							resultHolder.getRef().getType().toString());
-					runMode = profileExecDatastore.getRunMode();
-				} catch (Exception e) {
-					// TODO: handle exception
-					continue;
-				}
+//				profileExecObjListNew.add(profileExec);
+//				DataStore profileExecDatastore = null;
+//				MetaIdentifierHolder resultHolder = profileExec.getResult();
+//				String runMode = "";
+//				try {
+////					profileExecDatastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(
+////							resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(),
+////							resultHolder.getRef().getType().toString());
+////					runMode = profileExecDatastore.getRunMode();
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					continue;
+//				}
 				
-				Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+				
 				
 //				Datasource datasource = commonServiceImpl.getDatasourceByApp();
-				ExecContext execContext = null;
-				IExecutor exec = null;
+				
 				// String sql = null;
-				String appUuid = null;
+				
 //				if (runMode.equals(RunMode.ONLINE)) {
 //					execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
 //							|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
@@ -749,35 +754,39 @@ public class ProfileServiceImpl extends RuleTemplate {
 ////					appUuid = commonServiceImpl.getApp().getUuid();
 //				} else {
 //					execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-//				}
-
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());				
-				exec = execFactory.getExecutor(execContext.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
+//				}				
 				
 				try {
 
 					String tableName = "dp_result_summary";
-					String profileAttrType_new = null;
-					switch(profileAttrType) {
-					case "minval" : profileAttrType_new = "min_val";
-					case "maxval" : profileAttrType_new = "max_val";
-					case "avgval" : profileAttrType_new = "avg_val";
-					case "medianVal" : profileAttrType_new = "median_val";
-					case "stdDev" : profileAttrType_new = "std_dev";
-					case "numDistinct" : profileAttrType_new = "num_distinct";
-					case "perDistinct" : profileAttrType_new = "perc_distinct";
-					case "numNull" : profileAttrType_new = "num_null";
-					case "perNull" : profileAttrType_new = "perc_null";
-					default : profileAttrType_new = "min_val";
+					
+					if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+						MetaIdentifier dataStoreMI = profileExec.getResult().getRef();
+						DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString(), "N");
+						tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore, Helper.getExecutionMode(dataStore.getRunMode()));
 					}
 					
-					String sql = "SELECT " + profileAttrType_new + " as profile_attribute, rule_exec_time as profile_exec_time FROM " + tableName + 
+//					String profileAttrType_new = null;
+//					switch(profileAttrType) {
+//					case "minval" : profileAttrType_new = "min_val";
+//					case "maxval" : profileAttrType_new = "max_val";
+//					case "avgval" : profileAttrType_new = "avg_val";
+//					case "medianVal" : profileAttrType_new = "median_val";
+//					case "stdDev" : profileAttrType_new = "std_dev";
+//					case "numDistinct" : profileAttrType_new = "num_distinct";
+//					case "perDistinct" : profileAttrType_new = "perc_distinct";
+//					case "numNull" : profileAttrType_new = "num_null";
+//					case "perNull" : profileAttrType_new = "perc_null";
+//					default : profileAttrType_new = "min_val";
+//					}
+					
+					String sql = "SELECT " + profileAttrType + " as profile_attribute, rule_exec_time as profile_exec_time FROM " + tableName + 
 								" WHERE datapod_uuid = '" + datapodUuid + "' AND attribute_id = '" + attributeId + "'" +
 								" AND version = " + profileExec.getVersion();
-								;
 					
-					data = exec.executeAndFetchByDatasource(sql, datasource, appUuid);
+					unionBuilder.append(sql).append(" ").append(" UNION ALL ");
+					
+//					data = exec.executeAndFetchByDatasource(sql, datasource, appUuid);
 //					data = exec.executeAndFetch(profileExec.getExec(), appUuid);
 //					for(Map<String, Object> object : data ) {
 //						if(object.containsKey("attribute_id")) {
@@ -795,8 +804,13 @@ public class ProfileServiceImpl extends RuleTemplate {
 				}
 				
 			}
+			
+			String unionQuery = unionBuilder.toString();
+			unionQuery = unionQuery.substring(0, unionQuery.lastIndexOf(" UNION ALL "));
+
+			return exec.executeAndFetchByDatasource(unionQuery, datasource, appUuid);
 		}
-		return data;
+		return new ArrayList<>();
 	}
 	
 	@Override
