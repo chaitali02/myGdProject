@@ -12,6 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -130,13 +131,14 @@ public class ProfileOperator {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		
 //		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
-
+		
+		String currentDate = Helper.getCurrentDateByFormat();
 		switch(execContext) {
 		case HIVE : 
 			return "SELECT \'"
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
@@ -172,7 +174,7 @@ public class ProfileOperator {
 			return "SELECT \'"
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
@@ -208,7 +210,7 @@ public class ProfileOperator {
 			return "SELECT "
 					+ profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 				    + profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
@@ -240,7 +242,7 @@ public class ProfileOperator {
 			return "SELECT '"   
 		            + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
@@ -273,7 +275,7 @@ public class ProfileOperator {
 			return "SELECT \'" 
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
@@ -311,7 +313,7 @@ public class ProfileOperator {
 			return "SELECT '" 
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
 					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
-					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ currentDate + "' AS "+RULE_EXEC_TIME+", \'" 
 					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
 					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
 					+ profile.getName() + "' AS "+RULE_NAME+", \'" 

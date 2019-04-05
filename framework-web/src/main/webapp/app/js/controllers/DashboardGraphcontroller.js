@@ -1054,7 +1054,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       $window.dispatchEvent(new Event("resize"));
     }, 100);
   }
-  $scope.selectData = function (data) {
+  $scope.selectData = function (data) {zz
     var menu = [{
       title: 'Show Detail',
       action: $scope.actionEvent,
@@ -1073,7 +1073,18 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.contextMenu1(menu, data);
   }
 
-
+  $scope.selectDataScoreCard = function (data,datacol) {
+    var menu = [{
+      title: 'Show Detail',
+      action: $scope.actionEventScoreCard,
+      disabled: false // optional, defaults to false
+    }];
+    console.log(data);
+    var scoreData={}
+    scoreData.vizpod =datacol;
+    scoreData.dataobj ={value:datacol}
+    $scope.contextMenuScorcard(menu, data,scoreData);
+  }
 
   $scope.getVizpodResultDetails = function (uuid, version, vizpodbody, data) {
     $scope.IsVizpodDetailShow = true;
@@ -1139,7 +1150,33 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   //   $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody,data)
   // }
 
-
+  $scope.actionEventScoreCard = function (d, i, data) {
+    $scope.vizpodbody=null;
+    var filterinfoArray = []
+    var vizpodbody = {}
+    var filterInfo = {};
+    var ref = {}
+    if (data.dataobj.value != "") {
+      ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
+      ref.version = null;
+      ref.type = data.vizpod.vizpodInfo.values[0].ref.type;
+      filterInfo.ref = ref;
+      var attrName=data.vizpod.vizpodInfo.values[0].ref.name;
+      if(data.vizpod.vizpodInfo.values[0].ref.type !="formual"){
+        filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
+        attrName=data.vizpod.vizpodInfo.values[0].attributeName
+      }
+     
+      filterInfo.value = data.vizpod.gridOptions.data[0][attrName];
+      filterinfoArray.push(filterInfo);    
+      vizpodbody.filterInfo = filterinfoArray
+    }
+    else {
+      vizpodbody = null;
+    }
+    $scope.vizpodbody=vizpodbody;
+    $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody, data)
+  }
   $scope.actionEvent = function (d, i, data) {
     $scope.vizpodbody=null;
     var filterinfoArray = []
@@ -1184,8 +1221,8 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
     $scope.vizpodbody=vizpodbody;
     $scope.getVizpodResultDetails(data.vizpod.vizpodInfo.uuid, data.vizpod.vizpodInfo.version, vizpodbody, data)
-
   }
+
   $scope.contextMenu1 = function (menu, vizpodbody) {
     d3.select(".jitu").selectAll('.context-menu').data([1])
       .enter()
@@ -1222,7 +1259,41 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
   };
 
+  $scope.contextMenuScorcard = function (menu, vizpodbody,datacol) {
+    d3.select(".jitu").selectAll('.context-menu').data([1])
+      .enter()
+      .append('div')
+      .attr('class', 'context-menu')
 
+    // close menu
+    d3.select('body').on('click.context-menu', function () {
+      d3.selectAll('.context-menu').style('display', 'none');
+    });
+
+
+    var elm = this;
+    d3.selectAll('.context-menu')
+      .html('')
+      .append('ul')
+      .selectAll('li')
+      .data(menu).enter()
+      .append('li')
+      .html(function (d) {
+        return d.title;
+      })
+      .on('click', function (d, index) {
+        d.action(elm, d, datacol);
+        d3.selectAll('.context-menu').style('display', 'none');
+      })
+    //console.log(event)
+    // show the context menu
+    d3.selectAll('.context-menu')
+      .style('left', (vizpodbody["pageX"] - 2) + 'px')
+      .style('top', (vizpodbody["pageY"] - 30) + 'px')
+      .style('display', 'block');
+      vizpodbody.preventDefault();
+
+  };
   $scope.setDefault = function (inProgess, isDataError) {
     for (var i = 0; i < $scope.sectionRows.length; i++) {
       for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {

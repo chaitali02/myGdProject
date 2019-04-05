@@ -4,6 +4,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.inferyx.framework.enums.RunMode;
@@ -22,7 +23,8 @@ public class BaseExec extends BaseEntity {
 	protected MetaIdentifierHolder result;
 	protected MetaIdentifierHolder summaryResult;
 	protected List<MetaIdentifier> refKeyList;
-	protected ExecParams execParams;	
+	protected ExecParams execParams;
+	protected LinkedHashMap<String, String> paramValues;
 //	protected Message messageInfo;
 	protected RunMode runMode;
 //	protected MetaIdentifierHolder srcDatasource;
@@ -202,6 +204,20 @@ public class BaseExec extends BaseEntity {
 		this.abortExec = abortExec;
 	}
 
+	/**
+	 * @return the paramValues
+	 */
+	public LinkedHashMap<String, String> getParamValues() {
+		return paramValues;
+	}
+
+	/**
+	 * @param paramValues the paramValues to set
+	 */
+	public void setParamValues(LinkedHashMap<String, String> paramValues) {
+		this.paramValues = paramValues;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -209,7 +225,8 @@ public class BaseExec extends BaseEntity {
 	public String toString() {
 		return "BaseExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec + ", summaryExec="
 				+ summaryExec + ", abortExec=" + abortExec + ", result=" + result + ", summaryResult=" + summaryResult
-				+ ", refKeyList=" + refKeyList + ", execParams=" + execParams + "]";
+				+ ", refKeyList=" + refKeyList + ", execParams=" + execParams + ", paramValues=" + paramValues
+				+ ", runMode=" + runMode + "]";
 	}
 	
 }

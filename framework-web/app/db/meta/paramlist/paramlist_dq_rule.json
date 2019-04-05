@@ -1,7 +1,7 @@
 {
   "uuid": "c37726b2-35e5-4d5c-8da8-fa75836946f9",
-  "version": "1554235564",
-  "name": "paramlist_data_quality",
+  "version": "1554384408",
+  "name": "paramlist_dq_rule",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Apr 02 16:06:04 EDT 2019",
+  "createdOn": "Thu Apr 04 09:26:48 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -43,7 +43,7 @@
           "version": null,
           "name": null
         },
-        "value": "2019-04-02"
+        "value": "2019-03-15"
       },
       "paramRef": null
     }
