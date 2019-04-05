@@ -11,11 +11,16 @@
 package com.inferyx.framework.service;
 
 import org.apache.log4j.Logger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class AlgorithmServiceImpl {
+	
+	@Autowired
+	GraphRegister<?> registerGraph;
 	
 	static final Logger logger = Logger.getLogger(AlgorithmServiceImpl.class);
 

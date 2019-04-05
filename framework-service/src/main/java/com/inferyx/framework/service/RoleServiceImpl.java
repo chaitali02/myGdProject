@@ -56,8 +56,8 @@ public class RoleServiceImpl {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	RegisterService registerService;
+//	@Autowired
+//	RegisterService registerService;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
 

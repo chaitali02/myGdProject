@@ -63,8 +63,8 @@ public class SecurityServiceImpl  implements Serializable{
 	private static final long serialVersionUID = -9188483510205558602L;
 	@Autowired
 	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RoleServiceImpl roleServiceImpl;
+//	@Autowired
+//	RoleServiceImpl roleServiceImpl;
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
