@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
@@ -41,7 +41,6 @@ import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
@@ -51,7 +50,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
-import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
 public class DQOperator implements IParsable {
@@ -261,6 +259,11 @@ public class DQOperator implements IParsable {
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag) throws Exception {
 		logger.info("DQ generateSql otherParams : " + otherParams);
 		Datapod srcDP = null;
+		LinkedHashMap<String, String> paramValues = dataQualExec.getParamValues();
+		if (paramValues == null) {
+			paramValues = new LinkedHashMap<>();
+			dataQualExec.setParamValues(paramValues);
+		}
 //		DataSet dataset = null;
 		if (dataQual == null) {
 			return null;
