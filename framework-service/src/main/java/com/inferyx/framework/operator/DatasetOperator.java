@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -122,17 +123,17 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 		}
 		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 			logger.info("Started SQL Generation");
 			logger.info(" Check for window function : " + checkWindow(dataset));
-			String sql = generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
+			String sql = generateSelect(dataset, refKeyMap, otherParams, execParams, runMode, paramValMap)
 					.concat(getFrom())
-					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
+					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode, paramValMap))
 					.concat(generateWhere())
-					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap));
 			if (!checkWindow(dataset)) {		
-				sql = sql.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
-						 .concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+				sql = sql.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams, paramValMap))
+						 .concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap));
 			}
 			sql = sql.concat(generateLimit(dataset));
 			logger.info("SQL Generated: "+sql);
@@ -141,7 +142,8 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 		}
 
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
-									, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+									, ExecParams execParams, RunMode runMode
+									, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			// Create AttributeMap
 			List<AttributeMap> attrMapList = new ArrayList<>();
 			AttributeMap attrMap = null; 
@@ -165,14 +167,14 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 				attrMapList.add(attrMap);
 			}
 			attributeMapOperator.setRunMode(runMode);
-			return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(attrMapList, dataset.getDependsOn(), refKeyMap, otherParams, execParams));
+			return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(attrMapList, dataset.getDependsOn(), refKeyMap, otherParams, execParams, paramValMap));
 		}
 		
 		public String getFrom() {
 			return ConstantsUtil.FROM;
 		}
 	 	
-		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+		public String generateFrom(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 			StringBuilder builder = new StringBuilder();
 			Relation relation = null;
 	
@@ -182,7 +184,7 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 //				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
 				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
 				relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
+				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode, paramValMap));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
 //				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
@@ -210,7 +212,7 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 //				DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
                 MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
                 DataSet innerDS = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-                builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
+                builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode, paramValMap)).append(") ").append(innerDS.getName()).append(" ");
             }
 			return builder.toString();
 		}
@@ -219,12 +221,13 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 			return ConstantsUtil.WHERE_1_1;
 		}
 		
-		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+		public String generateFilter (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode
+				, Map<String, String> paramValMap) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
 				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
 				
 				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataset);
-				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 
 				//String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : filterStr;
@@ -232,17 +235,18 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 			return ConstantsUtil.BLANK;
 		} 
 		
-		public String generateGroupBy (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		public String generateGroupBy (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			MetaIdentifierHolder datasetSource = new MetaIdentifierHolder(dataset.getRef(MetaType.dataset));
-			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams, datasetSource);
+			return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(dataset.getAttributeInfo()), refKeyMap, otherParams, execParams, datasetSource, paramValMap);
 		}
 		
-		public String generateHaving (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+		public String generateHaving (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode
+				, Map<String, String> paramValMap) throws Exception {
 			if (dataset.getFilterInfo() != null && !dataset.getFilterInfo().isEmpty()) {
 				MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion()));
 
 				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataset);
-				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+				String filterStr = filterOperator2.generateSql(dataset.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS, paramValMap);
 
 //				String filterStr = filterOperator.generateSql(dataset.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 				return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
@@ -255,7 +259,8 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 		}
 		
 		public String generateSelectDistinct(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
-				, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+				, ExecParams execParams, RunMode runMode
+				, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 			List<AttributeMap> attrMapList = new ArrayList<>();
 			AttributeMap attrMap = null; 
 			AttributeRefHolder sourceAttr = null;
@@ -274,7 +279,7 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 			return ConstantsUtil.SELECT
 					.concat(" DISTINCT ")
 					.concat("(")
-					.concat(attributeMapOperator.generateSql(attrMapList, dataset.getDependsOn(), refKeyMap, otherParams, execParams))
+					.concat(attributeMapOperator.generateSql(attrMapList, dataset.getDependsOn(), refKeyMap, otherParams, execParams, paramValMap))
 					.concat(") ");
 		}
 }

@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,9 +26,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.FilterInfo;
@@ -94,14 +95,15 @@ public class AttributeMapOperator {
 	}
 
 	public String generateSql(List<AttributeMap> attrMapList, MetaIdentifierHolder mapSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, 
+			Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		String comma = "";
 		
 		// add select attribute
 		for (AttributeMap attr : attrMapList) {
 			builder.append(comma);
-			builder.append(mapSql(attr, mapSource, refKeyMap, otherParams, execParams));
+			builder.append(mapSql(attr, mapSource, refKeyMap, otherParams, execParams, paramValMap));
 			comma = ",";
 		}
 		return builder.toString();
@@ -126,7 +128,7 @@ public class AttributeMapOperator {
 	}
 
 	public String mapSql(AttributeMap attrMap, MetaIdentifierHolder mapSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		
 		Datapod datapod = null;
@@ -170,21 +172,21 @@ public class AttributeMapOperator {
 						, "N");
 				Datasource fileDatasource = new Datasource();
 				fileDatasource.setType(MetaType.file.toString());
-				return builder.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, fileDatasource)).append(" as ").append(alias).append(" ").toString();
+				return builder.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, fileDatasource, paramValMap)).append(" as ").append(alias).append(" ").toString();
 			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
 				//special handling for ingest 				
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
-				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef(), paramValMap);
 //				boolean isNumber = Helper.isNumber(value);			
 //				if(!isNumber) {
 //					value = "'"+value+"'";
 //				}
 				return builder.append("\"").append(value).append("\"").append(" as ").append(alias).append(" ").toString();
 			} 
-			builder.append(sourceAttrSql(mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams, execParams));
+			builder.append(sourceAttrSql(mapSource, attrMap.getSourceAttr(), refKeyMap, otherParams, execParams, paramValMap));
 			if (otherParams != null && otherParams.containsKey("operatorType")
 					&& otherParams.get("operatorType").equals(MetaType.mapiter.toString())
 					&& !getTypeInSourceAttrs(attrMap.getSourceAttr(), MetaType.formula)) {
@@ -230,7 +232,8 @@ public class AttributeMapOperator {
 
 	@SuppressWarnings("unlikely-arg-type")
 	public String sourceAttrSql(MetaIdentifierHolder mapSource, AttributeRefHolder sourceAttr,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, 
+			Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 //		Object object = daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 		MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
@@ -266,12 +269,12 @@ public class AttributeMapOperator {
 
 				return builder.append("CASE WHEN ")
 						.append(expressionOperator.generateSql(((Expression) object).getExpressionInfo(),
-								((Expression) object).getDependsOn(), refKeyMap, otherParams, execParams, mapSourceDS))
+								((Expression) object).getDependsOn(), refKeyMap, otherParams, execParams, mapSourceDS, paramValMap))
 						.append(" THEN ")
 						.append(expressionOperator.generateMetCondition(((Expression) object).getMatch(), null, refKeyMap,
-								otherParams, execParams, mapSourceDS))
+								otherParams, execParams, mapSourceDS, paramValMap))
 						.append(" ELSE ").append(expressionOperator
-								.generateNotMetCondition(((Expression) object).getNoMatch(), null, refKeyMap, otherParams, execParams, mapSourceDS)).
+								.generateNotMetCondition(((Expression) object).getNoMatch(), null, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap)).
 						append(" END ").append(" ").toString();
 				 
 				// }
@@ -290,7 +293,7 @@ public class AttributeMapOperator {
 
 			if (object instanceof Formula) {
 				//if (sourceAttr.getCondition() == null) {
-				return formulaOperator.generateSql((Formula) object, refKeyMap, otherParams, execParams, mapSourceDS);
+				return formulaOperator.generateSql((Formula) object, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap);
 				//}
 				/*Condition condition = (Condition) daoRegister
 						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getCondition().getRef(), refKeyMap));
@@ -440,7 +443,8 @@ public class AttributeMapOperator {
 	public String selectGroupBy(List<AttributeMap> attrMapList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, 
 			HashMap<String, String> otherParams, 
-			ExecParams execParams, MetaIdentifierHolder mapSource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, MetaIdentifierHolder mapSource, 
+			Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder groupByStr = new StringBuilder("");// StringBuilder(" GROUP BY ");
 		String groupInfo = "";
 		boolean isGroupBy = false;
@@ -455,7 +459,7 @@ public class AttributeMapOperator {
 		for (AttributeMap attr : attrMapList) {
 			if (attr.getSourceAttr().getRef().getType() == MetaType.datapod 
 					|| attr.getSourceAttr().getRef().getType() == MetaType.dataset) {
-				groupByStr.append(sourceAttrSql(attr.getSourceAttr(), attr.getSourceAttr(), null, null, execParams)).append(",");
+				groupByStr.append(sourceAttrSql(attr.getSourceAttr(), attr.getSourceAttr(), null, null, execParams, paramValMap)).append(",");
 				//groupByStr.append(attr.getSourceAttr().getAttrName()).append(",");
 			} else if (attr.getSourceAttr().getRef().getType() == MetaType.expression) {
 //				Expression expression = (Expression) daoRegister.getRefObject(attr.getSourceAttr().getRef());
@@ -468,11 +472,11 @@ public class AttributeMapOperator {
 					if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 						isGroupBy = true;
 					} else {
-						groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams, exprSource));
+						groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams, exprSource, paramValMap));
 					}
 				}
 				for (FilterInfo filterInfo : expression.getExpressionInfo()) {
-					groupInfo = selectGroupBy(createAttrMapWithSourceAttr(filterInfo.getOperand()), refKeyMap, otherParams, execParams, exprSource);
+					groupInfo = selectGroupBy(createAttrMapWithSourceAttr(filterInfo.getOperand()), refKeyMap, otherParams, execParams, exprSource, paramValMap);
 					if (StringUtils.isNotBlank(groupInfo)) {
 						groupByStr.append(groupInfo).append(",");
 					}
@@ -483,7 +487,7 @@ public class AttributeMapOperator {
 				if (formula.getFormulaType() == FormulaType.sum_aggr || formula.getFormulaType() == FormulaType.aggr) {
 					isGroupBy = true;
 				} else {
-					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, mapSourceDS)).append(",");
+					groupByStr.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap)).append(",");
 //					groupByStr.append(selectGroupBy(createAttrMapWithSourceAttr(formula.getFormulaInfo()), refKeyMap, otherParams, execParams));
 				}
 			}

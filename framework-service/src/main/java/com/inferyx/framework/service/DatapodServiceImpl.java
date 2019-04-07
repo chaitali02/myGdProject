@@ -1108,13 +1108,13 @@ public class DatapodServiceImpl {
 		int limit = Integer.parseInt(limitValue);
 		String resultLimitValue = commonServiceImpl.getConfigValue("framework.histogram.result.size");
 		int resultLimit = Integer.parseInt(resultLimitValue);
-		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode);
+		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode, new HashMap<String, String>());
 	}
 
 	public List<Map<String, Object>> getFormulaValues(String formulaUuid, String formulaVersion, RunMode runMode) throws Exception {
 		Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaUuid, formulaVersion, MetaType.formula.toString());
 		Datasource formulaDs = commonServiceImpl.getDatasourceByObject(formula);
-		String formulaQuery = formulaOperator.generateSql(formula, null, null, null, formulaDs);
+		String formulaQuery = formulaOperator.generateSql(formula, null, null, null, formulaDs, new HashMap<String, String>());
 		
 		MetaIdentifier dependsOn = formula.getDependsOn().getRef();
 		Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
@@ -1142,14 +1142,14 @@ public class DatapodServiceImpl {
 		if(object instanceof Datapod) {
 			return generateSqlByDatapod((Datapod)object, runMode);
 		} else if(object instanceof DataSet) {
-			return datasetOperator.generateSql((DataSet)object, null, null, new HashSet<>(), null, runMode);
+			return datasetOperator.generateSql((DataSet)object, null, null, new HashSet<>(), null, runMode, new HashMap<String, String>());
 		} else if(object instanceof Rule) {
-			return ruleOperator.generateSql((Rule) object, null, null, new HashSet<>(), null, runMode);
+			return ruleOperator.generateSql((Rule) object, null, null, new HashSet<>(), null, runMode, new HashMap<String, String>());
 		} else if(object instanceof Relation) {
 //			MetaIdentifier dependsOn = ((Relation)object).getDependsOn().getRef();
 //			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
 //			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
-			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode);
+			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode, new HashMap<String, String>());
 			if(relSql != null && !relSql.isEmpty()) {
 				return "SELECT * FROM "+relSql;
 			} 

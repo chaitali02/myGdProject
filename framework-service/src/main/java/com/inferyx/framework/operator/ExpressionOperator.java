@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -69,7 +70,7 @@ public class ExpressionOperator {
 	 * @return
 	 * @throws Exception 
 	 */
-	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Datasource mapSourceDS) throws Exception {
+	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Datasource mapSourceDS, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -81,7 +82,7 @@ public class ExpressionOperator {
 				OrderKey expressionKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(expressionKey.getUUID(), expressionKey.getVersion(), MetaType.expression.toString());
 				builder.append(" (")
-						.append(generateSql(expression.getExpressionInfo(), expression.getDependsOn(), null, null, execParams, mapSourceDS))
+						.append(generateSql(expression.getExpressionInfo(), expression.getDependsOn(), null, null, execParams, mapSourceDS, paramValMap))
 						.append(")");
 				builder.append(" as ").append(expression.getName()).append(COMMA);
 				MetaIdentifier expressionRef = new MetaIdentifier(MetaType.filter, expression.getUuid(), expression.getVersion());
@@ -91,7 +92,7 @@ public class ExpressionOperator {
 				OrderKey filterKey = filterIdentifier.getRef().getKey();
 				com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				builder.append(" (")
-						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode, mapSourceDS))
+						.append(joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, runMode, mapSourceDS, paramValMap))
 						.append(")");
 				builder.append(" as ").append(filter.getName()).append(COMMA);
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
@@ -136,7 +137,7 @@ public class ExpressionOperator {
 
 	public String generateSql(List<FilterInfo> expression, MetaIdentifierHolder expressionSource,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, Datasource mapSourceDS, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder builder = new StringBuilder();
 		builder.append("(").append(" ");
 
@@ -146,7 +147,7 @@ public class ExpressionOperator {
 
 		for (FilterInfo expressionInfo : expression) {
 			builder.append(" ").append(expressionInfo.getLogicalOperator()).append(" ");
-			builder.append(generateSql(expressionInfo, expressionSource, refKeyMap, otherParams, execParams, mapSourceDS)).append(" ");
+			builder.append(generateSql(expressionInfo, expressionSource, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap)).append(" ");
 		}
 		builder.append(")");
 
@@ -156,7 +157,7 @@ public class ExpressionOperator {
 
 	private String generateSql(FilterInfo expressionInfo, MetaIdentifierHolder filterSource,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ExecParams execParams, Datasource mapSourceDS, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<String> operandValue = new ArrayList<>(2);
 		for (SourceAttr sourceAttr : expressionInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
@@ -171,7 +172,7 @@ public class ExpressionOperator {
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist && execParams != null && (execParams.getCurrParamSet() != null || execParams.getParamListHolder() != null)) {
 				String value = null;
-				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef(), paramValMap);
 				if(value != null) {
 					boolean isNumber = Helper.isNumber(value);			
 					if(!isNumber) {
@@ -205,7 +206,7 @@ public class ExpressionOperator {
 //				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
 				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap));
 			}
 
 		}
@@ -213,7 +214,8 @@ public class ExpressionOperator {
 	}
 
 	public String generateMetCondition(AttributeRefHolder metInfo, AttributeRefHolder filterSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS, 
+			java.util.Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (metInfo.getRef().getType() == MetaType.simple) {
 			String value = metInfo.getValue();
@@ -226,7 +228,7 @@ public class ExpressionOperator {
 			operandValue = value;
 		} else if (metInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
-			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(metInfo.getAttrId()), metInfo.getRef());
+			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(metInfo.getAttrId()), metInfo.getRef(), paramValMap);
 			if(value != null) {
 				boolean isNumber = Helper.isNumber(value);			
 				if(!isNumber) {
@@ -238,13 +240,13 @@ public class ExpressionOperator {
 //			Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(metInfo.getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(metInfo.getRef(), refKeyMap);
 			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
+			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap);
 		}
 		return operandValue;
 	}
 
 	public String generateNotMetCondition(AttributeRefHolder notMetInfo, AttributeRefHolder filterSource,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource mapSourceDS, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String operandValue = null;
 		if (notMetInfo.getRef().getType() == MetaType.simple) {
 			String value = notMetInfo.getValue();
@@ -257,7 +259,7 @@ public class ExpressionOperator {
 			operandValue = value;
 		} else if (notMetInfo.getRef().getType() == MetaType.paramlist) {
 			String value = null;
-			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(notMetInfo.getAttrId()), notMetInfo.getRef());
+			value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(notMetInfo.getAttrId()), notMetInfo.getRef(), paramValMap);
 			if(value != null) {
 				boolean isNumber = Helper.isNumber(value);			
 				if(!isNumber) {
@@ -269,7 +271,7 @@ public class ExpressionOperator {
 //			Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(notMetInfo.getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(notMetInfo.getRef(), refKeyMap);
 			Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS);
+			operandValue = formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, mapSourceDS, paramValMap);
 		}
 		return operandValue;
 	}

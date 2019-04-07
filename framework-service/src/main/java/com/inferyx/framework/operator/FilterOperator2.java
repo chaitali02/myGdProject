@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -57,8 +58,9 @@ public class FilterOperator2 {
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
-		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
+			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS
+			, Map<String, String> paramValMap) throws Exception {
+		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd, runMode, mapSourceDS, paramValMap);
 	}
 	
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
@@ -67,7 +69,9 @@ public class FilterOperator2 {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
+			, Boolean isAggrReqd, RunMode runMode
+			, Datasource mapSourceDS
+			, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.size() <= 0) {
 			return "";
@@ -84,7 +88,7 @@ public class FilterOperator2 {
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
 				usedRefKeySet.add(filterRef);
 				
-				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
+				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS, paramValMap);
 				if (StringUtils.isBlank(filterStr)) {
 					builder.append(ConstantsUtil.BLANK);
 				} /*else if (isAggrReqd) {
@@ -129,7 +133,8 @@ public class FilterOperator2 {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
+			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS
+			, Map<String, String> paramValMap) throws Exception {
 		return generateSql(filterInfo
 				, refKeyMap
 				, filterSource
@@ -140,7 +145,8 @@ public class FilterOperator2 {
 				, isAggrReqd
 				, runMode
 				, mapSourceDS
-				, new ArrayList<String>());
+				, new ArrayList<String>()
+				, paramValMap);
 	}
 	
 	/**
@@ -169,7 +175,8 @@ public class FilterOperator2 {
 			, Boolean isAggrReqd
 			, RunMode runMode
 			, Datasource mapSourceDS
-			, List<String> attributeList) throws Exception {
+			, List<String> attributeList
+			, Map<String, String> paramValMap) throws Exception {
 
 		String XPLAIN_SINGLE_QUOTES = "'";
 		String XPLAIN_START_BRACKET = "('";
@@ -188,7 +195,8 @@ public class FilterOperator2 {
 				, isAggrReqd
 				, runMode
 				, mapSourceDS
-				, attributeList);
+				, attributeList
+				, paramValMap);
 		if (attributeList == null 
 				|| attributeList.isEmpty()) {
 			return sql;
@@ -213,13 +221,14 @@ public class FilterOperator2 {
 			, Boolean isAggrReqd
 			, RunMode runMode
 			, Datasource mapSourceDS
-			, List<String> attributeList) throws Exception {
+			, List<String> attributeList
+			, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterInfo == null || filterInfo.size() <= 0) {
 			return "";
 		}
 		
-		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS, attributeList);
+		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS, attributeList, paramValMap);
 		if (StringUtils.isBlank(filterStr)) {
 			builder.append(ConstantsUtil.BLANK);
 		} else {
@@ -236,7 +245,7 @@ public class FilterOperator2 {
 	 * @throws Exception 
 	 */
 	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet,
-											ExecParams execParams, Datasource mapSourceDS) throws Exception {
+											ExecParams execParams, Datasource mapSourceDS, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -252,7 +261,7 @@ public class FilterOperator2 {
 				case filter : 
 					OrderKey filterKey = filterIdentifier.getRef().getKey();
 					com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
-					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, null, mapSourceDS)).append(")");
+					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, null, mapSourceDS, paramValMap)).append(")");
 					builder.append(" as ").append(filter.getName()).append(COMMA);
 					break;
 				case datapod:

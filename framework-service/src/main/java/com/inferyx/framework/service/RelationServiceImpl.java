@@ -120,6 +120,7 @@ public class RelationServiceImpl {
 
 	public List<Map<String, Object>> getSample(String relUuid, String relVersion, int rows, ExecParams execParams,
 			RunMode runMode) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+		Map<String, String> paramValMap = new HashMap<String, String>();
 		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
@@ -141,7 +142,7 @@ public class RelationServiceImpl {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		Datasource relDs = commonServiceImpl.getDatasourceByObject(relation);
 		try {
-			String sql = relationOperator.generateSampleDataSql(relation, null, otherParams, execParams, new HashSet<>(), rows, runMode);
+			String sql = relationOperator.generateSampleDataSql(relation, null, otherParams, execParams, new HashSet<>(), rows, runMode, paramValMap);
 			List<Map<String, Object>> data = exec.executeAndFetchByDatasource(sql, relDs, commonServiceImpl.getApp().getUuid());	
 			logger.info("Time elapsed in getSample : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 			return data;	

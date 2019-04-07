@@ -13,6 +13,7 @@ package com.inferyx.framework.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
@@ -45,7 +45,6 @@ import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
@@ -72,7 +71,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE);
+		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE, new HashMap<String, String>());
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

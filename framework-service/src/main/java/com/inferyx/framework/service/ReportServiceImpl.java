@@ -163,7 +163,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			synchronized (execUuid) {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.STARTING);
 			}
-			reportExec.setExec(reportOperator.generateSql(report, refKeyMap, otherParams, usedRefKeySet, reportExec.getExecParams(), runMode));
+			reportExec.setExec(reportOperator.generateSql(report, refKeyMap, otherParams, usedRefKeySet, reportExec.getExecParams(), runMode, new HashMap<String, String>()));
 			synchronized (execUuid) {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.READY);
 			}

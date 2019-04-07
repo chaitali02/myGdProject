@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
@@ -549,7 +550,17 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 //							String[] customFldArr = new String[] {fieldArray[i]};
 //							tabName_2 = exec.assembleRandomDF(customFldArr, tableName, true, appUuid);
 							tabName_2 = exec.renameColumn(tableName, 1, fieldArray[i], appUuid);
-							String sql = simulateMLOperator.generateSql(simulate, tabName_2);
+							/***************  Initializing paramValMap - START ****************/
+							Map<String, String> paramValMap = null;
+							if (execParams.getParamValMap() == null) {
+								execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+							}
+							if (!execParams.getParamValMap().containsKey(simulateExec.getUuid())) {
+								execParams.getParamValMap().put(simulateExec.getUuid(), new HashMap<String, String>());
+							}
+							paramValMap = execParams.getParamValMap().get(simulateExec.getUuid());
+							/***************  Initializing paramValMap - END ****************/
+							String sql = simulateMLOperator.generateSql(simulate, tabName_2, paramValMap);
 							result = exec.executeAndRegister(sql, tabName_2, appUuid);// (sql, tabName_2, filePath,
 																						// null,
 																						// SaveMode.Append.toString(),

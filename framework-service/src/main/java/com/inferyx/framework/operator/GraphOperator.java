@@ -3,6 +3,7 @@
  */
 package com.inferyx.framework.operator;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,16 @@ public class GraphOperator implements IOperator {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		//commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec.toString(),null);
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
 				Status.Stage.STARTING);
 		// Fetch graphPod - START
@@ -61,8 +72,8 @@ public class GraphOperator implements IOperator {
 		// Get node 
 		List<GraphNode> nodeList = graphPod.getNodeInfo();
 		List<GraphEdge> edgeList = graphPod.getEdgeInfo();
-		String nodeSql = createNodeSql(nodeList, execParams, baseExec, runMode);
-		String edgeSql = createEdgeSql(edgeList, execParams, baseExec, runMode);
+		String nodeSql = createNodeSql(nodeList, execParams, baseExec, runMode, paramValMap);
+		String edgeSql = createEdgeSql(edgeList, execParams, baseExec, runMode, paramValMap);
 		baseExec.setExec(nodeSql.concat("|||").concat(edgeSql));
 		logger.info(" Sqls : " + baseExec.getExec());
 		commonServiceImpl.save(MetaType.graphExec.toString(), baseExec);
@@ -77,7 +88,8 @@ public class GraphOperator implements IOperator {
 	 * @return
 	 * @throws Exception 
 	 */
-	private String createNodeSql(List<GraphNode> nodeList, ExecParams execParams, BaseExec baseExec, RunMode runMode)
+	private String createNodeSql(List<GraphNode> nodeList, ExecParams execParams, BaseExec baseExec, RunMode runMode
+			, Map<String, String> paramValMap)
 			throws Exception {
 		if (nodeList == null || nodeList.isEmpty()) {
 			return null;
@@ -97,7 +109,7 @@ public class GraphOperator implements IOperator {
 			AttributeRefHolder nodeIdRefHolder = graphNode.getNodeId();
 			sb.append(attributeMapOperator.sourceAttrSql(nodeIdRefHolder, nodeIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
+					execParams, paramValMap));
 			sb.append(" AS id, ");
 
 			// Fetch id nodeBackgroundInfo
@@ -105,7 +117,7 @@ public class GraphOperator implements IOperator {
 				AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
 				sb.append(attributeMapOperator.sourceAttrSql(nbpropID, nbpropID,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-						execParams));
+						execParams, paramValMap));
 				sb.append(" AS nBPropertyId, ");
 
 			} else {
@@ -118,14 +130,14 @@ public class GraphOperator implements IOperator {
 			AttributeRefHolder nodeNameRefHolder = graphNode.getNodeName();
 			sb.append(attributeMapOperator.sourceAttrSql(nodeNameRefHolder, nodeNameRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
+					execParams, paramValMap));
 			sb.append(" AS nodeName, ");
 
 			if (graphNode.getNodeSize() != null) {
 				AttributeRefHolder nodeSizeRefHolder = graphNode.getNodeSize();
 				sb.append(attributeMapOperator.sourceAttrSql(nodeSizeRefHolder, nodeSizeRefHolder,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-						execParams));
+						execParams, paramValMap));
 			} else {
 				sb.append(0);
 			}
@@ -166,7 +178,7 @@ public class GraphOperator implements IOperator {
 
 				sb2.append(attributeMapOperator.sourceAttrSql(propertyIdRefHolder, propertyIdRefHolder,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-						execParams));
+						execParams, paramValMap));
 
 				sb2.append(", ");
 
@@ -189,7 +201,7 @@ public class GraphOperator implements IOperator {
 					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					// sb.append(" AS ");
 					sb.append(", \'\') ");
 					sb.append(", ");
@@ -204,7 +216,7 @@ public class GraphOperator implements IOperator {
 					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					// sb.append(" AS ");
 					sb.append(", 0) ");
 					sb.append(", ");
@@ -242,7 +254,7 @@ public class GraphOperator implements IOperator {
 				AttributeRefHolder propertyIdRefHolder1 = graphNode.getHighlightInfo().getPropertyId();
 				sb.append(attributeMapOperator.sourceAttrSql(propertyIdRefHolder1, propertyIdRefHolder1,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-						execParams));
+						execParams, paramValMap));
 				sb.append(" AS nHPropertyId");
 
 			} else {
@@ -273,7 +285,8 @@ public class GraphOperator implements IOperator {
 	 * @return
 	 * @throws Exception 
 	 */
-	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode)
+	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode
+			, Map<String, String> paramValMap)
 			throws Exception {
 		if (edgeList == null || edgeList.isEmpty()) {
 			return null;
@@ -297,12 +310,12 @@ public class GraphOperator implements IOperator {
 			AttributeRefHolder sourceNodeIdRefHolder = graphEdge.getSourceNodeId();
 			sb.append(attributeMapOperator.sourceAttrSql(sourceNodeIdRefHolder, sourceNodeIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
+					execParams, paramValMap));
 			sb.append(" AS src, ");
 			AttributeRefHolder targetNodeIdRefHolder = graphEdge.getTargetNodeId();
 			sb.append(attributeMapOperator.sourceAttrSql(targetNodeIdRefHolder, targetNodeIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
+					execParams, paramValMap));
 			sb.append(" AS dst, '");
 			sb.append(graphEdge.getEdgeName());
 			sb.append("' AS edgeName, '");
@@ -330,7 +343,7 @@ public class GraphOperator implements IOperator {
 					sb3.append("NVL( ");
 					sb3.append(attributeMapOperator.sourceAttrSql(hIpropIdRefHolder, hIpropIdRefHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					sb3.append(", \'\') ");
 					sb3.append(", ");
 
@@ -348,7 +361,7 @@ public class GraphOperator implements IOperator {
 					sb3.append("NVL( ");
 					sb3.append(attributeMapOperator.sourceAttrSql(hIpropIdRefHolder, hIpropIdRefHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					sb3.append(", 0) ");
 					sb3.append(", ");
 
@@ -374,7 +387,7 @@ public class GraphOperator implements IOperator {
 					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					// sb.append(" AS ");
 					sb.append(", \'\') ");
 					sb.append(", ");
@@ -389,7 +402,7 @@ public class GraphOperator implements IOperator {
 					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-							execParams));
+							execParams, paramValMap));
 					// sb.append(" AS ");
 					sb.append(", 0) ");
 					sb.append(", ");
@@ -423,7 +436,7 @@ public class GraphOperator implements IOperator {
 				AttributeRefHolder propertyIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
 				sb.append(attributeMapOperator.sourceAttrSql(propertyIdRefHolder, propertyIdRefHolder,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-						execParams));
+						execParams, paramValMap));
 				sb.append(" AS eHpropertyId, ");
 
 				// graphEdge.getEdgeSource().getRef().get

@@ -12,10 +12,10 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -127,6 +128,18 @@ public class ProfileOperator {
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
 		String datasourceType = mapSourceDS.getType();
 		ExecContext execContext = helper.getExecutorContext(datasourceType);
+		
+		/***************  Initializing paramValMap - START ****************/
+		ExecParams execParams = profileExec.getExecParams();
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(profileExec.getUuid())) {
+			execParams.getParamValMap().put(profileExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(profileExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		
@@ -169,7 +182,7 @@ public class ProfileOperator {
 					+ " FROM " + profileTableName 
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 		case FILE : 
 			return "SELECT \'"
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
@@ -205,7 +218,7 @@ public class ProfileOperator {
 					+ " FROM " + profileTableName 
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 		case IMPALA : 
 			return "SELECT "
 					+ profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
@@ -237,7 +250,7 @@ public class ProfileOperator {
 					+ " FROM " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 		case MYSQL : 
 			return "SELECT '"   
 		            + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
@@ -270,7 +283,7 @@ public class ProfileOperator {
 							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", '"  
 					+ profileExec.getVersion() + "' AS "+VERSION+" from " + profileTableName
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 		case ORACLE : 
 			return "SELECT \'" 
 				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
@@ -306,7 +319,7 @@ public class ProfileOperator {
 					+ profileExec.getVersion() + "' AS VERSION from " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS)
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap)
 					+ " GROUP BY "+attrName;
 		case POSTGRES : 
 			String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";
@@ -346,7 +359,7 @@ public class ProfileOperator {
 					+ " FROM " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
-					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
+					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 		default:
 			return null;
 		}

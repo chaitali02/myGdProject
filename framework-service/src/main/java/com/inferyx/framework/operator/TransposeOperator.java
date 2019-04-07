@@ -216,7 +216,7 @@ public class TransposeOperator implements IOperator {
 		} else if (sourceDataIdentifier.getType() == MetaType.dataset) {
 			sourceDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
 			attrList = getColumnNameList(sourceDataset, sourceDatapodInfo);
-			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode, new HashMap<String, String>()) + ") "
 					+ sourceDataset.getName();
 		}
 //		sourceTableName = getTableNameBySource(sourceData, runMode);

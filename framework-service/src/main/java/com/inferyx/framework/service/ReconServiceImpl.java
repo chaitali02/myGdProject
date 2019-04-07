@@ -102,12 +102,24 @@ public class ReconServiceImpl extends RuleTemplate {
 		Recon recon = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
+		
+		/***************  Initializing paramValMap - START ****************/
+		ExecParams execParams = reconExec.getExecParams();
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(reconExec.getUuid())) {
+			execParams.getParamValMap().put(reconExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(reconExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.STARTING);
 		}
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {
-			reconExec.setExec(reconOperator.generateSql(recon, reconExec, datapodList, dagExec, refKeyMap, otherParams, usedRefKeySet, runMode));
+			reconExec.setExec(reconOperator.generateSql(recon, reconExec, datapodList, dagExec, refKeyMap, otherParams, usedRefKeySet, runMode, paramValMap));
 			reconExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (reconExec.getUuid()) {

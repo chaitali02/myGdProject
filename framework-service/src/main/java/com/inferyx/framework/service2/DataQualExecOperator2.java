@@ -4,6 +4,7 @@
 package com.inferyx.framework.service2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class DataQualExecOperator2 implements IOperator {
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString());
 		dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
 		try{
-		dataQualExec.setExec(dqOperator.generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null));
+		dataQualExec.setExec(dqOperator.generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null, new HashMap<String, String>()));
 		dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		
 		synchronized (dataQualExec.getUuid()) {

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -256,7 +257,8 @@ public class DQOperator implements IParsable {
 
 	
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
-			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag, 
+			Map<String, String> paramValMap) throws Exception {
 		logger.info("DQ generateSql otherParams : " + otherParams);
 		Datapod srcDP = null;
 		LinkedHashMap<String, String> paramValues = dataQualExec.getParamValues();
@@ -283,10 +285,10 @@ public class DQOperator implements IParsable {
 				usedRefKeySet.add(srcDPRef);
 				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true),
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName(),
-						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag);
+						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag, paramValMap);
 			} else {
 				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), null, datapodList,
-						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag);
+						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag, paramValMap);
 			}
 		}
 		if (dataQual.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -295,7 +297,7 @@ public class DQOperator implements IParsable {
 		return null;
 	}
 
-	private String generateSelect(DataQual dq, DataQualExec dataQualExec, String tableName, String attributeName)
+	private String generateSelect(DataQual dq, DataQualExec dataQualExec, String tableName, String attributeName, Map<String, String> paramValMap)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Datasource dataSource = commonServiceImpl.getDatasourceByApp();
@@ -367,7 +369,7 @@ public class DQOperator implements IParsable {
 			select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)));
 		}
 		select = select.concat(AS).concat(ATTRIBUTE_VAL).concat(COMMA)
-				.concat(generateCase(dq, tableName, attributeName)).concat(COMMA);
+				.concat(generateCase(dq, tableName, attributeName, paramValMap)).concat(COMMA);
 		//added code for paramInfo
 		select = select.concat(pipeSepAttrsParamList(dataQualExec.getExecParams()).concat(AS)
 				.concat(PARAM_INFO).concat(COMMA));
@@ -377,7 +379,8 @@ public class DQOperator implements IParsable {
 	}
 
 	private String generateFrom(DataQual dq, MetaIdentifier ref, String attributeName, List<String> datapodList, DagExec dagExec,
-			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		Datapod srcDP = null;
 		String resp = null;
 //		Relation relation = null;
@@ -405,7 +408,7 @@ public class DQOperator implements IParsable {
 		 */
 		return resp
 				.concat(generateRefIntFrom(dq, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), attributeName,
-						datapodList, dagExec, usedRefKeySet, otherParams, runMode))
+						datapodList, dagExec, usedRefKeySet, otherParams, runMode, paramValMap))
 				// .concat(generateStddevFrom(dq, getDataQualTableName(srcDP, datapodList,
 				// dagExec), srcDP.getName(), datapodList, dagExec))
 				.concat(generateDupCheckFrom(dq, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), srcDP.getName(),
@@ -526,7 +529,7 @@ public class DQOperator implements IParsable {
 		StringBuilder attrStr = new StringBuilder();
 		String attrs = null;
 	    int count=0;
-		if (execParams==null  ) {
+		if (execParams==null  || execParams.getParamListInfo() == null) {
 			return " '  ' " ;
 		}
 //		metadataServiceImpl.getParamValue(execParams,);
@@ -552,7 +555,8 @@ public class DQOperator implements IParsable {
 	}
 
 	private String generateRefIntFrom(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, 
+			Map<String, String> paramValMap) throws Exception {
 		String refIntStr = null;
 		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getDependsOn() == null || dq.getRefIntegrityCheck().getDependsOn().getRef() == null) {
 			return EMPTY;
@@ -580,7 +584,7 @@ public class DQOperator implements IParsable {
 			usedRefKeySet.add(dq.getRefIntegrityCheck().getTargetAttr().getRef());
 		} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
 			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
-			refIntStr = BRACKET_OPEN.concat(relationOperator.generateSql(relation, null, otherParams, null, usedRefKeySet, runMode)).concat(BRACKET_CLOSE);
+			refIntStr = BRACKET_OPEN.concat(relationOperator.generateSql(relation, null, otherParams, null, usedRefKeySet, runMode, paramValMap)).concat(BRACKET_CLOSE);
 //					.concat(" ").concat(relation.getName()).concat("_ref ");
 			MetaIdentifier relationRef = new MetaIdentifier(MetaType.relation, relation.getUuid(), relation.getVersion());
 			usedRefKeySet.add(relationRef);
@@ -720,7 +724,8 @@ public class DQOperator implements IParsable {
 		return attrs.substring(0, attrs.length() - 2);
 	}
 
-	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, DataQualExec dataQualExec, RunMode runMode)
+	public String generateFilter(DataQual dq, Set<MetaIdentifier> usedRefKeySet, DataQualExec dataQualExec, RunMode runMode, 
+			Map<String, String> paramValMap)
 			throws Exception {
 		if (dq.getFilterInfo() == null || dq.getFilterInfo().isEmpty()) {
 			return "";
@@ -728,21 +733,22 @@ public class DQOperator implements IParsable {
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dq, dq.getUuid(), dq.getVersion()));
 
 		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dq);
-		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null, filterSource, null, usedRefKeySet, dataQualExec.getExecParams(), false, false, runMode, mapSourceDS);
+		String filterStr = filterOperator2.generateSql(dq.getFilterInfo(), null, filterSource, null, usedRefKeySet, dataQualExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 
 		return filterStr; //filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false, false, null);
 
 	}
 
 	public String generateSql(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag)
+			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag, 
+			Map<String, String> paramValMap)
 			throws Exception {
-		String select = generateSelect(dq, dataQualExec, tableName, attributeName);
+		String select = generateSelect(dq, dataQualExec, tableName, attributeName, paramValMap);
 		if (StringUtils.isBlank(select)) {
 			return null;
 		}
-		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
-				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, dataQualExec, runMode));
+		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode, paramValMap))
+				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, dataQualExec, runMode, paramValMap));
 		select = generateallCheckFlag(select, dq, dataQualExec);
 
 		if (summaryFlag == null || summaryFlag == "N")
@@ -910,7 +916,7 @@ public class DQOperator implements IParsable {
 	}
 	
 	public String generateSummarySql(DataQual dq, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
+			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, Map<String, String> paramValMap)
 			throws Exception {
 		// Find summary sql
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
@@ -926,7 +932,7 @@ public class DQOperator implements IParsable {
 //		String summaryTableName = datastoreServiceImpl.getTableNameByDatastoreKey(datasore.getUuid(), datasore.getVersion(), runMode);
 
 //		String resSql = dataQualExec.getExec();
-		String resSql = generateSql(dq,datapodList,dataQualExec,dagExec,usedRefKeySet,otherParams,runMode,"Y");		
+		String resSql = generateSql(dq,datapodList,dataQualExec,dagExec,usedRefKeySet,otherParams,runMode,"Y", paramValMap);		
 		String sql = generateSummarySql4(dq, dataQualExec, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
 		return sql;
 	}
@@ -1335,7 +1341,7 @@ public class DQOperator implements IParsable {
 		return CASE_WHEN + checkField + " = " + checkString + THEN_1_0 + aliasField;
 	}
 
-	public String generateCase(DataQual dq, String tableName, String attributeName)
+	public String generateCase(DataQual dq, String tableName, String attributeName, Map<String, String> paramValMap)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource dataSource = commonServiceImpl.getDatasourceByApp();
@@ -1529,7 +1535,7 @@ public class DQOperator implements IParsable {
 																						, dq.getExpressionCheck().getRef().getType().toString()
 																						, "N");
 			MetaIdentifierHolder expressionSource = new MetaIdentifierHolder(dq.getExpressionCheck().getRef());
-			check = expressionOperator.generateSql(expression.getExpressionInfo(), expressionSource, null, new HashMap<String, String>(), null, commonServiceImpl.getDatasourceByObject(dq));
+			check = expressionOperator.generateSql(expression.getExpressionInfo(), expressionSource, null, new HashMap<String, String>(), null, commonServiceImpl.getDatasourceByObject(dq), paramValMap);
 			colName = EXPRESSION_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
@@ -1557,13 +1563,23 @@ public class DQOperator implements IParsable {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString(), "N");
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (dataQualExec.getUuid()) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "Y");
 		try{
-			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null));
+			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null, paramValMap));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (dataQualExec.getUuid()) {

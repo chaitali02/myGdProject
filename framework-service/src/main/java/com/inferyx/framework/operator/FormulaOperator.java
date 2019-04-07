@@ -58,14 +58,16 @@ public class FormulaOperator {
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
 	
 	public String generateSql(Formula formula,
-			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource datasource) 
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource datasource, 
+			java.util.Map<String, String> paramValMap) 
 					throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return generateSql(formula
 				, refKeyMap
 				, otherParams
 				, execParams
 				, datasource
-				, new ArrayList<String>());
+				, new ArrayList<String>()
+				, paramValMap);
 	}
 
 	public String generateSql(Formula formula
@@ -73,7 +75,8 @@ public class FormulaOperator {
 							, HashMap<String, String> otherParams
 							, ExecParams execParams
 							, Datasource datasource
-							, List<String> attributeList) 
+							, List<String> attributeList
+							, java.util.Map<String, String> paramValMap) 
 					throws JsonProcessingException
 						, IllegalAccessException
 						, IllegalArgumentException
@@ -95,7 +98,7 @@ public class FormulaOperator {
 			} else if (sourceAttr.getRef().getType() == MetaType.paramlist) {
 				
 				builder.append(" ");
-				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef(), paramValMap);
 				if (value != null) {
 					boolean isNumber = Helper.isNumber(value);
 					if (!isNumber) {
@@ -124,7 +127,7 @@ public class FormulaOperator {
 				Formula innerFormula = (Formula)  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				Datasource datasource2 = commonServiceImpl.getDatasourceByObject(formula);
-				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2, attributeList) + ") ");
+				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2, attributeList, paramValMap) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {

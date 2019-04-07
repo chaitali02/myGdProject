@@ -11,8 +11,8 @@
 package com.inferyx.framework.controller;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
@@ -45,12 +44,11 @@ import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.Rule2Operator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.Rule2ServiceImpl;
+import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.TaskHolder;
 
 @RestController
@@ -72,7 +70,7 @@ public class Rule2Controller {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE,null, null, false).get(0);
+		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE,null, null, false, new HashMap<String, String>()).get(0);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

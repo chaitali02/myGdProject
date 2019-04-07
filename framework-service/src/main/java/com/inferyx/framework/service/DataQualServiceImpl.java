@@ -415,6 +415,21 @@ public class DataQualServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.dqExec.toString(), "Y");
+		ExecParams execParams = dataQualExec.getExecParams();
+		if (execParams == null) {
+			execParams = new ExecParams();
+			dataQualExec.setExecParams(execParams);
+		}
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(dataQualExec.getUuid())) {
+			execParams.getParamValMap().put(dataQualExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(dataQualExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
@@ -423,11 +438,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 				MetaType.dq.toString(), "Y");
 		try {
 			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-					otherParams, runMode, null));
+					otherParams, runMode, null, paramValMap));
 //			dataQualExec.setExec(dqOperator.generateResFilteredSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
 //					otherParams, runMode));
 			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
-					usedRefKeySet, otherParams, runMode));
+					usedRefKeySet, otherParams, runMode, paramValMap));
 			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 

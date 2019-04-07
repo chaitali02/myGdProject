@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +75,7 @@ public class VizpodParser {
 	static final Logger logger = Logger.getLogger(VizpodParser.class);
 
 	public String toSql(Vizpod vizpod, String tableName, Set<MetaIdentifier> usedRefKeySet, boolean allowColNameInFltr,
-			RunMode runMode, boolean flag) throws Exception {
+			RunMode runMode, boolean flag, Map<String, String> paramValMap) throws Exception {
 		// Formation of SQL query
 		StringBuilder selectBuilder = new StringBuilder();
 		StringBuilder fromBuilder = new StringBuilder();
@@ -129,7 +130,7 @@ public class VizpodParser {
 						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
 								MetaType.formula.toString());
 						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
-						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS, paramValMap);
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 
 							outerSelectBuilder.append(attrDet.getFunction()).append("(").append(datapod.getName())
@@ -161,7 +162,7 @@ public class VizpodParser {
 						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
 								MetaType.formula.toString());
 						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
-						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS, paramValMap);
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 
 							outerSelectBuilder.append(attrDet.getFunction()).append("(").append(datapod.getName())
@@ -212,7 +213,7 @@ public class VizpodParser {
 						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
 								MetaType.formula.toString());
 						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
-						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS, paramValMap);
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 
 							outerSelectBuilder.append(attrDet.getFunction()).append("(").append(datapod.getName())
@@ -269,7 +270,7 @@ public class VizpodParser {
 				whereBuilder.append(blankSpace);
 				Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 				whereBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet,
-						false, false, runMode, datasource));
+						false, false, runMode, datasource, paramValMap));
 				if (allowColNameInFltr) {
 					Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 					Matcher matcher = pattern.matcher(whereBuilder);
@@ -375,7 +376,7 @@ public class VizpodParser {
 				// Having
 				Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 				String havingStr = filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true,
-						true, runMode, datasource);
+						true, runMode, datasource, paramValMap);
 				if (org.apache.commons.lang3.StringUtils.isNotBlank(havingStr)) {
 					finalBuilder.append(ConstantsUtil.HAVING_1_1).append(havingStr);
 				}
@@ -442,7 +443,7 @@ public class VizpodParser {
 					Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 					selectBuilder
 							.append(expressionOperator.generateSql(expression.getExpressionInfo(),
-									expression.getDependsOn(), null, null, null, datasource))
+									expression.getDependsOn(), null, null, null, datasource, paramValMap))
 							.append(" as ").append("expression_" + expression.getName());
 					selectBuilder.append(comma);
 					if (attrDet.getFunction() == null
@@ -455,7 +456,7 @@ public class VizpodParser {
 					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
 							attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
 					Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
-					String formulaSql = formulaOperator.generateSql(formula, null, null, null, datasource);
+					String formulaSql = formulaOperator.generateSql(formula, null, null, null, datasource, paramValMap);
 					if (attrDet.getFunction() != null && !attrDet.getFunction().isEmpty()) {
 						selectBuilder.append(attrDet.getFunction() + "(" + formulaSql + ")");
 					} else {
@@ -472,7 +473,7 @@ public class VizpodParser {
 			fromBuilder.append(blankSpace);
 
 			// Append Join
-			fromBuilder.append(relationOperator.generateSql(relation, null, null, null, usedRefKeySet, runMode));
+			fromBuilder.append(relationOperator.generateSql(relation, null, null, null, usedRefKeySet, runMode, paramValMap));
 			fromBuilder.append(blankSpace);
 
 			// append Where
@@ -483,7 +484,7 @@ public class VizpodParser {
 				whereBuilder.append(blankSpace);
 				Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 				whereBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet,
-						false, false, runMode, datasource));
+						false, false, runMode, datasource, paramValMap));
 
 				if (allowColNameInFltr) {
 					Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
@@ -568,7 +569,7 @@ public class VizpodParser {
 			// Having Builder
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 			havingBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true,
-					true, runMode, datasource));
+					true, runMode, datasource, paramValMap));
 			orderByBuilder = generateOderBy(vizpod.getSortBy(), vizpod.getSortOrder());
 			// Limit Builder
 			// if (vizpod.getLimit() != null){
@@ -644,14 +645,14 @@ public class VizpodParser {
 			 * following custom code is written specifically to remove table name from
 			 * filter query else above commented code can work
 			 *******/
-			String innerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+			String innerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode, paramValMap);
 
 			dataSet.setAttributeInfo(attributeInfo);
 
 //			String outerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 
 			StringBuilder queryBuilder = new StringBuilder();
-			selectBuilder = new StringBuilder(generateSelectForDataSet(dataSet, vizpod));
+			selectBuilder = new StringBuilder(generateSelectForDataSet(dataSet, vizpod, paramValMap));
 
 			// if(formulaSql2 != null && !formulaSql2.isEmpty()) {
 			// selectBuilder.append(", ").append(formulaSql2);
@@ -663,7 +664,7 @@ public class VizpodParser {
 			System.out.println(fromBuilder.toString());
 			whereBuilder.append(datasetOperator.generateWhere());
 			whereBuilder.append(" ")
-					.append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null, null));
+					.append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null, null, paramValMap));
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 
 			// List<AttributeRefHolder> tempFormulaInfo =
@@ -671,7 +672,7 @@ public class VizpodParser {
 			// whereBuilder.append(" ").append(filterOperator2.generateSql(tempFormulaInfo,
 			// null, null, usedRefKeySet, false, false, runMode, datasource));
 			whereBuilder.append(" ").append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null,
-					usedRefKeySet, false, false, runMode, datasource));
+					usedRefKeySet, false, false, runMode, datasource, paramValMap));
 			// if(allowColNameInFltr) {
 			Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 			Matcher matcher = pattern.matcher(whereBuilder);
@@ -684,7 +685,7 @@ public class VizpodParser {
 			// groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet,
 			// null, null, null));
 			havingBuilder = new StringBuilder(
-					datasetOperator.generateHaving(dataSet, null, null, usedRefKeySet, null, null));
+					datasetOperator.generateHaving(dataSet, null, null, usedRefKeySet, null, null, paramValMap));
 			// List<AttributeRefHolder> formulaFilterInfo =
 			// getFilterInfoByFormula(vizpod.getFilterInfo());
 			// if(formulaFilterInfo != null && !formulaFilterInfo.isEmpty()) {
@@ -756,7 +757,7 @@ public class VizpodParser {
 		return null;
 	}
 
-	public StringBuilder generateSelectForDataSet(DataSet dataSet, Vizpod vizpod)
+	public StringBuilder generateSelectForDataSet(DataSet dataSet, Vizpod vizpod, Map<String, String> paramValMap)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder selectBuilder = new StringBuilder();
@@ -785,7 +786,7 @@ public class VizpodParser {
 						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
 								attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
 						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
-						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS, paramValMap);
 
 						selectBuilder.append(FormulaSql).append(" as ").append(formula.getName());
 					}

@@ -12,6 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -114,7 +115,7 @@ public class ReconOperator {
 
 	public String generateSql(Recon recon, ReconExec reconExec, List<String> datapodList, DagExec dagExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		String sql = "";
 		try {			
 			String sourceDistinct = recon.getSourceDistinct();
@@ -167,11 +168,11 @@ public class ReconOperator {
 			      + SINGLE_QUOTE + SOURCE_ATTR_NAME + SINGLE_QUOTE + " AS sourceAttributeName" + COMMA
 			      + sourceVal + " AS sourceValue"
 			      + FROM
-			      + generateFrom(sourceObj, datapodList, dagExec, reconExec.getExecParams(), refKeyMap, otherParams, usedRefKeySet, runMode)//getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
+			      + generateFrom(sourceObj, datapodList, dagExec, reconExec.getExecParams(), refKeyMap, otherParams, usedRefKeySet, runMode, paramValMap)//getTableName(sourceDp, datapodList, dagExec, otherParams, runMode) 
 			      + BLANK
 			      + " source "
 			      + WHERE_1_1 
-			      + generateFilter("source", recon,sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), runMode)
+			      + generateFilter("source", recon,sourceObj, recon.getSourceFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), runMode, paramValMap)
 //			      + GROUP_BY
 //			      + SOURCE_UUID_ALIAS + COMMA
 //			      + SOURCE_VERSION_ALIAS + COMMA
@@ -192,11 +193,11 @@ public class ReconOperator {
 			      + SINGLE_QUOTE + TARGET_ATTR_NAME + SINGLE_QUOTE + " AS targetAttributeName" + COMMA		      
 			      + targetVal + " AS targetValue" 
 			      + FROM
-			      + generateFrom(targetObj, datapodList, dagExec, null, refKeyMap, otherParams, usedRefKeySet, runMode)//getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
+			      + generateFrom(targetObj, datapodList, dagExec, null, refKeyMap, otherParams, usedRefKeySet, runMode, paramValMap)//getTableName(targetDp, datapodList, dagExec, otherParams, runMode)
 			      + BLANK
 			      + " target "
 			      + WHERE_1_1 
-			      + generateFilter("target",recon, targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), null)
+			      + generateFilter("target",recon, targetObj, recon.getTargetFilter(), refKeyMap, otherParams, usedRefKeySet, reconExec.getExecParams(), null, paramValMap)
 //			      + GROUP_BY
 //			      + TARGET_UUID_ALIAS + COMMA
 //			      + TARGET_VERSION_ALIAS + COMMA
@@ -314,9 +315,9 @@ public class ReconOperator {
 	}
 	
 	public String generateFrom(Object obj, List<String> datapodList, DagExec dagExec, ExecParams execParams, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if(obj instanceof DataSet) {
-			return "( " + datasetOperator.generateSql((DataSet)obj, refKeyMap, otherParams, usedRefKeySet, execParams, runMode) +" )";
+			return "( " + datasetOperator.generateSql((DataSet)obj, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap) +" )";
 		} else if(obj instanceof Datapod) {
 //			return getTableName((Datapod)obj, datapodList, dagExec, otherParams, runMode);
 			return datapodServiceImpl.genTableNameByDatapod((Datapod)obj, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
@@ -327,7 +328,7 @@ public class ReconOperator {
 
 	public String generateFilter(String tableName, Recon recon, Object object, List<FilterInfo> filterAttrRefHolder,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode)
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap)
 			throws Exception {
 		String objectName = null;
 		if(object instanceof Datapod) {				
@@ -341,7 +342,7 @@ public class ReconOperator {
 		if (filterAttrRefHolder != null && !filterAttrRefHolder.isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.recon, recon.getUuid(), recon.getVersion()));
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(recon);
-			String filter = filterOperator2.generateSql(filterAttrRefHolder, refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+			String filter = filterOperator2.generateSql(filterAttrRefHolder, refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 
 			//String filter = filterOperator.generateSql(filterAttrRefHolder, refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 			if(filter.contains(objectName))

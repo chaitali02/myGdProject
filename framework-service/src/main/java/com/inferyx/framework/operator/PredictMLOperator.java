@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
+  * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
  *
  * This unpublished material is proprietary to Inferyx Inc.
  * The methods and techniques described herein are considered  trade 
@@ -12,6 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -105,7 +106,7 @@ public class PredictMLOperator {
 			
 //			String label = commonServiceImpl.resolveLabel(predict.getLabelInfo());
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(predict);
-			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null, mapSourceDS)).append(" AS ").append("label");
+			builder.append(formulaOperator.generateSql(dumyFormula, null, null, null, mapSourceDS, new HashMap<String, String>())).append(" AS ").append("label");
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 

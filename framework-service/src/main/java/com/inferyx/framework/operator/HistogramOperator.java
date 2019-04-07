@@ -90,6 +90,16 @@ public class HistogramOperator implements IOperator {
 	 */
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
 		ParamListHolder numBucketsInfo = paramSetServiceImpl.getParamByName(execParams, "numBuckets");
 		ParamListHolder sourceInfo = paramSetServiceImpl.getParamByName(execParams, "sourceAttr");
@@ -119,7 +129,7 @@ public class HistogramOperator implements IOperator {
 
 		IExecutor exec = execFactory.getExecutor(locationDpDs.getType());		
 		
-		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
+		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode, paramValMap);
 		ResultSetHolder rsHolder = exec.histogram(locationDatapod, locationTableName, sql, key, numBuckets, appUuid, locationDpDs);
 		save(exec, rsHolder, locationTableName, locationDatapod,  baseExec.getRef(MetaType.operatorExec), runMode);
 		return null;
@@ -156,7 +166,8 @@ public class HistogramOperator implements IOperator {
 		return null;
 	}
 	
-	public String generateSql(List<AttributeRefHolder> sourceAttrs, ExecParams execParams, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+	public String generateSql(List<AttributeRefHolder> sourceAttrs, ExecParams execParams, HashMap<String, String> otherParams, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		String sql = null;
 		MetaIdentifier sourceMI = sourceAttrs.get(0).getRef();
 		
@@ -206,7 +217,7 @@ public class HistogramOperator implements IOperator {
 				}
 			}
 			dataset.setAttributeInfo(attributeInfo);
-			sql = datasetOperator.generateSql(dataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode);
+			sql = datasetOperator.generateSql(dataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode, paramValMap);
 		}
 		return sql;
 	}
@@ -268,7 +279,8 @@ public class HistogramOperator implements IOperator {
 	}
 
 	
-	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
+	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		Datasource appDS = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDS.getType());	
 		
@@ -295,7 +307,7 @@ public class HistogramOperator implements IOperator {
 			exec.executeAndRegisterByDatasource(sql, "tempAttrHistogram", attrDpDs, appUuid);
 			
 		} else {
-			sql = generateSql(attrRefHolderList, null, null, runMode);
+			sql = generateSql(attrRefHolderList, null, null, runMode, paramValMap);
 			sql = sql.concat(" ").concat(" LIMIT "+limit);
 
 			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid, attrDpDs);

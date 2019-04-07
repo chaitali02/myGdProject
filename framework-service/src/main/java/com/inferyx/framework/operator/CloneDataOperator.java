@@ -170,6 +170,16 @@ public class CloneDataOperator implements IOperator {
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info(" Inside CloneDataOperator");
 //		String execUuid = baseExec.getUuid();
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		String execVersion = baseExec.getVersion();
 		HashMap<String, String> otherParams = execParams.getOtherParams();
 		Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
@@ -197,10 +207,10 @@ public class CloneDataOperator implements IOperator {
 			sourceSql = otherParams.get("datapodUuid_" + sourceIdentifier.getUuid() + "_tableName");
 		} else if (sourceIdentifier.getType() == MetaType.rule) {
 			sourceSql = "(".concat(ruleOperator.generateSql((Rule) sourceObj, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, null,
-					execParams, runMode)).concat(")");
+					execParams, runMode, paramValMap)).concat(")");
 		} else if (sourceIdentifier.getType() == MetaType.dataset) {
 			sourceSql = "(".concat(datasetOperator.generateSql((DataSet) sourceObj, refKeyMap, otherParams,
-					null, execParams, runMode)).concat(")");
+					null, execParams, runMode, paramValMap)).concat(")");
 		}
 
 		String filePath = "/" + locationDatapod.getUuid() + "/" + locationDatapod.getVersion() + "/" + execVersion;

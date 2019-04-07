@@ -13,6 +13,7 @@ package com.inferyx.framework.operator;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,8 @@ public class SimulateMLOperator implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String generateSql(Simulate simulate, String tableName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), simulate.getDependsOn().getRef().getType().toString());
+	public String generateSql(Simulate simulate, String tableName, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(), simulate.getDependsOn().getRef().getVersion(), simulate.getDependsOn().getRef().getType().toString(), "N");
 		StringBuilder builder = new StringBuilder();
 		String aliaseName = "";
 		builder.append("SELECT ");
@@ -68,7 +69,7 @@ public class SimulateMLOperator implements Serializable {
 			}
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			builder.append(formulaOperator.generateSql(formula, null, null, null, datasource)).append(" AS ").append(model.getLabel());
+			builder.append(formulaOperator.generateSql(formula, null, null, null, datasource, paramValMap)).append(" AS ").append(model.getLabel());
 			builder.append(" FROM ");
 			builder.append(tableName).append(" ").append(aliaseName);
 			
