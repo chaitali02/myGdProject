@@ -8,8 +8,9 @@ export class AppConfig {
     name: 'InferYX',
     logoImg: '/assets/img/logo.png',
     title: 'InferYX',
-    version: '0.1.0',
-    copyright: '2017 © Inferyx, Inc. All rights reserved. v0.1.0 Patent Pending.',
+    version: 'v0.1.0 Patent Pending.',
+    year: '2017-19',
+    copyright: '2017-19 © Inferyx, Inc. All rights reserved.', //not used
     protocall : 'http://',
     serverHost: 'localhost',
     port: '8080',

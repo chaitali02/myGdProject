@@ -15,8 +15,9 @@
                         </a>
                     </span>
                     <span class="wrapcurrentpage">
-                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Profile Group"
-                            data-placement="top" tooltip (click)="reGroupExecute()">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Restart DQ Group"
+                            data-placement="top" tooltip (click)="reGroupExecute()"
+                            [ngClass]="restartStatus==true?'notcurrentpage':'currentpage'" >
                             <i class="fa fa-repeat" area-hidden="true"></i>
                         </a>
                     </span>
@@ -64,7 +65,7 @@
             </div>
             <div class="portlet-body">
                 <div *ngIf="isgraphShow && !showKnowledgeGraph">
-                    <app-jointjs-group [graphParms]="graphParams" (downloadShow)="downloadShow($event)"></app-jointjs-group>
+                    <app-jointjs-group [graphParms]="graphParams" (downloadShow)="downloadShow($event)" (jointJSRunStatus)="receiveJointJSRunStatus($event)"></app-jointjs-group>
                 </div>
                 <div *ngIf="istableShow && !showKnowledgeGraph">
                     <app-resulttable [tableParms]="tableparms"></app-resulttable>
@@ -121,7 +122,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <p-dropdown [options]="downloadFormatArray" [(ngModel)]="downloadFormat" name="downloadFormat+{{i}}"
-                                [style]="{'width':'250px','padding':'3px'}" [filter]="false" placeholder="-Select-">
+                                [style]="{'width':'250px','padding':'3px'}" [filter]="false" placeholder="-Select-" [dropdownIcon]="caretdown">
                             </p-dropdown>
                         </div>
                     </div>

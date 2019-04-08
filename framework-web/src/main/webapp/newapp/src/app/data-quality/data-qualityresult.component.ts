@@ -45,6 +45,7 @@ export class DataQualityResultComponent {
   isgraphShow: boolean;
   graphParams: any
   index: 0;
+  caretdown = 'fa fa-caret-down';
 
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
@@ -53,10 +54,11 @@ export class DataQualityResultComponent {
   isGraphError: boolean;
   restartDialogBox: boolean;
   msgs: Message[] = [];
+  restartStatus: any;
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute,
     private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService, private _dataQualityService: DataQualityService,
-    private _commonListService: CommonListService, ) {
+    private _commonListService: CommonListService ) {
 
     this.graphParams = new GraphParamIO();
     this.baseUrl = _config.getBaseUrl();
@@ -248,7 +250,9 @@ export class DataQualityResultComponent {
     this.restartDialogBox = false;
   }
 
+  receiveJointJSRunStatus(status) {debugger
+    this.restartStatus = status
+    console.log(this.restartStatus);
+  }
+
 }
-
-
-

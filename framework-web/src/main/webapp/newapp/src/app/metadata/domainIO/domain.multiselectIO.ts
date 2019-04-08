@@ -4,5 +4,6 @@ export class MultiSelectIO{
     itemName: String;
     uuid?: String;
     version?: String;
-    displayItemName?:String
+    displayItemName?: String;
+    attributeId?: String;
 }

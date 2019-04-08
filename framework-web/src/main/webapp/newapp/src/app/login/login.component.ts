@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { LoginService } from '../login/login.service';
 
 import { LoginStatus } from '../metadata/domain/domain.loginStatus';
+import { AppConfig } from '../app.config';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +18,12 @@ export class LoginComponent {
   loginResponse: LoginStatus;
   remember: boolean;
   username: any;
+  year: string;
 
-  constructor(private http: Http, private _service: LoginService, public router: Router, private cookieService: CookieService) {
+  constructor(private http: Http, private _service: LoginService, public router: Router, 
+    private cookieService: CookieService, private _appConfig: AppConfig) {
     this.getLocalStorage();
+    this.year = _appConfig.config.year;
   }
 
   getLocalStorage() {

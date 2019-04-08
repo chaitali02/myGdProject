@@ -69,6 +69,7 @@ export class BusinessRulesGroupDetailComponent {
   metaType = MetaType;
   isGraphInprogess: boolean;
   isGraphError: boolean;
+  caretdown = 'fa fa-caret-down';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata,
     private _commonService: CommonService, private _location: Location, public appHelper: AppHelper) {

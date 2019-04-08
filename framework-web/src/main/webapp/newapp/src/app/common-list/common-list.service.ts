@@ -191,7 +191,7 @@ export class CommonListService {
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-  restart(uuid, version, type, action): Observable<any> {
+  restart(uuid, version, type, action): Observable<any> {debugger
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
@@ -201,7 +201,7 @@ export class CommonListService {
     if (type == "profile") {
       this.url = this.baseUrl + 'profile/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
-    if (type == "profilegroup") {
+    if (type == "profilegroup" || type == "profilegroupExec") {
       this.url = this.baseUrl + 'profile/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "dq") {
@@ -250,7 +250,7 @@ export class CommonListService {
   }
 
 
-  kill(uuid, version, type, status): Observable<any> {
+  kill(uuid, version, type, status): Observable<any> {debugger
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/setStatus?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }

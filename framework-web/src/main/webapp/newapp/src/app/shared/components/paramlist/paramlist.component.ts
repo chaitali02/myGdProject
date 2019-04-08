@@ -183,7 +183,7 @@ export class ParamlistComponent implements OnInit {
       this.isEdit = false;
     }
   }
-  enableEdit(uuid, version) {debugger
+  enableEdit(uuid, version) {
     if (this.parentType == this.metaType.RULE) {
       this.router.navigate(['app/businessRules/paramlist', this.parentType, uuid, version, 'false']);
       this.isEdit = true;
@@ -198,7 +198,7 @@ export class ParamlistComponent implements OnInit {
     this.showForm = true;
   }
 
-  showGraph(uuid, version) {debugger
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showDivGraph = true;
     this.showForm = false;
