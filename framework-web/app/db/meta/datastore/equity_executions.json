@@ -50,6 +50,6 @@
   "location": null,
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
-  "numRows": 0,
+  "numRows": 750,
   "runMode": null
 }
