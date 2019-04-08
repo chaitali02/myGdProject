@@ -131,6 +131,10 @@ public class ProfileOperator {
 		
 		/***************  Initializing paramValMap - START ****************/
 		ExecParams execParams = profileExec.getExecParams();
+		if (execParams == null) {
+			execParams = new ExecParams();
+			profileExec.setExecParams(execParams);
+		}
 		Map<String, String> paramValMap = null;
 		if (execParams.getParamValMap() == null) {
 			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
