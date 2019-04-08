@@ -176,6 +176,9 @@ export class CommonListService {
     if (type == "ingest") {
       this.url = this.baseUrl + 'ingest/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "ingestgroup") {
+      this.url = this.baseUrl + 'ingest/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
