@@ -202,7 +202,7 @@
                       <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6 " [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['selectedRuleType1']?.invalid)}">
                         <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['selectedRuleType1']?.invalid)}">
                           <p-dropdown [options]="ruleTypes" [(ngModel)]="selectedRuleType" name="selectedRuleType1"
-                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="mode == 'true'"
                             (onChange)="onChangeRuleType()" placeholder="--Select--" #selectedRuleType1="ngModel"
                             required>
                           </p-dropdown>
@@ -239,7 +239,7 @@
                       <div class="col-md-3 col-sm-3 col-xs-6 col-lg-3">
                         <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}"
                           *ngIf="!enableInFileTable">
-                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px'}"
+                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px','border':'none'}"
                             [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
                             placeholder="--Select--" #sourceDsReq="ngModel" required>
                           </p-dropdown>
@@ -248,7 +248,7 @@
 
                         <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}"
                           *ngIf="enableInFileTable">
-                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px'}"
+                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px','border':'none'}"
                             [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
                             placeholder="--Select--" #sourceDsReq="ngModel" required>
                           </p-dropdown>
@@ -269,10 +269,18 @@
 
                       <label class="col-md-1 control-label col-sm-1 col-lg-1 col-xs-2" style="padding-right: 5px">Format</label>
                       <div class="col-md-2">
-                        <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedSourceFormat" name="selectedSourceFormat"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="selectedSourceType !== 'FILE' || mode == 'true'"
-                          placeholder="--Select--" (onChange)="onChangeSourceFormat()">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['selectedSourceFormatReq']?.invalid)}">
+                          <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedSourceFormat" name="selectedSourceFormatReq"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="selectedSourceType !== 'FILE' || mode == 'true'"
+                            placeholder="--Select--" (onChange)="onChangeSourceFormat()" #selectedSourceFormatReq="ngModel"
+                            required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['selectedSourceFormatReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -291,10 +299,33 @@
                         </div>
                       </div>
 
-                      <label class="col-md-1 control-label">Extension</label>
+                      <!-- <div class="form-group">
+                          <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
+                            <span class="required" aria-required="true"> * </span>
+                          </label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" [(ngModel)]="ingestData.name" name="name" placeholder=""
+                              (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
+                              [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                            <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
+                              <div class="help-block has-error error-msg">
+                                This field is required
+                              </div>
+                            </div>
+                          </div>
+                        </div> -->
+
+                      <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['sourceExtnReq']?.invalid)}">
+                        Extension
+                      </label>
                       <div class="col-md-2">
                         <input type="text" class="form-control" [disabled]="selectedSourceFormat == 'PARQUET' || mode == 'true'"
-                          [(ngModel)]="sourceExtn" name="sourceExtn">
+                          [(ngModel)]="sourceExtn" name="sourceExtnReq" #sourceExtnReq="ngModel" required [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['sourceExtnReq']?.invalid)}">
+                        <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['sourceExtnReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -307,8 +338,8 @@
                         </div>
                       </div>
 
-                      <label class="col-md-2 control-label">Ignore Case</label>
-                      <div class="col-md-1">
+                      <label class="col-md-2 control-label" style="padding-right: 2px;">Ignore Case</label>
+                      <div class="col-md-1" style="padding-top: 5px;">
                         <input type="checkbox" style="width:16px;height:16px;" [(ngModel)]="ignoreCase" name="ignoreCase"
                           [disabled]="mode == 'true'" />
                       </div>
@@ -321,7 +352,7 @@
                       </label>
                       <div class="col-md-2">
                         <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeReq']?.invalid)}">
-                          <p-dropdown [options]="sourceTypeArray" [(ngModel)]="sourceType" name="sourceTypeReq" [style]="{'width':'100%','padding':'3px'}"
+                          <p-dropdown [options]="sourceTypeArray" [(ngModel)]="sourceType" name="sourceTypeReq" [style]="{'width':'100%','padding':'3px','border':'none'}"
                             [filter]="true" [disabled]="mode == 'true'" placeholder="-Select-" (onChange)="onChangeSourceType()"
                             #sourceTypeReq="ngModel" required>
                           </p-dropdown>
@@ -332,13 +363,23 @@
                           </div>
                         </div>
                       </div>
-
-                      <label class="col-md-1 control-label" style="padding-right: 5px">Name</label>
+                    
+                      <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeNameReq']?.invalid)}"
+                        style="padding-right: 5px">Name
+                        <span class="required" aria-required="true"> * </span>
+                      </label>
                       <div class="col-md-3">
-                        <p-dropdown [options]="sourceTypeNameArray" [(ngModel)]="sourceTypeName" name="sourceTypeName"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          placeholder="--Select--" (onChange)="onChangeSourceTypeName()" dataKey="uuid">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeNameReq']?.invalid)}">
+                          <p-dropdown [options]="sourceTypeNameArray" [(ngModel)]="sourceTypeName" name="sourceTypeNameReq"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" (onChange)="onChangeSourceTypeName()" dataKey="uuid" #sourceTypeNameReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeNameReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -350,7 +391,7 @@
                       <div class="col-md-6">
                         <div class="pdropdown-border " [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['incrementKeyReq']?.invalid)}">
                           <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="incrementKey" name="incrementKeyReq"
-                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="mode == 'true'"
                             placeholder="--Select--" dataKey="uuid" #incrementKeyReq="ngModel" required>
                           </p-dropdown>
                         </div>
@@ -370,7 +411,7 @@
                       <div class="col-md-6">
                         <div class="pdropdown-border " [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['splitByReq']?.invalid)}">
                           <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="splitBy" name="splitByReq"
-                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="mode == 'true'"
                             placeholder="--Select--" dataKey="uuid" #splitByReq="ngModel" required>
                           </p-dropdown>
                         </div>
@@ -422,7 +463,7 @@
                       </label>
                       <div class="col-md-3">
                         <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)}">
-                          <p-dropdown [options]="allTargetDatasource" [(ngModel)]="targetDs" name="targetDsReq" [style]="{'width':'100%','padding':'3px'}"
+                          <p-dropdown [options]="allTargetDatasource" [(ngModel)]="targetDs" name="targetDsReq" [style]="{'width':'100%','padding':'3px','border':'none'}"
                             [filter]="true" [disabled]="mode == 'true'" dataKey="uuid" (onChange)="onChangeTargetDs()"
                             placeholder="--Select--" #targetDsReq="ngModel" required>
                           </p-dropdown>
@@ -434,12 +475,21 @@
                         </div>
                       </div>
 
-                      <label class="col-md-1 control-label">Format</label>
+                      <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['selectedTargetFormatReq']?.invalid)}"
+                        style="padding-right: 5px">Format</label>
                       <div class="col-md-2">
-                        <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedTargetFormat" name="selectedTargetFormat"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="selectedTargetType !== 'FILE' || mode == 'true'"
-                          placeholder="--Select--" (onChange)="onChangeTargetFormat()">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['selectedTargetFormatReq']?.invalid)}">
+                          <p-dropdown [options]="FormatTypes" [(ngModel)]="selectedTargetFormat" name="selectedTargetFormatReq"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="selectedTargetType !== 'FILE' || mode == 'true'"
+                            placeholder="--Select--" (onChange)="onChangeTargetFormat()" #selectedTargetFormatReq="ngModel"
+                            required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['selectedTargetFormatReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -458,10 +508,15 @@
                         </div>
                       </div>
 
-                      <label class="col-md-1 control-label">Extension</label>
+                      <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['targetExtnReq']?.invalid)}">Extension</label>
                       <div class="col-md-2">
                         <input type="text" class="form-control" [disabled]="selectedTargetFormat == 'PARQUET' || mode == 'true'"
-                          [(ngModel)]="targetExtn" name="targetExtn">
+                          [(ngModel)]="targetExtn" name="targetExtnReq" #targetExtnReq="ngModel" required [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['targetExtnReq']?.invalid)}">
+                        <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['targetExtnReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -483,7 +538,7 @@
                       <div class="col-md-6">
                         <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['targetNameForTableReq']?.invalid)}">
                           <p-dropdown [options]="targetNameArray" [(ngModel)]="targetNameForTable" name="targetNameForTableReq"
-                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" [disabled]="mode == 'true'"
                             placeholder="--Select--" dataKey="uuid" (onChange)="onChangeTargetNameTable()"
                             #targetNameForTableReq="ngModel" required>
                           </p-dropdown>
@@ -503,7 +558,7 @@
                       </label>
                       <div class="col-md-6">
                         <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['saveModeReq']?.invalid)}">
-                          <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveModeReq" [style]="{'width':'100%','padding':'3px'}"
+                          <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveModeReq" [style]="{'width':'100%','padding':'3px','border':'none'}"
                             [filter]="false" [disabled]="mode == 'true'" placeholder="--Select--" #saveModeReq="ngModel"
                             required>
                           </p-dropdown>
@@ -522,7 +577,7 @@
                       </label>
                       <div class="col-md-6">
                         <p-dropdown [options]="saveModeArrayFile" [(ngModel)]="saveMode" name="saveMode" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--" >
+                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--">
                         </p-dropdown>
                       </div>
                     </div>
@@ -637,15 +692,16 @@
 
                                   <div *ngIf="data.lhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="FormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
                                   <div *ngIf="data.lhsType == 'datapod' && selectedSourceType !== 'FILE'" class="pdropdown-border"
                                     [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" dataKey="uuid"
-                                      name="lhsAttribute{{i}}" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
+                                      name="lhsAttribute{{i}}" [style]="{'width':'100%','padding':'3px','border':'none'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid"
+                                      required #lhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
                                   <div *ngIf="data.lhsType == 'datapod' && selectedSourceType == 'FILE'" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
@@ -733,8 +789,8 @@
 
                                   <div *ngIf="data.rhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="FormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
 
@@ -748,8 +804,8 @@
                                   <div *ngIf="data.rhsType == 'datapod' && selectedSourceType !== 'FILE' && data.operator !== '!='"
                                     class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
 
@@ -767,23 +823,23 @@
 
                                   <div *ngIf="data.rhsType == 'function'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
 
                                   <div *ngIf="data.rhsType == 'paramlist'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
 
                                   <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
                                     [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" required #rhsAttribute="ngModel">
+                                      [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
 
@@ -843,6 +899,7 @@
                       </div>
                     </div>
 
+                    <!-- </div> -->
                   </form>
                 </div>
                 <!--End Tab2-->
@@ -927,8 +984,9 @@
                                 <td *ngIf="data.sourceType == 'datapod' && selectedSourceType == 'TABLE'">
                                   <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="allSourceAttribute" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
-                                      datakey="attrName" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+                                      datakey="attrName" [style]="{'width':'100%','padding':'3px','border':'none'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" required
+                                      #sourceAttribute="ngModel">
 
                                       <!-- <ng-template let-item pTemplate="group" > 
                                       <div class="ui-dropdown" style="border: 1px solid blue">
@@ -947,16 +1005,18 @@
                                 <td *ngIf="data.sourceType == 'function'">
                                   <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="functionArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
-                                      datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+                                      datakey="label" [style]="{'width':'100%','padding':'3px','border':'none'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" required
+                                      #sourceAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
                                 </td>
                                 <td *ngIf="data.sourceType == 'formula'">
                                   <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="FormulaArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
-                                      datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+                                      datakey="label" [style]="{'width':'100%','padding':'3px','border':'none'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" required
+                                      #sourceAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
                                 </td>
@@ -983,7 +1043,7 @@
                                   <div *ngIf="(selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE')" class="pdropdown-border"
                                     [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['targetAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="allSourceAttributeTarget" [(ngModel)]="data.targetAttribute"
-                                      name="targetAttribute{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px'}"
+                                      name="targetAttribute{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px','border':'none'}"
                                       [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" required
                                       #targetAttribute="ngModel">
                                     </p-dropdown>

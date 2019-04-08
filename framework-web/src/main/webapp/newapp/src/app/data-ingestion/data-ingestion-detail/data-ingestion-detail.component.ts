@@ -150,7 +150,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.ingestData = new IngestRule();
     this.sourceDs = {};
     this.targetDs = {};
-    this.sourceTypeName = {};
+    this.sourceTypeName = null;
     this.allSourceAttribute = []
     this.displayDialogBox = false;
     this.dialogAttributeName = {};
