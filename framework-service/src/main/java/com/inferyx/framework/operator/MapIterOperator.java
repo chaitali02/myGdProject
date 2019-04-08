@@ -56,7 +56,7 @@ public class MapIterOperator extends MapOperator{
 		for (i = iterParamStart; i <= iterParamEnd; i++) {
 			if (i == iterParamStart) {
 				builder = builder.append("WITH iter").append(i).append(" AS (")
-						.append(super.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode))
+						.append(super.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, new HashMap<String, String>()))
 						.append(")");
 				selectScopeBuilder = selectScopeBuilder.append(iterParamStart);
 
@@ -67,7 +67,7 @@ public class MapIterOperator extends MapOperator{
 			otherParams.put("iterStep", "TRUE");
 			builder = new StringBuilder();
 			builder = builder.append("\n, iter").append(i).append(" AS (")
-					.append(super.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode))
+					.append(super.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, new HashMap<String, String>()))
 					.append(") ");
 			selectScopeBuilder = selectScopeBuilder.append(",").append(i);
 

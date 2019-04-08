@@ -512,7 +512,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       'margin-bottom': '10px',
     }
     if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 50) + 'px';
     }
     else {
       style['height'] = "100px";
@@ -1157,14 +1157,27 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     var filterInfo = {};
     var ref = {}
     if (data.dataobj.value != "") {
-      ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
-      ref.version = null;
-      ref.type = data.vizpod.vizpodInfo.values[0].ref.type;
-      filterInfo.ref = ref;
-      var attrName=data.vizpod.vizpodInfo.values[0].ref.name;
-      if(data.vizpod.vizpodInfo.values[0].ref.type !="formual"){
-        filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
-        attrName=data.vizpod.vizpodInfo.values[0].attributeName
+      if(data.vizpod.vizpodInfo.keys && data.vizpod.vizpodInfo.keys.length>0){
+        ref.uuid = data.vizpod.vizpodInfo.keys[0].ref.uuid;
+        ref.version = null;
+        ref.type = data.vizpod.vizpodInfo.keys[0].ref.type;
+        filterInfo.ref = ref;
+        var attrName=data.vizpod.vizpodInfo.keys[0].ref.name;
+        if(data.vizpod.vizpodInfo.keys[0].ref.type !="formual"){
+          filterInfo.attrId = data.vizpod.vizpodInfo.keys[0].attributeId;
+          attrName=data.vizpod.vizpodInfo.keys[0].attributeName
+        }
+      }
+      else{
+        ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
+        ref.version = null;
+        ref.type = data.vizpod.vizpodInfo.values[0].ref.type;
+        filterInfo.ref = ref;
+        var attrName=data.vizpod.vizpodInfo.values[0].ref.name;
+        if(data.vizpod.vizpodInfo.values[0].ref.type !="formual"){
+          filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
+          attrName=data.vizpod.vizpodInfo.values[0].attributeName
+        }
       }
      
       filterInfo.value = data.vizpod.gridOptions.data[0][attrName];

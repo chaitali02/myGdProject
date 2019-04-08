@@ -26,6 +26,7 @@ public class ExecParams implements Cloneable {
 	private HashMap<String, String> otherParams;
 	private ExecutionContext executionContext;
 	private GraphFilter graphFilter;
+	private java.util.Map<String, java.util.Map<String, String>> paramValMap;
 	
 
 	/**
@@ -144,6 +145,20 @@ public class ExecParams implements Cloneable {
 	
 	public Object clone() throws CloneNotSupportedException {
 	    return super.clone();
+	}
+
+	/**
+	 * @return the paramValMap
+	 */
+	public java.util.Map<String, java.util.Map<String, String>> getParamValMap() {
+		return paramValMap;
+	}
+
+	/**
+	 * @param paramValMap the paramValMap to set
+	 */
+	public void setParamValMap(java.util.Map<String, java.util.Map<String, String>> paramValMap) {
+		this.paramValMap = paramValMap;
 	}
 
 }

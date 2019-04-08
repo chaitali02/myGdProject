@@ -127,7 +127,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 			sourceDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
 			exec = execFactory.getExecutor(commonServiceImpl.getDatasourceByObject(sourceDataset).getType());
 //			attrList = getColumnNameList(sourceDataset, sourceDatapodInfo);
-			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode, new HashMap<String, String>()) + ") "
 					+ sourceDataset.getName();
 		}
 		

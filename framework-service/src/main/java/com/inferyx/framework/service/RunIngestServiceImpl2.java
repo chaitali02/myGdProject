@@ -574,6 +574,17 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
+			/***************  Initializing paramValMap - START ****************/
+			Map<String, String> paramValMap = null;
+			if (execParams.getParamValMap() == null) {
+				execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+			}
+			if (!execParams.getParamValMap().containsKey(ingestExec.getUuid())) {
+				execParams.getParamValMap().put(ingestExec.getUuid(), new HashMap<String, String>());
+			}
+			paramValMap = execParams.getParamValMap().get(ingestExec.getUuid());
+			/***************  Initializing paramValMap - END ****************/
+			
 			if(sourceDpOrDsMI.getUuid() != null) {
 				//finding incremental column name
 				incrColName = ingestServiceImpl.getColName(sourceDp, sourceDataSet, ingest.getIncrAttr());
@@ -607,7 +618,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				if(sourceDp != null) {
 					if(areAllAttrs) {
 						whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
-						whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
+						whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode, paramValMap));
 					}
 					
 					//removing where
@@ -668,7 +679,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //							}	
 //						}
 					}
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode, paramValMap);
 //				} else {
 //					query = datasetOperator.generateSql(sourceDataSet, null, null, new HashSet<>(), null, runMode);
 //				}
@@ -1554,20 +1565,21 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 										Ingest ingest, 
 										String incrColName, 
 										String incrLastValue, 
-										Boolean areAllAttrs) throws Exception {
+										Boolean areAllAttrs, 
+										Map<String, String> paramValMap) throws Exception {
 		if(ingestionType.equals(IngestionType.FILETOFILE)) {
 			String tableName = null;
 			tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode, paramValMap);
 		} else if(sourceDataSet != null) {
 			String tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
-			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode, paramValMap);
 		} else if(!areAllAttrs && sourceDp != null) {
 			String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
-			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode, paramValMap);
 		} else if(!areAllAttrs && targetDp != null) {
 			String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
-			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode, paramValMap);
 		}
 		return null;
 	}

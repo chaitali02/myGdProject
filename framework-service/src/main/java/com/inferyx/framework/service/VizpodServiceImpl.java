@@ -361,7 +361,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		
 		try {
-			vizExec.setSql(vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false));
+			vizExec.setSql(vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false, new HashMap<String, String>()));
 			logger.info(vizExec.getSql());
 
 			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.READY);
@@ -408,7 +408,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 //				}
 		
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<MetaIdentifier>();
-			String sql=vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
+			String sql=vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false, new HashMap<String, String>());
 			//code commented by vaibhav retired vizexec
 			/**** Get sql and update in vizpodexec - START ****//*
 			if (vizExec == null) {
@@ -995,7 +995,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		if (execParams != null && execParams.getFilterInfo() != null) {
 			vizpod.setFilterInfo(execParams.getFilterInfo());
 		}
-		String sql = vizpodDetailParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
+		String sql = vizpodDetailParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false, new HashMap<String, String>());
 
 		logger.info("vizpod details quary: "+sql);
 

@@ -430,6 +430,17 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.ruleExec.toString(), "N");
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		ExecParams execParams = ruleExec.getExecParams();
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(ruleExec.getUuid())) {
+			execParams.getParamValMap().put(ruleExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(ruleExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.STARTING);
 		}
@@ -447,7 +458,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
 		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), filterFlag);
+				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), filterFlag, paramValMap);
         String detailsql=listSql.get(0);
 		
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
@@ -521,7 +532,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		*/
 //		String filterExpr;
 		listSqlWithFilter = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), true);
+				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), true, paramValMap);
         String detailsqlwithfilter=listSql.get(0);
 		ScoringMethod scoringMethod=rule2.getScoringMethod();
 		String summarysql = rule2Operator.generateSummarySql(rule2,listSqlWithFilter, scoringMethod, tableName, datapod, refKeyMap, otherParams,
@@ -708,7 +719,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		return ruleExecMetaList;
 	}
 
-	public List<Map<String, Object>> getDetailResults(String rule2ExecUUID, String rule2ExecVersion, RunMode runMode) throws Exception {
+	public List<Map<String, Object>> getDetailResults(String rule2ExecUUID, String rule2ExecVersion, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(rule2ExecUUID, rule2ExecVersion,
 				MetaType.ruleExec.toString());
 //		DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
@@ -737,7 +748,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
 		List<String> listSql=rule2Operator.generateDetailSql(rule2, null, null, null,
-				null, null, new ExecParams(), runMode,ruleExec, null, false);
+				null, null, new ExecParams(), runMode,ruleExec, null, false, paramValMap);
 		data = exec.executeAndFetch(listSql.get(0), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {

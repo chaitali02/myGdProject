@@ -127,7 +127,7 @@ DatascienceModule.service("ParamListService", function ($http, ParamListFactory,
         }
         else if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["date"].indexOf(response.params[i].paramType) !=-1){
           var temp=response.params[i].paramValue.value.replace(/["']/g, "")
-          paramInfo.paramValue=new Date(temp);
+          paramInfo.paramValue=new Date(temp+":00:00:00");
           paramInfo.paramValueType="date"
         }
         else if(response.params[i].paramValue !=null && response.params[i].paramValue.ref.type == "simple" && ["array"].indexOf(response.params[i].paramType) !=-1){

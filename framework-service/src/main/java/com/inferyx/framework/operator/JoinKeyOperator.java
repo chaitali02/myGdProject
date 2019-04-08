@@ -13,6 +13,7 @@ package com.inferyx.framework.operator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +23,9 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
@@ -63,7 +64,8 @@ public class JoinKeyOperator {
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
 			, RunMode runMode
-			, Datasource datasource) throws Exception {
+			, Datasource datasource
+			, Map<String, String> paramValMap) throws Exception {
 		return generateSql(filters
 				, filterSource
 				, refKeyMap
@@ -74,7 +76,8 @@ public class JoinKeyOperator {
 				, isAggrReqd
 				, runMode 
 				, datasource
-				, new ArrayList<String>());
+				, new ArrayList<String>()  
+				, paramValMap);
 	}
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
@@ -85,7 +88,8 @@ public class JoinKeyOperator {
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
 			, RunMode runMode, Datasource datasource
-			, List<String> attributeList) throws Exception {
+			, List<String> attributeList
+			, java.util.Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
@@ -95,7 +99,7 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource, attributeList);
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource, attributeList, paramValMap);
 			if (StringUtils.isNotBlank(filter)) {
 				if (StringUtils.isNotBlank(filterBuilder)) {
 					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
@@ -124,7 +128,8 @@ public class JoinKeyOperator {
 			, Boolean isAggrReqd
 			, RunMode runMode
 			, Datasource datasource
-			, List<String> attributeList) throws Exception {
+			, List<String> attributeList
+			, java.util.Map<String, String> paramValMap) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
@@ -159,7 +164,7 @@ public class JoinKeyOperator {
 					operandValue.add(sourceAttr.getValue());
 				}
 			} else if (sourceAttr.getRef().getType().equals(MetaType.paramlist)) {
-				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef());
+				String value = metadataServiceImpl.getParamValue(execParams, sourceAttr.getAttributeId(), sourceAttr.getRef(), paramValMap);
 				if(value != null) {
 					boolean isNumber = Helper.isNumber(value);			
 					if(!isNumber) {
@@ -208,7 +213,7 @@ public class JoinKeyOperator {
 				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
 					aggrCount += 1;
 				}
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource, attributeList));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource, attributeList, paramValMap));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
 			} else if (sourceAttr.getRef().getType() == MetaType.function) {
@@ -233,7 +238,7 @@ public class JoinKeyOperator {
 			if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.dataset)) {
 				MetaIdentifier dataSetMI = filterInfo.getOperand().get(1).getRef();
 				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString(),"N");
-				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap);
 				return generateRHSQuery(operandValue, filterInfo, filterSource, subQuery, dataSet.getName());
 			} else {
 				return generateRHSOperand(operandValue, filterInfo, filterSource);
@@ -270,8 +275,9 @@ public class JoinKeyOperator {
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
-			, RunMode runMode) throws Exception {
-		return datasetOperator.generateSql(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+			, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
+		return datasetOperator.generateSql(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap);
 	}
 }
 

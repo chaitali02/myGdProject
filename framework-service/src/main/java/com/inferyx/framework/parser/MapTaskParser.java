@@ -62,7 +62,7 @@ public class MapTaskParser extends TaskParser {
 	@Override
 	public StringBuilder parseTask(DagExec dagExec, Stage stage, TaskExec indvExecTask, List<String> datapodList,
 			ExecParams execParams, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
-
+		java.util.Map<String, String> paramValMap = new HashMap<String, String>();
 		java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList());
 		Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 		MetaIdentifier ref = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
@@ -130,7 +130,7 @@ public class MapTaskParser extends TaskParser {
 		
 		if (operatorType == null || operatorType.equals(MetaType.map.toString()) || operatorType.equals(MetaType.matrixmult.toString())) {
 			
-			builder.append(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+			builder.append(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, paramValMap));
 		} else {
 			otherParams.put("operatorType", operatorType);
 			builder.append(mapIterOperator.generateSql(map, refKeyMap, otherParams, operatorParams, execParams, usedRefKeySet, runMode));
