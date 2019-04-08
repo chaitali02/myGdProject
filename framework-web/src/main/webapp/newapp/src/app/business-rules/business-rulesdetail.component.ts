@@ -124,6 +124,7 @@ export class BusinessRulesDetailComponent {
   topDisabled: boolean;
   bottomDisabled: boolean;
   datasetNotEmpty: boolean = true;
+  caretdown = 'fa fa-caret-down';
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper) {

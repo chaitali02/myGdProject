@@ -120,6 +120,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
   invalideMinRow: boolean = false;
   invalideMaxRow: boolean = false;
   datasetNotEmpty: boolean = true;
+  caretdown = 'fa fa-caret-down';
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
@@ -534,7 +535,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.isEditInprogess = false;
   }
 
-  searchOption(data, index) {
+  searchOption(data, index) {debugger
     this.rowIndex = index;
     this.displayDialogBox = true;
     if (!data.uuid) {

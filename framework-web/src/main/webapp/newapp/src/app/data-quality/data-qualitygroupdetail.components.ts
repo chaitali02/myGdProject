@@ -57,6 +57,7 @@ export class DataQualityGroupDetailComponent {
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   isGraphError: boolean;
   isGraphInprogess: boolean;
+  caretdown = 'fa fa-caret-down';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location,
     private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
@@ -88,9 +89,9 @@ export class DataQualityGroupDetailComponent {
         "caption": "",
         "routeurl": null
       }
-    ],
+    ];
 
-      this.isEditInprogess = false;
+    this.isEditInprogess = false;
     this.isEditError = false;
     this.active = true;
     this.locked = false;
@@ -179,11 +180,11 @@ export class DataQualityGroupDetailComponent {
 
   getAllLatest() {
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DQ).subscribe(
-      response => { this.OnSuccesgetAllLatest(response) },
+      response => { this.onSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllLatest(response: BaseEntity[]) {
+  onSuccesgetAllLatest(response: BaseEntity[]) {
     let temp = []
     for (const n in response) {
       let allname = new MultiSelectIO();
@@ -250,12 +251,13 @@ export class DataQualityGroupDetailComponent {
     }
   }
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, MetaTypeEnum.MetaType.DQGROUP)
-      .subscribe(
-        response => {//console.log(response)},
-          this.onSuccessgetOneByUuidAndVersion(response)
-        },
-        error => console.log("Error :: " + error));
+    this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
+    // this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, MetaTypeEnum.MetaType.DQGROUP)
+    //   .subscribe(
+    //     response => {//console.log(response)},
+    //       this.onSuccessgetOneByUuidAndVersion(response)
+    //     },
+    //     error => console.log("Error :: " + error));
   }
 
   submitDqGroup() {

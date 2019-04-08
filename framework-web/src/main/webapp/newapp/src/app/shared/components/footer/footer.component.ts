@@ -11,10 +11,12 @@ import { AppConfig } from '../../../app.config';
 export class FooterComponent {
 
   version: any;
+  year: string;
 
   constructor(public router: Router, private _appConfig: AppConfig) {
 
     this.version = _appConfig.config.version;
+    this.year = _appConfig.config.year;
   
   }
 }

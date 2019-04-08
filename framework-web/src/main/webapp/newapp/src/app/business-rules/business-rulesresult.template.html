@@ -17,7 +17,8 @@
                     </span>
                     <span class="wrapcurrentpage">
                         <a *ngIf="!isAdd" class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Rule Group" data-placement="top" 
-                            tooltip [ngClass]="restartShow==true?'notcurrentpage':'currentpage'" (click)="reGroupExecute()">
+                            tooltip (click)="reGroupExecute()"
+                            [ngClass]="restartStatus==true?'notcurrentpage':'currentpage'" >
                             <i class="fa fa-repeat" area-hidden="true"></i>
                         </a>
                     </span>

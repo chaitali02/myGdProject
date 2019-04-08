@@ -1343,3 +1343,8 @@ background-color: #a0a0a0;
 .customDropdown{
   border: 1px solid blue !important; 
 }
+
+.ui-widget-overlay {
+  background-color: #666666 !important;
+  opacity: 0.1 !important;
+}

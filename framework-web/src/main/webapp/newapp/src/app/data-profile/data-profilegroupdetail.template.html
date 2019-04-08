@@ -13,144 +13,198 @@
             </span>
           </div>
           <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-            data- (click)="showMainPage(uuid,version)">
-            <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(uuid,version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-          </a>
-
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-            [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(uuid,version)">
-            <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-          </a>
-
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
-              data-original-title="" title="Refresh">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-
-            <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
-              <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main"
+                data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+                data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
+                data-(click)="enableEdit(uuid,version)">
+                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+                data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
+                <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
+                (click)="showGraph(uuid,version)" data-original-title="" title="Refresh">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
+                <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
+              </a>
+            </span>
           </div>
         </div>
 
-        <div class="portlet-body form">
-          <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submit()" #myNewForm="ngForm">
+        <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div class="show-graph-body" id="graphWrapper">
+            <knowledge-graph></knowledge-graph>
+          </div>
+        </div>
+
+        <div class="form-body" style="padding-top:50px;" *ngIf="showForm">
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+
+          <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="myform.form.valid && submitProfileGroup()"
+              #myform="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="dataprofilegroup.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="profilegroupdata.uuid" name="uuid" placeholder=""
+                    [disabled]="true">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Name
+                <label class="col-md-3 control-label" [ngClass]="{'has-error': myform.submitted && (myform.form.controls['name']?.invalid)}">
+                  Name
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="dataprofilegroup.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="profilegroupdata.name" name="name" placeholder=""
+                    (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
+                    [ngClass]="{'has-error':myform.submitted && (myform.form.controls['name']?.invalid)}">
+                  <div *ngIf="myform.submitted && (myform.form.controls['name']?.invalid)">
+                    <div class="help-block has-error error-msg">
+                      This field is required
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                  <p-dropdown [options]="versionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()" [dropdownIcon]="caretdown">
                   </p-dropdown>
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="profilegroupdata.createdBy.ref.name"
+                    name="createdBy">
                 </div>
               </div>
 
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dataprofilegroup.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="profilegroupdata.createdOn"
+                    name="createdOn">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="dataprofilegroup.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                  <!-- <tag-input [(ngModel)]="profilegroupdata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap'
+                    style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                  <p-chips [(ngModel)]="profilegroupdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'"
+                    name="tags" [allowDuplicate]="false"></p-chips>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="dataprofilegroup.desc" name="desc" class="form-control noresize " rows="2"
-                    style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="profilegroupdata.desc" name="desc" class="form-control noresize "
+                    rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
-              <!-- <div class="form-group">
+
+              <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.active" name="active" [checked]="active"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"></ui-switch>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.locked" name="locked" [checked]="locked"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="locked"></ui-switch>
                   </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataprofilegroup.published " name="published" [checked]="published"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published " name="published"></ui-switch>
                   </div>
                 </div>
-              </div> -->
+              </div>
+
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <p-checkbox [(ngModel)]="dataprofilegroup.inParallel" name="inParallel" binary="true"></p-checkbox>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
+                  <p-checkbox [(ngModel)]="profilegroupdata.inParallel" name="inParallel" binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Profile
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" [ngClass]="{'has-error':myform.submitted && (myform.form.controls['attributeInfo']?.invalid)}">
+                  Profile
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
-
-                  <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings" name="attributeInfo">
-                  </angular2-multiselect>
+                  <div style="border: 1px solid #e7ecf1;border-radius: 3px;" [ngClass]="{'has-error':myform.submitted && (myform.form.controls['attributeInfo']?.invalid)}">
+                    <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
+                      name="attributeInfo" #attributeInfo="ngModel" required>
+                    </angular2-multiselect>
+                  </div>
+                  <div *ngIf="myform.submitted && (myform.form.controls['attributeInfo']?.invalid)">
+                    <div class="help-block has-error error-msg">
+                      This field is required
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-1">
-                    <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
-                      aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
-                  </div>
+                  <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
+                    data-placement="top" tooltip aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
+                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
+                    binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myform.form.dirty == true)?false:true">
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -159,17 +213,6 @@
                 </div>
               </div>
             </form>
-          </div>
-          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
-            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <div class="spinner" id="graphloader">
-              <div class="bounce1"></div>
-              <div class="bounce2"></div>
-              <div class="bounce3"></div>
-            </div>
-            <div class="show-graph-body" id="graphWrapper" >
-              <knowledge-graph ></knowledge-graph>
-            </div>
           </div>
         </div>
       </div>

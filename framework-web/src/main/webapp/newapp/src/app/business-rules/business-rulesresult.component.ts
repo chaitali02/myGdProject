@@ -54,6 +54,7 @@ export class BusinessRulesResultComponent {
   restartDialogBox: boolean;
   msgs: Message[] = [];
   restartShow: any;
+  restartStatus: any;
 
 
   constructor(private http: Http, private _config: AppConfig, private _location: Location,
@@ -248,13 +249,16 @@ export class BusinessRulesResultComponent {
         error => console.log("Error :: " + error)
       );
     this.restartShow = false;
-    this.restartDialogBox = false;
-
-    
+    this.restartDialogBox = false;    
   }
 
   cancelRestartDialogBox() {
     this.restartDialogBox = false;
+  }
+
+  receiveJointJSRunStatus(status) {
+    this.restartStatus = status
+    console.log(this.restartStatus);
   }
 
 

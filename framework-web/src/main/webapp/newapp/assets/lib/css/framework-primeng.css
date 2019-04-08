@@ -48,6 +48,7 @@
 }
 .selected-list .c-btn{  
   padding: 0% 0% 0% 1.5% !important;
+  border: none;
 }
 .selected-list .c-list{
   padding-top: 3px !important;
@@ -67,6 +68,11 @@
 }
 .selected-list .c-list .c-token .c-remove svg{
   fill : #585858 !important;
+}
+
+.multiselect-border{
+  border: 1px solid #e7ecf1 !important;
+  border-radius: 2px !important;
 }
 /* --- angular2-multiselect end --- */
 
