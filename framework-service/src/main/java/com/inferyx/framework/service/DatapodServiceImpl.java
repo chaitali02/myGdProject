@@ -446,6 +446,27 @@ public class DatapodServiceImpl {
 				}				
 		return result;
 }
+	
+	public List<Datapod> searchDatapodByNameAndDsUuid(String name, String datasourceUuid) throws JsonProcessingException {	
+		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;		
+		 Aggregation filterAggr = 
+					newAggregation(	
+					match(Criteria.where("appInfo.ref.uuid").is(appUuid).andOperator(Criteria.where("name").is(name),Criteria.where("datasource.ref.uuid").is(datasourceUuid))),
+					group("uuid").max("version").as("version"));
+
+				 AggregationResults<Datapod> groupResults 
+					= mongoTemplate.aggregate(filterAggr, MetaType.datapod.toString(), Datapod.class);
+				List<Datapod> datapodList = groupResults.getMappedResults();
+				List<Datapod> result = new ArrayList<Datapod>();
+				for (Datapod datapod : datapodList) {
+					//Datapod datapodLatest = idatapodDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
+					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapod.getId(), datapod.getVersion(), MetaType.datapod.toString());
+					if(datapodLatest != null)
+						result.add(datapodLatest);
+				}				
+		return result;
+}
 
 	@SuppressWarnings("unchecked")
 	public List<DatapodStatsHolder> getDatapodStats() throws JsonProcessingException {		

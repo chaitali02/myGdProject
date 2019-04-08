@@ -38,71 +38,7 @@
     },
     "value": null
   },
-  "filterInfo": [
-    {
-      "display_seq": "0",
-      "logicalOperator": "",
-      "operator": ">=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 5,
-          "value": null,
-          "attributeName": "transaction_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "formula",
-            "uuid": "57c768a1-cfd7-4a02-b3cd-1fe5eb660c5a",
-            "version": null,
-            "name": "fm_lookback_yearly"
-          },
-          "attributeId": null,
-          "value": null,
-          "attributeName": null,
-          "attributeType": null
-        }
-      ]
-    },
-    {
-      "display_seq": "1",
-      "logicalOperator": "AND",
-      "operator": "<=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 5,
-          "value": null,
-          "attributeName": "transaction_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-            "version": null,
-            "name": "paramlist_aml_app"
-          },
-          "attributeId": 0,
-          "value": null,
-          "attributeName": "business_date",
-          "attributeType": null
-        }
-      ]
-    }
-  ],
-  "attributeInfo": [
+ "attributeInfo": [
     {
       "attrSourceId": "0",
       "attrDisplaySeq": "0",
@@ -1194,6 +1130,46 @@
           "uuid": "68ff5799-0386-4cb4-841a-9793a594f778",
           "version": null,
           "name": "fm_in_cash_transfers_round_amount_sum"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "55",
+      "attrDisplaySeq": "55",
+      "attrSourceName": "all_cash_trans_velocity_ratio",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "00c900ef-1744-424c-bb0e-0ed7356a7b96",
+          "version": null,
+          "name": "fm_all_cash_trans_velocity_ratio"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "56",
+      "attrDisplaySeq": "56",
+      "attrSourceName": "all_wire_trans_velocity_ratio",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "c2eb0d96-680d-43a6-be08-dc48eb5f510d",
+          "version": null,
+          "name": "fm_all_wire_trans_velocity_ratio"
         },
         "value": null,
         "attrId": null,

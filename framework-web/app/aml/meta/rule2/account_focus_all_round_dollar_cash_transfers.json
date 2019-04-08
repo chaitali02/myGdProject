@@ -118,7 +118,7 @@
     "attrUnitType": null,
     "function": null
   },
-  "criteriaInfo": [
+ "criteriaInfo": [
     {
       "criteriaId": "0",
       "criteriaName": "Transaction Volume",
@@ -136,9 +136,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 21,
+              "attributeId": 19,
               "value": null,
-              "attributeName": "all_cash_transfers_trans_count",
+              "attributeName": "all_cash_transfers_round_amount_count",
               "attributeType": null
             },
             {
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 21,
+              "attributeId": 18,
               "value": null,
-              "attributeName": "all_cash_transfers_trans_count",
+              "attributeName": "all_cash_transfers_round_amount_usd",
               "attributeType": null
             },
             {
@@ -199,7 +199,7 @@
       ],
       "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 1
+      "criteriaWeight": 0.5
     }
   ],
   "paramList": {
