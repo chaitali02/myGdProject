@@ -72,6 +72,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     this.showForm = true;
     this.isHomeEnable = false;
 
+    this.active = true;
     this.breadcrumbDataFrom = [{
       "caption": "Data Ingestion",
       "routeurl": "/app/list/ingestgroup"

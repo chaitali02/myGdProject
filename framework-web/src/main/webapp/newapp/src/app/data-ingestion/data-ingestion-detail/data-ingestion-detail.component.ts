@@ -117,7 +117,7 @@ export class DataIngestionDetailComponent implements OnInit {
   locked: any;
   targetHeader: any;
   metaType = MetaType;
-  
+
   moveToEnable: boolean;
   count: any[];
   txtQueryChangedFilter: Subject<string> = new Subject<string>();
@@ -136,30 +136,32 @@ export class DataIngestionDetailComponent implements OnInit {
   isAdd: boolean = false;
   isGraphInprogess: boolean;
   isGraphError: boolean;
-  
+
   sourceHeader: boolean;
   datasetNotEmpty: boolean = true;
   checkAllFilter: boolean;
   datasetRowIndex: any;
-  
+  ignoreCase: boolean;
+  enableInFileTable: boolean = false;
+
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
     //this.metaType = this.metaType;
     this.isSubmit = "false"
     this.ingestData = new IngestRule();
     this.sourceDs = {};
     this.targetDs = {};
-    this.sourceTypeName = {};
+    this.sourceTypeName = null;
     this.allSourceAttribute = []
     this.displayDialogBox = false;
     this.dialogAttributeName = {};
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-
+    this.active = true;
 
     this.showGraph = false;
     this.showForm = true;
     this.isHomeEnable = false;
-    
+
     this.breadcrumbDataFrom = [{
       "caption": "Data Ingestion",
       "routeurl": "/app/list/ingest"
@@ -352,8 +354,8 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   OnSuccesgetAllVersionByUuid(response: BaseEntity[]) {
+    this.VersionList = [];
     for (const i in response) {
-      this.VersionList = [new DropDownIO];
       let ver = new DropDownIO();
       ver.label = response[i].version;
       ver.value = { 'label': '', 'uuid': '' }
@@ -361,6 +363,7 @@ export class DataIngestionDetailComponent implements OnInit {
       ver.value.uuid = response[i].uuid;
       this.VersionList[i] = ver;
     }
+    console.log(JSON.stringify(this.VersionList));
   }
 
   onVersionChange() {
@@ -393,14 +396,20 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onSuccessgetDatasourceForFile(response: Datasource[]) {
     if (this.selectedSourceType == "FILE") {
-      let temp = [new DropDownIO];
+
+      if (this.selectedSourceType == "FILE" && this.selectedTargetType == "TABLE") {
+        this.enableInFileTable = false
+      }
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' }
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
         obj.value.version = response[i].version;
+        obj.value.type = response[i].type;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
@@ -408,18 +417,20 @@ export class DataIngestionDetailComponent implements OnInit {
     }
     if (this.selectedTargetType == "FILE") {
       this.allTargetDatasource = [new DropDownIO];
-      let temp = [new DropDownIO];
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' };
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
         obj.value.version = response[i].version;
+        obj.value.type = response[i].type;
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
-      console.log(JSON.stringify(this.allSourceDatasource));
+      console.log(JSON.stringify(this.allTargetDatasource));
     }
   }
 
@@ -432,14 +443,16 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onSuccessgetDatasourceForTable(response: Datasource[]) {
     if (this.selectedSourceType == "TABLE") {
-      let temp = [new DropDownIO];
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' }
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
         obj.value.version = response[i].version;
+        obj.value.type = response[i].type;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
@@ -460,20 +473,23 @@ export class DataIngestionDetailComponent implements OnInit {
       }
     }
     if (this.selectedTargetType == "TABLE") {
-      let temp = [new DropDownIO];
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' }
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
+        obj.value.type = response[i].type
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
 
       if (this.selectedSourceType == 'FILE' && this.selectedTargetType == 'TABLE') {
         if (this.allTargetDatasource && this.allTargetDatasource != null && this.allTargetDatasource.length > 0) {
-          for (var i = 0; i < this.allTargetDatasource.length; i++) {
+          for (let i = 0; i < this.allTargetDatasource.length; i++) {
             if (response[i].type == 'HIVE') {
               if (this.allSourceDatasource)
                 this.allSourceDatasource.push(this.allTargetDatasource[i]);
@@ -483,35 +499,53 @@ export class DataIngestionDetailComponent implements OnInit {
               }
             }
           }
+
+          for (let i = 0; i < this.allSourceDatasource.length; i++) {
+            if (this.allSourceDatasource[i].value.type == 'FILE') {
+              if (this.allSourceDatasource)
+                this.allTargetDatasource.push(this.allSourceDatasource[i]);
+              else {
+                this.allSourceDatasource = [];
+                this.allTargetDatasource.push(this.allSourceDatasource[i]);
+              }
+              this.allTargetDatasource.sort((a, b) => a.label.localeCompare(b.label.toString()));
+              this.enableInFileTable = true
+            }
+          }
         }
       }
     }
     if (this.selectedSourceType == "STREAM" && this.selectedTargetType == "FILE") {
       if (response != null && response.length > 0) {
         for (const i in response) {
+          response.sort((a, b) => a.name.localeCompare(b.name.toString()));
           if (response[i].type == 'HIVE') {
 
             if (this.allTargetDatasource) {
-              let temp = [new DropDownIO];
+              let temp = [new AttributeIO];
               for (const j in response) {
-                let obj = new DropDownIO;
+                let obj = new AttributeIO;
                 obj.label = response[i].name;
                 obj.value = { 'label': '', 'uuid': '' }
                 obj.value.label = response[i].name;
                 obj.value.uuid = response[i].uuid;
+                obj.value.version = response[i].version;
+                obj.value.type = response[i].type
                 temp[j] = obj;
               }
               this.allTargetDatasource.push(temp[i])
             }
             else {
               this.allTargetDatasource = [];
-              let temp = [new DropDownIO];
+              let temp = [new AttributeIO];
               for (const j in response) {
-                let obj = new DropDownIO;
+                let obj = new AttributeIO;
                 obj.label = response[i].name;
                 obj.value = { 'label': '', 'uuid': '' }
                 obj.value.label = response[i].name;
                 obj.value.uuid = response[i].uuid;
+                obj.value.version = response[i].version;
+                obj.value.type = response[i].type
                 temp[j] = obj;
               }
               this.allTargetDatasource.push(temp[i])
@@ -532,26 +566,31 @@ export class DataIngestionDetailComponent implements OnInit {
   onSuccessgetDatasourceForStream(response: Datasource[]) {
     if (this.selectedSourceType == "STREAM") {
 
-      let temp = [new DropDownIO];
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' }
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
         obj.value.version = response[i].version;
+        obj.value.type = response[i].type;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
     }
     if (this.selectedTargetType == "STREAM") {
-      let temp = [new DropDownIO];
+      let temp = [new AttributeIO];
       for (const i in response) {
-        let obj = new DropDownIO;
+        let obj = new AttributeIO;
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         obj.label = response[i].name;
         obj.value = { 'label': '', 'uuid': '' }
         obj.value.label = response[i].name;
         obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
+        obj.value.type = response[i].type;
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
@@ -654,6 +693,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeSourceTypeName() {
+    this.selectedAutoMode = "";
     this.getAllAttributeBySource();
     this.getAllAttributeBySource1();
   }
@@ -887,7 +927,7 @@ export class DataIngestionDetailComponent implements OnInit {
     filertable.rhsAttribute = null
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
 
-    this.checkSelected(false,null);
+    this.checkSelected(false, null);
   }
 
   removeRow() {
@@ -1057,6 +1097,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeTargetNameTable() {
+    this.selectedAutoMode = "";
     this._dataInjectService.getAttributesByDatapod(this.metaType.DATAPOD, this.targetNameForTable.uuid).subscribe(
       response => {
         this.onSuccessgetAttributesByDatapodTable(response),
@@ -1106,6 +1147,7 @@ export class DataIngestionDetailComponent implements OnInit {
       }
       this.attributeTableArray = this.attributeTableArray;
     }
+    this.selectedAutoMode = "";
   }
 
   onChangeOperator(index: any) {
@@ -1204,11 +1246,15 @@ export class DataIngestionDetailComponent implements OnInit {
           mapInfo.sourceType = "datapod";
 
           mapInfo.sourceAttribute = temp[i].targetAttribute.attrName;
-          mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
-          mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
-          mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
-          mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
-          mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
+          let targetAttriObj = new AttributeIO();
+
+          targetAttriObj.uuid = temp[i].targetAttribute.uuid;
+          targetAttriObj.label = temp[i].targetAttribute.label;
+          targetAttriObj.type = temp[i].targetAttribute.type;
+          targetAttriObj.attrName = temp[i].targetAttribute.attrName;
+          targetAttriObj.attributeId = temp[i].targetAttribute.attributeId;
+
+          mapInfo.targetAttribute = targetAttriObj;
 
           mapInfo.IsTargetAttributeSimple = "false";
 
@@ -1351,14 +1397,16 @@ export class DataIngestionDetailComponent implements OnInit {
     this.published = this.appHelper.convertStringToBoolean(response.ingestRule.published);
     this.active = this.appHelper.convertStringToBoolean(response.ingestRule.active);
     this.locked = this.appHelper.convertStringToBoolean(response.ingestRule.locked);
+    this.ignoreCase = this.appHelper.convertStringToBoolean(response.ingestRule.ignoreCase);
 
     this.selectedRuleType = response.ingestRule.type;
     this.onChangeRuleType();
 
     let sourceObj = new AttributeIO;
-    sourceObj.uuid = response.ingestRule.sourceDatasource.ref.uuid;
     sourceObj.label = response.ingestRule.sourceDatasource.ref.name;
+    sourceObj.uuid = response.ingestRule.sourceDatasource.ref.uuid;
     sourceObj.version = response.ingestRule.sourceDatasource.ref.version;
+    sourceObj.type = null;
     this.sourceDs = sourceObj;
     if (this.sourceDs.label == 'Stream') {
       this._dataInjectService.getTopicList(this.sourceDs.uuid, this.sourceDs.version).subscribe(
@@ -1374,10 +1422,10 @@ export class DataIngestionDetailComponent implements OnInit {
     if (response.ingestRule.sourceExtn != null) {
       this.sourceExtn = response.ingestRule.sourceExtn.toLowerCase();
     }
-    else{
+    else {
       this.sourceExtn = null;
     }
-     
+
     this.sourceHeader = this.appHelper.convertStringToBoolean(response.ingestRule.sourceHeader);
     this.sourceType = response.ingestRule.sourceDetail.ref.type;
     let sourceTypeNameObj = new AttributeIO();
@@ -1414,6 +1462,8 @@ export class DataIngestionDetailComponent implements OnInit {
     let targetObj = new AttributeIO;
     targetObj.uuid = response.ingestRule.targetDatasource.ref.uuid;
     targetObj.label = response.ingestRule.targetDatasource.ref.name;
+    targetObj.version = response.ingestRule.targetDatasource.ref.version;
+    targetObj.type = response.ingestRule.targetDatasource.ref.type;
     this.targetDs = targetObj;
 
     if (response.ingestRule.targetFormat != null) {
@@ -1426,6 +1476,9 @@ export class DataIngestionDetailComponent implements OnInit {
     targetNameObj.label = response.ingestRule.targetDetail.ref.name;
     this.targetNameForTable = targetNameObj;
     this.onChangeTargetDs();
+
+    this.onChangeTargetNameTable();
+
 
     if (response.ingestRule.targetExtn != null) {
       this.targetExtn = response.ingestRule.targetExtn.toLowerCase();
@@ -1460,7 +1513,9 @@ export class DataIngestionDetailComponent implements OnInit {
     }
 
     this.filterTableArray = response.filterInfo
+
     if (response.attributeMap !== null) {
+
       this._dataInjectService.getAttributesByDatapod(this.sourceType, this.sourceTypeName.uuid)
         .subscribe(response => { this.onSuccessgetAttributesByDatapod(response) },
           error => console.log("Error::", +error))
@@ -1468,12 +1523,22 @@ export class DataIngestionDetailComponent implements OnInit {
       this._dataInjectService.getAttributesByDatapod(this.metaType.DATAPOD, this.targetNameForTable.uuid)
         .subscribe(response => { this.onSuccessgetAttributesByDatapodTarget(response) },
           error => console.log("Error::", +error))
+
+      this._dataInjectService.getFunctionByCriteria("", "N", "function")
+        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+          error => console.log("Error::", +error))
+
+      this._commonService.getFormulaByType(this.targetNameForTable.uuid, this.metaType.DATAPOD)
+        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+          error => console.log("Error ::", error))
+
     }
     this.attributeTableArray = response.attributeMap;
-    console.log(JSON.stringify(this.attributeTableArray))
+    console.log(JSON.stringify(this.attributeTableArray));
+
     this.isEditInprogess = false;
   }
-  
+
   submitIngest() {
     this.isSubmit = "true"
     var upd_tag = 'N'
@@ -1492,7 +1557,7 @@ export class DataIngestionDetailComponent implements OnInit {
     //if(this.selectedSourceType == "File"){
     ingestJson.sourceExtn = this.sourceExtn;
     ingestJson.sourceHeader = this.sourceHeader == true ? 'Y' : "N";
-    ingestJson.ignoreCase = this.ingestData.ignoreCase;
+    ingestJson.ignoreCase = this.ignoreCase == true ? 'Y' : "N";
     // }
     // if(this.selectedTargetType == "File"){
     ingestJson.targetHeader = this.targetHeader == true ? 'Y' : "N";
@@ -1572,7 +1637,7 @@ export class DataIngestionDetailComponent implements OnInit {
       ingestJson.splitBy = null;
     }
 
-    let filterInfoArray = []; 
+    let filterInfoArray = [];
     if (this.filterTableArray != null) {
       for (let i = 0; i < this.filterTableArray.length; i++) {
         let filterInfo = new FilterInfo();
@@ -1692,7 +1757,7 @@ export class DataIngestionDetailComponent implements OnInit {
     }
     ingestJson["filterInfo"] = filterInfoArray;
 
-    let attributeTableArray = []; 
+    let attributeTableArray = [];
     if (this.attributeTableArray != null) {
       for (let i = 0; i < this.attributeTableArray.length; i++) {
         let attributeInfo = new AttributeMap();
@@ -1708,30 +1773,30 @@ export class DataIngestionDetailComponent implements OnInit {
           sourceAttrObj.value = this.attributeTableArray[i].sourceAttribute;
         }
         if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = "attribute";
           sourceAttrObj.ref = refObj;
           sourceAttrObj.value = this.attributeTableArray[i].sourceAttribute;
         }
         else if (this.attributeTableArray[i].sourceType == 'datapod' && this.selectedSourceType !== "TABLE") {
-           sourceAttrObj = new AttributeRefHolder();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new AttributeRefHolder();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "datapod";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
           sourceAttrObj.attrId = this.attributeTableArray[i].sourceAttribute.attributeId;
         }
         else if (this.attributeTableArray[i].sourceType == 'formula') {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "formula";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
         }
         else if (this.attributeTableArray[i].sourceType == 'function') {
-           sourceAttrObj = new SourceAttr();
-           refObj = new MetaIdentifier();
+          sourceAttrObj = new SourceAttr();
+          refObj = new MetaIdentifier();
           refObj.type = this.attributeTableArray[i].sourceType = "function";
           refObj.uuid = this.attributeTableArray[i].sourceAttribute.uuid;
           sourceAttrObj.ref = refObj;
