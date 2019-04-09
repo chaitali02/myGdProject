@@ -291,48 +291,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       backdrop: 'static',
       keyboard: false
     });
-    // var api = false;
-    // switch ($scope.newType) {
-    //   case 'dqexec':
-    //     api = 'dataqual';
-    //     break;
-    //   case 'dqgroupExec':
-    //     api = 'dataqual';
-    //     break;
-    //   case 'profileExec':
-    //     api = 'profile';
-    //     break;
-    //   case 'profilegroupExec':
-    //     api = 'profile';
-    //     break;
-    //   case 'ruleExec':
-    //     api = 'rule';
-    //     break;
-    //   case 'rulegroupExec':
-    //     api = 'rule';
-    //     break;
-    //   case 'dagexec':
-    //     api = 'dag';
-    //     break;
-    //   case 'reconExec':
-    //     api = 'recon';
-    //     break;
-    //   case 'recongroupExec':
-    //     api = 'recon';
-    //     break;
-    // }
-    // if (!api) {
-    //   return
-    // }
-    // notify.type = 'success',
-    // notify.title = 'Success',
-    // notify.content = $scope.newType == "dagexec" ? "Pipeline Restarted Successfully" : $scope.newType.indexOf("group") != -1 ? "Rule Group Restarted Successfully" : "Rule Restarted Successfully"
-    // $scope.$emit('notify', notify);
-
-    // var url = $location.absUrl().split("app")[0];
-    // $http.post(url + '' + api + '/restart?uuid=' + row.uuid + '&version=' + row.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
-    //   //console.log(response);
-    // });
   }
 
 
@@ -396,7 +354,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
     var url = $location.absUrl().split("app")[0];
     $http.post(url + '' + api + '/restart?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
-      //console.log(response);
       $rootScope.refreshRowData()
       $scope.refreshRowData();
     });
@@ -406,7 +363,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.caption = dagMetaDataService.elementDefs[data.type.toLowerCase()].caption;
     $scope.originalData = []
     $scope.originalData = data.data;
-    var changerowarray = [];
     if($scope.handleGroup > -1) {
       $scope.newType = data.type;
     }
@@ -507,7 +463,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.lockOrUnLock = function (data, unLock){
-    
     var action = unLock== true ? "unLock" : "lock";
     $scope.setActivity(data.uuid, data.version, $scope.select, action);
     var uuid = data.id;
@@ -633,8 +588,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     }
   }
   
- 
-
 
   $scope.getExecParamList=function(){
     $scope.attributeTypes=['datapod','dataset','rule'];
@@ -851,6 +804,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       stage.selected = $scope.selectallattribute;
     });
   }
+
   $scope.executeWithExecParams = function () {
     if($scope.selectParamType =="paramlist"){
       if($scope.paramlistdata){
@@ -924,17 +878,13 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     objJson.name=data.name;
     $scope.exeDetail = objJson
     $scope.objDetail=$scope.exeDetail;
+    $scope.isParamModelEnable=false;
 
   } //End excutionDag
 
   $scope.ok = function () {
     
     $('#DagConfExModal').modal('hide');
-   
-    // if($scope.select == 'rule') {  //|| $scope.select == 'train'
-    //   $scope.getExecParamsSet();
-    // }
-    debugger
     if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' || $scope.select == 'rule2' || $scope.select == 'dq' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;

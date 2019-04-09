@@ -1,9 +1,9 @@
 AdminModule = angular.module('AdminModule');
 
 AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc, CommonService, $timeout, $filter) {
-	
+
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle'];
-	$scope.applicationTypes=[{"caption":"SYSADMIN",'text':'SYSADMIN',"disabled":false},{"caption":"APPADMIN",'text':'APPADMIN',"disabled":false},{"caption":"DEFAULT",'text':'DEFAULT',"disabled":false}];
+	$scope.applicationTypes = [{ "caption": "SYSADMIN", 'text': 'SYSADMIN', "disabled": false }, { "caption": "APPADMIN", 'text': 'APPADMIN', "disabled": false }, { "caption": "DEFAULT", 'text': 'DEFAULT', "disabled": false }];
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -57,37 +57,39 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	$scope.privileges = [];
 	$scope.typeSimple = ["string", "double", "integer", "list"];
 	$scope.type = [
-		{"name":"string","caption":"STRING"},
-		{"name":"double","caption":"DOUBLE"},
-	 	{"name":"date","caption":"DATE"}, 
-		{"name":"integer","caption":"INTEGER"},
-		{"name":"decimal","caption":"DECIMAL"},
-		{"name":"attribute","caption":"ATTRIBUTE"},
-		{"name":"attributes","caption":"ATTRIBUTE[S]"},
-		{"name":"distribution","caption":"DISTRIBUTION"},
-		{"name":"datapod","caption":"DATAPOD"},
-		{"name":"function","caption":"FUNCTION"},
-		{"name":"list","caption":"LIST"},
-		{"name":"array","caption":"ARRAY"}];
+		{ "name": "string", "caption": "STRING" },
+		{ "name": "double", "caption": "DOUBLE" },
+		{ "name": "date", "caption": "DATE" },
+		{ "name": "integer", "caption": "INTEGER" },
+		{ "name": "decimal", "caption": "DECIMAL" },
+		{ "name": "attribute", "caption": "ATTRIBUTE" },
+		{ "name": "attributes", "caption": "ATTRIBUTE[S]" },
+		{ "name": "distribution", "caption": "DISTRIBUTION" },
+		{ "name": "datapod", "caption": "DATAPOD" },
+		{ "name": "function", "caption": "FUNCTION" },
+		{ "name": "list", "caption": "LIST" },
+		{ "name": "array", "caption": "ARRAY" }];
 	$scope.isTableDisable = false;
+	
 	$scope.popup2 = {
-    	opened: false
-    };
+		opened: false
+	};
 	$scope.dateOptions = {
-		dateDisabled: disabled,
+		//dateDisabled: disabled,
 		formatYear: 'yy',
-	//	maxDate: new Date(2020, 5, 22),
-	//	minDate: new Date(),
+		//	maxDate: new Date(2020, 5, 22),
+		//	minDate: new Date(),
 		startingDay: 1
 	};
+
 	function disabled(data) {
 		var date = data.date,
-		  mode = data.mode;
+			mode = data.mode;
 		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
 	}
-	
-	$scope.open2 = function() {
-		$scope.popup2.opened = true;
+
+	$scope.open2 = function(index) {
+		$scope.paramtable[index].opened = true;
 	};
 
 	$scope.privileges = privilegeSvc.privileges['application'] || [];
@@ -96,7 +98,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.privileges = privilegeSvc.privileges['application'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-    
+
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
@@ -110,26 +112,26 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	};
 	$scope.getLovByType();
-	$scope.ValidationKeyPress=function(e){
-		if((e.which <47)|| (e.which > 57)) {
-			 e.preventDefault();
-		 }
-	}
-	$scope.checkIsInrogess=function(){
-		if($scope.isEditInprogess || $scope.isEditVeiwError){
-		return false;
+	$scope.ValidationKeyPress = function (e) {
+		if ((e.which < 47) || (e.which > 57)) {
+			e.preventDefault();
 		}
-    }
+	}
+	$scope.checkIsInrogess = function () {
+		if ($scope.isEditInprogess || $scope.isEditVeiwError) {
+			return false;
+		}
+	}
 	$scope.showPage = function () {
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
-	$scope.showHome=function(uuid, version,mode){
-		if($scope.checkIsInrogess () ==false){
+	$scope.showHome = function (uuid, version, mode) {
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showPage()
@@ -140,10 +142,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
-		if($scope.isPrivlage || $scope.applicationdata.locked =="Y"){
+		if ($scope.isPrivlage || $scope.applicationdata.locked == "Y") {
 			return false;
 		}
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showPage()
@@ -154,7 +156,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showPage()
@@ -186,14 +188,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			$scope.applicationHasChanged = false;
 		}
 	}
-	
-	$scope.disabledApplicatoinType=function(applicationType,arrayStr){
-		if(applicationType && applicationType.length){
-			for(var i=0;i<applicationType.length;i++){
-				applicationType[i].disabled=false;
+
+	$scope.disabledApplicatoinType = function (applicationType, arrayStr) {
+		if (applicationType && applicationType.length) {
+			for (var i = 0; i < applicationType.length; i++) {
+				applicationType[i].disabled = false;
 				var index = arrayStr.indexOf(applicationType[i].text);
-				if(index !=-1){
-					applicationType[i].disabled=true;
+				if (index != -1) {
+					applicationType[i].disabled = true;
 				}
 
 			}
@@ -207,33 +209,33 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			$scope.allOrgnization = response;
 		}
 	};
-	
-	$scope.getLatestByUuid=function(){
-		MetadataApplicationSerivce.getLatestByUuid($rootScope.appUuid,'application').then(function(response){onSuccessGetLatestByUuid(response.data)});
-	    var onSuccessGetLatestByUuid=function(response){
-			$scope.applicationOrgDetail=response;
-			if($scope.applicationOrgDetail.applicationType =="SYSADMIN"){
+
+	$scope.getLatestByUuid = function () {
+		MetadataApplicationSerivce.getLatestByUuid($rootScope.appUuid, 'application').then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		var onSuccessGetLatestByUuid = function (response) {
+			$scope.applicationOrgDetail = response;
+			if ($scope.applicationOrgDetail.applicationType == "SYSADMIN") {
 				$scope.getAllLatestOrgnization();
-				if($scope.applicationdata.applicationType =="SYSADMIN"){
-					$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT']);
+				if ($scope.applicationdata.applicationType == "SYSADMIN") {
+					$scope.applicationTypes = $scope.disabledApplicatoinType($scope.applicationTypes, ['DEFAULT']);
 				}
 				else
-				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT','SYSADMIN']);
-                
-			}
-			else if($scope.applicationdata.applicationType =="APPADMIN"){
-				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['SYSADMIN']);
+					$scope.applicationTypes = $scope.disabledApplicatoinType($scope.applicationTypes, ['DEFAULT', 'SYSADMIN']);
 
 			}
-			else{
-				$scope.selectOrgInfo={};
-				$scope.selectOrgInfo.uuid=$scope.applicationOrgDetail.orgInfo.ref.uuid;
-				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['APPADMIN','SYSADMIN']);
+			else if ($scope.applicationdata.applicationType == "APPADMIN") {
+				$scope.applicationTypes = $scope.disabledApplicatoinType($scope.applicationTypes, ['SYSADMIN']);
+
+			}
+			else {
+				$scope.selectOrgInfo = {};
+				$scope.selectOrgInfo.uuid = $scope.applicationOrgDetail.orgInfo.ref.uuid;
+				$scope.applicationTypes = $scope.disabledApplicatoinType($scope.applicationTypes, ['APPADMIN', 'SYSADMIN']);
 			}
 		}
 	}
 
-	
+
 	$scope.selectType = function () {
 		MetadataApplicationSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
@@ -243,9 +245,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 
 		}
 	}
-	
+
 	$scope.showGraph = function (uuid, version) {
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showForm = false;
@@ -264,14 +266,14 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$scope.paramtable.splice($scope.paramtable.length, 0, paramjson);
 	}
 
-	$scope.getParamListChilds=function(uuid,version){
-		CommonService.getParamListChilds(uuid,version,"paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
+	$scope.getParamListChilds = function (uuid, version) {
+		CommonService.getParamListChilds(uuid, version, "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
 		var onSuccessGetParamListChilds = function (response) {
-			if(response.length >0){
-				$scope.isTableDisable=true;
-				$scope.isUseTemlateText=true;
-			}else{
-				$scope.isUseTemlateText=false;
+			if (response.length > 0) {
+				$scope.isTableDisable = true;
+				$scope.isUseTemlateText = true;
+			} else {
+				$scope.isUseTemlateText = false;
 			}
 
 		}//End getAllVersionByUuid
@@ -285,8 +287,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			stage.selected = $scope.selectallattribute;
 		});
 	}
-   
-	
+
+
 	$scope.removeRow = function () {
 		if ($scope.isTableDisable) {
 			return false;
@@ -306,7 +308,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		if ($scope.applicationCompare != null) {
 			$scope.applicationCompare.paramlistChg = "y";
 			$scope.applicationCompare.applicationChg = "y";
-		}	
+		}
 		if ($scope.typeSimple.indexOf(type) != -1) {
 			$scope.paramtable[index].paramValueType = 'simple';
 		}
@@ -318,22 +320,22 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}
 
-	$scope.onChangeSimple=function(){
+	$scope.onChangeSimple = function () {
 		if ($scope.applicationCompare != null) {
 			$scope.applicationCompare.paramlistChg = "y";
 			$scope.applicationCompare.applicationChg = "y";
-		}	
+		}
 	}
 
-    $scope.onChangeDistribution=function(){
+	$scope.onChangeDistribution = function () {
 		if ($scope.applicationCompare != null) {
 			$scope.applicationCompare.paramlistChg = "y";
 			$scope.applicationCompare.applicationChg = "y";
-		}	
+		}
 	}
 
-	$scope.onChangeFunction=function(){
-		
+	$scope.onChangeFunction = function () {
+
 		if ($scope.applicationCompare != null) {
 			$scope.applicationCompare.paramlistChg = "y";
 			$scope.applicationCompare.applicationChg = "y";
@@ -387,12 +389,12 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		$timeout(function () {
 			$scope.myform.$dirty = false;
 		}, 0)
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
 		MetadataApplicationSerivce.getOneByUuidAndVersion(uuid, version, 'applicationview')
-			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
+			.then(function (response) { onGetByOneUuidandVersion(response.data) }, function (response) { onError(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			$scope.applicationdata = response.application;
 			var defaultversion = {};
 			defaultversion.version = response.application.version;
@@ -419,50 +421,50 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-			$scope.paramtable=response.paramInfo;
+			$scope.paramtable = response.paramInfo;
 			$scope.getLatestByUuid();
-			$scope.selectOrgInfo={};
-			if($scope.applicationdata.orgInfo !=null){
-				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
-				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
+			$scope.selectOrgInfo = {};
+			if ($scope.applicationdata.orgInfo != null) {
+				$scope.selectOrgInfo.uuid = $scope.applicationdata.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name = $scope.applicationdata.orgInfo.ref.name;
 
 			}
-			if($scope.applicationdata.paramList.templateFlg =='Y'){
-				$scope.isUseTemlate=false;
-				$scope.isTemplageInfoRequired=false;
-				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
+			if ($scope.applicationdata.paramList.templateFlg == 'Y') {
+				$scope.isUseTemlate = false;
+				$scope.isTemplageInfoRequired = false;
+				$scope.getParamListChilds($scope.applicationdata.paramList.uuid, $scope.applicationdata.paramList.version);
 			}
 
-		
+
 		};
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		}
 	}//End SelectVersion
 
-    
+
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.showactive="true";
+		$scope.showactive = "true";
 		var id;
 		id = $stateParams.id;
 		$scope.getAllVersion(id)//Call SelectAllVersion Function
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
-		MetadataApplicationSerivce.getOneByUuidAndVersion(id,$stateParams.version || "", "applicationview")
-			.then(function (response) { onGetByOneUuidandVersion(response.data) },function (response) { onError(response.data)});
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
+		MetadataApplicationSerivce.getOneByUuidAndVersion(id, $stateParams.version || "", "applicationview")
+			.then(function (response) { onGetByOneUuidandVersion(response.data) }, function (response) { onError(response.data) });
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			$scope.applicationdata = response.application;
-			$scope.applicationCompare=$scope.applicationdata; 
+			$scope.applicationCompare = $scope.applicationdata;
 			var defaultversion = {};
 			defaultversion.version = response.application.version;
 			defaultversion.uuid = response.application.uuid;
 			$scope.application.defaultVersion = defaultversion;
 			var tags = [];
-		
+
 			if (response.tags != null) {
 				for (var i = 0; i < response.application.tags.length; i++) {
 					var tag = {};
@@ -485,54 +487,54 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				}
 			}
 			$scope.getLatestByUuid();
-			
-		
-			$scope.selectOrgInfo={};
-			if($scope.applicationdata.orgInfo !=null){
-				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
-				$scope.selectOrgInfo.name=$scope.applicationdata.orgInfo.ref.name;
+
+
+			$scope.selectOrgInfo = {};
+			if ($scope.applicationdata.orgInfo != null) {
+				$scope.selectOrgInfo.uuid = $scope.applicationdata.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name = $scope.applicationdata.orgInfo.ref.name;
 
 			}
-			$scope.paramtable=response.paramInfo;
-			if($scope.applicationdata.paramList !=null && $scope.applicationdata.paramList.templateFlg =='Y'){
-				$scope.isUseTemlate=false;
-				$scope.isTemplageInfoRequired=false;
-				$scope.getParamListChilds($scope.applicationdata.paramList.uuid,$scope.applicationdata.paramList.version);
+			$scope.paramtable = response.paramInfo;
+			if ($scope.applicationdata.paramList != null && $scope.applicationdata.paramList.templateFlg == 'Y') {
+				$scope.isUseTemlate = false;
+				$scope.isTemplageInfoRequired = false;
+				$scope.getParamListChilds($scope.applicationdata.paramList.uuid, $scope.applicationdata.paramList.version);
 			}
 
-			
+
 		};
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		}
 	}//End IF
-	else{
+	else {
 		$scope.getLatestByUuid();
-		$scope.applicationdata={};
-		$scope.applicationdata.locked="N";
+		$scope.applicationdata = {};
+		$scope.applicationdata.locked = "N";
 	}
-	
+
 
 
 	/*Start SubmitAplication*/
 	$scope.submitApplication = function () {
 		var upd_tag = "N"
 		var applicationJson = {};
-		
+
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
 		$scope.applicationHasChanged = true;
-		
+
 		if ($scope.applicationCompare == null) {
 			applicationJson.paramlistChg = "y";
 			applicationJson.applicationChg = "y";
-		}else if($scope.myform.$dirty ==true){
+		} else if ($scope.myform.$dirty == true) {
 			applicationJson.paramlistChg = "y";
 			applicationJson.applicationChg = "y";
 		}
-		else{
-			applicationJson.paramlistChg =$scope.applicationCompare.paramlistChg;
+		else {
+			applicationJson.paramlistChg = $scope.applicationCompare.paramlistChg;
 			applicationJson.applicationChg = $scope.applicationCompare.applicationChg;
 		}
 		$scope.myform.$dirty = false;
@@ -545,7 +547,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.publicFlag = $scope.applicationdata.publicFlag;
 
 		applicationJson.deployPort = $scope.applicationdata.deployPort;
-		applicationJson.applicationType= $scope.applicationdata.applicationType;
+		applicationJson.applicationType = $scope.applicationdata.applicationType;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -557,13 +559,13 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			}
 		}
 		applicationJson.tags = tagArray;
-        
-		var orgInfo={};
-		var refOrgInfo={};
-		refOrgInfo.uuid=$scope.selectOrgInfo.uuid;
-		refOrgInfo.type="organization";	
-		orgInfo.ref=refOrgInfo;
-		applicationJson.orgInfo=orgInfo;
+
+		var orgInfo = {};
+		var refOrgInfo = {};
+		refOrgInfo.uuid = $scope.selectOrgInfo.uuid;
+		refOrgInfo.type = "organization";
+		orgInfo.ref = refOrgInfo;
+		applicationJson.orgInfo = orgInfo;
 
 		var datasource = {};
 		var ref = {};
@@ -571,15 +573,15 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		ref.uuid = $scope.selectDataSource.uuid;
 		datasource.ref = ref;
 		applicationJson.dataSource = datasource;
-		applicationJson.paramList={};
-        if($scope.applicationCompare != null && $scope.applicationCompare.paramList !=null ){
-			applicationJson.paramList.uuid=$scope.applicationCompare.paramList.uuid;
-			applicationJson.paramList.paramListType=$scope.applicationCompare.paramList.paramListType;
-			applicationJson.paramList.templateFlg=$scope.applicationCompare.paramList.templateFlg;
+		applicationJson.paramList = {};
+		if ($scope.applicationCompare != null && $scope.applicationCompare.paramList != null) {
+			applicationJson.paramList.uuid = $scope.applicationCompare.paramList.uuid;
+			applicationJson.paramList.paramListType = $scope.applicationCompare.paramList.paramListType;
+			applicationJson.paramList.templateFlg = $scope.applicationCompare.paramList.templateFlg;
 		}
-		else{
-			applicationJson.paramList.paramListType="application";
-			applicationJson.paramList.templateFlg="Y";
+		else {
+			applicationJson.paramList.paramListType = "application";
+			applicationJson.paramList.templateFlg = "Y";
 		}
 		var paramInfoArray = [];
 		if ($scope.paramtable && $scope.paramtable.length > 0) {
@@ -590,55 +592,55 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				paraminfo.paramType = $scope.paramtable[i].paramType;
 				paraminfo.paramDesc = $scope.paramtable[i].paramDesc;
 				paraminfo.paramDispName = $scope.paramtable[i].paramDispName;
-				var paramValue={}
-				if($scope.typeSimple.indexOf($scope.paramtable[i].paramType) !=-1){
-					var paramRef={}	 
-					paramRef.type="simple";
-					paramValue.ref=paramRef;
-					paramValue.value=$scope.paramtable[i].paramValue;
-					paraminfo.paramValue =paramValue
-					paramInfoArray[i] = paraminfo; 
+				var paramValue = {}
+				if ($scope.typeSimple.indexOf($scope.paramtable[i].paramType) != -1) {
+					var paramRef = {}
+					paramRef.type = "simple";
+					paramValue.ref = paramRef;
+					paramValue.value = $scope.paramtable[i].paramValue;
+					paraminfo.paramValue = paramValue
+					paramInfoArray[i] = paraminfo;
 				}
-				else if($scope.paramtable[i].paramType =='distribution' || $scope.paramtable[i].paramType =='function'){
-					var paramRef={};
-					paramRef.type=$scope.paramtable[i].paramType;
-					if($scope.paramtable[i].selectedParamValue !=null)
-						paramRef.uuid=$scope.paramtable[i].selectedParamValue.uuid;
-					paramValue.ref=paramRef;
-					paraminfo.paramValue =paramValue
-					paramInfoArray[i] = paraminfo; 
+				else if ($scope.paramtable[i].paramType == 'distribution' || $scope.paramtable[i].paramType == 'function') {
+					var paramRef = {};
+					paramRef.type = $scope.paramtable[i].paramType;
+					if ($scope.paramtable[i].selectedParamValue != null)
+						paramRef.uuid = $scope.paramtable[i].selectedParamValue.uuid;
+					paramValue.ref = paramRef;
+					paraminfo.paramValue = paramValue
+					paramInfoArray[i] = paraminfo;
 				}
-				else if($scope.paramtable[i].paramType =='date'){
-					var paramRef={}	 
-					paramRef.type="simple";
-					paramValue.ref=paramRef;
-					paramValue.value=$filter('date')($scope.paramtable[i].paramValue, "yyyy-MM-dd");
-					paraminfo.paramValue=paramValue
-					paramInfoArray[i] = paraminfo; 
+				else if ($scope.paramtable[i].paramType == 'date') {
+					var paramRef = {}
+					paramRef.type = "simple";
+					paramValue.ref = paramRef;
+					paramValue.value = $filter('date')($scope.paramtable[i].paramValue, "yyyy-MM-dd");
+					paraminfo.paramValue = paramValue
+					paramInfoArray[i] = paraminfo;
 
 				}
-				else if($scope.paramtable[i].paramType =='array'){
-					var paramArrayTags=[];
-					if($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length >0){
-						for(var j=0;j<$scope.paramtable[i].paramArrayTags.length;j++){
-							paramArrayTags[j]=$scope.paramtable[i].paramArrayTags[j].text
+				else if ($scope.paramtable[i].paramType == 'array') {
+					var paramArrayTags = [];
+					if ($scope.paramtable[i].paramArrayTags && $scope.paramtable[i].paramArrayTags.length > 0) {
+						for (var j = 0; j < $scope.paramtable[i].paramArrayTags.length; j++) {
+							paramArrayTags[j] = $scope.paramtable[i].paramArrayTags[j].text
 						}
 					}
-					var paramRef={}	 
-					paramRef.type="simple";
-					paramValue.ref=paramRef;
-					paramValue.value=paramArrayTags.toString();;
-					paraminfo.paramValue=paramValue
-					paramInfoArray[i] = paraminfo; 
+					var paramRef = {}
+					paramRef.type = "simple";
+					paramValue.ref = paramRef;
+					paramValue.value = paramArrayTags.toString();;
+					paraminfo.paramValue = paramValue
+					paramInfoArray[i] = paraminfo;
 				}
 				else {
-					paramValue=null;
-					paraminfo.paramValue =paramValue
-					paramInfoArray[i] = paraminfo; 
-				}	
-			}	
+					paramValue = null;
+					paraminfo.paramValue = paramValue
+					paramInfoArray[i] = paraminfo;
+				}
+			}
 		}
-		
+
 		applicationJson.paramList.params = paramInfoArray;
 		console.log(JSON.stringify(applicationJson));
 		MetadataApplicationSerivce.submit(applicationJson, 'applicationview', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -649,7 +651,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			notify.title = 'Success',
 			notify.content = 'Application Saved Successfully'
 			$scope.$emit('notify', notify);
-			$scope.okapplicationsave();
+			$scope.okSave();
 		}//End Submit Api
 		var onError = function (response) {
 			notify.type = 'error',
@@ -659,8 +661,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}/*End SubmitApplication*/
 
-	$scope.okapplicationsave = function () {
-		$('#applicationsave').css("dispaly", "none");
+	$scope.okSave = function () {
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
 			setTimeout(function () { $state.go('admin', { 'type': 'application' }); }, 2000);

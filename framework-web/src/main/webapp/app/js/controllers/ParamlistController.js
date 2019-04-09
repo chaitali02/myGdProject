@@ -112,26 +112,30 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
 	}
 	
-	$scope.open2 = function() {
-		$scope.popup2.opened = true;
+	$scope.open2 = function(index) {
+		$scope.paramtable[index].opened = true;
 	};
+
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['paramlist'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
     $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
+
 	$scope.loadTag = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+
+	$scope.getLovByType();
+	
 	$scope.ValidationKeyPress=function(e){
 		if((e.which <47)|| (e.which > 57)) {
 			 e.preventDefault();
@@ -147,11 +151,13 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		}
 		$state.go(state); 
 	}
+
     $scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		  return false;
 		}
 	}
+
 	$scope.showPage = function () {
 		if($scope.checkIsInrogess () ==false){
 			return false;
@@ -161,6 +167,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.graphDataStatus = false;
 		$scope.showGraphDiv = false
 	}
+
 	$scope.showHome=function(uuid, version,mode){
 		if($scope.checkIsInrogess () ==false){
 			return false;
@@ -172,6 +179,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			mode: mode
 		});
 	}
+
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.paramlistData.locked =="Y"){
 			return false;
@@ -186,6 +194,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 			mode: 'false'
 		});
 	}
+
 	$scope.showview = function (uuid, version) {
 		if($scope.checkIsInrogess () ==false){
 			return false;
@@ -199,7 +208,6 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	}
 
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		//console.log(fromParams)
 		$sessionStorage.fromStateName = fromState.name
 		$sessionStorage.fromParams = fromParams
 
