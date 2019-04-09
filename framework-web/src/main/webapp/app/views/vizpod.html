@@ -249,14 +249,16 @@
 											<ui-select  name ="nodeIcon" ng-model="vizpoddata.colorPalette"  theme="" ng-disabled="{{mode}}"   on-select="onChangeColorPalette(vizpoddata.colorPalette)" append-to-body="true">
 												<ui-select-match  >
 													<div style="margin-top:0px;">
-														<span  ng-if="vizpoddata.colorPalette !='Standard' " style="background-color:{{code}};width:10px;padding-right:20px;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
-														<span  ng-if="vizpoddata.colorPalette =='Standard' ">{{vizpoddata.colorPalette}}</span>
+															<!-- ng-if="vizpoddata.colorPalette !='Standard' " -->
+														<span  style="background-color:{{code}};width:10px;padding-right:20px;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
+														<!-- <span  ng-if="vizpoddata.colorPalette =='Standard' ">{{vizpoddata.colorPalette}}</span> -->
 
 													</div>
 												</ui-select-match>
-												<ui-select-choices repeat="x in (colorPalette | filter: $select.search)  track by x" position='down'>
+												<ui-select-choices repeat="x.text as x in (colorPalette | filter: $select.search)  track by x.text" position='down'>
 													<div>
-														<span  ng-bind-html="x | highlight: $select.search"></span>
+														<span  style="padding-right: 6px;"ng-bind-html="x.text | highlight: $select.search"></span>
+														<span  style="background-color:{{code}};width:10px;padding-right:7px;" ng-repeat="code in x.codes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
 													</div>
 												</ui-select-choices>
 											</ui-select>
