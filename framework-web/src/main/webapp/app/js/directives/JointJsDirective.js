@@ -3253,11 +3253,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       
       $scope.onChangeOperatorInfo=function(defaultValue){
-       // $scope.popupModel.modelData.operators[0].operatorParams=null;
        $scope.paramListHolder=null;
        $scope.isExecParamList=false;
        $scope.isExecParams=false;
        $scope.isExecParamSet=false;
+       $scope.isParamLsitTable=false;
+       $scope.paramlistdata=null;
+       $scope.selectParamType=null;
         var temp = $scope.popupModel.selectedType.split('|');
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
@@ -3275,7 +3277,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var typeParamArray=[];//['dashboard'];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
-          $scope.isExecParamSet=true;
+          setTimeout(function(){
+            $scope.isExecParamSet=true;
+          },10);
+          
         }
         if(typeParamListArray.indexOf(type) != -1){
           if(defaultValue){
@@ -3643,7 +3648,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             EXEC_PARAMS.paramListInfo = paramListInfo;
             execParams.EXEC_PARAMS=EXEC_PARAMS;
           }*/
-          if($scope.selectParamList.length>0){
+          if($scope.selectParamList && $scope.selectParamList.length>0){
             for(var i=0;i<$scope.selectParamList.length;i++){
               var paramList={};
               paramList.paramId=$scope.selectParamList[i].paramId;

@@ -1030,7 +1030,7 @@ var confirmDialog = function(newVal, yes, no) {
   }
   $scope.onAttrFilterRowDown=function(index){	
 		var rowTempIndex=$scope.filterTableArray[index];
-        var rowTempIndexPlus=$scope.filterTableArray[index+1];
+    var rowTempIndexPlus=$scope.filterTableArray[index+1];
 		$scope.filterTableArray[index]=rowTempIndexPlus;
 		$scope.filterTableArray[index+1]=rowTempIndex;
 		if(index ==0){
@@ -1041,7 +1041,7 @@ var confirmDialog = function(newVal, yes, no) {
 
 	$scope.onAttrFilterRowUp=function(index){
 		var rowTempIndex=$scope.filterTableArray[index];
-        var rowTempIndexMines=$scope.filterTableArray[index-1];
+    var rowTempIndexMines=$scope.filterTableArray[index-1];
 		$scope.filterTableArray[index]=rowTempIndexMines;
 		$scope.filterTableArray[index-1]=rowTempIndex;
 		if(index ==1){
@@ -1211,25 +1211,7 @@ var confirmDialog = function(newVal, yes, no) {
 			},10,(i));
 		}
 	}
-  // $scope.onChangeSimple = function () {
-	
-	// }
-	
 
-  // $scope.onChangeAttribute=function(){
-	
-	// }
-
-	// $scope.onChangeFromula=function(){
-	
-  // }
-  // $scope.onChangeFunction=function(){
-   
-  // }
-  
-  // $scope.onChangeRhsParamList=function(){
-   
-  // }
 
   $scope.onChangeSourceAttribute = function (type, index) {
     $scope.attributeTableArray[index].isOnDropDown=true;
@@ -1578,20 +1560,6 @@ var confirmDialog = function(newVal, yes, no) {
 		}
   }
 
-  // $scope.hideOk = function (m) {
-  //   if (m === 1) {
-  //     $scope.showModal1 = false;
-  //     $scope.filterTableArray = [];
-  //     $scope.attributeTableArray=[];
-  //   }
-  // }
-
-  // $scope.hideCancel = function (m) {
-  //   if (m === 1) {
-  //     $scope.showModal1 = false;
-  //   }
-  // }
-
   $scope.modalOneShown = function () {
     //console.log('model one shown');
   }
@@ -1644,7 +1612,6 @@ var confirmDialog = function(newVal, yes, no) {
     var ref = {};
     ref.type = $scope.rulsourcetype
     ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-   // ref.version = $scope.ruleRelation.defaultoption.version;
     source.ref = ref;
     ruleJson.source = source;
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
@@ -1791,16 +1758,6 @@ var confirmDialog = function(newVal, yes, no) {
           sourceAttr.value = $scope.attributeTableArray[l].sourcesimple;
           attributeinfo.sourceAttr = sourceAttr;
         } else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
-          // if ($scope.rulsourcetype == "dataset") {
-          //   ref.type = "dataset";
-          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          // } else if ($scope.rulsourcetype == "rule") {
-          //   ref.type = "rule";
-          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          // } else {
-          //   ref.type = "datapod";
-          //   ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
-          // }
           ref.type = $scope.attributeTableArray[l].sourcedatapod.type;
 			  	ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
           sourceAttr.ref = ref;
@@ -1844,27 +1801,26 @@ var confirmDialog = function(newVal, yes, no) {
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      if(options.execution == "YES" && $scope.allparamlist.defaultoption != null) {
-        $scope.ruleId=response.data;
-        $scope.showParamlistPopup();
-        // RuleService.getOneById(response.data, "rule").then(function (response) {
-        //   onSuccessGetOneById(response.data)
-        // });
-        // var onSuccessGetOneById = function (result) {
-        //   $scope.modelExecute(result.data);
-        // }
-      } //End if
-      else if(options.execution == "YES" && $scope.allparamlist.defaultoption == null){
-          RuleService.getOneById(response.data, "rule").then(function (response) {
-          onSuccessGetOneById(response.data)
-        });
+      // if(options.execution == "YES" && $scope.allparamlist.defaultoption != null) {
+      //   $scope.ruleId=response.data;
+      //   $scope.showParamlistPopup();
+      // } //End if
+      // else 
+      if(options.execution == "YES"){
+        RuleService.getOneById(response.data, "rule").then(function (response) { onSuccessGetOneById(response.data)});
         var onSuccessGetOneById = function (result) {
-          $scope.modelExecute(result.data);
+          if ($scope.allparamlist.defaultoption == null) {
+            $scope.modelExecute(result.data);
+          } 
+          else {
+            $scope.isParamModelEnable = true;
+            $scope.exeDetail = result.data;
+          }
         }
       }
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = CF_SUCCESS_MSG.ruleSave//"Rule Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.ruleSave;
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage
@@ -1879,6 +1835,20 @@ var confirmDialog = function(newVal, yes, no) {
       $scope.$emit('notify', notify);
     }
   }
+  
+  $scope.onExecute = function (data) {
+		$scope.dataLoading = false;
+		notify.type = 'success';
+		notify.title = 'Success';
+		if(data.isExecutionCancel==false){
+			notify.content = CF_SUCCESS_MSG.ruleSaveExecute;
+		}else{
+			notify.content = CF_SUCCESS_MSG.ruleSave
+		}
+		$scope.$emit('notify', notify);
+		$scope.okrulesave();
+	}
+
 
   $scope.attrTableSelectedItem=[];
 	$scope.onChangeAttRow=function(index,status){

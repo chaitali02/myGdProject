@@ -885,7 +885,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   $scope.ok = function () {
     
     $('#DagConfExModal').modal('hide');
-    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' || $scope.select == 'rule2' || $scope.select == 'dq' ){
+    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag'  || $scope.select == 'rule2' || $scope.select == 'dq' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
@@ -894,18 +894,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.isParamLsitTable=false;
       setTimeout(function(){    $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
       ; },100);
-      if($scope.select =='rule' || $scope.select =='dag' || $scope.select == 'report' || $scope.select =='rule2' || $scope.select == 'dq'){
+      if($scope.select =='rule' || $scope.select =='dag' || $scope.select =='rule2' || $scope.select == 'dq'){
         $scope.isParamListRquired=false;
         CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
           $scope.exeDetail=response;
-          if(response.paramList !=null && $scope.select != 'dq'){
-            $('#responsive').modal({
-              backdrop: 'static',
-              keyboard: false
-            });   
-          }
-          else if(response.paramList !=null && $scope.select == 'dq'){
+          if(response.paramList !=null){
+          //   $('#responsive').modal({
+          //     backdrop: 'static',
+          //     keyboard: false
+          //   });   
+          // }
+          //else if(response.paramList !=null && $scope.select == 'dq'){
             $scope.isParamModelEnable=true;
           }
           else{
@@ -916,17 +916,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
             $scope.$emit('notify', notify);
             CommonService.execute($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version, null).then(function (response){ onSuccessExecute(response.data)});
             var onSuccessExecute = function (response) {
-                console.log("RuleExec: " + JSON.stringify(response))
+                console.log("exec: " + JSON.stringify(response))
             }
           }
         }
       }
       else{
         $scope.isParamListRquired=true;
-        $('#responsive').modal({
-          backdrop: 'static',
-          keyboard: false
-        });
+       /*('#responsive').modal({
+           backdrop: 'static',
+            keyboard: false
+        });*/
+        $scope.isParamModelEnable=true;
       }
     }
 
