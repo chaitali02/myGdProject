@@ -22,24 +22,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		$sessionStorage.fromParams = fromParams
 
 	});
-	$scope.popup2 = {
-    	opened: false
-	};
-	$scope.dateOptions = {
-		//dateDisabled: disabled,
-		formatYear: 'yy',
-	//	maxDate: new Date(2020, 5, 22),
-	//	minDate: new Date(),
-		startingDay: 1
-	};
-	function disabled(data) {
-		var date = data.date,
-		  mode = data.mode;
-		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
-	}
-	$scope.open2 = function() {
-		$scope.popup2.opened = true;
-	};
+
 	$scope.updateStats = function () {
 		CommonService.getMetaStats("report").then(function (response) {
 			if (response.data && response.data.length && response.data.length > 0) {
@@ -214,6 +197,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		});
 		$scope.paramTypes = [];
 		$scope.isParamLsitTable = null;
+		$scope.isParamModelEnable = false;
 	}
 
 	$scope.getOneByUuidAndVersionReport = function (data) {
@@ -229,14 +213,10 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.exeDetail = response;
 			$scope.select = "report"
 			if (response.paramList != null) {
-				$scope.isParamModelEnable=true;
-				// $('#responsive').modal({
-				// 	backdrop: 'static',
-				// 	keyboard: false
-				// });
+				$scope.isParamModelEnable = true;
 			}
 			else {
-				$scope.isParamModelEnable=false;
+				$scope.isParamModelEnable = false;
 				$scope.message = "Report Submitted Successfully"
 				notify.type = 'success',
 				notify.title = 'Success',
@@ -246,11 +226,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			}
 		}
 	}
-	
-	
-	$scope.onExecute=function(data){
-		$scope.isParamModelEnable=data.isParamModelEnable;
-		if(data.isExecutionInprogess){
+
+
+	$scope.onExecute = function (data) {
+		$scope.isParamModelEnable = data.isParamModelEnable;
+		if (data.isExecutionInprogess) {
 			$scope.message = "Report Submitted Successfully"
 			notify.type = 'success',
 			notify.title = 'Success',
@@ -258,173 +238,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.$emit('notify', notify);
 		}
 	}
-
-	/*$scope.onChangeParamType = function () {
-		$scope.allparamset = null;
-		$scope.allParamList = null;
-		$scope.isParamLsitTable = false;
-		$scope.selectParamList = null;
-		if ($scope.selectParamType == "paramlist") {
-			$scope.paramlistdata = null;
-			$scope.getParamListByTrainORRule();
-		}
-		else if ($scope.selectParamType == "paramset") {
-			$scope.getExecParamsSet();
-		}
-
-	}*/
-
-	/*$scope.onChangeParamList = function () {
-		$scope.isParamLsitTable = false;
-		CommonService.getParamByParamList($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
-		var onSuccesGetParamListByTrain = function (response) {
-			$scope.isParamLsitTable = true;
-			$scope.selectParamList = response;
-			var paramArray = [];
-			for (var i = 0; i < response.length; i++) {
-				var paramInfo = {}
-				var ref = {};
-				ref.uuid = $scope.paramlistdata.uuid;
-				ref.type = "paramlist";
-				paramInfo.ref = ref;
-				paramInfo.paramId = response[i].paramId;
-				paramInfo.paramName = response[i].paramName;
-				paramInfo.paramType = response[i].paramType.toLowerCase();
-				if (response[i].paramValue != null && response[i].paramValue.ref.type == "simple" && response[i].paramType!="date") {
-					paramInfo.paramValue = response[i].paramValue.value.replace(/["']/g, "");
-					paramInfo.paramValueType = "simple"
-				}
-				else if(response[i].paramValue != null && response[i].paramValue.ref.type == "simple" &&  response[i].paramType=="date"){
-					var temp =response[i].paramValue.value.replace(/["']/g, "")
-					paramInfo.paramValue = new Date(temp);
-					paramInfo.paramValueType = "simple"
-				}
-				 else if (response[i].paramValue != null) {
-					var paramValue = {};
-					paramValue.uuid = response[i].paramValue.ref.uuid;
-					paramValue.type = response[i].paramValue.ref.type;
-					paramInfo.paramValue = paramValue;
-					paramInfo.paramValueType = response[i].paramValue.ref.type;
-				} else {
-
-				}
-				paramArray[i] = paramInfo;
-			}
-			$scope.selectParamList.paramInfo = paramArray;
-		}
-	}*/
-
-	/*$scope.getParamListByTrainORRule = function () {
-		$scope.paramlistdata = null;
-		$scope.isPramlistInProgess = true;
-		CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version, $scope.select).then(function (response) { onSuccesGetParamListByTrain(response.data) });
-		var onSuccesGetParamListByTrain = function (response) {
-			$scope.allParamList = response;
-			$scope.isPramlistInProgess = false;
-			if (response.length == 0) {
-				$scope.isParamListRquired = false;
-			}
-		}
-	}*/
-
-	/*$scope.getExecParamsSet = function () {
-		$scope.paramtablecol = null
-		$scope.paramtable = null;
-		$scope.isTabelShow = false;
-		$scope.isPramsetInProgess = true;
-		CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
-			onSuccessGetExecuteModel(response.data)
-		});
-		var onSuccessGetExecuteModel = function (response) {
-			$('#responsive').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-			$scope.isPramsetInProgess = false;
-			$scope.allparamset = response;
-		}
-	}*/
-
-	/*$scope.executeWithExecParams = function () {
-		if ($scope.selectParamType == "paramlist") {
-			console.log($scope.selectParamList.paramInfo)
-			if ($scope.paramlistdata) {
-				var execParams = {};
-				var paramListInfo = [];
-				var paramInfo = {};
-				var paramInfoRef = {};
-				paramInfoRef.uuid = $scope.paramlistdata.uuid;
-				paramInfoRef.type = "paramlist";
-				paramInfo.ref = paramInfoRef;
-				//paramListInfo[0]=paramInfo;
-				for (var i = 0; i < $scope.selectParamList.paramInfo.length; i++) {
-					var paramListObj = {};
-					var ref = {};
-					ref.uuid = $scope.selectParamList.paramInfo[i].ref.uuid;
-					ref.type = $scope.selectParamList.paramInfo[i].ref.type;
-					paramListObj.ref = ref;
-					paramListObj.paramId = $scope.selectParamList.paramInfo[i].paramId;
-					paramListObj.paramName = $scope.selectParamList.paramInfo[i].paramName;
-					paramListObj.paramType = $scope.selectParamList.paramInfo[i].paramType;
-					paramListObj.paramValue = {};
-					var refParamValue = {};
-					refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
-					paramListObj.paramValue.ref = refParamValue;
-					if($scope.selectParamList.paramInfo[i].paramType =="date"){
-						paramListObj.paramValue.value = $filter('date')($scope.selectParamList.paramInfo[i].paramValue, "yyyy-MM-dd");
-					}else{
-						if($scope.selectParamList.paramInfo[i].paramType =="simple"){
-						paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
-						}
-					}
-					
-					paramListInfo[i] = paramListObj;
-
-				}
-				execParams.paramListInfo = paramListInfo;
-			} else {
-				execParams = null;
-			}
-			$scope.paramlistdata = null;
-			$scope.selectParamType = null;
-		} else {
-			$scope.newDataList = [];
-			$scope.selectallattribute = false;
-			angular.forEach($scope.paramtable, function (selected) {
-				if (selected.selected) {
-					$scope.newDataList.push(selected);
-				}
-			});
-			var paramInfoArray = [];
-			if ($scope.newDataList.length > 0) {
-				var execParams = {}
-				var ref = {}
-				ref.uuid = $scope.paramsetdata.uuid;
-				ref.type = "paramset";
-				ref.version = $scope.paramsetdata.version;
-				for (var i = 0; i < $scope.newDataList.length; i++) {
-					var paraminfo = {};
-					paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-					paraminfo.ref = ref;
-					paramInfoArray[i] = paraminfo;
-				}
-			}
-			if (paramInfoArray.length > 0) {
-				execParams.paramInfo = paramInfoArray;
-			} else {
-				execParams = null
-			}
-		}
-		$('#responsive').modal('hide');
-
-		$scope.executionmsg = "Report Submited Successfully"
-		notify.type = 'success',
-		notify.title = 'Success',
-		notify.content = $scope.executionmsg
-		$scope.$emit('notify', notify);
-		console.log(JSON.stringify(execParams));
-		$scope.reportExecute(execParams);
-	}*/
 
 
 
@@ -511,24 +324,22 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		if ($scope.obj.active == 'Y') {
 			CommonService.delete($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessDelete(response.data) });
 			var OnSuccessDelete = function (response) {
-				//	$scope.alldashboard[$scope.obj.index].active = response.active;
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].active = response.active;
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Deleted Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Deleted Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
 		else {
 			CommonService.restore($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessRestore(response.data) });
 			var OnSuccessRestore = function (response) {
-				//$scope.alldashboard[$scope.obj.index].active = 'Y'
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].active = "Y"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Restored Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Restored Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
@@ -543,8 +354,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].published = response.published;
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Publish Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Publish Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
@@ -554,8 +365,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].published = "N"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Unpublish Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Unpublish Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
@@ -565,12 +376,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		if ($scope.obj.locked == 'N') {
 			CommonService.lock($scope.obj.id, CF_META_TYPES.report).then(function (response) { OnSuccessLock(response.data) });
 			var OnSuccessLock = function (response) {
-
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].locked = "Y";
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Lock Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Lock Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
@@ -580,8 +390,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				if ($scope.gridOptions.data && $scope.gridOptions.data.length > 0)
 					$scope.gridOptions.data[$scope.obj.index].locked = "N"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = "Report Unpublish Successfully"
+				notify.title = 'Success',
+				notify.content = "Report Unpublish Successfully"
 				$scope.$emit('notify', notify);
 			}
 		}
@@ -593,8 +403,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
 	$scope.allFormats = CF_DOWNLOAD.formate;
-	$scope.allLayouts = ["LANDSCAPE","PORTRAIT"];
-	$scope.isLayoutDisable=true;
+	$scope.allLayouts = ["LANDSCAPE", "PORTRAIT"];
+	$scope.isLayoutDisable = true;
 
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -636,7 +446,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 	$scope.userDetail = {}
 	$scope.alignType = ["LEFT", "RIGHT", "CENTER"];
-	$scope.types=[{"text":"default","caption":"DEFAULT"},{"text":"dq","caption":"DATA-QUALITY"}];
+	$scope.types = [{ "text": "default", "caption": "DEFAULT" }, { "text": "dq", "caption": "DATA-QUALITY" }];
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false";
@@ -661,7 +471,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['report'] || [];
-	console.log($scope.privileges.indexOf('Edit'))
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
@@ -751,7 +560,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
+			//console.log(response)
 			$scope.lobTag = response[0].value
 		}
 	}
@@ -769,31 +578,31 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.allAttributesRef = response;
 		}
 	}
-  
+
 	$scope.loadAttribute = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.allAttributesRef, query);
 		});
 	};
-	 
-	$scope.onChangeType=function(type,isSourceNameByTypeCall){
-		$scope.attributeRefTags=null;
-		if(type =="dq"){
-			$scope.getAllAttributesByDatapods();
-			$scope.selectSourceType="datapod";
-			if(isSourceNameByTypeCall)
-			$scope.getSourceNameByType(null);
 
-			$scope.isSourceTypeDisable=true;
-		}else{
-			if(isSourceNameByTypeCall)
-			$scope.getAllLatest($scope.selectSourceType,null);
-			$scope.allAttributesRef=[];
-			$scope.isSourceTypeDisable=false
+	$scope.onChangeType = function (type, isSourceNameByTypeCall) {
+		$scope.attributeRefTags = null;
+		if (type == "dq") {
+			$scope.getAllAttributesByDatapods();
+			$scope.selectSourceType = "datapod";
+			if (isSourceNameByTypeCall)
+				$scope.getSourceNameByType(null);
+
+			$scope.isSourceTypeDisable = true;
+		} else {
+			if (isSourceNameByTypeCall)
+				$scope.getAllLatest($scope.selectSourceType, null);
+			$scope.allAttributesRef = [];
+			$scope.isSourceTypeDisable = false
 
 		}
 	}
-	
+
 	$scope.countContinue = function () {
 		if ($scope.continueCount == 3) {
 			if ($scope.isDuplication == true) {
@@ -874,76 +683,76 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.getExpressionByType = function () {
-		if($scope.allSource.defaultoption){
+		if ($scope.allSource.defaultoption) {
 			ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
 				$scope.allExpress = response
 			}
-	    }
+		}
 	}
 
-	$scope.onChangeFromat=function(format){
-		if(format !="PDF"){
-			$scope.report.layout=null;
-			$scope.isLayoutDisable=true;
+	$scope.onChangeFromat = function (format) {
+		if (format != "PDF") {
+			$scope.report.layout = null;
+			$scope.isLayoutDisable = true;
 
 		}
-        else{
-			if($scope.mode =="false" && format =="PDF"){
-				$scope.isLayoutDisable=false
-			}else{
-				$scope.isLayoutDisable=true;
+		else {
+			if ($scope.mode == "false" && format == "PDF") {
+				$scope.isLayoutDisable = false
+			} else {
+				$scope.isLayoutDisable = true;
 			}
 		}
-		
+
 	}
 	$scope.getFormulaByType = function () {
-		if($scope.allSource.defaultoption){
+		if ($scope.allSource.defaultoption) {
 			ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 			var onSuccessFormula = function (response) {
 				$scope.allSourceFormula = response;;
 				$scope.allFilterormula = response;
 			}//End onSuccessGetFormulaByType
-	    }
+		}
 	}
 
 	$scope.getAllAttributeBySource = function () {
-		if($scope.allSource.defaultoption){
+		if ($scope.allSource.defaultoption) {
 			ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
 				$scope.allattribute = response;
 			}
-	    }
+		}
 	}
-	
-	$scope.getSourceNameByType=function(defaultvalue){
-		
-        if($scope.report.type =="dq"){
+
+	$scope.getSourceNameByType = function (defaultvalue) {
+
+		if ($scope.report.type == "dq") {
 			ReportSerivce.getDatapodForDq("datapod").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				$scope.allSource={};
-				$scope.allSource.options= response;
+				$scope.allSource = {};
+				$scope.allSource.options = response;
 				if (defaultvalue != null) {
 					var defaultoption = {};
 					defaultoption.type = defaultvalue.ref.type
 					defaultoption.uuid = defaultvalue.ref.uuid
 					$scope.allSource.defaultoption = defaultoption;
-				}else{
-					$scope.allSource.defaultoption=response[0];
+				} else {
+					$scope.allSource.defaultoption = response[0];
 				}
 				$scope.getAllAttributeBySource();
 				$scope.getFormulaByType();
 				$scope.getExpressionByType();
 			}
-	    }else{
-			$scope.allSource=null;
+		} else {
+			$scope.allSource = null;
 		}
-    }
-	 
-    $scope.clear=function(){
-    	$scope.attributeRefTags=null;
+	}
+
+	$scope.clear = function () {
+		$scope.attributeRefTags = null;
 	}
 
 	$scope.getAllLatest = function (type, defaultvalue) {
@@ -955,7 +764,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				defaultoption.type = defaultvalue.ref.type
 				defaultoption.uuid = defaultvalue.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
-			}else{
+			} else {
 				//$scope.allSource.defaultoption =response.options[0];
 			}
 			$scope.getAllAttributeBySource();
@@ -1018,8 +827,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.reportParamListParam = paramsArray
 				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
 					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.reportParamListParam);
-				else{
-					$scope.allparamlistParams =$scope.reportParamListParam;
+				else {
+					$scope.allparamlistParams = $scope.reportParamListParam;
 				}
 			}
 		}
@@ -1078,23 +887,23 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.tagsCC = response.report.senderInfo.emailCC;
 				$scope.tagsBcc = response.report.senderInfo.emailBCC;
 			}
-			if ($scope.report.paramList != null && $scope.allparamlist !=null) {
+			if ($scope.report.paramList != null && $scope.allparamlist != null) {
 				var defaultoption = {};
 				defaultoption.uuid = $scope.report.paramList.ref.uuid;
 				defaultoption.name = $scope.report.paramList.ref.name;
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-			$scope.onChangeType($scope.report.type,false);
-			if($scope.report.type=="dq"){
+			$scope.onChangeType($scope.report.type, false);
+			if ($scope.report.type == "dq") {
 				$scope.getSourceNameByType(response.report.dependsOn);
-			}else{
+			} else {
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
-			$scope.attributeRefTags=response.attributeFilterInfoArray;
+			$scope.attributeRefTags = response.attributeFilterInfoArray;
 
 			$scope.onChangeFromat(response.report.format);
 		}//End onSuccessResult
@@ -1142,16 +951,16 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 
 			$scope.getParamByApp();
-            $scope.onChangeType($scope.report.type,false);
-			if($scope.report.type=="dq"){
+			$scope.onChangeType($scope.report.type, false);
+			if ($scope.report.type == "dq") {
 				$scope.getSourceNameByType(response.report.dependsOn);
-			}else{
+			} else {
 				$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			}
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
-			$scope.attributeRefTags=response.attributeFilterInfoArray;
+			$scope.attributeRefTags = response.attributeFilterInfoArray;
 
 		}//End onSuccessResult
 		var onError = function () {
@@ -1300,7 +1109,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
 		}
-		$scope.myform2.$dirty=true;
+		$scope.myform2.$dirty = true;
 		var filertable = {};
 		filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
@@ -1475,7 +1284,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.filterTableArray[index].isrhsFunction = false;
 			if (typeof $stateParams.id == "undefined") {
 				$scope.getParamByApp();
-		    }
+			}
 		}
 
 	}
@@ -1491,7 +1300,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
-		$scope.myform3.$dirty=true;
+		$scope.myform3.$dirty = true;
 		var len = $scope.attributeTableArray.length + 1
 		var attributeinfo = {};
 		attributeinfo.name = "attribute" + len;
@@ -1532,7 +1341,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
-			$scope.attributeTableArray[index].isOnDropDown=true;
+			$scope.attributeTableArray[index].isOnDropDown = true;
 
 		}
 		else if (type == "formula") {
@@ -1543,7 +1352,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
-			$scope.attributeTableArray[index].isOnDropDown=true;
+			$scope.attributeTableArray[index].isOnDropDown = true;
 
 			$scope.getFormulaByType();
 		}
@@ -1555,7 +1364,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = true;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
-			$scope.attributeTableArray[index].isOnDropDown=true;
+			$scope.attributeTableArray[index].isOnDropDown = true;
 
 			$scope.getExpressionByType();
 
@@ -1567,7 +1376,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = true;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
-			$scope.attributeTableArray[index].isOnDropDown=true;
+			$scope.attributeTableArray[index].isOnDropDown = true;
 
 			$scope.getFunctionByCriteria();
 		}
@@ -1578,7 +1387,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = true;
-			$scope.attributeTableArray[index].isOnDropDown=true;
+			$scope.attributeTableArray[index].isOnDropDown = true;
 			if (typeof $stateParams.id == "undefined") {
 				$scope.getParamByApp();
 			}
@@ -1632,7 +1441,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.onChangeAttributeDatapod = function (data, index) {
 		if (data != null && !$scope.attributeTableArray[index].isSourceName) {
 			$scope.attributeTableArray[index].name = data.name
-			//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
 		var dupArray = [];
 		setTimeout(function () {
@@ -1734,7 +1542,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 	}
 
-	$scope.ngChangeFunction = function (data,index) {
+	$scope.ngChangeFunction = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.paramName;
 		var dupArray = [];
@@ -1823,7 +1631,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.iSSubmitEnable = false;
 		$scope.myform1.$dirty = false;
 		$scope.myform2.$dirty = false;
- 		$scope.myform3.$dirty = false;
+		$scope.myform3.$dirty = false;
 		$scope.myform4.$dirty = false;
 
 		var reportJson = {}
@@ -1842,8 +1650,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.headerAlign = $scope.report.headerAlign;
 		reportJson.footerAlign = $scope.report.footerAlign;
 		reportJson.limit = $scope.report.limit;
-		reportJson.format=$scope.report.format;
-		reportJson.layout=$scope.report.layout;
+		reportJson.format = $scope.report.format;
+		reportJson.layout = $scope.report.layout;
 
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -1855,7 +1663,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				upd_tag = "Y"
 			}
 		}
-      
+
 		reportJson.tags = tagArray;
 		var dependsOn = {};
 		var ref = {};
@@ -1874,8 +1682,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				attrRefInfo.attrId = $scope.attributeRefTags[i].attributeId;
 				attributesRefInfoArray[i] = attrRefInfo;
 			}
-            reportJson.attributeFilterInfo=attributesRefInfoArray;
-		} 
+			reportJson.attributeFilterInfo = attributesRefInfoArray;
+		}
 
 		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
 			var paramlist = {};
@@ -2062,27 +1870,22 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		senderInfo.sendAttachment = $scope.report.senderInfo.sendAttachment;
 		senderInfo.notifyOnSuccess = $scope.report.senderInfo.notifyOnSuccess;
 		senderInfo.notifyOnFailure = $scope.report.senderInfo.notifyOnSuccess;
-		
+
 		reportJson.senderInfo = senderInfo;
 		console.log(JSON.stringify(reportJson))
 
 		ReportSerivce.submit(reportJson, 'report', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			/*if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
-				$scope.ruleId = response.data;
-				$scope.showParamlistPopup();
-			} *///End if
-			//else 
 			if ($scope.checkboxModelexecution == "YES") {
 				ReportSerivce.getOneById(response.data, "report").then(function (response) {
 					onSuccessGetOneById(response.data)
 				});
 				var onSuccessGetOneById = function (result) {
-					if($scope.allparamlist.defaultoption == null){
+					if ($scope.allparamlist.defaultoption == null) {
 						$scope.reportExecute(result);
-				    }else{
-						$scope.isParamModelEnable=true;
-						$scope.exeDetail=result;
+					} else {
+						$scope.isParamModelEnable = true;
+						$scope.exeDetail = result;
 					}
 				}
 			}
@@ -2123,80 +1926,23 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.selectParamType = null;
 	}
 
-	$scope.onExecute=function(data){
-	//	$scope.isParamModelEnable=data.isParamModelEnable;
+	$scope.onExecute = function (data) {
+		debugger
 		$scope.dataLoading = false;
-		notify.type = 'success',
-		notify.title = 'Success',
-		notify.content = 'Report Saved and Submitted Successfully'
+		notify.type = 'success';
+		notify.title = 'Success';
+		if(data.isExecutionCancel==false){
+			notify.content = 'Report Saved and Submitted Successfully'
+		}else{
+			notify.content = 'Report Saved Successfully'
+		}
 		$scope.$emit('notify', notify);
 		$scope.close();
 	}
 
 	$scope.reportExecute = function (modeldetail) {
-		if ($scope.selectParamType == "paramlist") {
-			if ($scope.paramlistdata) {
-				var execParams = {};
-				var paramListInfo = [];
-				var paramInfo = {};
-				var paramInfoRef = {};
-				paramInfoRef.uuid = $scope.paramlistdata.uuid;
-				paramInfoRef.type = "paramlist";
-				paramInfo.ref = paramInfoRef;
-				//paramListInfo[0] = paramInfo;
-				for (var i = 0; i < $scope.selectParamList.paramInfo.length; i++) {
-					var paramListObj = {};
-					var ref = {};
-					ref.uuid = $scope.paramlistdata.uuid;
-					ref.type = "paramlist";
-					paramListObj.ref = ref;
-					paramListObj.paramId = $scope.selectParamList.paramInfo[i].paramId;
-					paramListObj.paramName = $scope.selectParamList.paramInfo[i].paramName;
-					paramListObj.paramType = $scope.selectParamList.paramInfo[i].paramType;
-					paramListObj.paramValue = {};
-					var refParamValue = {};
-					refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
-					paramListObj.paramValue.ref = refParamValue;
-					paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
-					paramListInfo[i] = paramListObj;
-
-				}
-				execParams.paramListInfo = paramListInfo;
-			} else {
-				execParams = null;
-			}
-			$scope.paramlistdata = null;
-			$scope.selectParamType = null;
-		}
-		else {
-			$scope.newDataList = [];
-			$scope.selectallattribute = false;
-			angular.forEach($scope.paramtable, function (selected) {
-				if (selected.selected) {
-					$scope.newDataList.push(selected);
-				}
-			});
-			var paramInfoArray = [];
-			if ($scope.newDataList.length > 0) {
-				var execParams = {}
-				var ref = {}
-				ref.uuid = $scope.paramsetdata.uuid;
-				ref.version = $scope.paramsetdata.version;
-				for (var i = 0; i < $scope.newDataList.length; i++) {
-					var paraminfo = {};
-					paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
-					paraminfo.ref = ref;
-					paramInfoArray[i] = paraminfo;
-				}
-			}
-			if (paramInfoArray.length > 0) {
-				execParams.paramInfo = paramInfoArray;
-			} else {
-				execParams = null
-			}
-		}
-		ReportSerivce.reportExecute(modeldetail.uuid, modeldetail.version, execParams)
-		.then(function (response) {onSuccessGetReportExecute(response.data)}, function (response) {onError(response.data)});
+		ReportSerivce.reportExecute(modeldetail.uuid, modeldetail.version, null)
+			.then(function (response) { onSuccessGetReportExecute(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetReportExecute = function (response) {
 			$scope.dataLoading = false;
 			$scope.saveMessage = "Report Saved and Submitted Successfully";
@@ -2206,36 +1952,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.$emit('notify', notify);
 			$scope.close();
 		}
-		var onError=function(response){
+		var onError = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			$scope.close();
 		}
-	}
 
-	$scope.showParamlistPopup = function () {
-		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
-		if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
-			$('#responsive').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
-		} else {
-			$scope.isShowExecutionparam = false;
-			$scope.allparamset = null;
-			$scope.dataLoading = false;
-		}
 	}
-
-	$scope.closeParalistPopup = function () {
-		$scope.dataLoading = false;
-		$scope.checkboxModelexecution = "NO";
-		$scope.isSubmitDisabled = false;
-		$('#responsive').modal('hide');
-	}
-
-	$scope.executeWithExecParams = function () {
-		$('#responsive').modal('hide');
+	
+	$scope.getOneById = function () {
 		ReportSerivce.getOneById($scope.ruleId, "report").then(function (response) {
 			onSuccessGetOneById(response.data)
 		});
@@ -2244,74 +1969,11 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 	}
 
-	$scope.getParamSetByParamList = function () {
-		ReportService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid, "").then(function (response) { onSuccessGetParamSetByParmLsit(response.data) });
-		var onSuccessGetParamSetByParmLsit = function (response) {
-			$scope.allparamset = response
-			$scope.isShowExecutionparam = true;
-		}
-	}
 
-	$scope.getParamListChilds = function () {
-		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
-		var onSuccessGetParamListChilds = function (response) {
-			var defaultoption = {};
-			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
-			defaultoption.name = $scope.allparamlist.defaultoption.name;
-			if (response.length > 0) {
-				$scope.allParamList = response;
-				$scope.allParamList.splice(0, 0, defaultoption);
-			} else {
-				$scope.allParamList = [];
-				$scope.allParamList[0] = defaultoption;
-			}
-		}
-	}
 
-	$scope.onChangeParamType = function () {
-		$scope.allparamset = null;
-		$scope.allParamList = null;
-		$scope.isParamLsitTable = false;
-		$scope.selectParamList = null;
-		if ($scope.selectParamType == "paramlist") {
-			$scope.paramlistdata = null;
-			$scope.getParamListChilds();
-		}
-		else if ($scope.selectParamType == "paramset") {
-			$scope.getParamSetByParamList();
-		}
-	}
 
-	$scope.onChangeParamList=function(){
-		$scope.isParamLsitTable=false;
-		CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
-		var onSuccesGetParamListByTrain = function (response) {
-		  $scope.isParamLsitTable=true;
-		  $scope.selectParamList=response;
-		  var paramArray=[];
-		  for(var i=0;i<response.length;i++){
-			var paramInfo={}
-			  paramInfo.paramId=response[i].paramId; 
-			  paramInfo.paramName=response[i].paramName;
-			  paramInfo.paramType=response[i].paramType.toLowerCase();
-			  if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
-				paramInfo.paramValue=response[i].paramValue.value.replace(/["']/g, "");;
-				paramInfo.paramValueType="simple"
-			}else if(response[i].paramValue !=null){
-			  var paramValue={};
-			  paramValue.uuid=response[i].paramValue.ref.uuid;
-			  paramValue.type=response[i].paramValue.ref.type;
-			  paramInfo.paramValue=paramValue;
-			  paramInfo.paramValueType=response[i].paramValue.ref.type;
-			}else{
-			  
-			}
-			paramArray[i]=paramInfo;
-		  }
-		  $scope.selectParamList.paramInfo=paramArray;
-		}
-	  }
 	
+
 
 });
 
@@ -2321,11 +1983,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 
 	$scope.reportExec = { uuid: $stateParams.id, version: $stateParams.version }
 	$scope.download = {};
-	//$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-    //$scope.download.formates = CF_DOWNLOAD.formate;
-    //$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-	//$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-	//$scope.download.limit_to = CF_DOWNLOAD.limit_to;
+
 	$scope.name = $stateParams.name;
 	$scope.pagination = {
 		currentPage: 1,
@@ -2333,6 +1991,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 		paginationPageSizes: [10, 25, 50, 75, 100],
 		maxSize: 5,
 	}
+
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.gridOptions = {
 		rowHeight: 40,
@@ -2398,20 +2057,20 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			$scope.reportExecData = response;
 			$scope.filterTag = [];
 			if (response && response.execParams && response.execParams.paramListInfo != null && response.execParams.paramListInfo.length > 0) {
-				var count =0;
+				var count = 0;
 				for (var i = 0; i < response.execParams.paramListInfo.length; i++) {
 					var filterTag = {};
-					if(response.execParams.paramListInfo[i].paramValue !=null && response.execParams.paramListInfo[i].paramValue.ref.type == "simple"){
+					if (response.execParams.paramListInfo[i].paramValue != null && response.execParams.paramListInfo[i].paramValue.ref.type == "simple") {
 						filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + response.execParams.paramListInfo[i].paramValue.value;
 						$scope.filterTag[count] = filterTag;
-						count=count+1;
+						count = count + 1;
 					}
-					else{
+					else {
 						filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + null;
 						$scope.filterTag[count] = filterTag;
-						count=count+1;
+						count = count + 1;
 					}
-					
+
 				}
 
 
@@ -2466,115 +2125,69 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 	$scope.downloadFile = function (data) {
 		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData == true && !$scope.isGraphShow) {
 			$scope.download.data = data;
-			$scope.isDownloadDirective=true;
+			$scope.isDownloadDirective = true;
 			$scope.download.uuid = data.uuid;
 			$scope.download.version = data.version;
-			$scope.download.type="report";
-			// $('#downloadSample').modal({
-			// 	backdrop: 'static',
-			// 	keyboard: false
-			// });
+			$scope.download.type = "report";
 		}
 	};
 
-	$scope.onDownloaed=function(data){
-		console.log(data);
-		$scope.isDownlodInprogess=data.isDownloadInprogess;
-		$scope.isDownloadDirective=data.isDownloadDirective;
-	}
-
-	$scope.submitDownload = function () {
-		var uuid = $scope.download.data.uuid;
-		var version = $scope.download.data.version;
-		var url = $location.absUrl().split("app")[0];
-		$('#downloadSample').modal("hide");
-		$scope.isDownlodInprogess = true;
-		$http({
-			method: 'GET',
-			url: url + "report/downloadSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			headers = headers();
-			$scope.isDownlodInprogess = false;
-			var filename = headers['filename'];
-			var contentType = headers['content-type'];
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download", filename);
-
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			console.log(data);
-			$scope.isDownlodInprogess = false;
-		});
-
+	$scope.onDownloaed = function (data) {
+		$scope.isDownlodInprogess = data.isDownloadInprogess;
+		$scope.isDownloadDirective = data.isDownloadDirective;
 	}
 
 });
 
 
 DatavisualizationModule.controller("ReportArchivesSearchController", function ($filter, $location, $http, dagMetaDataService, $scope, ReportSerivce, CommonService) {
-    $scope.searchForm = {};
-    $scope.tz = localStorage.serverTz;
-    var matches = $scope.tz.match(/\b(\w)/g);
-    $scope.timezone = matches.join('');
-    $scope.autoRefreshCounter = 05;
-    $scope.autoRefreshResult = false;
-    $scope.path = dagMetaDataService.statusDefs;
-    var notify = {
-        type: 'success',
-        title: 'Success',
-        content: '',
-        timeout: 3000 //time in ms
+	$scope.searchForm = {};
+	$scope.tz = localStorage.serverTz;
+	var matches = $scope.tz.match(/\b(\w)/g);
+	$scope.timezone = matches.join('');
+	$scope.autoRefreshCounter = 05;
+	$scope.autoRefreshResult = false;
+	$scope.path = dagMetaDataService.statusDefs;
+	var notify = {
+		type: 'success',
+		title: 'Success',
+		content: '',
+		timeout: 3000 //time in ms
 	};
-	
-    $scope.searchForm.modelType ='reportexec';
-    $scope.newType =$scope.searchForm.modelType;
-    $scope.getGridStyle = function () {
-        var style = {
-            'margin-top': '10px',
-            'margin-bottom': '10px',
-        }
-        if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-            style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
-        } else {
-            style['height'] = "100px"
-        }
-        return style;
-    }
-    $scope.gridOptions = {};
-	$scope.gridOptions =  angular.copy(dagMetaDataService.getGridOptionsDefault());
-    var columnDefs=null;
-	columnDefs=$scope.gridOptions.columnDefs;
+
+	$scope.searchForm.modelType = 'reportexec';
+	$scope.newType = $scope.searchForm.modelType;
+	$scope.getGridStyle = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+		}
+		if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+		} else {
+			style['height'] = "100px"
+		}
+		return style;
+	}
+	$scope.gridOptions = {};
+	$scope.gridOptions = angular.copy(dagMetaDataService.getGridOptionsDefault());
+	var columnDefs = null;
+	columnDefs = $scope.gridOptions.columnDefs;
 	columnDefs.push(
 		{
 			displayName: 'Num Rows',
 			name: 'numRows',
 			cellClass: 'text-center',
-			maxWidth:140,
+			maxWidth: 140,
 			headerCellClass: 'text-center'
 		},
 		{
 			displayName: 'Size MB',
 			name: 'sizeMB',
 			cellClass: 'text-center',
-			maxWidth:140,
+			maxWidth: 140,
 			headerCellClass: 'text-center'
-		},   
+		},
 		{
 			displayName: 'Status',
 			name: 'status',
@@ -2582,9 +2195,9 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			headerCellClass: 'text-center',
 			maxWidth: 110,
 			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
-	  
-	  
-		  },
+
+
+		},
 		{
 			displayName: 'Action',
 			name: 'action',
@@ -2592,195 +2205,195 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			headerCellClass: 'text-center',
 			maxWidth: 100,
 			cellTemplate: [
-			  '<div class="ui-grid-cell-contents">',
-			  '  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
-			  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
-			  '    <i class="fa fa-angle-down"></i></button>',
-			  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
-//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',	
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
-			  '    </ul>',
-			  '  </div>',
-			  '</div>'
+				'<div class="ui-grid-cell-contents">',
+				'  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
+				'    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+				'    <i class="fa fa-angle-down"></i></button>',
+				'    <ul uib-dropdown-menu class="dropdown-menu-grid">',
+				//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+				//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',	
+				'       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+				'       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',
+				'    </ul>',
+				'  </div>',
+				'</div>'
 			].join('')
-	    }
+		}
 	);
 
-	$scope.gridOptions.columnDefs=columnDefs;
-    $scope.gridOptions.onRegisterApi = function (gridApi) {
-        $scope.gridApi = gridApi;
-        $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+	$scope.gridOptions.columnDefs = columnDefs;
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
 	};
-	
-    $scope.refreshData = function () {
-        $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+
+	$scope.refreshData = function () {
+		$scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
 
 	};
-	
-    $scope.refresh = function () {
-        $scope.searchForm.execname = "";
-        $scope.allExecName = [];
-        $scope.searchForm.username = "";
-        $scope.searchForm.tags = [];
-        $scope.searchForm.published = "";
-        $scope.searchForm.active = "";
-        $scope.searchForm.status = "";
-        $scope.searchForm.startdate = null;
-        $scope.searchForm.enddate = null;
-        $scope.allStatus = [{
-            "caption": "PENDING",
-            "name": "PENDING"
-        },
-        {
-            "caption": "RUNNING",
-            "name": "RUNNING"
-        },
-        {
-            "caption": "COMPLETED",
-            "name": "COMPLETED"
-        },
-        {
-            "caption": "KILLED",
-            "name": "KILLED"
-        },
-        {
-            "caption": "FAILED",
-            "name": "FAILED"
-        }
-        ];
-        $scope.getBaseEntityStatusByCriteria(true);
-    };
 
-    var myVar;
-    $scope.autoRefreshOnChange = function () {
-        if ($scope.autorefresh) {
-            myVar = setInterval(function () {
-                $scope.getBaseEntityStatusByCriteria(false);
-            }, $scope.autoRefreshCounter + "000");
-        }
-        else {
-            clearInterval(myVar);
-        }
-    }
-    $scope.refreshList = function () {
-        $scope.getBaseEntityStatusByCriteria(false);
-    }
-    $scope.$on('$destroy', function () {
-        // Make sure that the interval is destroyed too
-        clearInterval(myVar);
-    });
+	$scope.refresh = function () {
+		$scope.searchForm.execname = "";
+		$scope.allExecName = [];
+		$scope.searchForm.username = "";
+		$scope.searchForm.tags = [];
+		$scope.searchForm.published = "";
+		$scope.searchForm.active = "";
+		$scope.searchForm.status = "";
+		$scope.searchForm.startdate = null;
+		$scope.searchForm.enddate = null;
+		$scope.allStatus = [{
+			"caption": "PENDING",
+			"name": "PENDING"
+		},
+		{
+			"caption": "RUNNING",
+			"name": "RUNNING"
+		},
+		{
+			"caption": "COMPLETED",
+			"name": "COMPLETED"
+		},
+		{
+			"caption": "KILLED",
+			"name": "KILLED"
+		},
+		{
+			"caption": "FAILED",
+			"name": "FAILED"
+		}
+		];
+		$scope.getBaseEntityStatusByCriteria(true);
+	};
 
-    $scope.startDateOnSetTime = function () {
-        $scope.$broadcast('start-date-changed');
-    }
+	var myVar;
+	$scope.autoRefreshOnChange = function () {
+		if ($scope.autorefresh) {
+			myVar = setInterval(function () {
+				$scope.getBaseEntityStatusByCriteria(false);
+			}, $scope.autoRefreshCounter + "000");
+		}
+		else {
+			clearInterval(myVar);
+		}
+	}
+	$scope.refreshList = function () {
+		$scope.getBaseEntityStatusByCriteria(false);
+	}
+	$scope.$on('$destroy', function () {
+		// Make sure that the interval is destroyed too
+		clearInterval(myVar);
+	});
 
-    $scope.endDateOnSetTime = function () {
-        $scope.$broadcast('end-date-changed');
-    }
+	$scope.startDateOnSetTime = function () {
+		$scope.$broadcast('start-date-changed');
+	}
 
-    $scope.startDateBeforeRender = function ($dates) {
-        if ($scope.searchForm.enddate) {
-            var activeDate = moment($scope.searchForm.enddate);
-            $dates.filter(function (date) {
-                return date.localDateValue() >= activeDate.valueOf()
-            }).forEach(function (date) {
-                date.selectable = false;
-            })
-        }
-    }
+	$scope.endDateOnSetTime = function () {
+		$scope.$broadcast('end-date-changed');
+	}
 
-    $scope.endDateBeforeRender = function ($view, $dates) {
-        if ($scope.searchForm.startdate) {
-            var activeDate = moment($scope.searchForm.startdate).subtract(1, $view).add(1, 'minute');
-            $dates.filter(function (date) {
-                return date.localDateValue() <= activeDate.valueOf()
-            }).forEach(function (date) {
-                date.selectable = false;
-            })
-        }
-    }
-    $scope.getAllLatest = function (type,propName) {
-        CommonService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
-        var onSuccessGetAllLatest = function (response) {
-			if(propName =="name"){
+	$scope.startDateBeforeRender = function ($dates) {
+		if ($scope.searchForm.enddate) {
+			var activeDate = moment($scope.searchForm.enddate);
+			$dates.filter(function (date) {
+				return date.localDateValue() >= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}
+	}
+
+	$scope.endDateBeforeRender = function ($view, $dates) {
+		if ($scope.searchForm.startdate) {
+			var activeDate = moment($scope.searchForm.startdate).subtract(1, $view).add(1, 'minute');
+			$dates.filter(function (date) {
+				return date.localDateValue() <= activeDate.valueOf()
+			}).forEach(function (date) {
+				date.selectable = false;
+			})
+		}
+	}
+	$scope.getAllLatest = function (type, propName) {
+		CommonService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+		var onSuccessGetAllLatest = function (response) {
+			if (propName == "name") {
 				$scope.allExecName = response;
 			}
-			if(propName=="user"){
-				$scope.allUSerName=response;
+			if (propName == "user") {
+				$scope.allUSerName = response;
 			}
-        }
-    }
-	$scope.getAllLatest(dagMetaDataService.elementDefs["report"].metaType,"name");
-	$scope.getAllLatest(dagMetaDataService.elementDefs["user"].metaType,"user");
-   
-
-    $scope.getBaseEntityStatusByCriteria = function () {
-        var startdate = ""
-        if ($scope.searchForm.startdate != null) {
-            startdate = $filter('date')($scope.searchForm.startdate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
-            startdate = startdate + " UTC"
-        }
-        var enddate = "";
-        if ($scope.searchForm.enddate != null) {
-            enddate = $filter('date')($scope.searchForm.enddate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
-            enddate = enddate + " UTC";
-        }
-
-        var tags = [];
-        if ($scope.searchForm.tags) {
-            for (i = 0; i < $scope.searchForm.tags.length; i++) {
-                tags[i] = $scope.searchForm.tags[i].text;
-            }
-        }
-        tags = tags.toString();
-        ReportSerivce.getReprotExecViewByCriteria(dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
-            $scope.loading = false;
-        });
-        var onSuccess = function (response) {
-            // console.log(response);
-            $scope.gridOptions.data = response;
-            $scope.originalData = response;
-        }
-    }
-    $scope.getBaseEntityStatusByCriteria(false);
-    $scope.refresh();
-
-    $scope.searchCriteria = function () {
-        $scope.getBaseEntityStatusByCriteria(false);
+		}
 	}
-	
-    $scope.getDownload = function (data) {
+	$scope.getAllLatest(dagMetaDataService.elementDefs["report"].metaType, "name");
+	$scope.getAllLatest(dagMetaDataService.elementDefs["user"].metaType, "user");
+
+
+	$scope.getBaseEntityStatusByCriteria = function () {
+		var startdate = ""
+		if ($scope.searchForm.startdate != null) {
+			startdate = $filter('date')($scope.searchForm.startdate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+			startdate = startdate + " UTC"
+		}
+		var enddate = "";
+		if ($scope.searchForm.enddate != null) {
+			enddate = $filter('date')($scope.searchForm.enddate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+			enddate = enddate + " UTC";
+		}
+
+		var tags = [];
+		if ($scope.searchForm.tags) {
+			for (i = 0; i < $scope.searchForm.tags.length; i++) {
+				tags[i] = $scope.searchForm.tags[i].text;
+			}
+		}
+		tags = tags.toString();
+		ReportSerivce.getReprotExecViewByCriteria(dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
+			$scope.loading = false;
+		});
+		var onSuccess = function (response) {
+			// console.log(response);
+			$scope.gridOptions.data = response;
+			$scope.originalData = response;
+		}
+	}
+	$scope.getBaseEntityStatusByCriteria(false);
+	$scope.refresh();
+
+	$scope.searchCriteria = function () {
+		$scope.getBaseEntityStatusByCriteria(false);
+	}
+
+	$scope.getDownload = function (data) {
 		notify.type = 'success',
-		notify.title = 'Success',
-		notify.content = 'Report Download Successfully'
-		
-		$scope.execDetail=data;
-		$scope.msgDetail={};
-		$scope.msgDetail.msg="Download"
-		$scope.msgDetail.metaType="Report"
+			notify.title = 'Success',
+			notify.content = 'Report Download Successfully'
+
+		$scope.execDetail = data;
+		$scope.msgDetail = {};
+		$scope.msgDetail.msg = "Download"
+		$scope.msgDetail.metaType = "Report"
 		$('#confModal').modal({
 			backdrop: 'static',
 			keyboard: false
 		});
 	}
-	$scope.submitOk=function(data,msgDetail){
+	$scope.submitOk = function (data, msgDetail) {
 		$('#confModal').modal('hide');
-		if(msgDetail.msg=="Download"){
+		if (msgDetail.msg == "Download") {
 			$scope.$emit('notify', notify);
 			$scope.submitDownload(data);
 		}
-		if(msgDetail.msg=="E-Mail"){
+		if (msgDetail.msg == "E-Mail") {
 			$('#mailSendMdoel').modal({
 				backdrop: 'static',
 				keyboard: false
 			});
 		}
 	}
-	
 
-    $scope.submitDownload = function (data) {
+
+	$scope.submitDownload = function (data) {
 		var uuid = data.uuid;
 		var version = data.version;
 		var url = $location.absUrl().split("app")[0];
@@ -2818,23 +2431,23 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		});
 
 	}
-    $scope.sentMail=function(data){
-		$scope.execDetail=data;
-		$scope.objDetail=data;
-		$scope.msgDetail={};
-		$scope.msgDetail.msg="E-Mail"
-		$scope.msgDetail.metaType="Report"
-		$scope.sendAttachment="Y";
-		$scope.tagsTo=[];
-		$scope.tagsCC=[];
-		$scope.tagsBcc=[];
+	$scope.sentMail = function (data) {
+		$scope.execDetail = data;
+		$scope.objDetail = data;
+		$scope.msgDetail = {};
+		$scope.msgDetail.msg = "E-Mail"
+		$scope.msgDetail.metaType = "Report"
+		$scope.sendAttachment = "Y";
+		$scope.tagsTo = [];
+		$scope.tagsCC = [];
+		$scope.tagsBcc = [];
 		$('#confModal').modal({
 			backdrop: 'static',
 			keyboard: false
 		});
 	}
 
-	$scope.okSentMail=function(){
+	$scope.okSentMail = function () {
 		$('#mailSendMdoel').modal('hide');
 		var senderInfo = {};
 		var tagArrayTo = [];
@@ -2860,102 +2473,102 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		senderInfo.emailCC = tagArrayBcc;
 		senderInfo.sendAttachment = $scope.sendAttachment;
 		console.log(senderInfo);
-		ReportSerivce.getNumRowsbyExec($scope.objDetail.uuid,$scope.objDetail.version).then(function (response) { onSuccess(response.data) }, function error() {});
-        var onSuccess = function (response) {
-			$scope.reSendEMail(response,senderInfo);
+		ReportSerivce.getNumRowsbyExec($scope.objDetail.uuid, $scope.objDetail.version).then(function (response) { onSuccess(response.data) }, function error() { });
+		var onSuccess = function (response) {
+			$scope.reSendEMail(response, senderInfo);
 		}
 	}
-	
-	$scope.reSendEMail=function(response,senderInfo){
-		ReportSerivce.reSendEMail($scope.objDetail.uuid, $scope.objDetail.version, response.mode, senderInfo).then(function (response) { onSuccess(response.data) }, function error() {});
-        var onSuccess = function (response) {
+
+	$scope.reSendEMail = function (response, senderInfo) {
+		ReportSerivce.reSendEMail($scope.objDetail.uuid, $scope.objDetail.version, response.mode, senderInfo).then(function (response) { onSuccess(response.data) }, function error() { });
+		var onSuccess = function (response) {
 			console.log(response);
-			if(response ==true){
+			if (response == true) {
 				notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = 'Report Emailed Successfully'
+					notify.title = 'Success',
+					notify.content = 'Report Emailed Successfully'
 				$scope.$emit('notify', notify);
-			}else{
+			} else {
 				notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = 'Some Error Occure'
+					notify.title = 'Error',
+					notify.content = 'Some Error Occure'
 				$scope.$emit('notify', notify);
 			}
 		}
 	}
 
-    // $scope.setStatus = function (row, status) {
-    //     $scope.execDetail=row;
-    //     $scope.execDetail.setStatus=status;
-    //     $scope.msg =status;
-    //     $('#confModal').modal({
-    //       backdrop: 'static',
-    //       keyboard: false
-    //     });  
-     
-    // }
-    
-    // $scope.okSetStatus=function(){
-    //     var api = false;
-    //     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-    //     var api = false;
-    //     switch (type) {
-    //         case 'reportexec':
-    //             api = "reprot";
-    //             break;
-    //     }
-    //     if (!api) {
-    //         return
-    //     }
-    //     notify.type = 'success',
-    //     notify.title = 'Success',
-    //     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
-    //     $scope.$emit('notify', notify);
-    //     $('#confModal').modal('hide');
-    //     var url = $location.absUrl().split("app")[0];
-    //     $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
-    //         console.log(response);
-    //     });
-    // }
+	// $scope.setStatus = function (row, status) {
+	//     $scope.execDetail=row;
+	//     $scope.execDetail.setStatus=status;
+	//     $scope.msg =status;
+	//     $('#confModal').modal({
+	//       backdrop: 'static',
+	//       keyboard: false
+	//     });  
 
-    // $scope.restartExec = function (row, status) {
-    //     $scope.execDetail=row;
-    //     $scope.msg ="Restart";
-    //     $('#confModal').modal({
-    //       backdrop: 'static',
-    //       keyboard: false
-    //     });  
 	// }
-	
-    // $scope.okRestart=function(){
-    //     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-    //     var api = false;
-    //     switch (type) {
-    //         case 'reportexec':
-    //             api = 'report';
-    //             break;
-    //     }
-    //     if (!api) {
-    //         return
-    //     }
-    //     notify.type = 'success',
-    //     notify.title = 'Success',
-    //     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
-    //     $scope.$emit('notify', notify);
-    //     $('#confModal').modal('hide');
-    //     var url = $location.absUrl().split("app")[0];
-    //     $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
-    //         //console.log(response);
 
-    //     });
-    // }
+	// $scope.okSetStatus=function(){
+	//     var api = false;
+	//     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+	//     var api = false;
+	//     switch (type) {
+	//         case 'reportexec':
+	//             api = "reprot";
+	//             break;
+	//     }
+	//     if (!api) {
+	//         return
+	//     }
+	//     notify.type = 'success',
+	//     notify.title = 'Success',
+	//     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+	//     $scope.$emit('notify', notify);
+	//     $('#confModal').modal('hide');
+	//     var url = $location.absUrl().split("app")[0];
+	//     $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
+	//         console.log(response);
+	//     });
+	// }
 
-    // $scope.submitOk = function (action) {
-    //     if (action == "Restart") {
-    //       $scope.okRestart();
-    //     }
-    //     if(action == "Killed"){
-    //         $scope.okSetStatus()
-    //     }
-    // }
+	// $scope.restartExec = function (row, status) {
+	//     $scope.execDetail=row;
+	//     $scope.msg ="Restart";
+	//     $('#confModal').modal({
+	//       backdrop: 'static',
+	//       keyboard: false
+	//     });  
+	// }
+
+	// $scope.okRestart=function(){
+	//     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+	//     var api = false;
+	//     switch (type) {
+	//         case 'reportexec':
+	//             api = 'report';
+	//             break;
+	//     }
+	//     if (!api) {
+	//         return
+	//     }
+	//     notify.type = 'success',
+	//     notify.title = 'Success',
+	//     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+	//     $scope.$emit('notify', notify);
+	//     $('#confModal').modal('hide');
+	//     var url = $location.absUrl().split("app")[0];
+	//     $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
+	//         //console.log(response);
+
+	//     });
+	// }
+
+	// $scope.submitOk = function (action) {
+	//     if (action == "Restart") {
+	//       $scope.okRestart();
+	//     }
+	//     if(action == "Killed"){
+	//         $scope.okSetStatus()
+	//     }
+	// }
 });

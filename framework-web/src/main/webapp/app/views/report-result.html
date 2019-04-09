@@ -80,15 +80,14 @@
                                 <div class="col-md-11 col-sm-11" style="padding:0px;padding-bottom:15px;">
                                     <div class="chip" ng-repeat=" filterdata in filterTag">
                                         {{filterdata.text}}
-                                        <!-- <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span> -->
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
                                     <a aria-disabled="true" class="currentpage">
-                                    <span class="caption-subject font-dark bold" ng-click="openFilterPopup()"
-                                        tooltip-placement="left"  style="font-size:16px;color: #666 !important;">Parameter
-                                        <!-- <i class="fa fa-filter" style="font-size:17px;padding-right: 2px"></i>Filter -->
-                                    </span>
+                                        <span class="caption-subject font-dark bold" ng-click="openFilterPopup()"
+                                            tooltip-placement="left" style="font-size:16px;color: #666 !important;">Parameter
+                                            <!-- <i class="fa fa-filter" style="font-size:17px;padding-right: 2px"></i>Filter -->
+                                        </span>
                                     </a>
                                 </div>
                                 <br>
@@ -138,96 +137,9 @@
             </div>
         </div>
 
-
-
-        <div id="attrFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog" style="width:40%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">Filter</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="slimScrollDiv" style="margin-top:10px;">
-                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1"
-                                style="overflow-y: scroll;max-height: 300px;">
-                                <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
-                                    <div ng-if="report.filterInfo.length ==0"><h3 style="font-size:14px;color:blue;">Select Filter</h3></div>
-                                    <div class="form-body centercontent" ng-show="report.filterInfo.length >0 && filterAttribureIdValues.length == 0">
-                                        <div class="spinner">
-                                            <div class="bounce1"></div>
-                                            <div class="bounce2"></div>
-                                            <div class="bounce3"></div>
-                                        </div>
-                                    </div>
-                                    <div class="" style="margin-top: 15px;">
-                                        <div class="form-group" ng-repeat="data in filterAttribureIdValues">
-                                            <label class="col-md-4 control-label" title="{{data.dname}}">{{data.attrName}}</label>
-                                            <div class="col-md-6">
-                                                <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control"
-                                                    select2 ng-model="selectedAttributeValue[$index]" ng-change="onChange()"
-                                                    ng-options="c as c.value for c in data.values  track by c.value">
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="CancleFitler()">Close</button>
-                        <button type="button" class="btn green" ng-click="applyFilter()">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div ng-if="isDownloadDirective">
             <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
         </div>
-        <!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-            <div class="modal-dialog" style="width:40%">
-                <div class="modal-content" style="resize: both;overflow: auto;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">Download</h4>
-                    </div>
-                    <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
-                        <div class="modal-body" style="padding-top:0px">
-                            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Rows</label>
-                                                <div class="col-md-8">
-                                                    <input type="number" min="1" class="form-control" ng-model="download.rows"
-                                                        max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
 
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Format</label>
-                                                <div class="col-md-8">
-                                                    <select class="form-control" data-ng-model="download.selectFormate"
-                                                        ng-options="r for r in download.formates" required>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                            <button type="submit" class="btn green">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
     </div>
 </div>

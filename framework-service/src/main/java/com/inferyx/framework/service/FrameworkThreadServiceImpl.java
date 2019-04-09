@@ -40,7 +40,7 @@ public class FrameworkThreadServiceImpl {
 	@Autowired
 	IUserDao iUserDao;
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 
@@ -67,7 +67,7 @@ public class FrameworkThreadServiceImpl {
 
 			// Set default app and role
 			sessionContext.setAppInfo((appInfo != null)? appInfo : userDO.getAppInfo().get(0));
-			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
+//			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
 			Group group = (Group) commonServiceImpl.getOneByUuidAndVersion(
 					userDO.getGroupInfo().get(0).getRef().getUuid(), userDO.getGroupInfo().get(0).getRef().getVersion(),
 					MetaType.group.toString());
