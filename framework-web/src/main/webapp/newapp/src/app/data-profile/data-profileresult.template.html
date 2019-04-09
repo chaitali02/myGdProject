@@ -14,7 +14,7 @@
                             <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                         </a>
                     </span>
-                    <span class="wrapcurrentpage">
+                    <span *ngIf="isgraphShow" class="wrapcurrentpage">
                         <a class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Profile"
                             data-placement="top" tooltip (click)="reGroupExecute()"
                             [ngClass]="restartStatus==true?'notcurrentpage':'currentpage'" >

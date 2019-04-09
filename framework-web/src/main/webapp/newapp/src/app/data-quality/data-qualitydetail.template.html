@@ -371,11 +371,12 @@
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      {{data.lhsAttribute|json}}
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','box-sizing': 'border-box','border':'none'}"
                                         [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" datakey="label"
                                         required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
-                                      </p-dropdown>
+                                      </p-dropdown>{{attributesArray|json}}
                                     </div>
                                   </td>
                                   <td>

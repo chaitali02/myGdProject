@@ -535,7 +535,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.isEditInprogess = false;
   }
 
-  searchOption(data, index) {debugger
+  searchOption(data, index) {
     this.rowIndex = index;
     this.displayDialogBox = true;
     if (!data.uuid) {

@@ -109,7 +109,7 @@ export class DataQualityService {
   }
 
 
-  restart2(uuid, version, type: String): Observable<any[]> {debugger
+  restart2(uuid, version, type: String): Observable<any[]> {
     let url = ' http://localhost:8080/dataqual/restart?action=execute&uuid=' + uuid + '&version=' + version + '&type=' + type;
 
     let body = JSON.stringify({});
@@ -132,7 +132,7 @@ export class DataQualityService {
           let dataQualityIO = new DataQualityIO();
           dataQualityIO.dataQuality = response;
           let filterInfoIOArray = [new FilterInfoIO];
-          if (response.filterInfo) {
+          if (response.filterInfo) {debugger
             for (let k = 0; k < response.filterInfo.length; k++) {
               let filterInfoIO = new FilterInfoIO();
               filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator;
