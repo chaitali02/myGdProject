@@ -222,7 +222,7 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
@@ -4926,8 +4926,8 @@ public class CommonServiceImpl<T> {
 			Object dependsOnObj = getOneByUuidAndVersion(dataStoreDependsOn.getUuid(), dataStoreDependsOn.getVersion(),
 					dataStoreDependsOn.getType().toString());
 			return getDatasourceByObject(dependsOnObj);
-		}else if (object instanceof Rule2) {
-			Rule2 rule2 = (Rule2) object;
+		}else if (object instanceof BusinessRule) {
+			BusinessRule rule2 = (BusinessRule) object;
 			MetaIdentifier rule2DependsOn = rule2.getSourceInfo().getRef();
 			Object dependsOnObj = getOneByUuidAndVersion(rule2DependsOn.getUuid(), rule2DependsOn.getVersion(),
 					rule2DependsOn.getType().toString());

@@ -39,7 +39,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ScoringMethod;
@@ -71,7 +71,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	static final Logger logger = Logger.getLogger(Rule2Operator.class);
 
-	public List<String> generateDetailSql(Rule2 rule2, String withSql, String detailSelectSql,
+	public List<String> generateDetailSql(BusinessRule rule2, String withSql, String detailSelectSql,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, RuleExec ruleExec,
 			List<FilterInfo> list,Boolean filterFlag, Map<String, String> paramValMap) throws Exception {
@@ -80,7 +80,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				list, filterFlag, paramValMap);
 	}
 
-	public String generateSummarySql(Rule2 rule2, List<String> listSql, ScoringMethod scoringMethod, String tableName,
+	public String generateSummarySql(BusinessRule rule2, List<String> listSql, ScoringMethod scoringMethod, String tableName,
 			Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		// TODO Auto-generated method stub
@@ -88,7 +88,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return sql;
 	}
 
-	private String generateSql(Rule2 rule2, String tableName, List<String> listSql, String rule2Version,
+	private String generateSql(BusinessRule rule2, String tableName, List<String> listSql, String rule2Version,
 			Datapod datapod, ScoringMethod scoringMethod) {
 		String result = "";
 		String outerSql = null;
@@ -176,7 +176,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return querybuilder.toString();
 	}
 
-	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql,
+	public List<String> generateWith(BusinessRule rule2, String withSql, String detailSelectSql,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams,
 			RunMode runMode, RuleExec ruleExec, List<FilterInfo> list,Boolean filterFlag, Map<String, String> paramValMap) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
@@ -369,7 +369,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return ConstantsUtil.FROM;
 	}
 
-	public String generateFrom(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public String generateFrom(BusinessRule rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
 			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
@@ -420,7 +420,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	
 
-	public String generateFilter(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public String generateFilter(BusinessRule rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
 			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if (rule2.getFilterInfo() != null && !rule2.getFilterInfo().isEmpty()) {
@@ -434,7 +434,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return ConstantsUtil.BLANK;
 	}
 
-	public String generateHaving(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public String generateHaving(BusinessRule rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
 			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if (rule2.getFilterInfo() != null && !rule2.getFilterInfo().isEmpty()) {
@@ -450,7 +450,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		Rule2 rule2 = null;
+		BusinessRule rule2 = null;
 		/***************  Initializing paramValMap - START ****************/
 		Map<String, String> paramValMap = null;
 		if (execParams.getParamValMap() == null) {
@@ -466,7 +466,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		RuleExec ruleExec = (RuleExec) baseExec;
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
-		rule2 = (Rule2) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
+		rule2 = (BusinessRule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule2.toString());
 		Boolean filterFlag=false;
 		ruleExec.setExec(

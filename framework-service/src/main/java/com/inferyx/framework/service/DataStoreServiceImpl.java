@@ -58,7 +58,7 @@ import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;

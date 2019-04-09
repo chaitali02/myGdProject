@@ -117,7 +117,7 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -1472,7 +1472,7 @@ public class MetadataServiceImpl {
 		return plHolderList;
 	}
 	public List<ParamListHolder> getParamListByRule2(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Rule2 rule = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule2.toString());
+		BusinessRule rule = (BusinessRule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule2.toString());
 
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		if(rule.getParamList() != null) {

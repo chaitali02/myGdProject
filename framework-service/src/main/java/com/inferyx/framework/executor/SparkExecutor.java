@@ -2307,6 +2307,7 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		
 		switch (dataType.toLowerCase()) {
+    		case "int": return DataTypes.IntegerType;
 			case "integer": return DataTypes.IntegerType;
 			case "double": return DataTypes.DoubleType;
 			case "date": return DataTypes.DateType;

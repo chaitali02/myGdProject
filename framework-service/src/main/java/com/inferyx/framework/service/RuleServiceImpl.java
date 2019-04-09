@@ -526,12 +526,13 @@ public class RuleServiceImpl extends RuleTemplate {
 		/***************  Initializing paramValMap - START ****************/
 		Map<String, String> paramValMap = null;
 		ExecParams execParams = ruleExec.getExecParams();
-		if (execParams.getParamValMap() == null) {
+		if (execParams!=null && execParams.getParamValMap() == null) {
 			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
 		}
-		if (!execParams.getParamValMap().containsKey(ruleExec.getUuid())) {
+		if (execParams!=null && !execParams.getParamValMap().containsKey(ruleExec.getUuid())) {
 			execParams.getParamValMap().put(ruleExec.getUuid(), new HashMap<String, String>());
 		}
+		if (execParams!=null)
 		paramValMap = execParams.getParamValMap().get(ruleExec.getUuid());
 		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
