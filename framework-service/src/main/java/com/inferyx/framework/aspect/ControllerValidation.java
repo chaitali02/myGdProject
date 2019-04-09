@@ -10,65 +10,47 @@
  *******************************************************************************/
 package com.inferyx.framework.aspect;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
-import org.codehaus.jettison.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.domain.Message;
-import com.inferyx.framework.domain.Session;
+import org.aspectj.lang.annotation.Aspect;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.inferyx.framework.service.MessageServiceImpl;
-import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.SessionServiceImpl;
 
 @Aspect
 public class ControllerValidation {
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
-	@Autowired
-	SessionServiceImpl sessionServiceImpl;
 	
 	public static final Logger logger = Logger.getLogger(ControllerValidation.class);
 	/*
 	 * Pointcuts*
 	 */
-	@Pointcut("within(com.inferyx.framework.controller.*)")
-	public void controllerValidationPointcut() {}
+	/***********************Unused***********************/
+	/*@Pointcut("within(com.inferyx.framework.controller.*)")
+	public void controllerValidationPointcut() {}*/
 	
 	
 	
 	/*
 	 * Aspects*
 	 */
-	@AfterReturning(
+	/***********************Unused***********************/
+
+	/*@AfterReturning(
 		    pointcut="controllerValidationPointcut()", 
-		    returning="returnValue")
-	public void aspectReturing(JoinPoint joinPoint, Object returnValue) throws Throwable {
+		    returning="returnValue")*/
+	
+	/*public void aspectReturing(JoinPoint joinPoint, Object returnValue) throws Throwable {
 		//System.out.println("\n\n");         
 		//logger.info("Inside AfterReturningAspect.aspectReturing() method.");
 		logger.info("inserted after : " + joinPoint.getSignature());
 		if((returnValue == null) 
 				|| returnValue.equals("null") 
-				/*|| returnValue.equals("[]")
-				|| returnValue.equals("[ ]")*/) {
+				|| returnValue.equals("[]")
+				|| returnValue.equals("[ ]")) {
 			logger.info("Null value returned.");
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			if(requestAttributes != null) {
@@ -94,10 +76,11 @@ public class ControllerValidation {
 			}else
 				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
 		}else
-			logger.info("Method returned \"non-null vlue\"."/*+"returnValuealue: >>----->> "+returnValue*/);
-	}
+			logger.info("Method returned \"non-null vlue\"."+"returnValuealue: >>----->> "+returnValue);
+	}*/
 	
-	@AfterThrowing("controllerValidationPointcut()")
+	/***********************Unused***********************/
+	/*@AfterThrowing("controllerValidationPointcut()")
 	public void afterThrowingAdvice(JoinPoint joinPoint) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		logger.info("ControllerValidation...");  
 		logger.info("Method Signature: "  + joinPoint.getSignature()); 
@@ -124,7 +107,7 @@ public class ControllerValidation {
 		}else
 			logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
 	}
-	
+	*/
 	/*@Before("controllerValidationPointcut()")
 	public void validaterequest(JoinPoint joinPoint) throws JSONException, ParseException, IOException {
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

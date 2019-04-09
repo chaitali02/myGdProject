@@ -47,8 +47,7 @@ public class IngestViewServiceImpl {
     private GraphRegister<?> registerGraph;
     @Autowired
     private IIngestDao iIngestDao;
-	@Autowired
-	private FilterServiceImpl filterServiceImpl;
+
 	
 	static final Logger logger = Logger.getLogger(IngestViewServiceImpl.class);
 	

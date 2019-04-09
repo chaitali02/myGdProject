@@ -37,7 +37,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
@@ -61,20 +60,15 @@ import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.parser.FormulaParser;
-import com.inferyx.framework.register.CSVRegister;
-import com.inferyx.framework.register.HiveRegister;
+
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DashboardServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasourceServiceImpl;
-import com.inferyx.framework.service.FormulaServiceImpl;
-import com.inferyx.framework.service.ImportServiceImpl;
+
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.PrivilegeServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 import com.inferyx.framework.service.SystemServiceImpl;
-import com.inferyx.framework.view.parser.RefParser;
 
 @Controller
 @RequestMapping(value = "/metadata")
@@ -83,31 +77,15 @@ public class MetadataController {
 	@Autowired
 	RegisterService registerService;
 	@Autowired
-	RefParser refParser;
-	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	FormulaServiceImpl formulaServiceImpl;
-	@Autowired
 	DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	HiveRegister hiveRegister;
-	@Autowired
-	FormulaParser formulaParser;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired
-	protected DashboardServiceImpl dashboardServiceImpl;
-	@Autowired
-	CSVRegister csvRegister;
 	@Autowired
 	PrivilegeServiceImpl privilegeServiceImpl;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	ImportServiceImpl importServiceImpl;
 	@Autowired
 	SystemServiceImpl systemServiceImpl;
 	

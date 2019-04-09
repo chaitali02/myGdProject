@@ -11,51 +11,26 @@
 package com.inferyx.framework.service;
 
 
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IRuleGroupExecDao;
+
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.register.GraphRegister;
+
 
 @Service
 public class MapExecServiceImpl {
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;	
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;	
-	@Autowired
-	protected IRuleGroupExecDao iRuleGroupExecDao;	
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	RelationServiceImpl relationServiceImpl;	
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;	
-	@Autowired
-	MapServiceImpl mapServiceImpl;
+
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Resource(name="taskThreadMap")
@@ -81,7 +56,9 @@ public class MapExecServiceImpl {
 	 * @param version
 	 * @throws JsonProcessingException 
 	 */
-	public void kill (String uuid, String version) throws JsonProcessingException {
+	
+	/*****************************Unused*************************/
+	/*public void kill (String uuid, String version) throws JsonProcessingException {
 		MetaIdentifier mapExecMI = new MetaIdentifier(MetaType.mapExec, uuid, version);
 //		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecMI);
 		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString(), "N");
@@ -105,7 +82,7 @@ public class MapExecServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}			
+	}		*/	
 
 	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
 

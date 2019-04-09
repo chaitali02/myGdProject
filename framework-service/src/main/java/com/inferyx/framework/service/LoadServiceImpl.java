@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +25,6 @@ import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,7 +40,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -50,7 +47,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.StorageContext;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.LoadOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -62,13 +58,7 @@ public class LoadServiceImpl {
 	@Autowired
 	ILoadDao iLoadDao;
 	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
 	@Autowired
@@ -77,10 +67,6 @@ public class LoadServiceImpl {
 	private ExecutorFactory execFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	DataSourceFactory datasourceFactory;
-	@Autowired
-	DataFrameService dataFrameService;
 	@Autowired
 	private LoadOperator loadOperator;
 	@Autowired

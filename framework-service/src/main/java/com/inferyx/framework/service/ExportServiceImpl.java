@@ -33,16 +33,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IDataStoreDao;
-import com.inferyx.framework.dao.IDatasourceDao;
+
 import com.inferyx.framework.dao.IExportDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Export;
@@ -63,17 +60,7 @@ public class ExportServiceImpl implements Serializable {
 	@Autowired
 	GraphRegister registerGraph;
 	@Autowired
-	IDataStoreDao idatastoreDao;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired 
 	RegisterService registerService;
 	@Autowired

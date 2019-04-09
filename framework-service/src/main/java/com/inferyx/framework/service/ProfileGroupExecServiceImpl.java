@@ -31,20 +31,13 @@ import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
-	@Autowired
-	GraphRegister<?> registerGraph;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;	
+
+	
+		
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;	
 	@Autowired
 	protected IProfileGroupExecDao iProfileGroupExecDao;
-	@Autowired
-	ProfileGroupServiceImpl profileGroupServiceImpl;
-	@Autowired
-	ProfileExecServiceImpl profileExecServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Resource(name="taskThreadMap")
@@ -91,10 +84,10 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return mi;
 	}
 	
-	
-	public void kill (String uuid, String version) {
+	/****************************Unused*****************************/
+	/*public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.profilegroupExec, MetaType.profileExec);
-	}
+	}*/
 	
 
 

@@ -42,8 +42,6 @@ public class FrameworkThreadServiceImpl {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	ActivityServiceImpl activityServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 
 	static final Logger logger = Logger.getLogger(FrameworkThreadServiceImpl.class);

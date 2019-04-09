@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -396,7 +395,8 @@ public class IngestServiceImpl extends RuleTemplate {
 		return fileName;
 	}
 	
-	@SuppressWarnings("unused")
+	/**********************************Unused**************************************/
+	/*@SuppressWarnings("unused")
 	private Map<String, String> checkPartitionsByDatapod(Datapod datapod) {
 		Map<String, String> partitions = new TreeMap<>();
 		try {
@@ -409,7 +409,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			// TODO: handle exception
 		}
 		return partitions;
-	}
+	}*/
 
 	public String getColName(Datapod datapod, DataSet dataSet, AttributeRefHolder incrAttrHolder) {
 		String attrName = null;
@@ -742,7 +742,9 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public Status restart(BaseExec baseExec) throws Exception {
+	
+	/***************************Unused*****************************/
+	/*public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.ingestExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -750,7 +752,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}
+	}*/
 	
 	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws Exception {
 		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.ingestExec.toString());
@@ -958,7 +960,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @param version
 	 * @param execType
 	 */
-	public void kill (String uuid, String version, MetaType execType) {
+	/***************************************Unused*************************************/
+	/*public void kill (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -995,7 +998,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			taskThreadMap.remove(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	/**
 	 * Set status of BaseExec to RESUME if status is PAUSE
@@ -1003,7 +1006,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @param version
 	 * @param execType
 	 */
-	public void RESUME (String uuid, String version, MetaType execType) {
+	/*********************************Unused***********************************/
+	/*public void RESUME (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -1022,7 +1026,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	/**
 	 * Set status of BaseExec to PAUSE if status is KILLED, PENDING, or RESUME 
@@ -1030,7 +1034,9 @@ public class IngestServiceImpl extends RuleTemplate {
 	 * @param version
 	 * @param execType
 	 */
-	public void PAUSE (String uuid, String version, MetaType execType) {
+	
+	/******************************Unused********************/
+	/*public void PAUSE (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -1049,7 +1055,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 
 }

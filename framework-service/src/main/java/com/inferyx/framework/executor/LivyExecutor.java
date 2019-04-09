@@ -84,8 +84,6 @@ import com.inferyx.framework.writer.IWriter;
 public class LivyExecutor implements IExecutor {
 	@Autowired
 	LivyClientImpl livyClientImpl;
-//	@Autowired
-//	MetadataUtil commonActivity;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired

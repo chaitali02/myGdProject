@@ -36,7 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -44,7 +43,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
@@ -53,9 +51,7 @@ import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
 
@@ -67,13 +63,7 @@ public class ModelController {
 	@Autowired
 	private ModelExecServiceImpl modelExecServiceImpl;
 	@Autowired
-	RConnector rConnector;
-	@Autowired
-	RExecutor rExecutor;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 

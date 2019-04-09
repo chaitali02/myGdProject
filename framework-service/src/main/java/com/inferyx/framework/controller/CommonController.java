@@ -38,8 +38,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.EncryptionUtil;
 import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeRefHolder;
+
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -49,7 +48,6 @@ import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.RegisterService;
@@ -63,8 +61,6 @@ public class CommonController<T> {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	ImportServiceImpl importServiceImpl;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
 	@Autowired

@@ -22,12 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDatasetDao;
-import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
@@ -41,7 +39,6 @@ import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.AttributeMapOperator;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DatasetView;
@@ -54,38 +51,20 @@ public class DatasetServiceImpl {
 	private static DataSet dataset;	
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	MongoTemplate mongoTemplate;
 	@Autowired
 	IDatasetDao iDatasetDao;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RelationServiceImpl relationServiceImpl;
 	@Autowired
 	FilterServiceImpl filterServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired 
-	IFilterDao iFilterDao;
 	@Autowired
 	DatasetOperator datasetOperator;
 	@Autowired
 	ExecutorFactory execFactory;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	AttributeMapOperator attributeMapOperator;
-	@Autowired
-	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
 	

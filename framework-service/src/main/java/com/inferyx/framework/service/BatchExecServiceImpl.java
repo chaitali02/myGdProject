@@ -52,14 +52,12 @@ import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 
 	@Service
 	public class BatchExecServiceImpl {
 
 		public static void main(String[] args) {
 		
-
 		}
 
 		@Autowired
@@ -86,8 +84,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		DagServiceImpl dagServiceImpl;
 		@Autowired
 		protected DataSourceFactory datasourceFactory;
-		@Autowired
-		protected ExecutorFactory executorFactory;
 		@Autowired
 		private DataQualServiceImpl dataqualServiceImpl;
 		@Autowired
