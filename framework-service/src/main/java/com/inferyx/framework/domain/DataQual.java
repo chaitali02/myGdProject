@@ -15,9 +15,7 @@ import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.CaseCheckType;
-import com.inferyx.framework.enums.ThresholdType;
 
 @Document(collection="dq")
 public class DataQual extends BaseRule{
@@ -43,8 +41,7 @@ public class DataQual extends BaseRule{
 	private CaseCheckType caseCheck;
 	private String passFailCheck;
 	private MetaIdentifierHolder paramList;
-
-	
+	private String autoFlag = "N";
 	
 	public MetaIdentifierHolder getDomainCheck() {
 		return domainCheck;
@@ -199,6 +196,22 @@ public class DataQual extends BaseRule{
 	}
 	public void setParamList(MetaIdentifierHolder paramList) {
 		this.paramList = paramList;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the autoFlag
+	 */
+	public String getAutoFlag() {
+		return autoFlag;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param autoFlag the autoFlag to set
+	 */
+	public void setAutoFlag(String autoFlag) {
+		this.autoFlag = autoFlag;
 	}
 	
 
