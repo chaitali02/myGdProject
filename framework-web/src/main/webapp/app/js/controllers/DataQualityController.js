@@ -300,7 +300,21 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
 	}
-
+  $scope.thresholdInfoDefault=function(){
+    $scope.thresholdInfo = {};
+    $scope.thresholdInfo.low = 25;
+    $scope.thresholdInfo.medium = 50;
+    $scope.thresholdInfo.high = 75;
+    $scope.thresholdInfo.lowMin = 1;
+    $scope.thresholdInfo.lowMax = $scope.thresholdInfo.medium;
+    $scope.thresholdInfo.mediumMin = $scope.thresholdInfo.low;
+    $scope.thresholdInfo.mediumMax = $scope.thresholdInfo.high;
+    $scope.thresholdInfo.highMin = $scope.thresholdInfo.medium;
+    $scope.thresholdInfo.highMax = 100;
+    $scope.thresholdInfo.type = $scope.thresholdType[0];
+    $scope.thresholdInfo.isPresent = true;
+  }
+  
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.showactive = "true"
@@ -443,20 +457,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.getAllLatestActiveDependsOn("datapod");
   }
   
-  $scope.thresholdInfoDefault=function(){
-    $scope.thresholdInfo = {};
-    $scope.thresholdInfo.low = 25;
-    $scope.thresholdInfo.medium = 50;
-    $scope.thresholdInfo.high = 75;
-    $scope.thresholdInfo.lowMin = 1;
-    $scope.thresholdInfo.lowMax = $scope.thresholdInfo.medium;
-    $scope.thresholdInfo.mediumMin = $scope.thresholdInfo.low;
-    $scope.thresholdInfo.mediumMax = $scope.thresholdInfo.high;
-    $scope.thresholdInfo.highMin = $scope.thresholdInfo.medium;
-    $scope.thresholdInfo.highMax = 100;
-    $scope.thresholdInfo.type = $scope.thresholdType[0];
-    $scope.thresholdInfo.isPresent = true;
-  }
+  
 
 
   $scope.selectVersion = function () {
