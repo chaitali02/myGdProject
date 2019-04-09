@@ -1230,8 +1230,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.dataLoading = false;
-      $scope.changemodelvalue()
       if (options.execution == "YES") {
         DataqulityService.getOneById(response.data, "dq")
           .then(function (response) { onSuccessGetOneById(response.data)});
@@ -1239,6 +1237,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           if($scope.allparamlist.defaultoption ==null){
             DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function (response) { onSuccess(response.data)});
             var onSuccess = function (response) {
+              $scope.dataLoading = false;
               $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute;
               notify.type = 'success',
               notify.title = 'Success',
@@ -1253,6 +1252,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
+        $scope.dataLoading = false;
         $scope.saveMessage = CF_SUCCESS_MSG.dqSave;
         notify.type = 'success',
         notify.title = 'Success',
@@ -1266,25 +1266,31 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       notify.title = 'Error',
       notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
+      $scope.dataLoading = false;
     }
   } //End Submit Function
    
   $scope.onExecute=function(data){
+    $scope.dataLoading = false;
     $scope.isParamModelEnable=data.isParamModelEnable;
-    if(data.isExecutionInprogess){
+   if(data.isExecutionCancel==true){
+      $scope.message = CF_SUCCESS_MSG.dqSave;
+      notify.type = 'success',
+			notify.title = 'Success',
+      notify.content = $scope.message;
+    }
+    else{
 			$scope.message = CF_SUCCESS_MSG.dqSaveExecute;
 			notify.type = 'success',
 			notify.title = 'Success',
       notify.content = $scope.message;
-      $scope.$emit('notify', notify);
-		}
+    }
+
+    $scope.$emit('notify', notify);
+    $scope.okDQRuleSave();
 	}
-
-  $scope.changemodelvalue = function () {
-    $scope.isshowmodel = sessionStorage.isshowmodel
-  };
-
-
+  
+  
   $scope.fitlerAttrTableSelectedItem = [];
   $scope.onChangeFilterAttRow = function (index, status) {
     if (status == true) {
@@ -1658,8 +1664,6 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.changemodelvalue();
-
       if (options.execution == "YES") {
         DataqulityService.getOneById(response.data, 'dqgroup').then(function (response) {
           onSuccessGetOneById(response.data)
@@ -1698,9 +1702,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     }
   } //End Submit Function
 
-  $scope.changemodelvalue = function () {
-    $scope.isshowmodel = sessionStorage.isshowmodel
-  };
+ 
 });
 
 
