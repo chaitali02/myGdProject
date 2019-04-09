@@ -176,6 +176,9 @@ export class CommonListService {
     if (type == "ingest") {
       this.url = this.baseUrl + 'ingest/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "ingestgroup") {
+      this.url = this.baseUrl + 'ingest/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -188,7 +191,7 @@ export class CommonListService {
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-  restart(uuid, version, type, action): Observable<any> {debugger
+  restart(uuid, version, type, action): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
@@ -246,8 +249,7 @@ export class CommonListService {
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-
-  kill(uuid, version, type, status): Observable<any> {debugger
+  kill(uuid, version, type, status): Observable<any> {
     if (type == "rule") {
       this.url = this.baseUrl + 'rule/setStatus?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
