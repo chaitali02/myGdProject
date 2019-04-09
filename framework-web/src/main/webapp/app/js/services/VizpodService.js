@@ -220,7 +220,6 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attributedetail.attributeId = response[j].attrId;
           attributes.push(attributedetail)
         }
-        console.log(JSON.stringify(attributes));
         deferred.resolve({
           data: attributes
         })
