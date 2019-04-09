@@ -74,10 +74,10 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	public List<String> generateDetailSql(Rule2 rule2, String withSql, String detailSelectSql,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, RuleExec ruleExec,
-			List<FilterInfo> list,Boolean filterFlag) throws Exception {
+			List<FilterInfo> list,Boolean filterFlag, Map<String, String> paramValMap) throws Exception {
 		// TODO Auto-generated method stub
 		return generateWith(rule2, withSql, detailSelectSql, refKeyMap, otherParams, execParams, runMode, ruleExec,
-				list, filterFlag);
+				list, filterFlag, paramValMap);
 	}
 
 	public String generateSummarySql(Rule2 rule2, List<String> listSql, ScoringMethod scoringMethod, String tableName,
@@ -178,7 +178,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams,
-			RunMode runMode, RuleExec ruleExec, List<FilterInfo> list,Boolean filterFlag) throws Exception {
+			RunMode runMode, RuleExec ruleExec, List<FilterInfo> list,Boolean filterFlag, Map<String, String> paramValMap) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		String result = "";
 		StringBuilder selectbuilder = new StringBuilder();
@@ -209,7 +209,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			entityAttrName = datasetServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 					Integer.parseInt(attributeRefHolder.getAttrId()));
 			aliasName = ds.getName();
-			tablename = datasetOperator.generateSql(ds, null, null, usedRefKeySet, null, runMode);
+			tablename = datasetOperator.generateSql(ds, null, null, usedRefKeySet, null, runMode, paramValMap);
 			break;
 		case relation:
 			Relation relation = (Relation) commonServiceImpl.getLatestByUuid(attributeRefHolder.getRef().getUuid(),
@@ -223,7 +223,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				entityAttrName = datasetServiceImpl.getAttributeName(rel_ds, attributeRefHolder.getAttrId());
 			}
 			aliasName = relation.getName();
-			tablename = relationOperator.generateSql(relation, null, null, null, usedRefKeySet, runMode);
+			tablename = relationOperator.generateSql(relation, null, null, null, usedRefKeySet, runMode, paramValMap);
 			break;
 		default:
 			break;
@@ -232,7 +232,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
 		wherebuilder = "";
 		wherebuilder = filterOperator2.generateSql(list, refKeyMap, filterSource, otherParams, usedRefKeySet,
-				execParams, false, false, runMode, mapSourceDS);
+				execParams, false, false, runMode, mapSourceDS, paramValMap);
 
 		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append("_attrList")
 				.append(ConstantsUtil.FROM).append("(").append(tablename + ") " + aliasName)
@@ -284,7 +284,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			// Calculating criteria_met_ind
 			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
-					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 
 			filter = filter.replaceAll(aliasName, "rule_with_query");
 			criteria_indBuilder.append(ConstantsUtil.CASE_WHEN).append("1=1").append(filter)
@@ -295,7 +295,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			// Calculating criteria_expr
 			filter = "";
 			filter = filterOperator2.generateExprSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
-					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList, paramValMap);
 			filter = filter.replaceAll(aliasName, "rule_with_query");
 
 			selectbuilder.append(filter).append(" as ").append("criteria_expr").append(ConstantsUtil.COMMA);
@@ -333,7 +333,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		}
 
 		String filterExpr = filterOperator2.generateExprSql(rule2.getFilterInfo(), refKeyMap, filterSource, otherParams,
-				usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
+				usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList, paramValMap);
 
 		filterExpr = "CONCAT(' 1=1 '," + filterExpr + ")";
 
@@ -371,7 +371,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	public String generateFrom(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		Relation relation = null;
 
@@ -382,7 +382,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 					rule2.getSourceInfo().getRef().getVersion(), rule2.getSourceInfo().getRef().getType().toString(),
 					"N");
 			builder.append(
-					relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
+					relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode, paramValMap));
 		} else if (rule2.getSourceInfo().getRef().getType() == MetaType.datapod) {
 			// Datapod datapod = (Datapod)
 			// daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(),
@@ -408,7 +408,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 					rule2.getSourceInfo().getRef().getType().toString(), "N");
 
 			builder.append("(").append(
-					datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
+					datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
 					.append(")  ").append(dataset.getName());
 		}
 		return builder.toString();
@@ -422,13 +422,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	public String generateFilter(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if (rule2.getFilterInfo() != null && !rule2.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
 					new MetaIdentifier(MetaType.rule2, rule2.getUuid(), rule2.getVersion()));
 			Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
 			String filter = filterOperator2.generateSql(rule2.getFilterInfo(), refKeyMap, filterSource, otherParams,
-					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -436,13 +436,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	public String generateHaving(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if (rule2.getFilterInfo() != null && !rule2.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
 					new MetaIdentifier(MetaType.rule2, rule2.getUuid(), rule2.getVersion()));
 			Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
 			String filterStr = filterOperator2.generateSql(rule2.getFilterInfo(), refKeyMap, filterSource, otherParams,
-					usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+					usedRefKeySet, execParams, true, true, runMode, mapSourceDS, paramValMap);
 			return StringUtils.isBlank(filterStr) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;
@@ -451,6 +451,16 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Rule2 rule2 = null;
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) baseExec;
@@ -461,7 +471,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		Boolean filterFlag=false;
 		ruleExec.setExec(
 				generateDetailSql(rule2, null, null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
-						execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec, null, filterFlag)
+						execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec, null, filterFlag, paramValMap)
 								.get(0));
 		if (rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();

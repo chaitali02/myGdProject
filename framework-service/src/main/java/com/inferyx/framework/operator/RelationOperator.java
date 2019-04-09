@@ -55,7 +55,7 @@ public class RelationOperator {
 	
 	public String generateSql(Relation relation
 			, java.util.Map<String, MetaIdentifier> refKeyMap
-			, HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			, HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		Map<String, Short> datapodTracker = new HashMap<>(); 
 		StringBuilder builder = new StringBuilder();
 		List<RelationInfo> relInfoList = relation.getRelationInfo();
@@ -110,7 +110,7 @@ public class RelationOperator {
 			fromDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid()
 																				, dsVersion
 																				, relation.getDependsOn().getRef().getType().toString());
-			builder.append("(").append(datasetOperator.generateSql(fromDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(") ").append(fromDataset.getName()).append(" ");
+			builder.append("(").append(datasetOperator.generateSql(fromDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(") ").append(fromDataset.getName()).append(" ");
 		}
 		for (int i = 0; i < relInfoList.size(); i++) {
 			Datapod datapod = null;
@@ -173,14 +173,14 @@ public class RelationOperator {
 					rightDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
 																			, rightDsVersion
 																			, relInfoList.get(i).getJoin().getRef().getType().toString());
-					builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ");
+					builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(")  ");
 					if (datapodTracker.get(rightDataset.getUuid()) <= 1) {
 						builder.append(rightDataset.getName());
 					} else {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS, paramValMap));
 					}
 				} else {
 					builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
@@ -190,7 +190,7 @@ public class RelationOperator {
 						builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS, paramValMap));
 					}
 				}
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -199,14 +199,14 @@ public class RelationOperator {
 					rightDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
 																			, rightDsVersion
 																			, relInfoList.get(i).getJoin().getRef().getType().toString());
-					builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ");
+					builder.append(joinType + " JOIN ").append(" (").append(datasetOperator.generateSql(rightDataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(")  ");
 					if (datapodTracker.get(rightDataset.getUuid()) <= 1) {
 						builder.append(rightDataset.getName());
 					} else {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS, paramValMap));
 					}
 				} else if(joinMI.getType().equals(MetaType.datapod)) {
 					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
@@ -220,14 +220,14 @@ public class RelationOperator {
 							builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 						}
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS, paramValMap));
 						}
 					} else {
 						builder.append(joinType + " JOIN ").append(" ");
 						builder.append(datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
 
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS, paramValMap));
 						}
 					}
 				}
@@ -272,9 +272,10 @@ public class RelationOperator {
 			, ExecParams execParams
 			, Set<MetaIdentifier> usedRefKeySet
 			, int limit
-			, RunMode runMode) throws Exception {
+			, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		StringBuilder sampleDatSql = new StringBuilder("SELECT * FROM "); 
-		String relSql = generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode);
+		String relSql = generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, paramValMap);
 		sampleDatSql.append(relSql);
 		sampleDatSql.append(" LIMIT ").append(limit);
 		return sampleDatSql.toString();

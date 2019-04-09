@@ -131,7 +131,7 @@ public class DataSamplingOperator implements IOperator, Serializable {
 		} else if (sourceDataIdentifier.getType() == MetaType.dataset) {
 			sourceDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
 			exec = execFactory.getExecutor(commonServiceImpl.getDatasourceByObject(sourceDataset).getType());
-			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+			sourceTableSql = "(" + datasetServiceImpl.generateSql(sourceDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode, new HashMap<String, String>()) + ") "
 					+ sourceDataset.getName();
 		}
 		Dataset<Row> dataDf = exec.executeSql(" SELECT * FROM " + sourceTableSql).getDataFrame();

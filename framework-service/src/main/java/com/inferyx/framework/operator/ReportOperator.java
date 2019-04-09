@@ -96,18 +96,18 @@ public class ReportOperator implements IOperator {
 	}
 	
 	public String generateSql(Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		return generateSelect(report, refKeyMap, otherParams, execParams, runMode)
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
+		return generateSelect(report, refKeyMap, otherParams, execParams, runMode, paramValMap)
 		.concat(getFrom())
-		.concat(generateFrom(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
+		.concat(generateFrom(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
 		.concat(generateWhere(report))
-		.concat(generateFilter(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-		.concat(generateGroupBy(report, refKeyMap, otherParams, execParams))
-		.concat(generateHaving(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+		.concat(generateFilter(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
+		.concat(generateGroupBy(report, refKeyMap, otherParams, execParams, paramValMap))
+		.concat(generateHaving(report, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap));
 	}
 
 	private String generateSelect(Report report, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// Create AttributeMap
 		List<AttributeMap> attrMapList = new ArrayList<>();
 		AttributeMap attrMap = null; 
@@ -124,7 +124,7 @@ public class ReportOperator implements IOperator {
 			attrMapList.add(attrMap);
 		}
 		attributeMapOperator.setRunMode(runMode);
-		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(attrMapList, report.getDependsOn(), refKeyMap, otherParams, execParams));
+		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(attrMapList, report.getDependsOn(), refKeyMap, otherParams, execParams, paramValMap));
 	}
 
 	public String getFrom() {
@@ -132,7 +132,8 @@ public class ReportOperator implements IOperator {
 	}
 
 	private String generateFrom(Report report, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, 
+			Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		Relation relation = null;
 
@@ -141,7 +142,7 @@ public class ReportOperator implements IOperator {
 			usedRefKeySet.add(report.getDependsOn().getRef());
 //			relation = (Relation) daoRegister.getRefObject(report.getDependsOn().getRef()); 
 			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(report.getDependsOn().getRef().getUuid(), report.getDependsOn().getRef().getVersion(), report.getDependsOn().getRef().getType().toString(), "N");
-			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
+			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode, paramValMap));
 		} else if (report.getDependsOn().getRef().getType() == MetaType.datapod) {
 //			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(report.getDependsOn().getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(report.getDependsOn().getRef(), refKeyMap);
@@ -162,7 +163,7 @@ public class ReportOperator implements IOperator {
 		} else if (report.getDependsOn().getRef().getType() == MetaType.dataset) {
 //          DataSet dataset = (DataSet) daoRegister.getRefObject(report.getDependsOn().getRef()); 
             DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(report.getDependsOn().getRef().getUuid(), report.getDependsOn().getRef().getVersion(), report.getDependsOn().getRef().getType().toString(), "N");
-            builder.append("( ").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(" ) ").append(dataset.getName());
+            builder.append("( ").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(" ) ").append(dataset.getName());
         }
 		return builder.toString();
 	}
@@ -188,7 +189,7 @@ public class ReportOperator implements IOperator {
 	}
 
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		/*if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
 			String filter = filterOperator2.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
@@ -196,19 +197,19 @@ public class ReportOperator implements IOperator {
 		}*/
 		if (report !=null && report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
-			String filter = filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+			String filter = filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
 	} 
 
 	private String generateGroupBy(Report report, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HashMap<String, String> otherParams, ExecParams execParams, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifierHolder reportSource = new MetaIdentifierHolder(report.getRef(MetaType.report));
-		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(report.getAttributeInfo()), refKeyMap, otherParams, execParams, reportSource);
+		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(report.getAttributeInfo()), refKeyMap, otherParams, execParams, reportSource, paramValMap);
 	}
 	
-	private String generateHaving (Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+	private String generateHaving (Report report, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		
 		/*if (report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
 			String filterStr = filterOperator.generateSql(report.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
@@ -216,7 +217,7 @@ public class ReportOperator implements IOperator {
 		}*/
 		if (report !=null && report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
-			String filterStr =filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+			String filterStr =filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS, paramValMap);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 	    }
 		/*if (execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {

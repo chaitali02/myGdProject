@@ -140,7 +140,7 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 					}
 					else if (response.paramList.params[i].paramValue != null && response.paramList.params[i].paramValue.ref.type == "simple" && ["date"].indexOf(response.paramList.params[i].paramType) != -1) {
 						var temp = response.paramList.params[i].paramValue.value.replace(/["']/g, "")
-						paramInfo.paramValue = new Date(temp);
+						paramInfo.paramValue=new Date(temp+":00:00:00");						
 						paramInfo.paramValueType = "date"
 					}
 					else if (response.paramList.params[i].paramValue != null && response.paramList.params[i].paramValue.ref.type == "simple" && ["array"].indexOf(response.paramList.params[i].paramType) != -1) {

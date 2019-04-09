@@ -287,7 +287,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if($scope.vizpodtype !="score-card" && $scope.vizpodtype !="form-card" ){
+		// $scope.vizpodtype !="score-card" && 
+		if($scope.vizpodtype !="form-card" ){
 			if (type == "formula") {
 				if ($scope.indexOfBySingleValue($scope.keylist, data) == -1 && isEnable == false) {
 					deferred.resolve();

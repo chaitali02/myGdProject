@@ -12,6 +12,7 @@ package com.inferyx.framework.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,8 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.Rule2Operator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.Rule2ServiceImpl;
+import com.inferyx.framework.service.RuleGroupServiceImpl;
 import com.inferyx.framework.service.TaskHolder;
 
 @RestController
@@ -69,7 +70,7 @@ public class Rule2Controller {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE,null, null, false).get(0);
+		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE,null, null, false, new HashMap<String, String>()).get(0);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

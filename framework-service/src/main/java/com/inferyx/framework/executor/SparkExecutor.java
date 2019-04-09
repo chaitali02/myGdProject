@@ -833,6 +833,29 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 
+	public ResultSetHolder executeRegisterAndPersistByDatasource(String sql, String tempTableName,
+			String relativeFilePath, Datasource sourceDS, Datapod targetDatapod, String saveMode, boolean formPath,
+			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+		Datasource targetDS = (Datasource) commonServiceImpl.getOneByUuidAndVersion(
+				targetDatapod.getDatasource().getRef().getUuid(), targetDatapod.getDatasource().getRef().getVersion(),
+				targetDatapod.getDatasource().getRef().getType().toString(), "N");
+
+		ResultSetHolder rsHolder = executeAndRegisterByDatasource(sql, tempTableName, sourceDS, clientContext);
+
+		IWriter datapodWriter = dataSourceFactory.getDatapodWriter(targetDatapod);
+		rsHolder.setTableName(tempTableName);
+
+		String filePathUrl = relativeFilePath;
+		if (formPath) {
+			filePathUrl = String.format("%s%s", targetDS.getPath(), relativeFilePath);
+		}
+
+		datapodWriter.write(rsHolder, filePathUrl, targetDatapod, saveMode);
+		return rsHolder;
+	}
+	
 	@Override
 	public ResultSetHolder registerDataFrameAsTable(ResultSetHolder rsHolder, String tableName) {
 		try {

@@ -676,7 +676,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		if(datapod != null) {
 			sql = "SELECT MAX("+attrName+") FROM " + datasource.getDbname() + "." + datapod.getName();
 		} else {
-			sql = "SELECT MAX("+attrName+") FROM (" + datasetOperator.generateSql(dataSet, null, null, new HashSet<>(), null, runMode) + ") " + dataSet.getName();
+			sql = "SELECT MAX("+attrName+") FROM (" + datasetOperator.generateSql(dataSet, null, null, new HashSet<>(), null, runMode, new HashMap<String, String>()) + ") " + dataSet.getName();
 		}
 		 
 		
@@ -907,7 +907,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				MetaIdentifier formulaMI = attrRefHolder.getRef();
 				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMI.getUuid(), formulaMI.getVersion(), formulaMI.getType().toString());
 				Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
-				return formulaOperator.generateSql(formula, null, null, null, mapSourceDS);
+				return formulaOperator.generateSql(formula, null, null, null, mapSourceDS, new HashMap<String, String>());
 			}
 		
 		return null;

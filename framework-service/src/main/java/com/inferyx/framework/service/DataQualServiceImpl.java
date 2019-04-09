@@ -411,6 +411,21 @@ public class DataQualServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.dqExec.toString(), "Y");
+		ExecParams execParams = dataQualExec.getExecParams();
+		if (execParams == null) {
+			execParams = new ExecParams();
+			dataQualExec.setExecParams(execParams);
+		}
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(dataQualExec.getUuid())) {
+			execParams.getParamValMap().put(dataQualExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(dataQualExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
@@ -419,11 +434,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 				MetaType.dq.toString(), "Y");
 		try {
 			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-					otherParams, runMode, null));
+					otherParams, runMode, null, paramValMap));
 //			dataQualExec.setExec(dqOperator.generateResFilteredSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
 //					otherParams, runMode));
 			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
-					usedRefKeySet, otherParams, runMode));
+					usedRefKeySet, otherParams, runMode, paramValMap));
 			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 
@@ -492,79 +507,92 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return response;
 	}
 
-	public String getSummarySql(String tableName, String execVersion, ExecContext execContext) {
+	public String getSummarySql(String tableName, String aliasName, String execVersion, ExecContext execContext) {
 		StringBuilder filterBuilder = new StringBuilder(" ");
 		filterBuilder.append(" AND version = " + execVersion);
 		if (execContext.equals(ExecContext.FILE) || execContext.equals(ExecContext.spark)) {
 			return "SELECT datapod_name, attribute_id, attribute_name, check_type, check_pass_count, check_fail_count, score FROM ( "
-					
-					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'NULL' AS check_type, null_pass_count AS check_pass_count, " + 
-					" null_fail_count as check_fail_count,null_score AS score, 'COMPLETENESS' AS dimension, version FROM "+tableName+" WHERE null_pass_count > 0 OR null_fail_count > 0"
-					
-					+" UNION ALL "
-					
-					+"SELECT rule_uuid, rule_version, rule_name, datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'VALUE' as check_type,value_pass_count as check_pass_count, " + 
-					" value_fail_count as check_fail_count,value_score as score, 'CONSISTENCY' as dimension,version from "+tableName+" where value_pass_count > 0 OR value_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'RANGE' as check_type,range_pass_count as check_pass_count, " + 
-					" range_fail_count as check_fail_count,range_score as score, 'CONFORMITY' as dimension,version from "+tableName+" where range_pass_count > 0 OR range_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'DATATYPE' as check_type,datatype_pass_count as check_pass_count, " + 
-					" datatype_fail_count as check_fail_count,datatype_score as score, 'CONFORMITY' as dimension,version from "+tableName+" where datatype_pass_count > 0 OR datatype_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'FORMAT' as check_type,format_pass_count as check_pass_count, " + 
-					" format_fail_count as check_fail_count,format_score as score, 'CONFORMITY' as dimension,version from "+tableName+" where format_pass_count > 0 OR format_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'LENGTH' as check_type,length_pass_count as check_pass_count, " + 
-					" length_fail_count as check_fail_count,length_score as score, 'CONFORMITY' as dimension,version from "+tableName+" where length_pass_count > 0 OR length_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'REFINT' as check_type,refint_pass_count as check_pass_count, " + 
-					" refint_fail_count as check_fail_count,refint_score as score, 'INTEGRITY' as dimension,version from "+tableName+" where refint_pass_count > 0 OR refint_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'DUPLICATE' as check_type,dup_pass_count as check_pass_count, " + 
-					" dup_fail_count as check_fail_count,dup_score as score, 'INTEGRITY' as dimension,version from "+tableName+" where dup_pass_count > 0 OR dup_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'CUSTOM' as check_type,custom_pass_count as check_pass_count, " + 
-					" custom_fail_count as check_fail_count,custom_score as score, 'CUSTOM' as dimension,version from "+tableName+" where custom_pass_count > 0 OR custom_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'DOMAIN' as check_type,domain_pass_count as check_pass_count, " + 
-					" domain_fail_count as check_fail_count,domain_score as score, 'ACCURACY' as dimension,version from "+tableName+" where domain_pass_count > 0 OR domain_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'BLANKSPACE' as check_type,blankspace_pass_count as check_pass_count, " + 
-					" blankspace_fail_count as check_fail_count,blankspace_score as score, 'COMPLETENESS' as dimension,version from "+tableName+" where blankspace_pass_count > 0 OR blankspace_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'EXPRESSION' as check_type,expression_pass_count as check_pass_count, " + 
-					" expression_fail_count as check_fail_count,expression_score as score, 'TIMELINESS' as dimension,version from "+tableName+" where expression_pass_count > 0 OR expression_fail_count > 0"
-					
-					+" UNION ALL "
-			
-					+"SELECT rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'CASE' as check_type,case_pass_count as check_pass_count, " + 
-					" case_fail_count as check_fail_count,case_score as score, 'CONSISTENCY' as dimension,version from "+tableName+" where case_pass_count > 0 OR case_fail_count > 0"
-					
-					+" ) WHERE 1=1 " + filterBuilder.toString() ;
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'NULL' AS check_type, null_pass_count AS check_pass_count, "
+					+ " null_fail_count as check_fail_count, null_score AS score, 'COMPLETENESS' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE null_pass_count > 0 OR null_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'VALUE' AS check_type, value_pass_count AS check_pass_count, "
+					+ " value_fail_count AS check_fail_count, value_score AS score, 'CONSISTENCY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE value_pass_count > 0 OR value_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'RANGE' AS check_type, range_pass_count AS check_pass_count, "
+					+ " range_fail_count AS check_fail_count, range_score AS score, 'CONFORMITY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE range_pass_count > 0 OR range_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'DATATYPE' AS check_type, datatype_pass_count AS check_pass_count, "
+					+ " datatype_fail_count AS check_fail_count, datatype_score AS score, 'CONFORMITY' AS dimension, version FROM "
+					+ tableName + " WHERE datatype_pass_count > 0 OR datatype_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'FORMAT' AS check_type, format_pass_count AS check_pass_count, "
+					+ " format_fail_count as check_fail_count, format_score AS score, 'CONFORMITY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE format_pass_count > 0 OR format_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'LENGTH' AS check_type, length_pass_count AS check_pass_count, "
+					+ " length_fail_count AS check_fail_count, length_score AS score, 'CONFORMITY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE length_pass_count > 0 OR length_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'REFINT' AS check_type, refint_pass_count AS check_pass_count, "
+					+ " refint_fail_count AS check_fail_count, refint_score AS score, 'INTEGRITY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE refint_pass_count > 0 OR refint_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'DUPLICATE' AS check_type, dup_pass_count AS check_pass_count, "
+					+ " dup_fail_count AS check_fail_count, dup_score AS score, 'INTEGRITY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE dup_pass_count > 0 OR dup_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name,datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'CUSTOM' AS check_type, custom_pass_count AS check_pass_count, "
+					+ " custom_fail_count AS check_fail_count, custom_score as score, 'CUSTOM' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE custom_pass_count > 0 OR custom_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'DOMAIN' AS check_type, domain_pass_count AS check_pass_count, "
+					+ " domain_fail_count AS check_fail_count, domain_score AS score, 'ACCURACY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE domain_pass_count > 0 OR domain_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'BLANKSPACE' AS check_type, blankspace_pass_count AS check_pass_count, "
+					+ " blankspace_fail_count AS check_fail_count, blankspace_score AS score, 'COMPLETENESS' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE blankspace_pass_count > 0 OR blankspace_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'EXPRESSION' AS check_type, expression_pass_count AS check_pass_count, "
+					+ " expression_fail_count AS check_fail_count, expression_score AS score, 'TIMELINESS' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE expression_pass_count > 0 OR expression_fail_count > 0 " + filterBuilder.toString()
+
+					+ " UNION ALL "
+
+					+ "SELECT rule_uuid, rule_version, rule_name, datapod_uuid, datapod_version, datapod_name, attribute_id, attribute_name, 'CASE' AS check_type, case_pass_count AS check_pass_count, "
+					+ " case_fail_count AS check_fail_count, case_score AS score, 'CONSISTENCY' AS dimension, version FROM "
+					+ tableName + " "+ aliasName + " " + " WHERE case_pass_count > 0 OR case_fail_count > 0 " + filterBuilder.toString()
+
+					+ " ) dq_result_summary_dashboard";
 		} else {
 			return "SELECT datapod_name, attribute_id, attribute_name, check_type, check_pass_count, check_fail_count, score FROM "
-					+ tableName + " WHERE 1=1 " + filterBuilder.toString();
+					+ tableName + " "+ aliasName + " " + " WHERE 1=1 " + filterBuilder.toString();
 		}
 		
 //		return "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'PASS' as result_type, count(nullCheck_pass) AS count FROM "
@@ -635,9 +663,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 //		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			String tableName = "dq_result_summary_dashboard";
+			String aliasName = "dq_result_summary_dashboard";
 			
 //			tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),runMode);
 			Datapod datapod = dataStoreServiceImpl.getDatapodByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
+			
 			Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
 //			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
@@ -656,9 +686,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 			
 			if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore, runMode);
+				aliasName = datapod.getName();
 			}
 			
-			return exec.executeAndFetchByDatasource(getSummarySql(tableName, dqExec.getVersion(), execContext), datasource, appUuid);
+			return exec.executeAndFetchByDatasource(getSummarySql(tableName, aliasName, dqExec.getVersion(), execContext), datasource, appUuid);
 //			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
 		} catch (Exception e) {
 			logger.error("Exception in DataQualServiceImpl", e);

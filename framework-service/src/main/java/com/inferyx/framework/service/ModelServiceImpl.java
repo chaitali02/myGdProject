@@ -1397,11 +1397,11 @@ public class ModelServiceImpl {
 			return sql;
 		} else if (source instanceof DataSet) {
 			DataSet dataset = (DataSet) source;
-			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.BATCH);
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.BATCH, new HashMap<String, String>());
 			return sql;
 		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
-			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, RunMode.BATCH);
+			String sql = ruleOperator.generateSql(rule, null, null, new HashSet<>(), null, RunMode.BATCH, new HashMap<String, String>());
 			return sql;
 		}
 		return null;

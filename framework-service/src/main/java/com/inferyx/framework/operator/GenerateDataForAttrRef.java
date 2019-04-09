@@ -154,7 +154,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		DataSet attrDataset = null;
 		if (StringUtils.isBlank(attrTableName) && attrIdentifier.getType() == MetaType.dataset) {
 			attrDataset = (DataSet)attrDp;
-			attrTableNameSql = "(" + datasetServiceImpl.generateSql(attrDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode) + ") "
+			attrTableNameSql = "(" + datasetServiceImpl.generateSql(attrDataset, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), otherParams, new HashSet<>(), execParams, runMode, new HashMap<String, String>()) + ") "
 						+ attrDataset.getName();
 			attrTableName = attrDataset.getName();
 		}

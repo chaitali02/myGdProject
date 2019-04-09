@@ -184,45 +184,36 @@ public class PDFUtil {
 			cellSize = 12.50f;
 			numCellsPerPage = 8;
 		}
-		
+
+		int numRowsPerPage = 30;
 		float tableWidth = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
 		if (document.getLayout().equals(Layout.LANDSCAPE)) {
 			pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 			tableWidth = pdfPage.getMediaBox().getWidth() - 2.00f * margin;
+			numRowsPerPage = 20;
 		}
 		
-		List<List<String>> partitionedLeyList = new ArrayList<>(
-				partitionBasedOnSize(new ArrayList<String>(data.get(0).keySet()), numCellsPerPage));
-		for (List<String> keySubList : partitionedLeyList) {
-			pdfPage = new PDPage();			
-			pdfDoc.addPage(pdfPage);
-			
-			BaseTable baseTable = null;
-			if (document.getLayout().equals(Layout.LANDSCAPE)) {
-				float yStartNewPage = 545.0f - 30;
-				float yStart = yStartNewPage;
-				baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
-			} else if (document.getLayout().equals(Layout.PORTRAIT)) {
-				float yStartNewPage = pdfPage.getMediaBox().getHeight() - 30;
-				float yStart = yStartNewPage;
-				baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
-			}
+		ArrayList<List<Map<String, Object>>> partitionedDataList = new ArrayList<List<Map<String, Object>>>(dataPartitionBasedOnSize(data, numRowsPerPage));		
+		List<List<String>> partitionedLeyList = new ArrayList<>(colPartitionBasedOnSize(new ArrayList<String>(data.get(0).keySet()), numCellsPerPage));
+		for(List<Map<String, Object>> perPageData : partitionedDataList) {
+			for (List<String> keySubList : partitionedLeyList) {
+				pdfPage = new PDPage();			
+				pdfDoc.addPage(pdfPage);
+				
+				BaseTable baseTable = null;
+				if (document.getLayout().equals(Layout.LANDSCAPE)) {
+					float yStartNewPage = 545.0f - 30;
+					float yStart = yStartNewPage;
+					baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+				} else if (document.getLayout().equals(Layout.PORTRAIT)) {
+					float yStartNewPage = pdfPage.getMediaBox().getHeight() - 30;
+					float yStart = yStartNewPage;
+					baseTable = new BaseTable(yStart, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+				}
 
-			Row<PDPage> headerRow = baseTable.createRow(30f);
-			for (String colName : keySubList) {
-				Cell<PDPage> cell = headerRow.createCell(cellSize, colMap.get(colName).toString());
-				cell.setFont(boldFont);
-				cell.setTextColor(Color.WHITE);
-				cell.setFontSize(10);
-//				cell.setFillColor(Color.WHITE);
-				cell.setAlign(HorizontalAlignment.CENTER);
-				cell.setFillColor(new Color(36, 92, 148));
-			}
-			
-			if(keySubList.size() < numCellsPerPage) {
-				final int paddingCells = numCellsPerPage - keySubList.size();
-				for(int i=0; i < paddingCells; i++) {
-					Cell<PDPage> cell = headerRow.createCell(cellSize, "-NA-");
+				Row<PDPage> headerRow = baseTable.createRow(30f);
+				for (String colName : keySubList) {
+					Cell<PDPage> cell = headerRow.createCell(cellSize, colMap.get(colName).toString());
 					cell.setFont(boldFont);
 					cell.setTextColor(Color.WHITE);
 					cell.setFontSize(10);
@@ -231,25 +222,38 @@ public class PDFUtil {
 					cell.setFillColor(new Color(36, 92, 148));
 				}
 				
-			}
-			baseTable.addHeaderRow(headerRow);
-
-			for (final Map<String, Object> row : data) {
-				Row<PDPage> tableRow = baseTable.createRow(12);
-				for (String colName : keySubList) {
-					Cell<PDPage> cell = tableRow.createCell(cellSize, row.get(colName).toString());
-				}
-				
 				if(keySubList.size() < numCellsPerPage) {
 					final int paddingCells = numCellsPerPage - keySubList.size();
 					for(int i=0; i < paddingCells; i++) {
-						Cell<PDPage> cell = tableRow.createCell(cellSize, "");
+						Cell<PDPage> cell = headerRow.createCell(cellSize, "-NA-");
+						cell.setFont(boldFont);
+						cell.setTextColor(Color.WHITE);
+						cell.setFontSize(10);
+//						cell.setFillColor(Color.WHITE);
+						cell.setAlign(HorizontalAlignment.CENTER);
+						cell.setFillColor(new Color(36, 92, 148));
+					}
+					
+				}
+				baseTable.addHeaderRow(headerRow);
+
+				for (final Map<String, Object> row : perPageData) {
+					Row<PDPage> tableRow = baseTable.createRow(12);
+					for (String colName : keySubList) {
+						Cell<PDPage> cell = tableRow.createCell(cellSize, row.get(colName).toString());
+					}
+					if(keySubList.size() < numCellsPerPage) {
+						final int paddingCells = numCellsPerPage - keySubList.size();
+						for(int i=0; i < paddingCells; i++) {
+							Cell<PDPage> cell = tableRow.createCell(cellSize, "");
+						}
 					}
 				}
-			}
 
-			baseTable.draw();
+				baseTable.draw();
+			}
 		}
+		
 
 		contentStream.close();
 		
@@ -348,11 +352,16 @@ public class PDFUtil {
 		}
 	}
 	
-	public static Collection<List<String>> partitionBasedOnSize(List<String> inputList, int size) {
+	public static Collection<List<String>> colPartitionBasedOnSize(List<String> inputList, int size) {
 		final AtomicInteger counter = new AtomicInteger(0);
 		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / size)).values();
 	}
 
+	public static Collection<List<Map<String, Object>>> dataPartitionBasedOnSize(List<Map<String, Object>> inputList, int size) {
+		final AtomicInteger counter = new AtomicInteger(0);
+		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / size)).values();
+	}
+	
 //	public PDDocument getPDFDocForReport(List<Map<String, Object>> resultList, ReportExec reportExec)
 //			throws IOException {
 //		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(),

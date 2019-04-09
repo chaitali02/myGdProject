@@ -523,6 +523,17 @@ public class RuleServiceImpl extends RuleTemplate {
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.ruleExec.toString(), "N");
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		ExecParams execParams = ruleExec.getExecParams();
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(ruleExec.getUuid())) {
+			execParams.getParamValMap().put(ruleExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(ruleExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.STARTING);
 		}
@@ -530,7 +541,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule.toString(), "N");
-		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode, paramValMap));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString(), "N");

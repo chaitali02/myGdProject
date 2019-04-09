@@ -1585,19 +1585,21 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   }
 
   $scope.loadRules = function (query) {
+    console.log(query)
     return $timeout(function () {
+      console.log($filter('filter')($scope.dqall, query))
       return $filter('filter')($scope.dqall, query);
     });
   };
 
 
   $scope.clear = function () {
-    $scope.ruleTags = null;
+    $scope.ruleTags = [];
 		$scope.myform.$dirty=true;
 	}
 
 	$scope.addAll = function () {
-		$scope.ruleTags =$scope.dqall;
+		$scope.ruleTags = angular.copy($scope.dqall);
 		$scope.myform.$dirty=true;
 	}
   $scope.okDqGroupSave = function () {

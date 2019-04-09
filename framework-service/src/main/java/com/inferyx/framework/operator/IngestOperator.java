@@ -54,44 +54,47 @@ public class IngestOperator {
 	static Logger logger = Logger.getLogger(IngestOperator.class);
 	
 	public String generateSQL(Ingest ingest, String tableName, String incrColName, String incrLastValue, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		return generateSelect(ingest, refKeyMap, otherParams, execParams, runMode)
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, 
+			Map<String, String> paramValMap) throws Exception {
+		return generateSelect(ingest, refKeyMap, otherParams, execParams, runMode, paramValMap)
 				.concat(getFrom())
-				.concat(generateFrom(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, tableName))
+				.concat(generateFrom(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, tableName, paramValMap))
 				.concat(generateWhere(ingest, incrColName, incrLastValue))
-				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams))
-				.concat(generateHaving(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+				.concat(generateFilter(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
+				.concat(generateGroupBy(ingest, refKeyMap, otherParams, execParams, paramValMap))
+				.concat(generateHaving(ingest, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap));
 		
 	}
 
 	public String generateGroupBy(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HashMap<String, String> otherParams, ExecParams execParams, 
+			Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifierHolder ingestSource = new MetaIdentifierHolder(ingest.getRef(MetaType.ingest));
-		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams, ingestSource);
+		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams, ingestSource, paramValMap);
 		logger.info("group by: "+query);
 		return query;
 	}
 
 	public String generateFilter(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, 
+			Map<String, String> paramValMap) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
 
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
-		    return filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+		    return filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 
 			//return filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode);
 		}
 		return ConstantsUtil.BLANK;
 	}
 	
-	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+	public String generateHaving (Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		if (ingest.getFilterInfo() != null && !ingest.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingest.getUuid(), ingest.getVersion()));
 
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(ingest);
-			String filterStr = filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+			String filterStr = filterOperator2.generateSql(ingest.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS, paramValMap);
 
 			//String filterStr = filterOperator.generateSql(ingest.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
@@ -106,10 +109,10 @@ public class IngestOperator {
 	}
 
 	public String generateFrom(Ingest ingest, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, String tableName) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, String tableName, Map<String, String> paramValMap) throws Exception {
 		if(ingest.getSourceDetail().getRef().getType().equals(MetaType.dataset)) {
 			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ingest.getSourceDetail().getRef().getUuid(), ingest.getSourceDetail().getRef().getVersion(), ingest.getSourceDetail().getRef().getType().toString());
-			return "( "+datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)+" ) " + dataset.getName();
+			return "( "+datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)+" ) " + dataset.getName();
 		} else {
 			return tableName;
 		}
@@ -120,7 +123,8 @@ public class IngestOperator {
 	}
 
 	public String generateSelect(Ingest ingest, Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(ingest.getAttributeMap(), ingest.getSourceDetail(), refKeyMap, otherParams, execParams));
+			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode, 
+			Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(ingest.getAttributeMap(), ingest.getSourceDetail(), refKeyMap, otherParams, execParams, paramValMap));
 	}
 }

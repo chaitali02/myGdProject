@@ -12,6 +12,7 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -64,7 +65,8 @@ public class ParamListServiceImpl {
 	 */
 	public String getParamValue(ExecParams execParams,  
 									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {	
+									MetaIdentifier ref, 
+									Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {	
 		logger.info("Inside ParamListServiceImpl.getParamValue(); "); 
 		ParamListHolder paramListHolder = null;
 		String paramName = null;
@@ -101,6 +103,7 @@ public class ParamListServiceImpl {
 			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {
 				logger.info("Param name from app paramlist : " + param.getParamName());
+				paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 				return param.getParamValue().getValue();
 			}
 		}
@@ -112,6 +115,7 @@ public class ParamListServiceImpl {
 			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {
 				logger.info("Param name from execParams : " + param.getParamName());
+				paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 				return param.getParamValue().getValue();
 			} 
 		}

@@ -271,6 +271,11 @@
               metajson.state = "admin";
               metajson.param={type:'user'}
               break;
+            case "domain":
+              metajson.caption = "Domain";
+              metajson.icon = "fa fa-wrench"
+              metajson.state = "admin";
+              metajson.param={type:'domain'}
             case "export":
               metajson.caption="Export";
               metajson.icon='fa fa-wrench';

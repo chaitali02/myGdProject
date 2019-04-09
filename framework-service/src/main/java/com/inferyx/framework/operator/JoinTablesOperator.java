@@ -51,12 +51,13 @@ public class JoinTablesOperator {
 						MetaIdentifier execIdentifier, 
 						java.util.Map<String, MetaIdentifier> refKeyMap, 
 						HashMap<String, String> otherParams, 
-						Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+						Set<MetaIdentifier> usedRefKeySet, RunMode runMode, 
+						Map<String, String> paramValMap) throws Exception {
 //		Operator operatorType = (Operator) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorType().getRef().getUuid(), operator.getOperatorType().getRef().getVersion(), operator.getOperatorType().getRef().getType().toString());
 		ParamListHolder relationIdentifier = paramSetServiceImpl.getParamByName(execParams, "RELATION");
 		Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(relationIdentifier.getParamValue().getRef().getUuid(), relationIdentifier.getParamValue().getRef().getVersion(), relationIdentifier.getParamValue().getRef().getType().toString());
 //		String joinTableName = paramSetServiceImpl.getParamByName(execParams, "JOIN_TABLE_NAME").getValue();
-		String sql = relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode);
+		String sql = relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, paramValMap);
 		logger.info("Inside JoinTablesOperator relation sql : " + sql);
 		return null;
 	}

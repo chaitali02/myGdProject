@@ -13,6 +13,7 @@ package com.inferyx.framework.controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE);
+		return ruleOperator.generateSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE, new HashMap<String, String>());
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

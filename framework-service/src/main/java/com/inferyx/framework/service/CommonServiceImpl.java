@@ -4709,6 +4709,16 @@ public class CommonServiceImpl<T> {
 	 * @throws Exception
 	 */
 	public String getSource(Object object, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		if (object == null) {
 			throw new Exception("No source chosen.");
 		} else if (object instanceof Datapod) {
@@ -4717,11 +4727,11 @@ public class CommonServiceImpl<T> {
 		} else if (object instanceof DataSet) {
 			return "(" + datasetOperator.generateSql(((DataSet) object),
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					new HashSet<>(), execParams, runMode) + ")";
+					new HashSet<>(), execParams, runMode, paramValMap) + ")";
 		} else if (object instanceof Rule) {
 			return "(" + ruleOperator.generateSql(((Rule) object),
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null,
-					execParams, runMode) + ")";
+					execParams, runMode, paramValMap) + ")";
 		} else {
 			throw new Exception("Wrong choice of source.");
 		}

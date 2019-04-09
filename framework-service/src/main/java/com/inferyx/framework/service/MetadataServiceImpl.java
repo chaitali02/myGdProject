@@ -11,10 +11,11 @@
 package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,7 +52,6 @@ import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import static org.springframework.data.mongodb.core.query.Criteria.*; 
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -116,10 +117,6 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.domain.VizExec;
-import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -131,6 +128,10 @@ import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
+import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 
 
 @Service
@@ -1555,15 +1556,16 @@ public class MetadataServiceImpl {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("Ref : " + ref);
+		
 		if(execParams != null && (execParams.getCurrParamSet() != null 
 									|| execParams.getParamListHolder() != null 
 									|| execParams.getParamListInfo() != null)) {
 			if(execParams.getCurrParamSet() != null) {
-				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref);
+				return paramSetServiceImpl.getParamValue(execParams, attributeId, ref, paramValMap);
 			} else if(execParams.getParamListHolder() != null) {
-				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
+				return paramListServiceImpl.getParamValue(execParams, attributeId, ref, paramValMap);
 			} else if (execParams.getParamListInfo() != null){
 //				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
 				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
@@ -1585,17 +1587,20 @@ public class MetadataServiceImpl {
 					if((StringUtils.isBlank(paramName) && param2.getParamId().equalsIgnoreCase(attributeId.toString())) 
 							|| param2.getParamName().equals(paramName)) {
 						logger.info("Param name from app paramlist : " + param2.getParamName());
+						paramValMap.put(param2.getParamName(), param2.getParamValue().getValue());
 						return param2.getParamValue().getValue();
 					}
 				}
 				
 				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					if (paramListHolder.getParamName().equals(paramName)) {
+						paramValMap.put(paramName, paramListHolder.getParamValue().getValue());
 						return paramListHolder.getParamValue().getValue();
 					}
 				}
 				
 				if (param != null && param.getParamValue() != null) {
+					paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 					return param.getParamValue().getValue();
 				}
 			} else {
@@ -1603,6 +1608,7 @@ public class MetadataServiceImpl {
 				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 					if (param.getParamId().equals(attributeId+"")) {
+						paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 						return param.getParamValue().getValue();
 					}
 				}
@@ -1618,6 +1624,7 @@ public class MetadataServiceImpl {
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId.toString())) {
 					if(appParamList == null) {
+						paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 						return param.getParamValue().getValue();	// Nothing in execParams. Send from ref
 					} else {	// ExecParams has data. Wait and watch
 						paramName = param.getParamName();
@@ -1633,6 +1640,7 @@ public class MetadataServiceImpl {
 				if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 						|| param.getParamName().equals(paramName)) {
 					logger.info("Param name from app paramlist : " + param.getParamName());
+					paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 					return param.getParamValue().getValue();
 				}
 			}

@@ -116,7 +116,8 @@ public class MapOperator implements IParsable {
 	}
 
 	public String generateSql(Map map, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode) throws Exception {
+			HashMap<String, String> otherParams, ExecParams execParams, Set<MetaIdentifier> usedRefKeySet, RunMode runMode, 
+			java.util.Map<String, String> paramValMap) throws Exception {
 		Relation relation = null;
 		// Target datapod
 		StringBuilder builder = new StringBuilder();
@@ -124,7 +125,7 @@ public class MapOperator implements IParsable {
 		builder.append(SELECT);
 		MetaIdentifierHolder mapSource = map.getSource();
 		attributeMapOperator.setRunMode(runMode);
-		builder.append(attributeMapOperator.generateSql(map.getAttributeMap(),mapSource, refKeyMap, otherParams, execParams));
+		builder.append(attributeMapOperator.generateSql(map.getAttributeMap(),mapSource, refKeyMap, otherParams, execParams, paramValMap));
 		// FROM
 		builder.append(FROM);
 		logger.info("OtherParams in MapOperator : " + otherParams);
@@ -136,7 +137,7 @@ public class MapOperator implements IParsable {
 				MetaIdentifier relationRef = new MetaIdentifier(MetaType.relation, relation.getUuid(), relation.getVersion());
 				usedRefKeySet.add(relationRef);
 				// Append JOIN
-				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, paramValMap));
 			} else if (map.getSource().getRef().getType() == MetaType.datapod) {
 //				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(map.getSource().getRef(), refKeyMap));
 				MetaIdentifier ref = TaskParser.populateRefVersion(map.getSource().getRef(), refKeyMap);
@@ -154,10 +155,10 @@ public class MapOperator implements IParsable {
 			} else if (map.getSource().getRef().getType() == MetaType.dataset) {
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(map.getSource().getRef());
 				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
-				builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, RunMode.BATCH)).append(")  ").append(dataset.getName());
+				builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, RunMode.BATCH, paramValMap)).append(")  ").append(dataset.getName());
 			} else if (map.getSource().getRef().getType() == MetaType.rule) {
 				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(map.getSource().getRef().getUuid(), map.getSource().getRef().getVersion(), map.getSource().getRef().getType().toString(), "N");
-				builder.append(" (" + ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, null, RunMode.BATCH) + " )  " + rule.getName());
+				builder.append(" (" + ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, null, RunMode.BATCH, paramValMap) + " )  " + rule.getName());
 			}
 			// Append Filter(s) - WHERE
 			builder.append(WHERE_1_1);
@@ -179,6 +180,16 @@ public class MapOperator implements IParsable {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		/***************  Initializing paramValMap - START ****************/
+		java.util.Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, java.util.Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.map.toString(), "N");
 		baseExec.setName(map.getName());
 		baseExec.setAppInfo(map.getAppInfo());
@@ -188,7 +199,7 @@ public class MapOperator implements IParsable {
 			statusList.add(status);
 			baseExec.setStatusList(statusList);		
 			try {
-				baseExec.setExec(generateSql(map, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, usedRefKeySet, runMode));
+				baseExec.setExec(generateSql(map, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, usedRefKeySet, runMode, paramValMap));
 			} catch (Exception e) {
 				Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
 				statusList.remove(FAILEDStatus);

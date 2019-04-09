@@ -71,6 +71,7 @@ public class DatasetServiceImpl {
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
 		//logger.info(" Start datasetSample ");
+		Map<String, String> paramValMap = new HashMap<String, String>();
 		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(commonServiceImpl.getConfigValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
@@ -83,7 +84,7 @@ public class DatasetServiceImpl {
 		
 		DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(datasetUUID, datasetVersion, MetaType.dataset.toString());
 		List<Map<String, Object>> data = new ArrayList<>();
-		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode);
+		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode, paramValMap);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
@@ -214,14 +215,15 @@ public class DatasetServiceImpl {
 
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		long startTime = System.currentTimeMillis();
-		String sql = datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		String sql = datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap);
 		logger.info("Time elapsed in generateSql : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 		return sql;
 	}
 
-	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {
+	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		DataSet dataSet = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString());
 		List<AttributeSource> attributeSources = dataSet.getAttributeInfo();
 		List<AttributeSource> tempAttributeSources = new ArrayList<>();
@@ -233,7 +235,7 @@ public class DatasetServiceImpl {
 		}
 		dataSet.setAttributeInfo(tempAttributeSources);
 		dataSet.setFilterInfo(null);
-		String selectQuery = datasetOperator.generateSelectDistinct(dataSet, null, null, null, runMode);
+		String selectQuery = datasetOperator.generateSelectDistinct(dataSet, null, null, null, runMode, paramValMap);
 		if(selectQuery.contains(" AS "+tempAttributeSources.get(0))){
 			selectQuery = selectQuery.replaceAll(" AS "+tempAttributeSources.get(0), "");
 		}
@@ -243,7 +245,7 @@ public class DatasetServiceImpl {
 		StringBuilder builder = new StringBuilder(selectQuery);
 		builder.append(" AS value ");
 		builder.append(" FROM ");
-		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
+		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode, paramValMap));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(dataSet);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());

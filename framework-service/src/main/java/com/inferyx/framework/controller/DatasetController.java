@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class DatasetController {
 			@RequestParam(value = "action", required = false) String action,	    
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
 	 	RunMode runMode = Helper.getExecutionMode(mode);		 
-    	return datasetServiceImpl.getAttributeValues(datasetUuid, attributeID, runMode);   	
+    	return datasetServiceImpl.getAttributeValues(datasetUuid, attributeID, runMode, new HashMap<String, String>());   	
    }
    
 	@RequestMapping(value = "/download", method = RequestMethod.GET)

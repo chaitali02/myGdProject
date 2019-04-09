@@ -394,7 +394,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				synchronized (mapExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.STARTING);
 				}
-				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, new HashMap<String, String>()));
 				synchronized (mapExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.READY);
 				}

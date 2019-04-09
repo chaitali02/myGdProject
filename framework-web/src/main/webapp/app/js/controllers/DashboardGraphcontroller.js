@@ -443,7 +443,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
 
 
 //Start ShowDashboradController
-DatavisualizationModule.controller('ShowDashboradController2', function ($location, privilegeSvc, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce, CF_DOWNLOAD) {
+DatavisualizationModule.controller('ShowDashboradController2', function ($location, privilegeSvc, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce, CF_DOWNLOAD, COLORPALETTE) {
   $scope.showmap = true;
   $scope.isApplyFilter = true
   $scope.datax = [];
@@ -464,7 +464,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.graphDataStatus = false
   $scope.showtooltip = 'top'
   $scope.showtooltiptitle = "Maximize";
-  $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
+  $scope.chartcolor =COLORPALETTE.Random_4 //["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
   $scope.vizpodbody = {};
   $scope.filterListarray = [];
   $scope.hideIcon = true
@@ -512,7 +512,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       'margin-bottom': '10px',
     }
     if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 50) + 'px';
     }
     else {
       style['height'] = "100px";
@@ -915,6 +915,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {
         var datax = {}
         var vizpoddetailjson = {};
+        var colorcount=0;
         vizpoddetailjson.id = "chart" + $scope.sectionRows[i].columns[j].vizpodInfo.id + i + j
         vizpoddetailjson.uuid = $scope.sectionRows[i].columns[j].vizpodInfo.uuid
         vizpoddetailjson.version = $scope.sectionRows[i].columns[j].vizpodInfo.version
@@ -962,9 +963,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
             datacolumnsjson.type = "bar"
 
           }
-
-          if (colorcount <= 16) {
-            if (colorcount == 16) {
+          
+          if($scope.sectionRows[i].columns[j].vizpodInfo.colorPalette !=null && ($scope.sectionRows[i].columns[j].vizpodInfo.colorPalette !="Standard" )){
+            var str=$scope.sectionRows[i].columns[j].vizpodInfo.colorPalette.replace(" ", "_");
+            $scope.chartcolor=COLORPALETTE[str];
+          }else{
+            $scope.chartcolor=COLORPALETTE.Random_4
+          }
+         
+          if (colorcount <=  $scope.chartcolor.length) {
+            if (colorcount ==  $scope.chartcolor.length) {
               colorcount = 0;
             }
             datacolumnsjson.color = $scope.chartcolor[colorcount];
@@ -1157,14 +1165,27 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     var filterInfo = {};
     var ref = {}
     if (data.dataobj.value != "") {
-      ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
-      ref.version = null;
-      ref.type = data.vizpod.vizpodInfo.values[0].ref.type;
-      filterInfo.ref = ref;
-      var attrName=data.vizpod.vizpodInfo.values[0].ref.name;
-      if(data.vizpod.vizpodInfo.values[0].ref.type !="formual"){
-        filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
-        attrName=data.vizpod.vizpodInfo.values[0].attributeName
+      if(data.vizpod.vizpodInfo.keys && data.vizpod.vizpodInfo.keys.length>0){
+        ref.uuid = data.vizpod.vizpodInfo.keys[0].ref.uuid;
+        ref.version = null;
+        ref.type = data.vizpod.vizpodInfo.keys[0].ref.type;
+        filterInfo.ref = ref;
+        var attrName=data.vizpod.vizpodInfo.keys[0].ref.name;
+        if(data.vizpod.vizpodInfo.keys[0].ref.type !="formual"){
+          filterInfo.attrId = data.vizpod.vizpodInfo.keys[0].attributeId;
+          attrName=data.vizpod.vizpodInfo.keys[0].attributeName
+        }
+      }
+      else{
+        ref.uuid = data.vizpod.vizpodInfo.values[0].ref.uuid;
+        ref.version = null;
+        ref.type = data.vizpod.vizpodInfo.values[0].ref.type;
+        filterInfo.ref = ref;
+        var attrName=data.vizpod.vizpodInfo.values[0].ref.name;
+        if(data.vizpod.vizpodInfo.values[0].ref.type !="formual"){
+          filterInfo.attrId = data.vizpod.vizpodInfo.values[0].attributeId;
+          attrName=data.vizpod.vizpodInfo.values[0].attributeName
+        }
       }
      
       filterInfo.value = data.vizpod.gridOptions.data[0][attrName];
@@ -1514,13 +1535,22 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         datacolumnsjson.id = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname] + "";
         datacolumnsjson.ref = "jitu"
         datacolumnsjson.type = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.type.split("-")[0];
-        if (colorcount <= 15) {
-          if (colorcount == 15) {
+        
+        var colorPalette=$scope.sectionRows[rowNo].columns[colNo].vizpodInfo.colorPalette;
+        if(colorPalette !=null && (colorPalette !="Standard" )){
+          var str=colorPalette.replace(" ", "_");
+          $scope.chartcolor=COLORPALETTE[str];
+        }else{
+          $scope.chartcolor=COLORPALETTE.Random_4
+        }
+        if (colorcount <=  $scope.chartcolor.length) {
+          if (colorcount ==  $scope.chartcolor.length) {
             colorcount = 0;
           }
           datacolumnsjson.color = $scope.chartcolor[colorcount];
           colorcount = colorcount + 1;
         }//End If
+       
         datajson[$scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname]] = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnnamevalue];
         columnarray[k] = datacolumnsjson;
         dataarray[k] = datajson;

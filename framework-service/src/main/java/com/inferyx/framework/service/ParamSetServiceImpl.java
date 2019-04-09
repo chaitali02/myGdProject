@@ -285,7 +285,8 @@ public class ParamSetServiceImpl {
 	 */
 	public String getParamValue(ExecParams execParams,  
 									Integer attributeId, 
-									MetaIdentifier ref) throws JsonProcessingException {		
+									MetaIdentifier ref, 
+									Map<String, String> paramValMap) throws JsonProcessingException {		
 		ParamSetHolder paramSetHolder = null;
 		if (execParams != null) {
 			paramSetHolder = execParams.getCurrParamSet();
@@ -296,6 +297,7 @@ public class ParamSetServiceImpl {
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId+"")) {
+					paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 					return param.getParamValue().getValue();
 				}
 			}
@@ -308,6 +310,7 @@ public class ParamSetServiceImpl {
 		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
 			if (paramListHolder.getParamId().equals(attributeId.toString())) {
 				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
+					paramValMap.put(paramListHolder.getParamName(), paramListHolder.getValue());
 					return paramListHolder.getValue();
 				} else {
 //					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
@@ -315,6 +318,7 @@ public class ParamSetServiceImpl {
 					
 					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 						if (param.getParamId().equals(attributeId+"")) {
+							paramValMap.put(param.getParamName(), param.getParamValue().getValue());
 							return param.getParamValue().getValue();
 						}
 					}

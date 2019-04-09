@@ -71,14 +71,15 @@ public class RuleOperator implements IParsable, IReferenceable {
 	static final Logger logger = Logger.getLogger(RuleOperator.class);
 	
 	public String generateSql(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
-		String sql = generateSelect(rule, refKeyMap, otherParams, execParams, runMode)
+								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode
+								, Map<String, String> paramValMap) throws Exception {
+		String sql = generateSelect(rule, refKeyMap, otherParams, execParams, runMode, paramValMap)
 				.concat(getFrom())
-				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
+				.concat(generateFrom(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
 				.concat(generateWhere())
-				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams))
-				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+				.concat(generateFilter(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap))
+				.concat(selectGroupBy(rule, refKeyMap, otherParams, execParams, paramValMap))
+				.concat(generateHaving(rule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap));
 		return sql;
 	}
 	
@@ -102,10 +103,11 @@ public class RuleOperator implements IParsable, IReferenceable {
 		return attrMapList;
 	}
 	
-	public String generateSelect(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String generateSelect(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode
+			, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, null));
 		attributeMapOperator.setRunMode(runMode);
-		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, otherParams, execParams));
+		return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, otherParams, execParams, paramValMap));
 	}
 	
 	public String getFrom() {
@@ -113,14 +115,14 @@ public class RuleOperator implements IParsable, IReferenceable {
 	}
  	
 	public String generateFrom(Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, Map<String, String> paramValMap) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		Relation relation = null;
 		usedRefKeySet.add(rule.getSource().getRef());
 		if (rule.getSource().getRef().getType() == MetaType.relation) {
 //			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
 			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
-			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
+			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode, paramValMap));
 		} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
 //			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap);
@@ -138,12 +140,12 @@ public class RuleOperator implements IParsable, IReferenceable {
 //			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
 			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
 			
-			builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(dataset.getName());
+			builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(")  ").append(dataset.getName());
 		} else if (rule.getSource().getRef().getType() == MetaType.rule) {
 //			Rule innerRule = (Rule) daoRegister.getRefObject(rule.getSource().getRef());
 			Rule innerRule = (Rule) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
 			
-			builder.append("(").append(generateSql(innerRule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(innerRule.getName());
+			builder.append("(").append(generateSql(innerRule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode, paramValMap)).append(")  ").append(innerRule.getName());
 		}
 		return builder.toString();
 	}
@@ -152,30 +154,33 @@ public class RuleOperator implements IParsable, IReferenceable {
 		return ConstantsUtil.WHERE_1_1;
 	}
 	
-	public String selectGroupBy (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String selectGroupBy (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams
+			, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifierHolder ruleSource = new MetaIdentifierHolder(rule.getRef(MetaType.rule));
-		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource);
+		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource, paramValMap);
 	}
 	
 	public String generateFilter (Rule rule, 
 									java.util.Map<String, MetaIdentifier> refKeyMap, 
 									HashMap<String, String> otherParams, 
 									Set<MetaIdentifier> usedRefKeySet, 
-									ExecParams execParams, RunMode runMode) throws Exception {
+									ExecParams execParams, RunMode runMode, 
+									Map<String, String> paramValMap) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
-			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS, paramValMap);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
 	}
 	
-	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
+	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode
+			, Map<String, String> paramValMap) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
-			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS, paramValMap);
 			return StringUtils.isBlank(filterStr) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;
@@ -184,6 +189,16 @@ public class RuleOperator implements IParsable, IReferenceable {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Rule rule = null;
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(baseExec.getUuid())) {
+			execParams.getParamValMap().put(baseExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(baseExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) baseExec;
@@ -191,7 +206,7 @@ public class RuleOperator implements IParsable, IReferenceable {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule.toString());
-		ruleExec.setExec(generateSql(rule, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(generateSql(rule, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, paramValMap));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
