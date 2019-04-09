@@ -1,6 +1,6 @@
 
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('RuleDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $timeout, $filter, Rule2Service, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
+RuleModule.controller('RuleDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $timeout, $filter, Rule2Service, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD ,CF_SUCCESS_MSG) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
 	$scope.allFormats = CF_DOWNLOAD.formate;
@@ -751,27 +751,7 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 			}
 		}
 	}
-	// $scope.onAttrFilterRowDown = function (index) {
-	// 	var rowTempIndex = $scope.filterTableArray[index];
-	// 	var rowTempIndexPlus = $scope.filterTableArray[index + 1];
-	// 	$scope.filterTableArray[index] = rowTempIndexPlus;
-	// 	$scope.filterTableArray[index + 1] = rowTempIndex;
-	// 	if (index == 0) {
-	// 		$scope.filterTableArray[index + 1].logicalOperator = $scope.filterTableArray[index].logicalOperator;
-	// 		$scope.filterTableArray[index].logicalOperator = ""
-	// 	}
-	// }
 
-	// $scope.onAttrFilterRowUp = function (index) {
-	// 	var rowTempIndex = $scope.filterTableArray[index];
-	// 	var rowTempIndexMines = $scope.filterTableArray[index - 1];
-	// 	$scope.filterTableArray[index] = rowTempIndexMines;
-	// 	$scope.filterTableArray[index - 1] = rowTempIndex;
-	// 	if (index == 1) {
-	// 		$scope.filterTableArray[index].logicalOperator = $scope.filterTableArray[index - 1].logicalOperator;
-	// 		$scope.filterTableArray[index - 1].logicalOperator = ""
-	// 	}
-	// }
 
 	$scope.onFilterDrop = function (index) {
 		if (index.targetIndex == 0) {
@@ -783,10 +763,6 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 			$scope.filterTableArray[index.sourceIndex].logicalOperator = ""
 		}
 	}
-
-
-
-
 
 	$scope.selectlhsType = function (type, index) {
 		if (type == "string") {
@@ -811,7 +787,6 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 			}
 		}
 	}
-
 
 	$scope.selectrhsType = function (type, index) {
 		if (type == "string") {
@@ -1401,37 +1376,57 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 
 		Rule2Service.submit(ruleJson, 'rule2', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
-				$scope.ruleId = response.data;
-				$scope.showParamlistPopup();
-			} //End if
-			else if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption == null) {
-				Rule2Service.getOneById(response.data, "rule2").then(function (response) {
-					onSuccessGetOneById(response.data)
-				});
+			// if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+			// 	$scope.ruleId = response.data;
+			// 	$scope.showParamlistPopup();
+			// }
+			// else 
+			if ($scope.checkboxModelexecution == "YES") {
+				Rule2Service.getOneById(response.data, "rule2")
+				.then(function (response) { onSuccessGetOneById(response.data)});
 				var onSuccessGetOneById = function (result) {
-					$scope.ruleExecute(result.data);
+					if ($scope.allparamlist.defaultoption == null) {
+						$scope.ruleExecute(result.data);
+					} 
+					else {
+						$scope.isParamModelEnable = true;
+						$scope.exeDetail = result.data;
+					}
+					
 				}
 			}
 			else {
 				$scope.dataLoading = false;
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = 'Rule Saved Successfully'
+				notify.title = 'Success',
+				notify.content = 'Rule Saved Successfully'
 				$scope.$emit('notify', notify);
 				$scope.close();
 			}
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 			$scope.iSSubmitEnable = false;
 
 		}
 
 		return false;
+	}
+
+	$scope.onExecute = function (data) {
+		$scope.dataLoading = false;
+		notify.type = 'success';
+		notify.title = 'Success';
+		if(data.isExecutionCancel==false){
+			notify.content = CF_SUCCESS_MSG.ruleSaveExecute;
+		}else{
+			notify.content = CF_SUCCESS_MSG.ruleSave
+		}
+		$scope.$emit('notify', notify);
+		$scope.close();
 	}
 
 	$scope.close = function () {
@@ -2147,41 +2142,7 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 
 
 
-	// $scope.submitDownload = function () {
-	// 	var uuid = $scope.download.data.uuid;
-	// 	var version = $scope.download.data.version;
-	// 	var url = $location.absUrl().split("app")[0];
-	// 	$('#downloadSample').modal("hide");
-	// 	$http({
-	// 		method: 'GET',
-	// 		url: url + "rule2/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&rows=" + $scope.download.rows + "&format=" + $scope.download.selectFormate + "&resultType=" + $scope.download.resultType,
-	// 		responseType: 'arraybuffer'
-	// 	}).success(function (data, status, headers) {
-	// 		headers = headers();
-	// 		$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-	// 		var filename = headers['filename'];
-	// 		var contentType = headers['content-type'];
-	// 		var linkElement = document.createElement('a');
-	// 		try {
-	// 			var blob = new Blob([data], {
-	// 				type: contentType
-	// 			});
-	// 			var url = window.URL.createObjectURL(blob);
-	// 			linkElement.setAttribute('href', url);
-	// 			linkElement.setAttribute("download", filename);
-	// 			var clickEvent = new MouseEvent("click", {
-	// 				"view": window,
-	// 				"bubbles": true,
-	// 				"cancelable": false
-	// 			});
-	// 			linkElement.dispatchEvent(clickEvent);
-	// 		} catch (ex) {
-	// 			console.log(ex);
-	// 		}
-	// 	}).error(function (data) {
-	// 		console.log(data);
-	// 	});
-	// }
+	
 
 
 	$scope.downloadFile = function (data) {
@@ -2193,11 +2154,8 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="rule2";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
 	};
+	
 	$scope.onDownloaed=function(data){
 		console.log(data);
 		$scope.isDownloadDirective=data.isDownloadDirective;

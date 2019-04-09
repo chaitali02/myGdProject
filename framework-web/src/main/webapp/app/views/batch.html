@@ -1,4 +1,3 @@
-
 <div class="row" ng-controller="DetailBatchController">
   <div class="col-md-12">
     <div class="page-bar">
@@ -18,7 +17,8 @@
         <li>{{batchDetail.name}}</li>
       </ul>
       <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+          data-original-title="Change dashboard date range">
           <i class="icon-calendar"></i>&nbsp;
           <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
         </div>
@@ -26,42 +26,35 @@
     </div>
     <br>
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="batchDetail"
-      comment-panel-directive></div>
+    <div options="dirOptions" type="'recongroup'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+      comment-data="batchDetail" comment-panel-directive></div>
 
-    <div class="portlet box green" >
+    <div class="portlet box green">
       <div class="portlet-title">
-       
+
         <div class="caption">
-            <i class="fa fa-gift"></i>{{batchDetail.name}}
+          <i class="fa fa-gift"></i>{{batchDetail.name}}
         </div>
         <div class="tools">
-          <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(batchDetail.uuid,batchDetail.version,mode)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+            ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            style="height:16px;font-size:16px;" data-ng-click="showHome(batchDetail.uuid,batchDetail.version,mode)">
+            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
           </a>
-          <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(isEdit==true || isPrivlage || batchDetail.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
+          <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || batchDetail.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <!-- <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
-          </a>
-          <a  href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(batchDetail.uuid,batchDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white"></i>
-          </a> -->
-          <a  href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
-            tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
+          <a href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
+            ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white"></i>
           </a>
-          <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()" data-original-title=""
-            title="" ng-class="(showForm ==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
+          <a href="javascript:;" class="reload" ng-click="broadcastRefreshData()" data-original-title="" title=""
+            ng-class="(showForm ==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
           </a>
-          <a class="" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
-            tooltip>
+          <a class="" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip>
             <i class="fa fa-times" style="display: block;margin: 2px auto;color:white"></i>
           </a>
         </div>
@@ -75,10 +68,11 @@
             <div class="bounce2"></div>
             <div class="bounce3"></div>
           </div>
-          <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="batchDetail.uuid" version="batch.defaultVersion.version"></div>
+          <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="batchDetail.uuid"
+            version="batch.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit(myform.$dirty)" ng-show="showForm"
-          prevent-enter-submit>
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit(myform.$dirty)"
+          ng-show="showForm" prevent-enter-submit>
           <div class="form-wizard">
             <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
               <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
@@ -110,8 +104,8 @@
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="col-md-3 control-label">Version</label>
                 <div class="col-md-6">
-                  <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="batch.defaultVersion.version"
-                    ng-options="c.version as c.version for c in batch.versions">
+                  <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()"
+                    data-ng-model="batch.defaultVersion.version" ng-options="c.version as c.version for c in batch.versions">
                     <option>-select-</option>
                   </select>
                 </div>
@@ -134,10 +128,11 @@
               <div class="form-group">
                 <label class="control-label col-md-3">Tag</label>
                 <div class="col-md-6">
-                  <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
-                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-                    add-on-enter="true" add-on-space="true" on-tag-adding="onTagAdd($tag)" on-tag-removed="onTagRemoved($tag)">
-                    <auto-complete source="loadTag($query)"  min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                  <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+                    add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true" on-tag-adding="onTagAdd($tag)"
+                    on-tag-removed="onTagRemoved($tag)">
+                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true"
+                      max-results-to-show="10">
                     </auto-complete>
                   </tags-input>
                 </div>
@@ -146,7 +141,8 @@
               <div class="form-group">
                 <label class="control-label col-md-3">Desc</label>
                 <div class="col-md-6">
-                  <textarea class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDesc()" ng-model="batchDetail.desc" rows="2" style="resize:none;"></textarea>
+                  <textarea class="form-control" ng-disabled="{{mode}}" ng-change="onChangeDesc()" ng-model="batchDetail.desc"
+                    rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -154,9 +150,10 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6">
                   <div class="btn-group" ng-init="batchDetail.active='Y'">
-                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
-                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'"
-                      uncheckable>No</label>
+                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'N'" uncheckable>No</label>
                   </div>
                 </div>
               </div>
@@ -164,9 +161,10 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                 <div class="col-md-6">
                   <div class="btn-group">
-                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
-                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'"
-                      uncheckable>No</label>
+                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'N'" uncheckable>No</label>
                   </div>
                 </div>
               </div>
@@ -186,10 +184,10 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group" ng-init="batchDetail.publicFlag='N'">
-                    <label class="btn btn-default" ng-model="batchDetail.publicFlag" uib-btn-radio="'Y'"
-                      ng-disabled="{{mode}}" uncheckable>Yes</label>
-                    <label class="btn btn-default" ng-model="batchDetail.publicFlag" uib-btn-radio="'N'"
-                      ng-disabled="{{mode}}" uncheckable>No</label>
+                    <label class="btn btn-default" ng-model="batchDetail.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+                      uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="batchDetail.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+                      uncheckable>No</label>
                   </div>
                 </div>
               </div>
@@ -199,8 +197,8 @@
                 <div class="col-md-6">
                   <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;">
                     <label class="mt-checkbox " style="margin-bottom:-1px;">
-                      <input type="checkbox" ng-model="batchDetail.inParallel" ng-disabled="{{mode}}" ng-true-value="'true'" ng-false-value="'false'"
-                        ng-change="onChangeRunInParallel()">
+                      <input type="checkbox" ng-model="batchDetail.inParallel" ng-disabled="{{mode}}" ng-true-value="'true'"
+                        ng-false-value="'false'" ng-change="onChangeRunInParallel()">
                       <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
                     </label>
 
@@ -212,20 +210,21 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Pipeline Info
                   <span class="required" aria-required="true"> * </span>
                 </label>
-                <div class="col-md-6"> 
-                  <tags-input class="tag-scroll" min-tags="0" name="metaTags" ng-model="metaTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()" on-tag-adding="onPipelineInfoTagAdding($tag)" on-tag-removed="onPipelineInfoTagRemoved($tag)">
-                    <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-                      load-on-empty="true" >
+                <div class="col-md-6">
+                  <tags-input class="tag-scroll" min-tags="0" name="metaTags" ng-model="metaTags" ng-disabled="{{mode}}"
+                    display-property="name" key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()"
+                    on-tag-adding="onPipelineInfoTagAdding($tag)" on-tag-removed="onPipelineInfoTagRemoved($tag)">
+                    <auto-complete source="loadMeta($query)" min-length="1" debounce-delay="0" highlight-matched-text="true"
+                      load-on-focus="true" load-on-empty="true">
                     </auto-complete>
                   </tags-input>
                   <input type="hidden" ng-model="metaTags" name="metaTags" required="">
                 </div>
                 <div class="col-md-1">
-                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
-                    aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
+                    data-placement="top" tooltip aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
-               
+
               </div>
 
               <div class="form-group">
@@ -233,8 +232,8 @@
                 <div class="col-md-9">
                   <div class="mt-checkbox-list" style="margin-top:-7px">
                     <label class="mt-checkbox mt-checkbox-outline">
-                      <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
-                        ng-change="changeCheckboxExecution()">
+                      <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'"
+                        ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
                       <span ng-disabled="{{mode}}"></span>
                     </label>
 
@@ -272,8 +271,8 @@
                     <tr>
                       <th style="text-align: center; Vertical-align: middle;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllRow" ng-change="selectedAllRow()" ng-disabled="{{mode}}"
-                          />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="selectAllRow" ng-change="selectedAllRow()"
+                            ng-disabled="{{mode}}" />
                         </span>
                       </th>
                       <th style="width:13%;text-align: center">Name</th>
@@ -288,52 +287,58 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="data in scheduleTableArray">
-                      
+
                       <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}"  />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
                         </span>
                       </td>
                       <td>
-                          
+
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message="" title="{{data.name}}"
-                          ng-change="onChangeScheduleName($index)" ng-disabled="{{mode}}">
+                          <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}"
+                            required disable-validation-message="" title="{{data.name}}" ng-change="onChangeScheduleName($index)"
+                            ng-disabled="{{mode}}">
                         </span>
                       </td>
                       <td>
-                          <!-- max-view="hour" -->
+                        <!-- max-view="hour" -->
                         <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;">
-                            <!-- MM-D-YYYY, h:mm:ss a -->
-                            <div class="input-group" moment-picker="data.startDate"
-                              start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY"  min-date=data.minDate  selectable="isSelectable(date,type,$index)"   validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)" ng-init="getMinDate()" >
-                              <span class="form-control" name="startDate" style="padding-right:10px;text-align:right;"  name="startDate" ng-disabled="{{mode}}" >{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>  
-                             
-                              <!-- <input class="form-control" placeholder="Select a start date..." locale="en" 
+                          <!-- MM-D-YYYY, h:mm:ss a -->
+                          <div class="input-group" moment-picker="data.startDate" start-view="month" max-view="hour"
+                            format="MMM D HH:mm:00 YYYY" min-date=data.minDate selectable="isSelectable(date,type,$index)"
+                            validate=true change="onChangeStartDate(data.startDate,$index,data.isStartDateChange)"
+                            ng-init="getMinDate()">
+                            <span class="form-control" name="startDate" style="padding-right:10px;text-align:right;"
+                              name="startDate" ng-disabled="{{mode}}">{{data.startDate}} <span style="text-align:right;">{{timezone}}</span></span>
+
+                            <!-- <input class="form-control" placeholder="Select a start date..." locale="en" 
                                   ng-model="data.startDate" ng-model-options="{ updateOn: 'blur' }" 
                                   change="onChangeStartDate(data.startDate,$index)"  ng-disabled="{{mode}}" required disable-validation-message=""> -->
-                                <span class="input-group-addon" style="padding:5px;">
-                                  <i class="fa fa-calendar" style="color:#666;"></i>
-                                </span>
-                           </div>
-                           <input type="hidden" ng-model="data.startDate" name="startDate" required disable-validation-message="">
+                            <span class="input-group-addon" style="padding:5px;">
+                              <i class="fa fa-calendar" style="color:#666;"></i>
+                            </span>
                           </div>
+                          <input type="hidden" ng-model="data.startDate" name="startDate" required
+                            disable-validation-message="">
+                        </div>
                       </td>
                       <td>
-                          <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;">
-                          <div class="input-group" moment-picker="data.endDate" 
-                         
-                            start-view="month" max-view="hour" format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true change="onChangeEndDate(data.endDate,$index,data.isEndDateChange)">
-                            <span class="form-control" name="startDate" style="padding-right: 5px; text-align:right;"   ng-disabled="{{mode}}" name="endDate" >{{data.endDate}} <span style="text-align:right;">{{timezone}}</span></span>  
+                        <div class="form-group" style="margin-left:0px;margin-right:0px;margin-bottom: 0px;">
+                          <div class="input-group" moment-picker="data.endDate" start-view="month" max-view="hour"
+                            format="MMM D HH:mm:00 YYYY" min-date=data.startDate validate=true change="onChangeEndDate(data.endDate,$index,data.isEndDateChange)">
+                            <span class="form-control" name="startDate" style="padding-right: 5px; text-align:right;"
+                              ng-disabled="{{mode}}" name="endDate">{{data.endDate}} <span style="text-align:right;">{{timezone}}</span></span>
                             <!-- <input class="form-control" placeholder="Select a end date..." locale="en" 
                             ng-model="data.endDate" ng-model-options="{ updateOn: 'blur' }"  ng-disabled="{{mode}}" 
                              change="onChangeEndDate(data.endDate,$index)" required disable-validation-message=""> -->
-                             <span class="input-group-addon" style="padding:5px;">
-                                <i class="fa fa-calendar" style="color:#666;"></i>
+                            <span class="input-group-addon" style="padding:5px;">
+                              <i class="fa fa-calendar" style="color:#666;"></i>
                             </span>
-                           </div>
-                           <input type="hidden" ng-model="data.endDate" name="endDate" required disable-validation-message="">
                           </div>
+                          <input type="hidden" ng-model="data.endDate" name="endDate" required
+                            disable-validation-message="">
+                        </div>
                       </td>
                       <!-- <td style="text-align: center;width:5%;">
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -342,17 +347,19 @@
                       </td> -->
                       <td>
                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                          <select ng-model="data.frequencyType" ng-change="onChangeFrequencyType($index)" ng-options=" x.text as x.caption for x in frequencyTypes" ng-disabled="{{mode}}" class="form-control"></select>
+                          <select ng-model="data.frequencyType" ng-change="onChangeFrequencyType($index)" ng-options=" x.text as x.caption for x in frequencyTypes"
+                            ng-disabled="{{mode}}" class="form-control"></select>
                         </span>
                       </td>
-                      
+
                       <td>
-                        <span class="form-group" style="margin-left:0px;margin-right: 0px;" >
-                          <div ng-if="data.frequencyType =='MONTHLY'" >
-                            <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
-                              popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <div ng-if="data.frequencyType =='MONTHLY'">
+                            <div uib-popover-template="'dom-popoverTemplate_data.html'" popover-append-to-body="true"
+                              popover-placement="left-bottom" popover-is-open="data.popoverIsOpen" ng-click="doneFrequencyDetail($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}"
+                                  required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                 <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
@@ -371,11 +378,12 @@
                               </div>
                             </script>
                           </div>
-                          <div ng-if="data.frequencyType =='QUARTERLY'" >
-                            <div uib-popover-template="'quarterly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
-                              popover-is-open="data.quarterlyPopoverIsOpen" ng-click="doneFrequencyDetailQuarterly($index)">
+                          <div ng-if="data.frequencyType =='QUARTERLY'">
+                            <div uib-popover-template="'quarterly-popoverTemplate_data.html'" popover-append-to-body="true"
+                              popover-placement="left-bottom" popover-is-open="data.quarterlyPopoverIsOpen" ng-click="doneFrequencyDetailQuarterly($index)">
                               <div class="col-md-11" style="padding: 0px;">
-                                <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
+                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}"
+                                  required disable-validation-message="">
                               </div>
                               <div class="col-md-1" style="padding:7px 0px 0px 4px;">
                                 <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
@@ -392,17 +400,18 @@
                             </script>
                           </div>
                           <div ng-if="data.frequencyType =='WEEKLY' || data.frequencyType =='BIWEEKLY'">
-                            
-                              <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
-                                popover-is-open="data.domPopoverIsOpen"  ng-click="doneFrequencyDetailDOW($index)">
-                                <div class="col-md-11" style="padding: 0px;">
-                                  <input type="text" class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
-                                </div>
-                                <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                  <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
-                                </div>
+
+                            <div uib-popover-template="'dow-popoverTemplate_data.html'" popover-append-to-body="true"
+                              popover-placement="left-bottom" popover-is-open="data.domPopoverIsOpen" ng-click="doneFrequencyDetailDOW($index)">
+                              <div class="col-md-11" style="padding: 0px;">
+                                <input type="text" class="form-control" ng-model="data.frequencyDetail" readonly
+                                  ng-disabled="{{mode}}" required disable-validation-message="">
                               </div>
-                              <script type="text/ng-template" id="dow-popoverTemplate_data.html">
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
+                              </div>
+                            </div>
+                            <script type="text/ng-template" id="dow-popoverTemplate_data.html">
                                 <div style="width:270px;"> 
                                   <weekday-selector model="WeekArray"></weekday-selector>
                                   <!-- border-top:1px solid grey; -->
@@ -415,18 +424,19 @@
                                   </div>
                                 </div>
                               </script>
+                          </div>
+                          <div ng-if="data.frequencyType =='HOURLY'">
+                            <div uib-popover-template="'hourly-popoverTemplate_data.html'" popover-append-to-body="true"
+                              popover-placement="left-bottom" popover-is-open="data.hourlyPopoverIsOpen" ng-click="doneFrequencyDetailHourly($index)">
+                              <div class="col-md-11" style="padding: 0px;">
+                                <input class="form-control" ng-model="data.frequencyDetail" readonly ng-disabled="{{mode}}"
+                                  required disable-validation-message="">
+                              </div>
+                              <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
+                              </div>
                             </div>
-                            <div ng-if="data.frequencyType =='HOURLY'" >
-                                <div uib-popover-template="'hourly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
-                                  popover-is-open="data.hourlyPopoverIsOpen" ng-click="doneFrequencyDetailHourly($index)">
-                                  <div class="col-md-11" style="padding: 0px;">
-                                    <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
-                                  </div>
-                                  <div class="col-md-1" style="padding:7px 0px 0px 4px;">
-                                    <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
-                                  </div>
-                                </div>
-                                <script type="text/ng-template" id="hourly-popoverTemplate_data.html">
+                            <script type="text/ng-template" id="hourly-popoverTemplate_data.html">
                                   <div>
                                     <hourly-selector model="myArrayOfHours"></hourly-selector>
                                     <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
@@ -435,8 +445,8 @@
                                     </div>
                                   </div>
                                 </script>
-                              </div>
-                          <div ng-if="['ONCE','DAILY','YEARLY'].indexOf(data.frequencyType) !=-1" style="text-align:center" >-NA-</div>
+                          </div>
+                          <div ng-if="['ONCE','DAILY','YEARLY'].indexOf(data.frequencyType) !=-1" style="text-align:center">-NA-</div>
                         </span>
                       </td>
                     </tr>
@@ -449,7 +459,7 @@
       </div>
     </div>
   </div>
- 
+
 </div>
 <br>
 <br>

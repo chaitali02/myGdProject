@@ -248,13 +248,14 @@ public class SqoopExecutor {
 	    return res;
 	}
 
-	public FileLayout getFileLayout(String targetFormat) {
+	/******************Unused***********************/
+	/*public FileLayout getFileLayout(String targetFormat) {
 		if(targetFormat != null) {
 			switch(targetFormat.toLowerCase()) {
 			case "parquet" : return FileLayout.ParquetFile;
 			}
 		}
 		return null;
-	}
+	}*/
 
 }

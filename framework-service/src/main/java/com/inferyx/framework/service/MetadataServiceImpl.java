@@ -95,7 +95,6 @@ import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Message;
-import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -144,11 +143,7 @@ public class MetadataServiceImpl {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	LoadServiceImpl loadServiceImpl;
-	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -204,11 +199,12 @@ public class MetadataServiceImpl {
 		return baseEntity;
 	}	
 	
-	public Meta findOne(String id) throws JsonProcessingException{
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+	 /*************************Unused****************************/
+/*	public Meta findOne(String id) throws JsonProcessingException{
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//return iMetadataDao.findOneById(appUuid,id);
 		return (Meta) commonServiceImpl.getOneById(id, MetaType.meta.toString());
-	}
+	}*/
 
 
 	@SuppressWarnings("unchecked")
@@ -1063,7 +1059,8 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
+	/********************************Unused************************************/
+	/*public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
 		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operator.toString(),"N");			
@@ -1085,7 +1082,7 @@ public class MetadataServiceImpl {
 			holderList.add(paramListHolder);
 		}
 		return holderList;
-	}
+	}*/
 	
 
 	@SuppressWarnings("unchecked")

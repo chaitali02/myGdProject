@@ -20,36 +20,6 @@ import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class DimensionServiceImpl {
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	IDimensionDao  iDimensionDao;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	FormulaServiceImpl formulaServiceImpl;
-	@Autowired
-	ExpressionServiceImpl expressionServiceImpl;
-	@Autowired
-	ConditionServiceImpl conditionServiceImpl;
-	/*@Autowired
-	GroupServiceImpl groupServiceImpl;*/
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DimensionServiceImpl.class);
 

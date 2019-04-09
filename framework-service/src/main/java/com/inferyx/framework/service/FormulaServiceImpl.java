@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -28,51 +26,21 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.IFormulaDao;
 import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Expression;
+
 import com.inferyx.framework.domain.Formula;
-import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.FormulaTypeHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.register.GraphRegister;
+
 
 @Service
 public class FormulaServiceImpl {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	IFormulaDao iFormulaDao;
-	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;	
-	@Autowired
-	DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	ExpressionServiceImpl expressionServiceImpl;
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 
@@ -117,10 +85,10 @@ public class FormulaServiceImpl {
 		return result;
 	}
 
-
-	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
+/********************Unused*************************/
+	/*public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
 		return findFormulaByType2(uuid, formulaType, "Y");
-	}
+	}*/
 	
 	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType, String resolveFlag) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null

@@ -42,15 +42,12 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ReconGroupServiceImpl;
 import com.inferyx.framework.service.ReconServiceImpl;
-import com.inferyx.framework.service.RegisterService;
 import com.inferyx.framework.service.TaskHolder;
 
 @RestController
 @RequestMapping(value = "/recon")
 public class ReconController {
 
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired

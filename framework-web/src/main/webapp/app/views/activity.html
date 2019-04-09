@@ -19,7 +19,8 @@
       </li>
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+        data-original-title="Change dashboard date range">
         <i class="icon-calendar"></i>&nbsp;
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
@@ -27,8 +28,8 @@
   </div>
   <br>
   <!-- END PAGE HEADER-->
-  <div options="dirOptions" type="'activity'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="activitydata"
-    comment-panel-directive></div>
+  <div options="dirOptions" type="'activity'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+    comment-data="activitydata" comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
@@ -39,33 +40,29 @@
           </div>
 
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+              ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               style="height:16px;font-size:16px;" data-ng-click="showHome(activitydata.uuid,activitydata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || activitydata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-              data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <!-- <a title="Edit" ng-class="(showForm==true && isEdit==true && isPrivlage)? 'currentpage':'notcurrentpage'"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || activitydata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(activitydata.uuid,activitydata.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-click="showView(activitydata.uuid,activitydata.version)" ng-hide="isAdd" style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
+
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-show="isDependencyShow" data-ng-click="showGraph(activitydata.uuid,activitydata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip
+              ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
 
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="admin({type:'activity'})" style="height:14px;">
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="admin({type:'activity'})"
+              style="height:14px;">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
             </a>
           </div>
@@ -78,7 +75,8 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="activitydata.uuid" version="activity.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="activitydata.uuid"
+              version="activity.defaultVersion.version">
             </div>
           </div>
 
@@ -106,7 +104,8 @@
                 <div class="form-group">
                   <label class="col-md-3 control-label">Name*</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="activitydata.name" required="">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="activitydata.name"
+                      required="">
                   </div>
                 </div>
 
@@ -152,8 +151,10 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group">
-                      <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="activitydata.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
@@ -161,8 +162,10 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group">
-                      <label class="btn btn-default" ng-model="activitydata.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="activitydata.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="activitydata.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="activitydata.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
@@ -181,13 +184,13 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="activitydata.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="activitydata.publicFlag" uib-btn-radio="'Y'"
-                        ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="activitydata.publicFlag" uib-btn-radio="'N'"
-                        ng-disabled="{{mode}}" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="activitydata.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="activitydata.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+                        uncheckable>No</label>
                     </div>
                   </div>
-                </div> 
+                </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Status</label>
                   <div class="col-md-6">

@@ -21,11 +21,9 @@ import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.dao.IUserDao;
-import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -42,9 +40,7 @@ public class FrameworkThreadServiceImpl {
 	@Autowired
 	IUserDao iUserDao;
 	@Autowired
-	CommonServiceImpl commonServiceImpl;
-	@Autowired
-	ActivityServiceImpl activityServiceImpl;
+	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 
@@ -71,7 +67,7 @@ public class FrameworkThreadServiceImpl {
 
 			// Set default app and role
 			sessionContext.setAppInfo((appInfo != null)? appInfo : userDO.getAppInfo().get(0));
-			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
+//			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
 			Group group = (Group) commonServiceImpl.getOneByUuidAndVersion(
 					userDO.getGroupInfo().get(0).getRef().getUuid(), userDO.getGroupInfo().get(0).getRef().getVersion(),
 					MetaType.group.toString());

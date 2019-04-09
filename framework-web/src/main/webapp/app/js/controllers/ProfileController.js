@@ -1275,11 +1275,6 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 	$scope.isD3RGEexecGraphShow = false;
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.download = {};
-	//$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-	//$scope.download.formates = CF_DOWNLOAD.formate;
-	//$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-	//$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-	//$scope.download.limit_to = CF_DOWNLOAD.limit_to;
 	// ui grid
 	var notify = {
 		type: 'success',
@@ -1485,8 +1480,8 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$('#reExModal').modal('hide');
 		$scope.executionmsg = "Profile Group Restarted Successfully"
 		notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = $scope.executionmsg
+		notify.title = 'Success',
+		notify.content = $scope.executionmsg
 		$rootScope.$emit('notify', notify);
 		CommonService.restartExec("profilegroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -1504,43 +1499,6 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$scope.showZoom = !$scope.showZoom;
 	}
 
-	// $scope.submitDownload = function () {
-	// 	var uuid = $scope.download.data.uuid;
-	// 	var version = $scope.download.data.version;
-	// 	var url = $location.absUrl().split("app")[0];
-	// 	$('#downloadSample').modal("hide");
-	// 	$http({
-	// 		method: 'GET',
-	// 		url: url + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
-	// 		responseType: 'arraybuffer'
-	// 	}).success(function (data, status, headers) {
-	// 		$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-
-	// 		headers = headers();
-	// 		var filename = headers['filename'];
-	// 		var contentType = headers['content-type'];
-	// 		var linkElement = document.createElement('a');
-	// 		try {
-	// 			var blob = new Blob([data], {
-	// 				type: contentType
-	// 			});
-	// 			var url = window.URL.createObjectURL(blob);
-	// 			linkElement.setAttribute('href', url);
-	// 			linkElement.setAttribute("download", filename);
-	// 			var clickEvent = new MouseEvent("click", {
-	// 				"view": window,
-	// 				"bubbles": true,
-	// 				"cancelable": false
-	// 			});
-	// 			linkElement.dispatchEvent(clickEvent);
-	// 		} catch (ex) {
-	// 			console.log(ex);
-	// 		}
-	// 	}).error(function (data) {
-	// 		console.log(data);
-	// 	});
-	// }
-
 	$scope.downloadFilePofile = function (data) {
 		if ($scope.isD3RuleEexecGraphShow) {
 			return false;
@@ -1550,10 +1508,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="profile";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
+	
 	};
 	$scope.onDownloaed=function(data){
 		console.log(data);

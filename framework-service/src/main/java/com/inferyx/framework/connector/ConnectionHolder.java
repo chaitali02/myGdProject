@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.connector;
 
-import java.sql.DatabaseMetaData;
 
 public class ConnectionHolder {
 	

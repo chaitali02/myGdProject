@@ -10,49 +10,26 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Dag;
-import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualGroup;
-import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Datasource;
+
 import com.inferyx.framework.domain.Edge;
-import com.inferyx.framework.domain.Expression;
-import com.inferyx.framework.domain.Formula;
-import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.Load;
+
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.domain.Vertex;
-import com.inferyx.framework.domain.Vizpod;
+
 @Service
 public class GenericGraph {
 	List<Row> verticesRowList = new ArrayList<Row>();
@@ -70,50 +47,20 @@ public class GenericGraph {
 	String objectUuid=null;
 	Row vertexRow;
 	
-	@Autowired FunctionServiceImpl functionServiceImpl;
-	@Autowired DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired RelationServiceImpl relationServiceImpl;
-	@Autowired RuleServiceImpl ruleServiceImpl; 
-	@Autowired FilterServiceImpl filterServiceImpl;
-	@Autowired RuleGroupServiceImpl ruleGroupServiceImpl;
-    @Autowired DataQualServiceImpl dataQualServiceImpl;
-    @Autowired DataQualGroupServiceImpl dataqualGroupServiceImpl;
-    @Autowired MapServiceImpl mapServiceImpl;
-    @Autowired DagServiceImpl dagServiceImpl;
-    @Autowired DataStoreServiceImpl datastoreServiceImpl;
-    @Autowired DatapodServiceImpl datapodServiceImpl;
-    @Autowired ApplicationServiceImpl applicationServiceImpl;
-    @Autowired FormulaServiceImpl formulaServiceImpl; 
-    @Autowired UserServiceImpl userServiceImpl;
-    @Autowired LoadServiceImpl loadServiceImpl;
-    @Autowired ExpressionServiceImpl expressionServiceImpl;
-    @Autowired DataQualGroupServiceImpl dqGroupServiceImpl;
-    @Autowired DatasetServiceImpl datasetServiceImpl;
-    @Autowired RoleServiceImpl roleServiceImpl;
-    @Autowired GroupServiceImpl groupServiceImpl;
-    @Autowired LoadExecServiceImpl loadExecServiceImpl;
-    @Autowired ProfileServiceImpl profileServiceImpl;
-    @Autowired ProfileGroupServiceImpl profileGroupServiceImpl;
-    @Autowired ProfileExecServiceImpl profileExecServiceImpl;
-    @Autowired MapExecServiceImpl mapExecServiceImpl;
-    @Autowired VizpodServiceImpl vizpodServiceImpl;
-    @Autowired AlgorithmServiceImpl algorithmServiceImpl;
-    @Autowired ModelServiceImpl modelServiceImpl;
-    @Autowired ParamListServiceImpl paramlistServiceImpl;
     @Autowired GraphServiceImpl graphServiceImpl;
     
     static final Logger logger = Logger.getLogger(GenericGraph.class);
    
     
-    
-    public List<Row> saveEdges(String jsonString, List<Row> verticesRowList, List<Row> edgeRowList, Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap) throws ParseException, JsonProcessingException, JSONException {
+    /***************************Unused**********************/
+    /*public List<Row> saveEdges(String jsonString, List<Row> verticesRowList, List<Row> edgeRowList, Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap) throws ParseException, JsonProcessingException, JSONException {
     	JSONObject jsonObject = new JSONObject(jsonString);
     	String uuid = jsonObject.optString("uuid");
     	String version = jsonObject.optString("version");
     	String srcUUid = uuid.concat("_").concat(version);
     	parseJsonObject(srcUUid, jsonObject, verticesRowList, edgeRowList, verticesRowMap, edgeRowMap);
     	return null;
-    }
+    }*/
     
     
     
@@ -190,8 +137,8 @@ public class GenericGraph {
 		return null;
 	}
 
-	
-	public List<Row> createVertex(Map<String, Object> document,String type, List<Row> verticesRowList, Map<String, Row> verticesRowMap) {
+	/***************************Unused*****************************/
+	/*public List<Row> createVertex(Map<String, Object> document,String type, List<Row> verticesRowList, Map<String, Row> verticesRowMap) {
 		
 		UUID=document.get("uuid").toString().concat("_").concat(document.get("version").toString());
 		Version=document.get("version").toString();
@@ -204,9 +151,10 @@ public class GenericGraph {
 		verticesRowMap.put(UUID.concat("_").concat(Version).concat("_").concat(Name).concat("_").concat(type).concat("_").concat(active), vertexRow);
 		
 		return verticesRowList;
-	}
+	}*/
 
-	public List<Row> saveVertex(Map<String, Object> document,String type, List<Row> verticesRowList) {
+	/***************************Unused*****************************/
+	/*public List<Row> saveVertex(Map<String, Object> document,String type, List<Row> verticesRowList) {
 		
 		UUID=document.get("uuid").toString().concat("_").concat(document.get("version").toString());
 		Version=document.get("version").toString();
@@ -222,10 +170,12 @@ public class GenericGraph {
 		
 		return verticesRowList;
 	}
+	*/
 	
-	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn, String active) {
+	/***************************Unused*****************************/
+	/*public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn, String active) {
 		return RowFactory.create(uuid,version,name,nodeType, null, null, createdOn, active);
-	}
+	}*/
 	
 	public List<Row> createEdge(String srcUuid, String dstUuid, String dstVersion, String name, List<Row> edgeRowList, Map<String, Row> edgeRowMap) {
 		return createEdge(srcUuid, dstUuid.concat("_").concat(dstVersion), name, edgeRowList, edgeRowMap);
@@ -239,9 +189,10 @@ public class GenericGraph {
 		return edgeRowList;
 	}
 	
-	public List<Row> createAndSaveEdge(String srcUuid, String dstUuid, String dstVersion, String name) {
+	/***************************Unused*****************************/
+	/*public List<Row> createAndSaveEdge(String srcUuid, String dstUuid, String dstVersion, String name) {
 		return createAndSaveEdge(srcUuid, dstUuid.concat("_").concat(dstVersion), name);
-	}
+	}*/
 
 	public List<Row> createAndSaveEdge(String srcUuid, String dst, String name) {
 		edgeRow = RowFactory.create(srcUuid, dst, name);

@@ -15,11 +15,13 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{paramlistData.name | strReplace:'_':' '|capitalize}}</span>
+        <span>{{paramlistData.name}}</span>
+        <!-- | strReplace:'_':' '|capitalize -->
       </li>
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+        data-original-title="Change dashboard date range">
         <i class="icon-calendar"></i>&nbsp;
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
@@ -28,39 +30,34 @@
   <!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'paramlist'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="paramlistData" comment-panel-directive></div>
+  <div options="dirOptions" type="'paramlist'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+    comment-data="paramlistData" comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{paramlistData.name | strReplace:'_':' '|capitalize}}
+            <i class="fa fa-gift"></i>{{paramlistData.name}}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(paramlistData.uuid,paramlistData.version,mode)">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+              ng-class="(showForm==true || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(paramlistData.uuid,paramlistData.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit"ng-class="(isEdit==true || isPrivlage || paramlistData.locked == 'Y' || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || paramlistData.locked == 'Y' || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(paramlistData.uuid,paramlistData.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(paramlistData.uuid,paramlistData.version)"
-              ng-hide="isAdd" style="height:16px;">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true ||isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-click="showview(paramlistData.uuid,paramlistData.version)" ng-hide="isAdd" style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
+              ng-class="(showForm==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(paramlistData.uuid,paramlistData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip  tooltip ng-class="(showGraphDiv ==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip
+              tooltip ng-class="(showGraphDiv ==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="close()" style="height:14px;">
@@ -76,7 +73,8 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="paramlistData.uuid" version="paramlist.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="paramlistData.uuid"
+              version="paramlist.defaultVersion.version">
             </div>
           </div>
 
@@ -84,6 +82,7 @@
             <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
               <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
             </div>
+
             <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
               <div class="spinner">
                 <div class="bounce1"></div>
@@ -91,8 +90,10 @@
                 <div class="bounce3"></div>
               </div>
             </div>
+
             <div ng-show="!isEditInprogess && !isEditVeiwError">
-              <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitParamList()" prevent-enter-submit>
+              <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitParamList()"
+                prevent-enter-submit>
                 <div class="form-group" ng-show="paramlistData.uuid">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
@@ -104,7 +105,8 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramlistData.name" required="">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="paramlistData.name"
+                      required="">
                   </div>
                 </div>
                 <div class="form-group" ng-show="paramlistData.uuid">
@@ -132,19 +134,21 @@
                 <div class="form-group taginput">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+                      add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true"
                         max-results-to-show="10">
                       </auto-complete>
                     </tags-input>
                   </div>
                 </div>
-              
-              
+
+
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                   <div class="col-md-6">
-                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="paramlistData.desc" rows="2" style="resize:none;"></textarea>
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="paramlistData.desc" rows="2"
+                      style="resize:none;"></textarea>
                   </div>
                 </div>
 
@@ -162,7 +166,7 @@
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" >
+                    <div class="btn-group">
                       <label class="btn btn-default" ng-model="paramlistData.locked" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                         uncheckable>Yes</label>
                       <label class="btn btn-default" ng-model="paramlistData.locked" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
@@ -185,34 +189,38 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="paramlistData.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
-                        uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
-                        uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" ng-init="paramlistData.templateFlg='Y'" >{{addMode}}
-                      <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'Y'" ng-change="onChangeIsTemplate()"  ng-disabled="isAdd == true ? false:true" uncheckable >Yes</label>
-                      <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'N'"  ng-change="onChangeIsTemplate()" ng-disabled="isAdd== true ? false:true" uncheckable >No</label>
+                    <div class="btn-group" ng-init="paramlistData.templateFlg='Y'">{{addMode}}
+                      <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'Y'" ng-change="onChangeIsTemplate()"
+                        ng-disabled="isAdd == true ? false:true" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="paramlistData.templateFlg" uib-btn-radio="'N'" ng-change="onChangeIsTemplate()"
+                        ng-disabled="isAdd== true ? false:true" uncheckable>No</label>
                     </div>
                   </div>
                 </div>
-            
-                <div class="form-group" >
+
+                <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Use Template</label>
                   <div class="col-md-5 col-sm-5 col-xs-12">
-                    <select class="form-control" select2   name="templateInfo" ng-disabled="(isAdd ==true && !isUseTemlate == false) ? false:true" ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid" >    <!--||!isTemplate -->
+                    <select class="form-control" select2 name="templateInfo" ng-disabled="(isAdd ==true && !isUseTemlate == false) ? false:true"
+                      ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid">
+                      <!--||!isTemplate -->
                       <option value="">-select-</option>
                     </select>
                     <input type="hidden" name="templateInfo" data-ng-model="selectedTemplate.uuid" ng-required="isTemplageInfoRequired">
                   </div>
-                
+
                 </div>
-    
+
                 <div class="form-group" style="padding-top:10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a ng-click="close()" class="btn btn-primary">Cancel</a>
@@ -225,14 +233,17 @@
                   </div>
                 </div>
                 <div class="x_title">
-                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}} ||isTableDisable " ng-click="removeRow()"></button>
-                  <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}} || isTableDisable" ng-click="addRow()"></button>
+                  <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}} ||isTableDisable "
+                    ng-click="removeRow()"></button>
+                  <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}} || isTableDisable"
+                    ng-click="addRow()"></button>
                   <h4>
                     <strong>Parameter Details</strong>
                   </h4>
                   <hr>
                 </div>
-                <div class="pull-right" ng-if="isUseTemlateText" style="font-style: italic;color:blue;margin-bottom:10px;margin-top:-10px;">Note : Template in use</div>
+                <div class="pull-right" ng-if="isUseTemlateText" style="font-style: italic;color:blue;margin-bottom:10px;margin-top:-10px;">Note
+                  : Template in use</div>
                 <br>
                 <div>
                   <table class=" row-border hover table  table-striped table-bordered">
@@ -240,7 +251,8 @@
                       <tr>
                         <th style="text-align:center;Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}} || isTableDisable" ng-model="selectallattribute" ng-change="selectAllRow()"/>
+                            <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}} || isTableDisable"
+                              ng-model="selectallattribute" ng-change="selectAllRow()" />
                           </span>
                         </th>
                         <th style="width:6%;text-align:center">ID</th>
@@ -249,15 +261,16 @@
                         <th class="text-center" style="width:20%;">Desc</th>
                         <th class="text-center" style="width:14%;">Type</th>
                         <th class="text-center" style="width:20%;">Default Value</th>
-                       
+
                       </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="tabledata in paramtable">
                         <td style="text-align:center;Vertical-align:middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}} || isTableDisable"/>
-                        </span>
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected"
+                              ng-disabled="{{mode}} || isTableDisable" />
+                          </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -266,26 +279,29 @@
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="{{mode}} || isTableDisable"
-                            class="form-control" required disable-validation-message="">
+                            <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}"
+                              ng-disabled="{{mode}} || isTableDisable" class="form-control" required
+                              disable-validation-message="">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.paramDispName" title="{{tabledata.paramDispName}}" ng-disabled="{{mode}} || isTableDisable"
-                            class="form-control" required disable-validation-message="">
+                            <input type="text" ng-model="tabledata.paramDispName" title="{{tabledata.paramDispName}}"
+                              ng-disabled="{{mode}} || isTableDisable" class="form-control" required
+                              disable-validation-message="">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.paramDesc" title="{{tabledata.paramDesc}}" ng-disabled="{{mode}} || isTableDisable"
-                            class="form-control">
+                            <input type="text" ng-model="tabledata.paramDesc" title="{{tabledata.paramDesc}}"
+                              ng-disabled="{{mode}} || isTableDisable" class="form-control">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <select select2 ng-model="tabledata.paramType" ng-options="x.name as x.caption for x in type | orderBy:'caption'" ng-disabled="{{mode}} || isTableDisable"
-                            class="form-control" ng-change="onChangeParamType(tabledata.paramType,$index)" required disable-validation-message=""></select>
+                            <select select2 ng-model="tabledata.paramType" ng-options="x.name as x.caption for x in type | orderBy:'caption'"
+                              ng-disabled="{{mode}} || isTableDisable" class="form-control" ng-change="onChangeParamType(tabledata.paramType,$index)"
+                              required disable-validation-message=""></select>
                           </span>
                         </td>
                         <td>
@@ -295,7 +311,8 @@
                                 data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
                                 required disable-validation-message="">
                               </select>
-                              <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid" required disable-validation-message=""/>
+                              <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid"
+                                required disable-validation-message="" />
                             </span>
                           </div>
                           <div ng-if="tabledata.paramValueType =='function'" ng-init="onNgInit('function',$index)">
@@ -304,39 +321,44 @@
                                 data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allFunction track by r.uuid"
                                 required disable-validation-message="">
                               </select>
-                              <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid" required disable-validation-message=""/>
+                              <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid"
+                                required disable-validation-message="" />
                             </span>
                           </div>
                           <div ng-if="tabledata.paramValueType =='simple'">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <input type="text" ng-model="tabledata.paramValue" title="{{tabledata.paramValue}}" ng-disabled="{{mode}}"
-                              class="form-control">
+                              <input type="text" ng-model="tabledata.paramValue" title="{{tabledata.paramValue}}"
+                                ng-disabled="{{mode}}" class="form-control">
                             </span>
                           </div>
-                          
+
                           <div ng-if="tabledata.paramValueType =='date'">
                             <div class="col-md-12" style="margin-top:0px;margin-bottom:-20px;padding-left: 0px;padding-right: 0px;">
-                          
                               <p class="input-group">
-                                <input type="text" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="tabledata.paramValue" is-open="popup2.opened" ng-disabled="!isEdit" ng-keypress="ValidationKeyPress($event)" datepicker-options="dateOptions" ng-required="true" close-text="Close"  />
+                                <input type="text" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}" class="form-control"
+                                  uib-datepicker-popup="yyyy-MM-dd" ng-model="tabledata.paramValue" is-open="tabledata.opened"
+                                  ng-disabled="!isEdit" ng-keypress="ValidationKeyPress($event)" datepicker-options="dateOptions"
+                                  ng-required="true" close-text="Close" />
                                 <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                  <button type="button" class="btn btn-default" ng-click="open2($index)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
                               </p>
                             </div>
                           </div>
                           <div ng-if="tabledata.paramValueType =='array'">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              <tags-input  min-tags="1" class="tag-scroll-height" ng-model="tabledata.paramArrayTags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                                
+                              <tags-input min-tags="1" class="tag-scroll-height" ng-model="tabledata.paramArrayTags"
+                                ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true"
+                                add-on-space="true">
+
                               </tags-input>
                             </span>
                           </div>
-                          <div  class="text-center" ng-if="['simple','distribution','date','function','array'].indexOf(tabledata.paramValueType) == -1">
-                              NA
-                            </div>
+                          <div class="text-center" ng-if="['simple','distribution','date','function','array'].indexOf(tabledata.paramValueType) == -1">
+                            NA
+                          </div>
                         </td>
-                       
+
                       </tr>
                     </tbody>
                   </table>

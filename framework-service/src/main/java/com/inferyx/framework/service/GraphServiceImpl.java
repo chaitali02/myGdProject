@@ -92,8 +92,6 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	@Autowired
 	IEdgeDao iEdgeDao;
 	@Autowired
-	LogServiceImpl logServiceImpl;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	GraphOperator graphOperator;
@@ -109,14 +107,6 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	MongoTemplate mongoTemplate;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
-
-	public LogServiceImpl getLogServiceImpl() {
-		return logServiceImpl;
-	}
-
-	public void setLogServiceImpl(LogServiceImpl logServiceImpl) {
-		this.logServiceImpl = logServiceImpl;
-	}
 
 	private static final Logger logger = Logger.getLogger(GraphServiceImpl.class);
 	private List<String> keywordList = new ArrayList<>();
@@ -289,18 +279,21 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		iEdgeDao.save(edge);
 	}
 
-	public List<Vertex> findVertices() {
+	/**************************Unused*************************/
+	/*public List<Vertex> findVertices() {
 		return iVertexDao.findAll();
-	}
+	}*/
 
-	public long countEdges() {
+	/**************************Unused*************************/
+	/*public long countEdges() {
 		return iEdgeDao.count();
-	}
+	}*/
 
-	public long countVertices() {
+/***********************Unused**********************/
+	/*	public long countVertices() {
 		return iVertexDao.count();
 	}
-
+*/
 	public void deleteAllVertices() {
 		String appUuid = null;
 		if (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
@@ -325,7 +318,8 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	}
 
 
-	public List<Row> saveVertex(Map<String, Object> document, String type, List<Row> verticesRowList) {
+	/************************Unused**************************/
+	/*public List<Row> saveVertex(Map<String, Object> document, String type, List<Row> verticesRowList) {
 
 		String UUID = document.get("uuid").toString().concat("_").concat(document.get("version").toString());
 		String Version = document.get("version").toString();
@@ -340,7 +334,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		verticesRowList.add(vertexRow);
 
 		return verticesRowList;
-	}
+	}*/
 
 	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn, String active,
 			GraphMetaIdentifierHolder graphMetaIdentifierHolder ,List<MetaIdentifierHolder> appInfo) {

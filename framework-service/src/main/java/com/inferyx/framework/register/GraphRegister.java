@@ -153,11 +153,11 @@ import com.inferyx.framework.service.VizpodServiceImpl;
 @Component
 public class GraphRegister<T> {
 
+//	@Autowired
+//	DatapodServiceImpl datapodServiceImpl; 
 	@Autowired
-	DatapodServiceImpl datapodServiceImpl; 
-	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
+//	RelationServiceImpl relationServiceImpl;
+//	@Autowired
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired
 	ExpressionServiceImpl expressionServiceImpl;
@@ -169,8 +169,8 @@ public class GraphRegister<T> {
 	DimensionServiceImpl dimensionServiceImpl;
 	@Autowired
 	DagServiceImpl dagServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
+//	@Autowired
+//	UserServiceImpl userServiceImpl;
 	@Autowired
 	GroupServiceImpl groupServiceImpl;
 	@Autowired
@@ -219,6 +219,7 @@ public class GraphRegister<T> {
 	ParamListServiceImpl paramListServiceImpl;
 	@Autowired
 	GenericGraph genericGraph;
+	@Autowired
 	GraphInfo graphFlag;
 //	@Autowired
 //	MetadataUtil miUtil;

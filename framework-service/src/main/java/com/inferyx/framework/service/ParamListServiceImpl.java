@@ -12,49 +12,32 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ParamListServiceImpl {
 
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	IParamListDao iParamListDao;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ParamListServiceImpl.class);
 
 
-	
-	public String sql(Integer paramId, ParamList paramList) {
+	/******************************Unused**********************/
+	/*public String sql(Integer paramId, ParamList paramList) {
 		List<Param> list = paramList.getParams();
 		for(Param param : list) {
 			if(param.getParamId().equalsIgnoreCase(paramId.toString())) {
@@ -63,7 +46,7 @@ public class ParamListServiceImpl {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	/**
 	 * 

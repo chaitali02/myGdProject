@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.domain.BaseEntityStatus;
-import com.inferyx.framework.service.SecurityServiceImpl;
 import com.inferyx.framework.service.SystemServiceImpl;
 
 import shaded.parquet.org.codehaus.jackson.JsonGenerationException;
@@ -42,8 +41,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SystemController {
 	@Autowired
 	SystemServiceImpl systemServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(SystemController.class);
 	

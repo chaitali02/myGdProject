@@ -28,14 +28,6 @@ import com.inferyx.framework.view.metadata.DQView;
 public class DQViewServiceImpl {
 	
 	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	IDataQualDao iDataQualDao;
-	@Autowired
-	FilterServiceImpl filterServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-    @Autowired
     CommonServiceImpl<?> commonServiceImpl;
 
 	static final Logger logger = Logger.getLogger(DQViewServiceImpl.class);

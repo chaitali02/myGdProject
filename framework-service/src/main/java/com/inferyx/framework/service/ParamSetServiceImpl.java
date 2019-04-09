@@ -17,16 +17,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.ml.param.ParamMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IModelDao;
-import com.inferyx.framework.dao.IParamListDao;
+
 import com.inferyx.framework.dao.IParamSetDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
@@ -44,43 +40,18 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ParamSetServiceImpl {
 
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
+	
 	@Autowired
 	IParamSetDao iParamSetDao;
 	@Autowired
-	IParamListDao IParamListDao;
-	@Autowired
-	IModelDao iModelDao;
-	@Autowired
-	IAlgorithmDao iAlgorithmDao;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	ModelServiceImpl modelServiceImpl;
-	@Autowired
-	AlgorithmServiceImpl algorithmServiceImpl;
-	@Autowired
-	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	RuleServiceImpl ruleServiceImpl;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	MetadataServiceImpl metadataServiceImpl;
+	
 	
 	static final Logger logger = Logger.getLogger(ParamSetServiceImpl.class);
 
@@ -248,7 +219,8 @@ public class ParamSetServiceImpl {
 		return paramSetList;		
 	}	
 	
-	public ParamMap getParamMapCombined(ExecParams execParams, String trainUuid, String trainVersion) throws Exception {
+	/******************************Unused*************************************/
+	/*public ParamMap getParamMapCombined(ExecParams execParams, String trainUuid, String trainVersion) throws Exception {
 		Object paramMapList1 = null;
 		List<ParamMap> paramMapList = metadataServiceImpl.getParamMap(execParams, trainUuid, trainVersion, paramMapList1);
 		ParamMap paramMapCombined = null;
@@ -264,7 +236,7 @@ public class ParamSetServiceImpl {
 			}
 		}
 		return paramMapCombined;	
-	}
+	}*/
 	
 	/**
 	 * 
@@ -290,7 +262,9 @@ public class ParamSetServiceImpl {
 	 * @param paramName
 	 * @return
 	 */
-	public ParamListHolder getParamById (ExecParams execParams, String paramId) {
+	
+	/********************************Unused******************************/
+	/*public ParamListHolder getParamById (ExecParams execParams, String paramId) {
 		if (execParams == null || execParams.getParamListInfo() == null || execParams.getParamListInfo().isEmpty() || StringUtils.isBlank(paramId)) {
 			return null;
 		}
@@ -300,7 +274,7 @@ public class ParamSetServiceImpl {
 			}
 		}
 		return null;
-	}
+	}*/
 	/**
 	 * 
 	 * @param execParams

@@ -11,9 +11,7 @@ angular.module('InferyxApp')
       $scope.createMode = $stateParams.action == 'add';
       $scope.selectedDagTemplate = null;
       $scope.isDependencyShow = false;
-      var yourDateObject = new Date();
       $scope.isDestoryState = false; 
-      var convertedDate = $filter('date')(yourDateObject, "EEE MMM dd hh:mm:ss Z yyyy", "EDT");
       var notify = {
         type: 'success',
         title: 'Success',
@@ -275,25 +273,6 @@ angular.module('InferyxApp')
               $('.button-next').click();
             }
           }, 500);
-
-          // MetadataDagSerivce.getAllLatest("map").then(function (response) { onSuccessGetAllLatesMap(response.data) });
-          // var onSuccessGetAllLatesMap = function (resposne) {
-          //   $scope.allMap = resposne;
-          // }
-
-          // MetadataDagSerivce.getAllLatest("dq").then(function (response) { onSuccessGetAllLatesDq(response.data) });
-          // var onSuccessGetAllLatesDq = function (resposne) {
-          //   $scope.allDq = resposne;
-          // }
-          // MetadataDagSerivce.getAllLatest("dqgroup").then(function (response) { onSuccessGetAllLatesDqGroup(response.data) });
-          // var onSuccessGetAllLatesDqGroup = function (resposne) {
-          //   $scope.allDqGroup = resposne;
-          // }
-
-          // MetadataDagSerivce.getAllLatest("load").then(function (response) { onSuccessGetAllLatesLode(response.data) });
-          // var onSuccessGetAllLatesLode = function (resposne) {
-          //   $scope.allLoad = resposne;
-          // }
         } //End getLatestByUuid
         var onError =function(){
           $scope.isEditInprogess=false;
@@ -349,13 +328,6 @@ angular.module('InferyxApp')
         } 
       }//End SelectVersin
 
-
-
-     
-
-      $scope.changemodelvalue = function () {
-        $scope.isshowmodel = sessionStorage.isshowmodel
-      };
 
       $scope.okdagsave = function () {
         $('#dagsave').css("dispaly", "none");
@@ -427,7 +399,6 @@ angular.module('InferyxApp')
         MetadataDagSerivce.submit(dagJson, "dag", upd_tag).then(function (response) { onSuccessSubmit(response.data) }, function (response) { onError(response.data) });
         var onSuccessSubmit = function (response) {
           $scope.dataLoading = false;
-          $scope.changemodelvalue();
           if (options.execution == "YES") {
             MetadataDagSerivce.getOneById(response, "dag").then(function (response) { onSuccessGetOneById(response.data) });
             var onSuccessGetOneById = function (result) {
@@ -528,30 +499,6 @@ angular.module('InferyxApp')
         $scope.isSubmitShow = false;
       }
 
-      // $scope.OnChangeTemplate=function(){
-      //  if($scope.dagdata.templateFlg == 'N'){
-      //    $scope.isTemplate=true;
-      //    $scope.isUseTemplate=false;
-      //    $scope.allDagTemplate=[];
-      //    MetadataDagSerivce.getDagTemplates('dag').then(function (response) {onSuccessGetDagTemplates(response.data)});
-      //    var onSuccessGetDagTemplates=function(response){
-      //      console.log(response)
-      //      for(var i=0;i<response.length;i++){
-      //        var dagtemplate={};
-      //        dagtemplate.version=response[i].version;
-      //        dagtemplate.uuid=response[i].uuid;
-      //        dagtemplate.name=response[i].name;
-      //        $scope.allDagTemplate[i]=dagtemplate
-      //      }
-      //    }//End getDagTemplates
-      //  }
-      //  else
-      //    $scope.isTemplate=false;
-      //   // $scope.isUseTemplate=true;
-      //    $scope.selectedDagTemplate=null;
-      //    $scope.allDagTemplate=[];
-
-      // }
       $scope.selectTemplateDag = function () {
         console.log($scope.selectedDagTemplate)
         if ($scope.selectedDagTemplate != null) {
@@ -578,26 +525,26 @@ angular.module('InferyxApp')
 
       }
       //  buttonConfig.toggleEvent=$scope.OnChangeTemplate();
-      $scope.sbumitDag = function () {
-        $scope.isshowmodel = true;
-        $scope.dataLoading = true;
-        $scope.iSSubmitEnable = false;
-        $scope.dagHasChanged = true;
-        var dagJson = {};
-        dagJson.uuid = $scope.dagdata.uuid
-        dagJson.name = $scope.dagdata.name
-        var tagArray = [];
-        if ($scope.tags != null) {
-          for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
-            tagArray[counttag] = $scope.tags[counttag].text;
-          }
-        }
-        dagJson.tags = tagArray
-        dagJson.active = $scope.dagdata.active;
-        console.log(JSON.stringify(dagJson));
-      }
-      $scope.fullscreen = false;
+      // $scope.sbumitDag = function () {
+      //   $scope.isshowmodel = true;
+      //   $scope.dataLoading = true;
+      //   $scope.iSSubmitEnable = false;
+      //   $scope.dagHasChanged = true;
+      //   var dagJson = {};
+      //   dagJson.uuid = $scope.dagdata.uuid
+      //   dagJson.name = $scope.dagdata.name
+      //   var tagArray = [];
+      //   if ($scope.tags != null) {
+      //     for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+      //       tagArray[counttag] = $scope.tags[counttag].text;
+      //     }
+      //   }
+      //   dagJson.tags = tagArray
+      //   dagJson.active = $scope.dagdata.active;
+      //   console.log(JSON.stringify(dagJson));
+      // }
 
+      $scope.fullscreen = false;
       $scope.requestFullscreen = function () {
         if ($scope.fullscreen) {
           $("#form_wizard_1").removeAttr('style');

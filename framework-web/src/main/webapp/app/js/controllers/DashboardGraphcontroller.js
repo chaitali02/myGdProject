@@ -443,7 +443,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
 
 
 //Start ShowDashboradController
-DatavisualizationModule.controller('ShowDashboradController2', function ($location, privilegeSvc, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce, CF_DOWNLOAD) {
+DatavisualizationModule.controller('ShowDashboradController2', function ($location, privilegeSvc, $http, $filter, dagMetaDataService, $window, $timeout, $rootScope, $scope, $state, $stateParams, $q, NgTableParams, $sessionStorage, DahsboardSerivce, CF_DOWNLOAD, COLORPALETTE) {
   $scope.showmap = true;
   $scope.isApplyFilter = true
   $scope.datax = [];
@@ -464,7 +464,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.graphDataStatus = false
   $scope.showtooltip = 'top'
   $scope.showtooltiptitle = "Maximize";
-  $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
+  $scope.chartcolor =COLORPALETTE.Random_4 //["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
   $scope.vizpodbody = {};
   $scope.filterListarray = [];
   $scope.hideIcon = true
@@ -915,6 +915,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       for (var j = 0; j < $scope.sectionRows[i].columns.length; j++) {
         var datax = {}
         var vizpoddetailjson = {};
+        var colorcount=0;
         vizpoddetailjson.id = "chart" + $scope.sectionRows[i].columns[j].vizpodInfo.id + i + j
         vizpoddetailjson.uuid = $scope.sectionRows[i].columns[j].vizpodInfo.uuid
         vizpoddetailjson.version = $scope.sectionRows[i].columns[j].vizpodInfo.version
@@ -962,9 +963,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
             datacolumnsjson.type = "bar"
 
           }
-
-          if (colorcount <= 16) {
-            if (colorcount == 16) {
+          
+          if($scope.sectionRows[i].columns[j].vizpodInfo.colorPalette !=null && ($scope.sectionRows[i].columns[j].vizpodInfo.colorPalette !="Standard" )){
+            var str=$scope.sectionRows[i].columns[j].vizpodInfo.colorPalette.replace(" ", "_");
+            $scope.chartcolor=COLORPALETTE[str];
+          }else{
+            $scope.chartcolor=COLORPALETTE.Random_4
+          }
+         
+          if (colorcount <=  $scope.chartcolor.length) {
+            if (colorcount ==  $scope.chartcolor.length) {
               colorcount = 0;
             }
             datacolumnsjson.color = $scope.chartcolor[colorcount];
@@ -1527,13 +1535,22 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         datacolumnsjson.id = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname] + "";
         datacolumnsjson.ref = "jitu"
         datacolumnsjson.type = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.type.split("-")[0];
-        if (colorcount <= 15) {
-          if (colorcount == 15) {
+        
+        var colorPalette=$scope.sectionRows[rowNo].columns[colNo].vizpodInfo.colorPalette;
+        if(colorPalette !=null && (colorPalette !="Standard" )){
+          var str=colorPalette.replace(" ", "_");
+          $scope.chartcolor=COLORPALETTE[str];
+        }else{
+          $scope.chartcolor=COLORPALETTE.Random_4
+        }
+        if (colorcount <=  $scope.chartcolor.length) {
+          if (colorcount ==  $scope.chartcolor.length) {
             colorcount = 0;
           }
           datacolumnsjson.color = $scope.chartcolor[colorcount];
           colorcount = colorcount + 1;
         }//End If
+       
         datajson[$scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnname]] = $scope.sectionRows[rowNo].columns[colNo].vizpodDetails.datapoints[k][columnnamevalue];
         columnarray[k] = datacolumnsjson;
         dataarray[k] = datajson;
@@ -1646,44 +1663,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.getAllLatestDashboardExec("reRun"); 
   }
 
-  // $scope.submitDownload = function () {
-  //   var uuid = $scope.download.data.uuid;
-  //   var version = $scope.download.data.version;
-  //   var url = $location.absUrl().split("app")[0];
-  //   $('#downloadSample').modal("hide");
-  //   $http({
-  //     method: 'GET',
-  //     url: url + "vizpod/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&saveOnRefresh="+$scope.dashboardExecData.dashboard.saveOnRefresh+"&format="+$scope.download.selectFormate,
-  //     responseType: 'arraybuffer'
-  //   }).success(function (data, status, headers) {
-
-  //     $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-
-  //       headers = headers();
-	// 	var filename = headers['filename'];
-	// 	var contentType = headers['content-type'];
-	// 	var linkElement = document.createElement('a');
-	// 	try {
-	// 		var blob = new Blob([data], {
-	// 			type: contentType
-	// 		});
-	// 		var url = window.URL.createObjectURL(blob);
-	// 		linkElement.setAttribute('href', url);
-	// 		linkElement.setAttribute("download",filename);
-  //           var clickEvent = new MouseEvent("click", {
-  //         "view": window,
-  //         "bubbles": true,
-  //         "cancelable": false
-  //       });
-  //       linkElement.dispatchEvent(clickEvent);
-  //     } catch (ex) {
-  //       console.log(ex);
-  //     }
-  //   }).error(function (data) {
-  //     console.log(data);
-  //   });
-  // }
-
+  
   $scope.onDownloaed=function(data){
     
 		console.log(data);
@@ -1701,11 +1681,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.download.version=data.version;
     $scope.download.type="dashboard";
     $scope.isDownloadDirective=true;
-    // $('#downloadSample').modal({
-    //   backdrop: 'static',
-    //   keyboard: false
-    // });
-
   };
 
   $scope.downloadFileDetail = function (data) {
@@ -1717,11 +1692,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.download.version=data.version;
     $scope.download.type="vizpoddetail";
     $scope.isDownloadDetailDirective=true;
-    // $('#downloadSample').modal({
-    //   backdrop: 'static',
-    //   keyboard: false
-    // });
-
   };
 
   $scope.executeDashboard = function (data) {

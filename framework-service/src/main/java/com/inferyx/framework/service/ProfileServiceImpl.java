@@ -142,14 +142,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 	 * Sort(Sort.Direction.DESC, "version"))); }
 	 */
 
-	public Profile findAllByUuid(String uuid) {
+	/**************************Unused***************************/
+	/*public Profile findAllByUuid(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
 		return iProfileDao.findAllByUuid(appUuid, uuid);
-	}
+	}*/
 
-	public Profile findLatestByUuid(String uuid) {
+	/*public Profile findLatestByUuid(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -157,9 +158,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return iProfileDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
 		}
 		return iProfileDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}
+	}*/
 
-	public Profile findOneByUuidAndVersion(String uuid, String version) {
+	/*public Profile findOneByUuidAndVersion(String uuid, String version) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -168,9 +169,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return iProfileDao.findOneByUuidAndVersion(appUuid, uuid, version);
 		} else
 			return iProfileDao.findOneByUuidAndVersion(uuid, version);
-	}
+	}*/
 
-	public Profile findOneById(String id) {
+	/*public Profile findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -179,9 +180,11 @@ public class ProfileServiceImpl extends RuleTemplate {
 		} else
 			return iProfileDao.findOne(id);
 
-	}
+	}*/
 
-	public List<Profile> findAll() {
+	
+	/*******************Unused********************/
+	/*public List<Profile> findAll() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -189,7 +192,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return iProfileDao.findAll();
 		}
 		return iProfileDao.findAll(appUuid);
-	}
+	}*/
 
 	public void delete(String Id) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -210,7 +213,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return ProfileDet;
 	}
 
-	public List<Profile> findAllLatest() {
+	
+	/*********************Unused********************/
+	/*public List<Profile> findAllLatest() {
 		{
 			Aggregation ProfileAggr = newAggregation(group("uuid").max("version").as("version"));
 			AggregationResults<Profile> ProfileResults = mongoTemplate.aggregate(ProfileAggr, "profile", Profile.class);
@@ -236,8 +241,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return result;
 		}
 	}
-
-	public List<Profile> findAllLatestActive() {
+*/
+	/*************************Unused***********************/
+	/*public List<Profile> findAllLatestActive() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -260,9 +266,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 		}
 		return result;
-	}
+	}*/
 
-	public List<Profile> findAllByVersion(String uuid) {
+	/********************Unused******************/
+	/*public List<Profile> findAllByVersion(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
@@ -270,7 +277,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return iProfileDao.findAllVersion(appUuid, uuid);
 		} else
 			return iProfileDao.findAllVersion(uuid);
-	}
+	}*/
 
 	public Profile getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -282,6 +289,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 			return iProfileDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}
 
+	/*************************Unused******************/
+	/*
 	public MetaIdentifierHolder saveAs(Profile profile) throws Exception {
 		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
 		MetaIdentifier ref = new MetaIdentifier();
@@ -297,9 +306,11 @@ public class ProfileServiceImpl extends RuleTemplate {
 		ref.setUuid(profileNew.getUuid());
 		refMeta.setRef(ref);
 		return refMeta;
-	}
+	}*/
 
-	public List<BaseEntity> findList(List<? extends BaseEntity> ProfileList) {
+	
+	/***********************Unused********************/
+	/*public List<BaseEntity> findList(List<? extends BaseEntity> ProfileList) {
 		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
 		for (BaseEntity Profile : ProfileList) {
 			BaseEntity baseEntity = new BaseEntity();
@@ -329,7 +340,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		}
 		return baseEntityList;
 	}
-
+*/
 	public ProfileExec create(String profileUUID, String profileVersion, ProfileExec profileExec,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws NumberFormatException, Exception {
@@ -446,7 +457,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public Status restart(BaseExec baseExec) throws Exception {
+	
+	/**********************Unused**********************/
+	/*public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profileExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -454,7 +467,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}
+	}*/
 
 
 	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)

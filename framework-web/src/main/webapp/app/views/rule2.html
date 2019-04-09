@@ -1103,9 +1103,6 @@
                                 <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
                                     <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="submit()"
                                         novalidate="novalidate">
-
-
-
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Run Immediately ?</label>
                                             <div class="col-md-9">
@@ -1185,8 +1182,10 @@
             </div>
         </div>
     </div>
-
-    <div id="responsive" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div ng-if="isParamModelEnable">
+        <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'rule2'" on-execute="onExecute"></exec-param-directive>
+    </div>   
+    <!--<div id="responsive" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content" style="resize: both;overflow: auto;">
                 <div class="modal-header">
@@ -1358,7 +1357,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 <br>
 <br>

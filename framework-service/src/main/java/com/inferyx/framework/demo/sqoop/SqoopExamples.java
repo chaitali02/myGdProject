@@ -60,27 +60,32 @@ public class SqoopExamples {
     sqoopOptions.setHiveImport(true);
   }
  
-  private static void tansferringEntireTableSpecificDirHivePartitionMerge(String table
+ /****************************Unused***********************/
+  /* private static void tansferringEntireTableSpecificDirHivePartitionMerge(String table
     , String directory
     , String partitionKey
     , String partitionValue) {
     tansferringEntireTableSpecificDirHiveMerge(table,directory);
     sqoopOptions.setHivePartitionKey(partitionKey);
     sqoopOptions.setHivePartitionValue(partitionValue);
-  }
+  }*/
  
-  private static void tansferringEntireTableWhereClause(String table,
+  
+  /****************************Unused**********************/
+  /*private static void tansferringEntireTableWhereClause(String table,
     String whereClause) {
     //To do
-  }
+  }*/
  
-  private static void compressImportedData(String table, String directory
+  /*********************Unused***************************/
+  /*private static void compressImportedData(String table, String directory
   ,String compress) {
     tansferEntireTableSpecificDir(table,directory);
     sqoopOptions.setCompressionCodec(compress);
-  }
+  }*/
  
-  private static void incrementalImport(String table
+ /**********************Unused***************************/
+  /* private static void incrementalImport(String table
     , String directory
     , IncrementalMode mode
     , String checkColumn
@@ -90,7 +95,7 @@ public class SqoopExamples {
     sqoopOptions.setAppendMode(true);
     sqoopOptions.setIncrementalTestColumn(checkColumn);
     sqoopOptions.setIncrementalLastValue(lastVale);
-  }
+  }*/
  
   private static void transferEntireTableSpecificDirHive(String table,
                                                         String directory) {
@@ -98,12 +103,14 @@ public class SqoopExamples {
     sqoopOptions.setHiveImport(true);
   }
   
-  private static void transferEntireTableSpecificDirHivePartition(String table,
+ 
+  /***************************Unused************************/
+  /* private static void transferEntireTableSpecificDirHivePartition(String table,
                                                         String directory
                                                         , String partitionKey
                                                         , String partitionValue) {
     transferEntireTableSpecificDirHive(table,directory);
     sqoopOptions.setHivePartitionKey(partitionKey);
     sqoopOptions.setHivePartitionValue(partitionValue);
-  }
+  }*/
 }

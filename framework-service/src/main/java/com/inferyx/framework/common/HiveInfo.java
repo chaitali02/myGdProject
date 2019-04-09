@@ -10,19 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.executor.ExecContext;
 
 @Component
 
@@ -40,8 +29,8 @@ public class HiveInfo {
 	}*/
 	
 	
-
-	public HiveConf getHiveConfiguration() throws IOException {
+/************************************Unused******************************/
+	/*public HiveConf getHiveConfiguration() throws IOException {
 		Resource resource = new ClassPathResource("/framework.properties");
 		Properties prop = PropertiesLoaderUtils.loadProperties(resource);
         HiveConf hiveConf = new HiveConf();        
@@ -79,5 +68,5 @@ public class HiveInfo {
 			}
 		
         return hiveConf;
-    }
+    }*/
 }

@@ -55,10 +55,7 @@
             title="Restart" data-toggle="tooltip" data-placement="top" tooltip="" ng-click="reGroupExecute()">
             <i class="fa fa-repeat" area-hidden="true"></i>
           </a>
-          <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'"
-            data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;">
-            <span class="glyphicon glyphicon-file" style="color:white;"></span>
-          </a> -->
+        
           <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="rGExecshowGraph()" ng-class="isD3RGEexecGraphShow==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
           </a>
@@ -107,10 +104,7 @@
           <a ng-click="downloadFilePofile({uuid:ruleExecUuid,version:ruleExecVersion})" tooltip-placement="{{showtooltip}}" uib-tooltip="Download">
             <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'"></i>
           </a>
-          <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"
-            onClick="refreshResultfunction()" style="height:16px;">
-            <span class="glyphicon glyphicon-file" style="color:white;"></span>
-          </a> -->
+    
           <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="ruleExecshowGraph()" ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
           </a>
@@ -179,45 +173,5 @@
     <div ng-if="isDownloadDirective">
       <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
     </div>
-    <!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-      <div class="modal-dialog" style="width:40%">
-        <div class="modal-content" style="resize: both;overflow: auto;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-            <h4 class="modal-title">Download</h4>
-          </div>
-          <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
-            <div class="modal-body" style="padding-top:0px">
-              <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                  data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Rows</label>
-                        <div class="col-md-8">
-                          <input type="number"  min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload" >                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-md-3 control-label">Format</label>
-                        <div class="col-md-8">
-                          <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-              <button type="submit" class="btn green">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>

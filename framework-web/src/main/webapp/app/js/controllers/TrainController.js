@@ -863,28 +863,45 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     var onSuccess = function (response) {
       $scope.iSSubmitEnable = true
       $scope.changemodelvalue();
+      debugger
       if ($scope.selectedRunImmediately == "YES") {
         TrainService.getOneById(response, "train").then(function (response) { onSuccessGetOneById(response.data) });
         var onSuccessGetOneById = function (result) {
-          $scope.trainExecute(result);
+          //$scope.trainExecute(result);
+          $scope.isParamModelEnable = true;
+						$scope.exeDetail = result;
         }
       } //End if
       else {
         $scope.dataLoading = false;
         notify.type = 'success',
-          notify.title = 'Success',
-          notify.content = 'Configuration Saved Successfully'
+        notify.title = 'Success',
+        notify.content = 'Configuration Saved Successfully'
         $scope.$emit('notify', notify);
         $scope.okmodelsave();
       }
     }
     var onError = function (response) {
       notify.type = 'error',
-        notify.title = 'Error',
-        notify.content = "Some Error Occurred"
+      notify.title = 'Error',
+      notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
     }
   }
+
+  $scope.onExecute = function (data) {
+		$scope.dataLoading = false;
+		notify.type = 'success';
+		notify.title = 'Success';
+		if(data.isExecutionCancel==false){
+			notify.content = 'Configuration Submited and Saved Successfully'
+		}else{
+			notify.content = 'Configuration Saved Successfully'
+		}
+		$scope.$emit('notify', notify);
+		$scope.okmodelsave();
+	}
+
 
   $scope.okmodelsave = function () {
     $('#modelsave').css("dispaly", "none");
@@ -976,10 +993,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.selectParamType = null;
 
     if ($scope.selectedRunImmediately == "YES" && $scope.modelData.dependsOn.ref.type == "algorithm") {
-      $('#responsive').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
+      // $('#responsive').modal({
+      //   backdrop: 'static',
+      //   keyboard: false
+      // });
     } else {
       $scope.isShowExecutionparam = false;
       $scope.allparamset = null;

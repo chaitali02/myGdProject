@@ -1,4 +1,5 @@
 <div data-ng-controller="MetadataApplicationController">
+
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
     <ul class="page-breadcrumb">
@@ -28,6 +29,7 @@
   </div>
   <!-- END PAGE HEADER-->
   <br>
+
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <div options="dirOptions" type="'application'" on-close="onPanelClose" mode="mode" current-user="userDetail"
     comment-data="applicationdata" comment-panel-directive></div>
@@ -51,15 +53,6 @@
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-              data-placement="top" tooltip ng-click="enableEdit(applicationdata.uuid,applicationdata.version)" ng-hide="isAdd"
-              style="height:16px;">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-click="showView(applicationdata.uuid,applicationdata.version)" ng-hide="isAdd" style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
               ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(applicationdata.uuid,applicationdata.version)" style="height:14px;">
@@ -110,6 +103,7 @@
                     <input type="text" class="form-control" data-ng-disabled="true" ng-model="applicationdata.uuid">
                   </div>
                 </div>
+
                 <div class="form-group">
                   <label class="col-md-3 control-label">Name
                     <span class="required" aria-required="true"> * </span>
@@ -216,7 +210,7 @@
                       <span class="required" aria-required="true"> * </span>
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
+                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
                         ng-change="selectType()" required>
                       </select>
                     </div>
@@ -234,28 +228,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- <div class="col-md-12">
-                  <div class="col-md-6 form-group">
-                    <label class="control-label col-md-6 col-sm-6 col-xs-12">Data Source
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                      <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in SourceTypes"
-                        ng-change="selectType()" required>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-md-6 form-group">
-                    <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                      <select class="form-control" ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="selectDataSource"
-                        ng-options="r as r.name for r in alldatasource  track by r.uuid " required>
-                      </select>
-                    </div>
-                  </div>
-                </div> -->
+                
                 <div class="form-group">
                   <label class="col-md-3 control-label">Application Type
                     <span class="required" aria-required="true"> * </span>
@@ -408,11 +381,12 @@
                           <div ng-if="tabledata.paramValueType =='date'">
                             <div class="col-md-12" style="margin-top:0px;margin-bottom:-20px;padding-left: 0px;padding-right: 0px;">
                               <p class="input-group">
-                                <input type="text" class="form-control" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}"  uib-datepicker-popup="yyyy-MM-dd" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
-                                  is-open="popup2.opened" ng-disabled="!isEdit" datepicker-options="dateOptions"
+                                <input type="text" class="form-control" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}"
+                                  uib-datepicker-popup="yyyy-MM-dd" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
+                                  is-open="tabledata.opened" ng-disabled="!isEdit" datepicker-options="dateOptions"
                                   ng-required="true" close-text="Close" />
                                 <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default" ng-click="open2()">
+                                  <button type="button" class="btn btn-default" ng-click="open2($index)">
                                     <i class="glyphicon glyphicon-calendar"></i>
                                   </button>
                                 </span>

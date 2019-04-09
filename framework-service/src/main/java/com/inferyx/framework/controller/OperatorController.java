@@ -14,18 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.connector.RConnector;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.ModelExecServiceImpl;
-import com.inferyx.framework.service.ModelServiceImpl;
+
 import com.inferyx.framework.service.CustomOperatorServiceImpl;
 
 
@@ -36,10 +32,6 @@ public class OperatorController {
 	
 	@Autowired
 	private CustomOperatorServiceImpl operatorServiceImpl;
-	@Autowired
-	RConnector rConnector;
-	@Autowired
-	RExecutor rExecutor;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	

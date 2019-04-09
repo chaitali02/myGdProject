@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +25,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.Application;
@@ -38,35 +36,18 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
+	
 	@Autowired
 	IProfileExecDao iProfileExecDao;
 	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	ProfileServiceImpl profileServiceImpl;
 	@Autowired
 	IProfileGroupExecDao iProfileGroupExecDao;
 	@Autowired
@@ -285,7 +266,8 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return mi;
 	}
     
-	public void PAUSE (String uuid, String version) throws JsonProcessingException {
+	/*************************Unused***********************************/
+	/*public void PAUSE (String uuid, String version) throws JsonProcessingException {
 	MetaIdentifier profileExecMI = new MetaIdentifier(MetaType.profileExec, uuid, version);
 //	ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecMI);
 	ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecMI.getUuid(), profileExecMI.getVersion(), profileExecMI.getType().toString(), "N");
@@ -301,9 +283,10 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-}
+}*/
 	
-	public void RESUME (String uuid, String version) throws JsonProcessingException {
+	/*****************************Unused******************************/
+	/*public void RESUME (String uuid, String version) throws JsonProcessingException {
 		MetaIdentifier profileExecMI = new MetaIdentifier(MetaType.profileExec, uuid, version);
 //		ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecMI);
 		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecMI.getUuid(), profileExecMI.getVersion(), profileExecMI.getType().toString(), "N");
@@ -319,7 +302,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion) throws Exception {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/

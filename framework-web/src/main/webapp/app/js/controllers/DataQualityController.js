@@ -38,7 +38,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.isAdd = true;
   }
- 
+  $scope.isSelectAuto=false;
   $scope.isDestoryState = false;
   $scope.thresholdType = CF_THRESHOLDTYPE.thresholdType
   $scope.rhsNA = ['NULL', "NOT NULL"];
@@ -300,7 +300,21 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
 	}
-
+  $scope.thresholdInfoDefault=function(){
+    $scope.thresholdInfo = {};
+    $scope.thresholdInfo.low = 25;
+    $scope.thresholdInfo.medium = 50;
+    $scope.thresholdInfo.high = 75;
+    $scope.thresholdInfo.lowMin = 1;
+    $scope.thresholdInfo.lowMax = $scope.thresholdInfo.medium;
+    $scope.thresholdInfo.mediumMin = $scope.thresholdInfo.low;
+    $scope.thresholdInfo.mediumMax = $scope.thresholdInfo.high;
+    $scope.thresholdInfo.highMin = $scope.thresholdInfo.medium;
+    $scope.thresholdInfo.highMax = 100;
+    $scope.thresholdInfo.type = $scope.thresholdType[0];
+    $scope.thresholdInfo.isPresent = true;
+  }
+  
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.showactive = "true"
@@ -426,6 +440,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         expressionCheck.name = response.dqdata.expressionCheck.ref.name;
         $scope.selectedExpression = expressionCheck;
       }
+      if(response.dqdata.autoFlag =="Y"){
+        $scope.onChagneAuto();
+      }
 
     };
     var onError = function () {
@@ -436,21 +453,11 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.showactive = "false";
     $scope.dataqualitydata.locked = "N";
-    $scope.thresholdInfo = {};
-    $scope.thresholdInfo.low = 25;
-    $scope.thresholdInfo.medium = 50;
-    $scope.thresholdInfo.high = 75;
-    $scope.thresholdInfo.lowMin = 1;
-    $scope.thresholdInfo.lowMax = $scope.thresholdInfo.medium;
-    $scope.thresholdInfo.mediumMin = $scope.thresholdInfo.low;
-    $scope.thresholdInfo.mediumMax = $scope.thresholdInfo.high;
-    $scope.thresholdInfo.highMin = $scope.thresholdInfo.medium;
-    $scope.thresholdInfo.highMax = 100;
-    $scope.thresholdInfo.type = $scope.thresholdType[0];
-    $scope.thresholdInfo.isPresent = true;
+    $scope.thresholdInfoDefault();
     $scope.getAllLatestActiveDependsOn("datapod");
   }
-
+  
+  
 
 
   $scope.selectVersion = function () {
@@ -458,6 +465,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.myform1.$dirty = false;
     $scope.isEditInprogess = true;
     $scope.isEditVeiwError = false;
+    $scope.dataqualityoption=undefined;
+    $scope.dataqualityoptions=null;
     DataqulityService.getOneByUuidAndVersionDQView($scope.dq.defaultVersion.uuid, $scope.dq.defaultVersion.version, "dq")
       .then(function (response) { onGetSuccess(response.data) }, function (response) { onError(response.data) });
     var onGetSuccess = function (response) {
@@ -508,15 +517,18 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
       $scope.getAllLatestActiveDependsOn($scope.dataqualitysourceType);
       $scope.getFunctionByCriteria();
-
+     
       if (response.dqdata.attribute != null) {
         $scope.isSelectSoureceAttr = true
-        var dataqualityoption = {};
-        dataqualityoption.uuid = response.dqdata.attribute.ref.uuid;
-        dataqualityoption.datapodname = response.dqdata.attribute.ref.name;
-        dataqualityoption.name = response.dqdata.attribute.attrName
-        dataqualityoption.attributeId = response.dqdata.attribute.attrId
-        $scope.dataqualityoption = dataqualityoption;
+        setTimeout(function(){
+          var dataqualityoption = {};
+          dataqualityoption.uuid = response.dqdata.attribute.ref.uuid;
+          dataqualityoption.datapodname = response.dqdata.attribute.ref.name;
+          dataqualityoption.name = response.dqdata.attribute.attrName
+          dataqualityoption.attributeId = response.dqdata.attribute.attrId
+          $scope.dataqualityoption = dataqualityoption;
+        },100);
+        
       }
       else {
         $scope.dataqualityoptions = null;
@@ -579,6 +591,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         $scope.thresholdInfo.highMax = 100;
         $scope.thresholdInfo.isPresent = false;
       }
+      if(response.dqdata.autoFlag =="Y"){
+        $scope.onChagneAuto();
+      }
     };
     var onError = function () {
       $scope.isEditInprogess = false;
@@ -617,6 +632,31 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.selectrefIntegrityCheck = "";
       $scope.refIntegrityCheckoption = "";
       $scope.dataqualitydata.stdDevCheck = "";
+    }
+    $scope.onChagneAuto();
+  }
+  $scope.onChagneAuto = function () {
+    if ($scope.isSelectAuto != true) {
+      $scope.isSelectAuto = true
+      $scope.dataqualitydata.duplicateKeyCheck="N";
+      $scope.dataqualitydata.nullCheck = 'N';
+      $scope.dataqualitydata.valueCheck = ""
+      $scope.dataqualitydata.lowerBound = "";
+      $scope.dataqualitydata.upperBound = "";
+      $scope.selectDataType = "";
+      $scope.selectdatefromate = "";
+      $scope.dataqualitydata.minLength = ""
+      $scope.dataqualitydata.maxLength = "";
+      $scope.selectrefIntegrityCheck = "";
+      $scope.refIntegrityCheckoption = "";
+      $scope.dataqualitydata.stdDevCheck = "";
+      $scope.thresholdInfo=null;
+    }
+    else {
+      $scope.isSelectAuto = false;
+      $scope.thresholdInfoDefault();
+
+     
     }
   }
 
@@ -1196,9 +1236,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     } else {
       dataqualityjosn.filterInfo = null;
     }
+    dataqualityjosn.autoFlag=$scope.dataqualitydata.autoFlag;
 
     var thresholdInfo = {};
-    if ($scope.thresholdInfo.isPresent = true) {
+    if($scope.thresholdInfo !=null && $scope.thresholdInfo.isPresent == true) {
       thresholdInfo.type = $scope.thresholdInfo.type;
       thresholdInfo.low = $scope.thresholdInfo.low;
       thresholdInfo.medium = $scope.thresholdInfo.medium;
@@ -1230,8 +1271,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.dataLoading = false;
-      $scope.changemodelvalue()
       if (options.execution == "YES") {
         DataqulityService.getOneById(response.data, "dq")
           .then(function (response) { onSuccessGetOneById(response.data)});
@@ -1239,6 +1278,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
           if($scope.allparamlist.defaultoption ==null){
             DataqulityService.executeDQRule(result.data.uuid, result.data.version).then(function (response) { onSuccess(response.data)});
             var onSuccess = function (response) {
+              $scope.dataLoading = false;
               $scope.saveMessage = CF_SUCCESS_MSG.dqSaveExecute;
               notify.type = 'success',
               notify.title = 'Success',
@@ -1253,6 +1293,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         } /*end onSuccessGetOneById */
       } /*End If*/
       else {
+        $scope.dataLoading = false;
         $scope.saveMessage = CF_SUCCESS_MSG.dqSave;
         notify.type = 'success',
         notify.title = 'Success',
@@ -1266,25 +1307,31 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       notify.title = 'Error',
       notify.content = "Some Error Occurred"
       $scope.$emit('notify', notify);
+      $scope.dataLoading = false;
     }
   } //End Submit Function
    
   $scope.onExecute=function(data){
+    $scope.dataLoading = false;
     $scope.isParamModelEnable=data.isParamModelEnable;
-    if(data.isExecutionInprogess){
+   if(data.isExecutionCancel==true){
+      $scope.message = CF_SUCCESS_MSG.dqSave;
+      notify.type = 'success',
+			notify.title = 'Success',
+      notify.content = $scope.message;
+    }
+    else{
 			$scope.message = CF_SUCCESS_MSG.dqSaveExecute;
 			notify.type = 'success',
 			notify.title = 'Success',
       notify.content = $scope.message;
-      $scope.$emit('notify', notify);
-		}
+    }
+
+    $scope.$emit('notify', notify);
+    $scope.okDQRuleSave();
 	}
-
-  $scope.changemodelvalue = function () {
-    $scope.isshowmodel = sessionStorage.isshowmodel
-  };
-
-
+  
+  
   $scope.fitlerAttrTableSelectedItem = [];
   $scope.onChangeFilterAttRow = function (index, status) {
     if (status == true) {
@@ -1585,19 +1632,21 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   }
 
   $scope.loadRules = function (query) {
+    console.log(query)
     return $timeout(function () {
+      console.log($filter('filter')($scope.dqall, query))
       return $filter('filter')($scope.dqall, query);
     });
   };
 
 
   $scope.clear = function () {
-    $scope.ruleTags = null;
+    $scope.ruleTags = [];
 		$scope.myform.$dirty=true;
 	}
 
 	$scope.addAll = function () {
-		$scope.ruleTags =$scope.dqall;
+		$scope.ruleTags = angular.copy($scope.dqall);
 		$scope.myform.$dirty=true;
 	}
   $scope.okDqGroupSave = function () {
@@ -1656,8 +1705,6 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      $scope.changemodelvalue();
-
       if (options.execution == "YES") {
         DataqulityService.getOneById(response.data, 'dqgroup').then(function (response) {
           onSuccessGetOneById(response.data)
@@ -1696,9 +1743,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     }
   } //End Submit Function
 
-  $scope.changemodelvalue = function () {
-    $scope.isshowmodel = sessionStorage.isshowmodel
-  };
+ 
 });
 
 

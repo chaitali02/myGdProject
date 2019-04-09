@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -28,44 +26,18 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.dao.IExpressionDao;
-import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.Attribute;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.DataSet;
+
 import com.inferyx.framework.domain.Expression;
-import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.User;
-import com.inferyx.framework.register.GraphRegister;
+
 
 @Service
 public class ExpressionServiceImpl {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	IExpressionDao iExpressionDao;
-	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired 
@@ -75,8 +47,9 @@ public class ExpressionServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ExpressionServiceImpl.class);
 
-	public List<Expression> findExpressionByRelation(String relationUUID) throws JsonProcessingException{
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+	/**************************Unused******************************/
+	/*public List<Expression> findExpressionByRelation(String relationUUID) throws JsonProcessingException{
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Aggregation expressionAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(relationUUID)),
 				group("uuid").max("version").as("version"));
 		AggregationResults<Expression> expressionResults = mongoTemplate.aggregate(expressionAggr, "expression",
@@ -92,7 +65,7 @@ public class ExpressionServiceImpl {
 		}
 		return result;
 	}
-
+*/
 
 	public List<Expression> findExpressionByType(String uuid) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null

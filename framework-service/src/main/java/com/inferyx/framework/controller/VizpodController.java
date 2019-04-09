@@ -41,10 +41,6 @@ public class VizpodController {
 
 	@Autowired
 	VizpodServiceImpl vizpodServiceImpl;
-	@Autowired
-	DagExecServiceImpl dagExecImpl;
-	@Autowired
-	DataStoreServiceImpl datastoreImpl;
 
 	@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
 	public List<Map<String, Object>> getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
