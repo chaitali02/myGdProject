@@ -1927,7 +1927,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.onExecute = function (data) {
-		debugger
 		$scope.dataLoading = false;
 		notify.type = 'success';
 		notify.title = 'Success';
