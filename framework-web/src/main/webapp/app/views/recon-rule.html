@@ -47,16 +47,6 @@
                             ng-hide="isAdd" data-ng-click="enableEdit(reconruledata.uuid,reconruledata.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
-                        <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="enableEdit(reconruledata.uuid,reconruledata.version)">
-                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="showview(reconruledata.uuid,reconruledata.version)">
-                            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a> -->
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
                             tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showGraph()">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -178,7 +168,6 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3">Tag</label>
                                             <div class="col-md-6">
-                                                <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
                                                 <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
                                                     add-on-enter="true" add-on-space="true">
                                                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
@@ -360,7 +349,6 @@
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                                                <!-- <th style="width:8%;text-align:center;">Move</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -552,19 +540,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <!-- <td>
-                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <div style="text-align: center;">
-                                                                            <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrSourceFilterRowUp($index)">
-                                                                                <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
-
-                                                                            </a>
-                                                                            <a class="move-column" ng-disabled="($index == sourceFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrSourceFilterRowDown($index)">
-                                                                                <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </span>
-                                                                </td> -->
+                                                              
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -698,7 +674,6 @@
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                                                <!-- <th style="width:8%;text-align:center;">Move</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -887,18 +862,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <!-- <td>
-                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <div style="text-align: center;">
-                                                                            <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrTargetFilterRowUp($index)">
-                                                                                <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
-                                                                            </a>
-                                                                            <a class="move-column" ng-disabled="($index == targetFilterTable.length-1 || {{mode}}) ? true:false" ng-click="onAttrTargetFilterRowDown($index)">
-                                                                                <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </span>
-                                                                </td> -->
+                                                               
                                                             </tr>
                                                         </tbody>
                                                     </table>

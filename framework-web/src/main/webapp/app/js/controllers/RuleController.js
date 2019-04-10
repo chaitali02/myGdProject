@@ -2675,8 +2675,8 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
     $('#reExModal').modal('hide');
     $scope.executionmsg = "Rule Group Restarted Successfully"
     notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = $scope.executionmsg
+    notify.title = 'Success',
+    notify.content = $scope.executionmsg
     $rootScope.$emit('notify', notify);
     CommonService.restartExec("rulegroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
@@ -2686,43 +2686,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
   }
 
 
-
-  // $scope.submitDownload=function(){
-	// 	var uuid = $scope.download.data.uuid;
-	// 	var version = $scope.download.data.version;
-	// 	var url = $location.absUrl().split("app")[0];
-	// 	$('#downloadSample').modal("hide"); 
-  //   $http({
-  //     method: 'GET',
-  //     url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-  //     responseType: 'arraybuffer'
-  //   }).success(function (data, status, headers) {
-  //     headers = headers();
-  //     $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-			
-  //     var filename = headers['filename'];
-  //     var contentType = headers['content-type'];
-  //     var linkElement = document.createElement('a');
-  //     try {
-  //       var blob = new Blob([data], {
-  //         type: contentType
-  //       });
-  //       var url = window.URL.createObjectURL(blob);
-  //       linkElement.setAttribute('href', url);
-  //       linkElement.setAttribute("download", filename);
-  //       var clickEvent = new MouseEvent("click", {
-  //         "view": window,
-  //         "bubbles": true,
-  //         "cancelable": false
-  //       });
-  //       linkElement.dispatchEvent(clickEvent);
-  //     } catch (ex) {
-  //       console.log(ex);
-  //     }
-  //   }).error(function (data) {
-  //     console.log(data);
-  //   });
-	// }
 
 
   $scope.downloadFile = function (data) {
@@ -2734,10 +2697,6 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="rule";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
 	};
 	$scope.onDownloaed=function(data){
 		console.log(data);

@@ -8,11 +8,6 @@ MetadataModule.controller('ResultMapController', function ($filter, $state, $loc
     $scope.autoRefreshCounterResult = 05;
     $scope.autoRefreshResult = false;
     $scope.download = {};
-    $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-    $scope.download.formates = CF_DOWNLOAD.formate;
-    $scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-    $scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-    $scope.download.limit_to = CF_DOWNLOAD.limit_to;
     $scope.pagination = {
         currentPage: 1,
         pageSize: 10,
@@ -107,58 +102,12 @@ MetadataModule.controller('ResultMapController', function ($filter, $state, $loc
 		$scope.download.uuid=$scope.maplDetail.uuid;
 		$scope.download.version =$scope.maplDetail.version;
 		$scope.download.type="map";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
 	};
 	$scope.onDownloaed=function(data){
 		console.log(data);
 		$scope.isDownloadDirective=data.isDownloadDirective;
 	}
     
-
-    // $scope.submitDownload = function () {
-    //     var baseurl = $location.absUrl().split("app")[0];
-    //     var url;
-    //     url = baseurl + "map/download?action=view&mapExecUUID=" + $scope.maplDetail.uuid + "&mapExecVersion=" + $scope.maplDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
-    //     $('#downloadSample').modal("hide");
-    //     $http({
-    //         method: 'GET',
-    //         url: url,
-    //         responseType: 'arraybuffer'
-    //     })
-    //     .success(function (data, status, headers) {
-    //         $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-    //         headers = headers();
-    //        // console.log(typeof (data))
-    //         var filename = headers['filename'];
-    //         var contentType = headers['content-type'];
-    //         var linkElement = document.createElement('a');
-    //         try {
-    //             var blob = new Blob([data], {
-    //                 type: contentType
-    //             });
-    //             var url = window.URL.createObjectURL(blob);
-    //             linkElement.setAttribute('href', url);
-    //             linkElement.setAttribute("download", filename);
-    //             var clickEvent = new MouseEvent(
-    //                 "click", {
-    //                     "view": window,
-    //                     "bubbles": true,
-    //                     "cancelable": false
-    //                 });
-    //             linkElement.dispatchEvent(clickEvent);
-    //         } catch (ex) {
-    //             console.log(ex);
-    //         }
-    //     })
-    //     .error(function (data) {
-    //         console.log();
-    //     });
-    // };
-
-
 
     $scope.$on('$destroy', function () {
         // Make sure that the interval is destroyed too

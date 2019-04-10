@@ -1805,6 +1805,7 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           scope.body=null;
         }
         scope.cancel=function(){
+          $('#downloadSample').modal("hide");
           setTimeout(function(){
             scope.onDownloade({
               isDownloadInprogess:false,

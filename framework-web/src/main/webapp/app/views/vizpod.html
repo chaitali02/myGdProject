@@ -35,7 +35,6 @@
 	<!-- BEGIN MAIN CONTENT -->
 	<div class="row">
 		<div class="col-md-12">
-			<!-- BEGIN: ACCORDION DEMO -->
 			<div class="portlet box green">
 				<div class="portlet-title">
 					<div class="caption">
@@ -50,14 +49,7 @@
 						 data-placement="top" tooltip ng-click="enableEdit(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showvizpod==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-						 data-placement="top" tooltip ng-click="enableEdit(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
-							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-						</a>
-						<a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showvizpod==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-						 ng-click="showview(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
-							<span class="glyphicon glyphicon-file" style="color:white;"></span>
-						</a> -->
+						
 						<a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 ng-hide="isAdd" data-ng-click="isShowSimpleData ==false?showSampleTable(vizpoddata):''" style="height:16px;">
 							<i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -80,7 +72,6 @@
 				</div>
 
 				<div class="portlet-body">
-					<!-- BEGIN FORM-->
 					<div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
 						<div class="spinner" ng-show="spinner">
 							<div class="bounce1"></div>
@@ -484,45 +475,6 @@
 	 <div ng-if="isDownloadDirective">
     <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
   </div>
-	<!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-		<div class="modal-dialog" style="width:40%">
-			<div class="modal-content" style="resize: both;overflow: auto;">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
-					<h4 class="modal-title">Download</h4>
-				</div>
-				<form class="form-horizontal" name="myform3" id="downloadModel" ng-submit="submitDownload()" novalidate="novalidate">
-					<div class="modal-body" style="padding-top:0px">
-						<div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-							<div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-							 data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label class="col-md-3 control-label">Rows</label>
-											<div class="col-md-8">
-												<input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
-											</div>
-										</div>
-										<div class="form-group">
-											<label class="col-md-3 control-label">Format</label>
-											<div class="col-md-8">
-												<select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-												</select>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-						<button type="submit" class="btn green">Submit</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div> -->
+
 </div>
 <!-- END MAIN CONTENT -->

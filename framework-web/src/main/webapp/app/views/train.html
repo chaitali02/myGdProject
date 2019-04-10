@@ -485,11 +485,15 @@
                                                                     style="table-layout:fixed;">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th style="text-align: center; Vertical-align:middle;width:2%;"><input
-                                                                                    style="width: 16px;height:16px;"
-                                                                                    type="checkbox" ng-model="slectAllRow"
-                                                                                    ng-click="selectAllRow()"
-                                                                                    ng-disabled="true" /></th>
+                                                                            <th style="text-align: center; Vertical-align:middle;width:2%;">
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    <input
+                                                                                        style="width: 16px;height:16px;"
+                                                                                        type="checkbox" ng-model="slectAllRow"
+                                                                                        ng-click="selectAllRow()"
+                                                                                        ng-disabled="true" />
+                                                                                    </span>
+                                                                                </th>
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:18%;text-align: center">Attributes</th>
@@ -504,9 +508,11 @@
                                                                         drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                                                         <tr>
                                                                             <td style="text-align: center; Vertical-align: middle;width:2%;">
-                                                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
-                                                                                    type="checkbox" ng-model="data.selected"
-                                                                                    ng-change="onChangeAttrRow($index,data.selected)" />
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
+                                                                                        type="checkbox" ng-model="data.selected"
+                                                                                        ng-change="onChangeAttrRow($index,data.selected)" />
+                                                                                </span>
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -754,6 +760,9 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <div ng-if="isParamModelEnable">
+                                            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'train'" on-execute="onExecute"></exec-param-directive>
+                                        </div>   
                                     <div id="responsive" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true"
                                         style="display: none;">
                                         <div class="modal-dialog">
