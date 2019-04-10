@@ -256,6 +256,7 @@ public class DatapodServiceImpl {
 		dp.setCache("Y");
 		dp.setName(fileName.toLowerCase());
 		dp.setAttributes(attributes);
+		dp.setPrefix(getPrefix(fileName.toLowerCase()));
 		
 		try {
 			dp = save(dp);

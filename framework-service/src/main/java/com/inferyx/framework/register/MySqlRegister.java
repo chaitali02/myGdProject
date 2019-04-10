@@ -132,6 +132,7 @@ public class MySqlRegister {
 						attr.setPartition("N");
 						attr.setActive("Y");
 						attr.setDispName(colName);
+						attr.setNullFlag((rs.getString("IS_NULLABLE").equalsIgnoreCase("no")) ? "N": "Y");
 						attrList.add(attr);
 					}
 					
