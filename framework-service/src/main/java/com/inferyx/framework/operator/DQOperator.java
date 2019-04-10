@@ -1653,7 +1653,7 @@ public class DQOperator implements IParsable {
 			Map<String, String> paramValMap) throws Exception {
 		return generateCustomSelect(dataQual)
 				.concat(generateCustomFrom(dataQual, dagExec, datapodList, otherParams, runMode))
-				.concat(WHERE_1_1).concat(" AND ")
+				.concat(WHERE_1_1)
 				.concat(generateFilter(dataQual, usedRefKeySet, dataQualExec, runMode, paramValMap));
 	}
 

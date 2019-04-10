@@ -4041,7 +4041,7 @@ public class SparkExecutor<T> implements IExecutor {
 		if(registerTempTable) {
 			registerTempTable(df, tempTableName);
 		}
-		
+		df.show();
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);
