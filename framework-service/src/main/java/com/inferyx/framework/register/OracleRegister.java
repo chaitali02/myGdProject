@@ -130,6 +130,7 @@ public class OracleRegister {
 						}
 						attr.setPartition("N");
 						attr.setActive("Y");
+						attr.setNullFlag((rs.getString("IS_NULLABLE").equalsIgnoreCase("no")) ? "N": "Y");
 						attr.setDispName(colName);
 						attrList.add(attr);
 					}
