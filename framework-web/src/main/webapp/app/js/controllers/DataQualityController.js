@@ -636,7 +636,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.onChagneAuto();
   }
   $scope.onChagneAuto = function () {
-    if ($scope.isSelectAuto != true) {
+	  debugger
+    if ($scope.dataqualitydata.autoFlag == "Y") {
       $scope.isSelectAuto = true
       $scope.dataqualitydata.duplicateKeyCheck="N";
       $scope.dataqualitydata.nullCheck = 'N';
