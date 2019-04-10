@@ -183,17 +183,17 @@ public class DatapodController {
 		return datapodServiceImpl.getFormulaValues(formulaUuid, formulaVersion, runMode);
 	}
 	
-	@RequestMapping(value = "/prefixValidate", method = RequestMethod.GET)
-	public boolean prefixValidate(
-			@RequestParam(value = "prefix") String prefix,
+	@RequestMapping(value = "/getPrefix", method = RequestMethod.GET)
+	public String prefixValidate(
+			@RequestParam(value = "datapodName") String datapodName,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception{
 		try{
-			return true;
+			return datapodServiceImpl.getPrefix(datapodName);
 
 		}catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return "";
 		}
 	}
 }

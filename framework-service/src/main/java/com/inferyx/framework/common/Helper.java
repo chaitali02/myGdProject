@@ -1982,4 +1982,55 @@ public class Helper {
 		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 		return formatter.format(new Date());
 	}
+
+	public static List<String> genaretePrefix(String datapodName, int numCombination) {
+		List<String> result = new ArrayList<>();
+		StringBuilder str;
+		datapodName = datapodName.replace("_", "");
+		if (datapodName.length() > 8)
+			for (int i = 0; i < numCombination; i++) {
+				str = new StringBuilder();
+				str.append(datapodName.charAt(i));
+				str.append(datapodName.charAt(i + 2));
+				str.append(datapodName.charAt(i + 4));
+
+				/*
+				 * for (int j = 0; j < datapodName.length(); j++) { if
+				 * (Character.isUpperCase(datapodName.charAt(j))) {
+				 * str.append(datapodName.charAt(j)); } }
+				 */
+
+				result.add(str.toString());
+
+			}
+		else {
+			if(datapodName.length()<3)
+			permute(datapodName, 0, datapodName.length() - 1, result);
+			else
+			permute(datapodName, 0,3, result);
+
+		}
+		return result;
+	}
+
+	private static void permute(String str, int l, int r, List<String> result) {
+		if (l == r) {
+			result.add(str);
+		} else {
+			for (int i = l; i <= r; i++) {
+				str = swap(str, l, i);
+				permute(str, l + 1, r, result);
+				str = swap(str, l, i);
+			}
+		}
+	}
+
+	private static String swap(String a, int i, int j) {
+		char temp;
+		char[] charArray = a.toCharArray();
+		temp = charArray[i];
+		charArray[i] = charArray[j];
+		charArray[j] = temp;
+		return String.valueOf(charArray);
+	}
 }
