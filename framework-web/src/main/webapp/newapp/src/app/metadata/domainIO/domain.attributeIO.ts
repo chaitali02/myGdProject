@@ -5,7 +5,7 @@ export class AttributeIO {
     datapodname: String;
     name: String;
     dname: String;
-    attributeId?: String;
+    attributeId?: any;
     attrType: String;
     version: String
     label: String;

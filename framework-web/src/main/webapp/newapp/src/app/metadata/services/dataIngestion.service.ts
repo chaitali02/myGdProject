@@ -109,8 +109,19 @@ export class DataIngestionService {
 							let filterInfoIO = new FilterInfoIO();
 							filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator
 							filterInfoIO.lhsType = response.filterInfo[k].operand[0].ref.type;
+							// if(filterInfoIO.lhsType == "datapod" || filterInfoIO.lhsType == "dataset"){
+							// 	filterInfoIO.lhsType = "datapod"
+							// }
+
 							filterInfoIO.operator = response.filterInfo[k].operator;
 							filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
+
+							// if(response.filterInfo[k].operand[1].ref.uuid == response.sourceType.uuid){
+							// 	filterInfoIO.rhsType = "datapod"
+							// }
+							// else {
+							// 	filterInfoIO.rhsType = "dataset"
+							// }
 
 							if (response.filterInfo[k].operand[0].ref.type == 'formula') {
 								let lhsAttribute = new AttributeIO()
@@ -118,7 +129,7 @@ export class DataIngestionService {
 								lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
 								filterInfoIO.lhsAttribute = lhsAttribute;
 							}
-							else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
+							else if (response.filterInfo[k].operand[0].ref.type == 'datapod' || response.filterInfo[k].operand[0].ref.type == 'dataset') {
 								let lhsAttribute = new AttributeIO();
 								lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
 								lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;

@@ -6,10 +6,10 @@ import { BaseEntity } from './domain.baseEntity';
 
 export class Expression extends BaseEntity{
 
-	private dependsOn : MetaIdentifierHolder ;
-	private condition : String;
-	private match : AttributeRefHolder;
-	private noMatch : AttributeRefHolder;	
-	private expressionInfo : FilterInfo[];	
-	
+	 dependsOn : MetaIdentifierHolder ;
+	 condition : String;
+	 match : AttributeRefHolder;
+	 noMatch : AttributeRefHolder;	
+	 expressionInfo : FilterInfo[];	
+
 }

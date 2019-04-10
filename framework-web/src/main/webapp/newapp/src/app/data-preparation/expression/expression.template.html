@@ -97,8 +97,8 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="expression.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap'
-                    style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;padding-left: 5px"></tag-input>
+                  <p-chips [(ngModel)]="expression.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                    [allowDuplicate]="false"></p-chips>
                 </div>
               </div>
 

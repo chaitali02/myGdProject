@@ -1,456 +1,3 @@
-<!-- <div>
-  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
-  <br>
-  <p-growl [(value)]="msgs"></p-growl>
-  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-
-  <div class="row">
-    <div class="col-md-12">
-    
-      <div class="portlet box green">
-        <div class="portlet-title">
-          <div class="caption">
-            <i class="fa fa-gift"></i>{{dataset.name}}
-          </div>
-          <div class="tools">
-            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip (click)="showDatapodSampleTable(dataset)" style="height:16px;"
-              *ngIf="mode">
-              <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"
-              *ngIf="mode">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
-              *ngIf="mode">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip
-              style="height:14px;" *ngIf="mode">
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-            </a>
-          </div>
-        </div>
-
-        <div class="portlet-body form">
-          <div class="form-body {{tableclass}}" *ngIf="isShowSimpleData">
-            <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
-              <div class="col-md-12" *ngIf="cols !=null">
-                <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt exportFilename="data" selectionMode="multiple"
-                  [metaKeySelection]="false" scrollable="true" scrollWidth="980px" resizableColumns="true" scrollHeight="440px"
-                  [globalFilter]="gb" sortMode="multiple">
-                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
-                </p-dataTable>
-              </div>
-            </div>
-            
-            <div class="centercontent" *ngIf="IsError">
-              <span style="font-size:14px;color:red;">Some error occur</span>
-
-            </div>
-          </div>
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
-            *ngIf="showgraphdiv">
-            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            
-            <div class="form-body show-graph-body" id="graphWrapper">
-              <app-d3></app-d3>
-            </div>
-          </div>
-
-          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDataset()" #myNewForm="ngForm">
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="dataset.uuid" name="uuid" placeholder="" [disabled]="true">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="dataset.name" name="name" placeholder="" [disabled]="mode == 'true'">
-                </div>
-              </div>
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="dataset.version" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [disabled]="mode == 'true'" (onChange)="onVersionChange()" dataKey="uuid" [filter]="true" placeholder="--Select--">
-                  </p-dropdown>
-
-                </div>
-              </div>
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="false" [(ngModel)]="dataset.createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dataset.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="dataset.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="dataset.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Source
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-2 col-sm-2 col-xs-12">
-                  <select class="form-control" [(ngModel)]="dataset.source" name="source" (change)="selectSourceType()" [disabled]="mode == 'true'">
-                    <option *ngFor="let app of sources" [ngValue]="app.value">{{app.label}} </option>
-                  </select>
-                </div>
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-3 col-sm-4 col-xs-12">
-                  <p-dropdown [options]="allNames" [(ngModel)]="dataset.sourcedata" name="sourcedata" dataKey="uuid" [disabled]="mode == 'true'"
-                    [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType()"  placeholder="--Select--">
-                  </p-dropdown>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataset.active"
-                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataset.published"
-                      name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Limit
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <input type="number" limit-to="4" class="form-control" [(ngModel)]="dataset.limit" [disabled]="mode =='true'" name="numIterations"
-                    max="1000" required>
-                </div>
-              </div>
-
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-                </div>
-              </div>
-
-              <div class="portlet box green">
-                <div class="portlet-title">
-                  <div class="caption">
-                    <i class="fa fa-gift"></i>Filter
-                  </div>
-                </div>
-                <div class="portlet-body form">
-                  <div class="x_title" style="padding:10px;">
-                    <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRow()" [disabled]="mode == 'true'"></button>
-                    <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()" [disabled]="mode == 'true'"></button>
-                  </div>
-                  <br>
-                  <div class="form-body" style="padding-top:50px;">
-                    <table class=" row-border hover table  table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th style="width:5%;text-align: center; Vertical-align: middle;">
-                            <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="checkAll" name="checkAll"
-                              (click)="checkAllFilterRow()" />
-                          </th>
-                          <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
-                          <th style="text-align: center;width:15%;">LHS Type</th>
-                          <th style="text-align: center;width:20%;">LHS Attribute</th>
-                          <th style="text-align: center;width:20%;">Operator</th>
-                          <th style="text-align: center;width:20%;">RHS Type</th>
-                          <th style="text-align: center;width:20%;">RHS Attribute</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let data of dataset.filterTableArray ;let i=index">
-                          <td style="text-align:center;Vertical-align:middle;">
-                            <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selected" [disabled]="mode == 'true'"/>
-                          </td>
-                          <td>
-                            <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="i === 0 || mode == 'true'" [filter]="true" placeholder="--Select--">
-                            </p-dropdown>
-                          </td>
-                          <td>
-                            <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="mode == 'true'" [filter]="true" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
-                            </p-dropdown>
-                          </td>
-
-                          <td>
-                            <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter only integer"
-                              tooltipPosition="top" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                              *ngIf="data.lhsType == 'integer'" placeholder="--Enter integer value--">
-                            <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" pTooltip="enter values into single quotes"
-                              tooltipPosition="top" tooltipEvent="focus" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                              *ngIf="data.lhsType == 'string'" placeholder="--Enter string--">
-                            <div *ngIf="data.lhsType == 'formula'">
-                              <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-                            <div *ngIf="data.lhsType == 'datapod'">
-                              <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" dataKey="uuid" name="lhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-                          </td>
-                          <td>
-                            <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}" [style]="{'width':'100%','padding':'3px'}"
-                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)= "onChangeOperator(i)">
-                            </p-dropdown>
-                          </td>
-                          <td>
-                            <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsType(i)"
-                              [disabled]="mode == 'true'" placeholder="--Select--">
-                              <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
-                                <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
-                                <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
-                                <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
-                              </ng-container>
-
-                              <ng-container *ngIf="data.operator == 'BETWEEN'">
-                                <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
-                                <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
-                              </ng-container>
-
-                              <ng-container *ngIf="data.operator == 'EXISTS' || data.operator == 'NOT EXISTS' ">
-                                <option [ngValue]="rhsTypeArray[0].value" disabled>{{rhsTypeArray[0].label}}</option>
-                                <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
-                                <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
-                                <option [ngValue]="rhsTypeArray[3].value">{{rhsTypeArray[3].label}}</option>
-                                <option [ngValue]="rhsTypeArray[4].value">{{rhsTypeArray[4].label}}</option>
-                                <option [ngValue]="rhsTypeArray[5].value">{{rhsTypeArray[5].label}}</option>
-                                <option [ngValue]="rhsTypeArray[6].value">{{rhsTypeArray[6].label}}</option>
-                              </ng-container>
-
-                              <ng-container *ngIf="data.operator == 'IN' || data.operator == 'NOT IN' ">
-                                <option [ngValue]="rhsTypeArray[0].value" >{{rhsTypeArray[0].label}}</option>
-                                <option [ngValue]="rhsTypeArray[1].value" >{{rhsTypeArray[1].label}}</option>
-                                <option [ngValue]="rhsTypeArray[2].value" >{{rhsTypeArray[2].label}}</option>
-                                <option [ngValue]="rhsTypeArray[3].value" >{{rhsTypeArray[3].label}}</option>
-                                <option [ngValue]="rhsTypeArray[4].value" >{{rhsTypeArray[4].label}}</option>
-                                <option [ngValue]="rhsTypeArray[5].value" >{{rhsTypeArray[5].label}}</option>
-                                <option [ngValue]="rhsTypeArray[6].value" >{{rhsTypeArray[6].label}}</option>
-                              </ng-container>
-                            </select>
-                          </td>
-                          <td>
-                            <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                              *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'" placeholder="--Enter integer value--">
-                            <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                              *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'" placeholder="--Enter string--">
-                            <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
-                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
-                                [disabled]="mode == 'true'" placeholder="--Select--"> {{"-"}}
-                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}" style="width:40%;display: inline-block"
-                                [disabled]="mode == 'true'" placeholder="--Select--">
-                            </div>
-                            <div *ngIf="data.rhsType == 'formula'">
-                              <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-                            <div *ngIf="data.rhsType == 'datapod'">
-                              <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-                            <div *ngIf="data.rhsType == 'dataset'">
-                              <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
-                              <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block" pTooltip="Search"></i>
-                            </div>
-                            <div *ngIf="data.rhsType == 'function'">
-                              <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-                            <div *ngIf="data.rhsType == 'paramlist'">
-                              <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                              </p-dropdown>
-                            </div>
-
-                            <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
-                              [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
-
-                              <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                    [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() " dataKey="uuid">
-                                  </p-dropdown>
-                                </div>
-                              </div>
-
-                              <div>
-                                <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
-                                  <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName" name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-                                    </p-dropdown>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <p-footer>
-                                <div style="padding-top: 10px;">
-                                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                                    <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                                    <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox(i)">
-                                  </div>
-                                </div>
-                              </p-footer>
-                            </p-dialog>
-
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-              <div class="portlet box green">
-                <div class="portlet-title">
-                  <div class="caption">
-                    <i class="fa fa-gift"></i>Source Attribute
-                  </div>
-                </div>
-                <div class="portlet-body form">
-                  <div class="x_title" style="padding:10px;">
-                    <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()" [disabled]="mode == 'true'"></button>
-                    <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true'"></button>
-                  </div>
-                  <div class="form-body" style="padding-top:50px;">
-                    <div>
-
-                      <table class=" row-border hover table  table-striped table-bordered">
-                        <thead>
-                          <tr>
-                            <th style="width:5%;text-align: center; Vertical-align: middle;">
-                              <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
-                                (click)="checkAllAttributeRow()" />
-                            </th>
-                            <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
-                            <th style="text-align: center;width:15%;">Name</th>
-                            <th style="text-align: center;width:35%;">Source Type</th>
-                            <th style="text-align: center;width:35%;">Source Name</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let data of dataset.attributeTableArray ;let i=index">
-                            <td style="text-align:center;Vertical-align:middle;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true'"
-                              />
-                            </td>
-                            <td style="width:10%;">
-                              <input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control" [(ngModel)]="data.name" name="name+{{i}}" [disabled]="mode == 'true'">
-                            </td>
-                            <td>
-                              <select class="form-control" [(ngModel)]="dataset.attributeTableArray[i].sourceAttributeType.value" (change)="onChangeSourceAttribute(dataset.attributeTableArray[i].sourceAttributeType.value,i)"
-                                name="sourceAttributeType+{{i}}" [disabled]="mode == 'true'">
-                                <option *ngFor="let app of sourceAttributeTypes" [ngValue]="app.value">{{app.label}}</option>
-                              </select>
-                            </td>
-                            <td>
-                              <input type="text" class="form-control" [(ngModel)]="dataset.attributeTableArray[i].sourcesimple" name="sourcesimple+{{i}}"
-                                *ngIf="dataset.attributeTableArray[i].isSourceAtributeSimple" [disabled]="mode == 'true'">
-                              <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeDatapod">
-                                <p-dropdown [options]="allMapSourceAttribute" [(ngModel)]="dataset.attributeTableArray[i].sourceattribute" name="sourceattribute+{{i}}"
-                                  dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                  placeholder="--Select--" (onChange)="onChangeAttributeDatapod(dataset.attributeTableArray[i].sourceattribute,i)">
-                                </p-dropdown>
-                              </div>
-
-                              <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeFormula">
-                                <p-dropdown [options]="allMapFormula" [(ngModel)]="dataset.attributeTableArray[i].sourceformula" name="sourceformula+{{i}}"
-                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                  placeholder="--Select--">
-                                </p-dropdown>
-                              </div>
-
-                              <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeExpression">
-                                <p-dropdown [options]="allMapExpression" [(ngModel)]="dataset.attributeTableArray[i].sourceexpression" name="sourceexpression+{{i}}"
-                                  placeholder="--Select--" dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                                  [filter]="true" (ngModelChange)='onSelectExpression($event)'>
-                                </p-dropdown>
-                              </div>
-
-                              <div *ngIf="dataset.attributeTableArray[i].isSourceAtributeFunction">
-                                <p-dropdown [options]="ruleLoadFunction" [(ngModel)]="dataset.attributeTableArray[i].sourcefunction" name="sourcefunction+{{i}}"
-                                  dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                  placeholder="--Select--">
-                                </p-dropdown>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>  -->
-
 <p-growl [(value)]="msgs"></p-growl>
 <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
 <br>
@@ -461,7 +8,7 @@
 
         <div class="caption">
           <i class=" icon-layers"></i>
-          <span class="caption-subject  bold ">Rules Wizard -
+          <span class="caption-subject  bold ">Dataset Wizard -
             <span class="step-title"> Step 1 of 4 </span>
           </span>
         </div>
@@ -469,27 +16,41 @@
         <div class="actions">
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
-            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dataset.uuid,dataset.version)" *ngIf="!isAdd">
+            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dataset.uuid,dataset.version)"
+            *ngIf="!isAdd">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(dataset.uuid,dataset.version)" *ngIf="!isAdd">
+            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(dataset.uuid,dataset.version)"
+            *ngIf="!isAdd">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Sample Records" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="IsTableShow == false ? 'notcurrentpage':'currentpage'" (click)="showDatapodSampleTable(dataset)" *ngIf="!isAdd">
+            data-placement="top" tooltip [ngClass]="IsTableShow == false ? 'notcurrentpage':'currentpage'" (click)="showDatapodSampleTable(dataset)"
+            *ngIf="!isAdd">
             <i class="fa fa-table" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Download" data-toggle="tooltip"
+            data-placement="top" tooltip [ngClass]="IsTableShow == true ? 'notcurrentpage':'currentpage'" (click)="downloadShow(dataset.uuid,dataset.version)"
+            *ngIf="!isAdd">
+            <i class="fa fa-download" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip data-(click)="showDagGraph(dataset.uuid,dataset.version)" [ngClass]="showGraph==true ? 'currentpage':'notcurrentpage'" *ngIf="!isAdd">
+            data-placement="top" tooltip data-(click)="showDagGraph(dataset.uuid,dataset.version)" [ngClass]="showGraph==true ? 'currentpage':'notcurrentpage'"
+            *ngIf="!isAdd">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
-            (click)="broadcastRefreshData()" data-original-title="" title="Refresh">
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" [ngClass]="showGraph==false ? 'currentpage':'notcurrentpage'"
+            (click)="showDagGraph(dataset.uuid,dataset.version)" data-original-title="" title="Refresh" *ngIf=!IsTableShow>
+            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+          </a>
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" [ngClass]="IsTableShow == false ? 'currentpage':'notcurrentpage'"
+            (click)="showDatapodSampleTable(dataset)" data-original-title="" title="Refresh" *ngIf=IsTableShow>
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
@@ -575,8 +136,9 @@
             </div>
             <div class="tab-content">
               <div class="tab-pane" id="tab1" [hidden]="!showdatapod" [ngClass]="{'active' : continueCount == 1}">
-                <form class="form-horizontal" name="myNewForm1" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()" #myNewForm1="ngForm">
-                  
+                <form class="form-horizontal" name="myNewForm1" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()"
+                  #myNewForm1="ngForm">
+
                   <div class="form-group" *ngIf="mode">
                     <label class="col-md-3 control-label">UUID</label>
                     <div class="col-md-6">
@@ -584,20 +146,20 @@
                         [disabled]="true">
                     </div>
                   </div>
-                  
+
                   <div class="form-group">
                     <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
                       <span class="required" aria-required="true"> * </span>
                     </label>
                     <div class="col-md-6">
                       <input type="text" class="form-control" [(ngModel)]="dataset.name" name="name" placeholder=""
-                      (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
-                      [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
-                    <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
-                      <div class="help-block has-error error-msg">
-                        This field is required
+                        (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
+                        [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                      <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
+                        <div class="help-block has-error error-msg">
+                          This field is required
+                        </div>
                       </div>
-                    </div>
                     </div>
                   </div>
 
@@ -628,7 +190,8 @@
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <p-chips [(ngModel)]="dataset.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                      <p-chips [(ngModel)]="dataset.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                        [allowDuplicate]="false"></p-chips>
                     </div>
                   </div>
 
@@ -642,7 +205,7 @@
 
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                       <div class="btn-group">
                         <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataset.active" name="active"
                           [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -652,7 +215,7 @@
 
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                       <div class="btn-group">
                         <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataset.locked" name="locked"
                           [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -662,7 +225,7 @@
 
                   <div class="form-group">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                       <div class="btn-group">
                         <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dataset.published" name="published"
                           [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -680,7 +243,7 @@
                   <div class="row">
                     <label class="control-label col-md-3"></label>
                     <div class="col-md-4 col-sm-4 col-xs-8 col-lg-4" style="padding-top: 2%;">
-                      <button type="submit" class="btn btn-outline green left-margin" >
+                      <button type="submit" class="btn btn-outline green left-margin">
                         Continue
                         <i class="fa fa-angle-right"></i>
                       </button>
@@ -697,10 +260,9 @@
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceReq']?.invalid)}">Source
                       <span class="required" aria-required="true"> * </span>
                     </label>
-                    <div class="col-md-2 col-sm-2 col-xs-12 " >
+                    <div class="col-md-2 col-sm-2 col-xs-12 ">
                       <select class="form-control" [(ngModel)]="dataset.source" name="sourceReq" (change)="selectSourceType()"
-                        [disabled]="mode == 'true'" #sourceReq="ngModel" required
-                        [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceReq']?.invalid)}">
+                        [disabled]="mode == 'true'" #sourceReq="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceReq']?.invalid)}">
                         <option *ngFor="let app of sources" [ngValue]="app.value">{{app.label}} </option>
                       </select>
                       <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceReq']?.invalid)">
@@ -711,21 +273,21 @@
                     </div>
 
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;"
-                    [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">Name
+                      [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">Name
                       <span class="required" aria-required="true"> * </span>
                     </label>
                     <div class="col-md-3 col-sm-4 col-xs-12">
-                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
-                      <p-dropdown [options]="allNames" [(ngModel)]="dataset.sourcedata" name="sourcedataReq" dataKey="uuid"
-                        [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                        (onChange)="changeType()" placeholder="--Select--" #sourcedataReq="ngModel" required>
-                      </p-dropdown>
+                      <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
+                        <p-dropdown [options]="allNames" [(ngModel)]="dataset.sourcedata" name="sourcedataReq" dataKey="uuid"
+                          [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                          (onChange)="changeType()" placeholder="--Select--" #sourcedataReq="ngModel" required>
+                        </p-dropdown>
                       </div>
                       <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)">
-                          <div class="help-block has-error error-msg">
-                            This field is required
-                          </div>
+                        <div class="help-block has-error error-msg">
+                          This field is required
                         </div>
+                      </div>
                     </div>
                   </div>
 
@@ -825,7 +387,7 @@
                                   pTooltip="enter only integer" tooltipPosition="top" [disabled]="mode == 'true'"
                                   [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'integer' && data.operator != 'BETWEEN'"
                                   placeholder="--Enter integer value--" #lhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
-                                
+
                                 <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                   pTooltip="enter values into single quotes" tooltipPosition="top" tooltipEvent="focus"
                                   [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'string'"
@@ -953,7 +515,7 @@
                                   </p-dropdown>
                                 </div>
                                 <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
-                                [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                  [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                   <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                     [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                     placeholder="--Select--" required #rhsAttribute="ngModel">
@@ -1004,7 +566,7 @@
                       </div>
                     </div>
                   </div>
-                  
+
                   <div class="row">
                     <label class="control-label col-md-3"></label>
                     <div class="col-md-4" style="padding-top: 2%;">
@@ -1247,3 +809,37 @@
     </div>
   </div>
 </div>
+
+<p-dialog class="dialog-titlebar" header="Download" [(visible)]="showDownloadModel" [modal]="true" [responsive]="true"
+  [width]="500" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}"
+  [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+  <form class="form-horizontal" name="myform" novalidate="novalidate">
+    <div class="form-group">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Rows</label>
+      <div class="col-md-7 col-sm-6 col-xs-12">
+        <input type="number"  class="form-control" [(ngModel)]="numRows" [disabled]="mode =='true'" name="numRows"
+          max="100" required>
+      </div>
+    </div>
+
+    <div class="form-group" style="padding-top : 10px">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <p-dropdown [options]="downloadFormatArray" [(ngModel)]="downloadFormat" name="downloadFormat+{{i}}" 
+        [style]="{'width':'250px','padding':'3px'}" [filter]="false" placeholder="-Select-" [dropdownIcon]="caretdown">
+        </p-dropdown>
+      </div>
+    </div>
+  </form>
+  <p-footer>
+    <div>
+      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+        <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a> -->
+        <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
+          (click)="cancelDownloadDialogBox()">
+        <input type="button" class="btn btn-success" value="Submit" name="submit" style="border-radius: 4px;" (click)="downloadDatasetResult(i)">
+      </div>
+    </div>
+  </p-footer>
+
+</p-dialog>
