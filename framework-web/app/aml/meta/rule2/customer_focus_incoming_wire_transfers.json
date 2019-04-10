@@ -158,7 +158,7 @@
       ],
       "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 1
+      "criteriaWeight": 0.5
     },
     {
       "criteriaId": "1",
@@ -199,7 +199,7 @@
       ],
       "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 1
+      "criteriaWeight": 0.5
     }
   ],
   "paramList": {

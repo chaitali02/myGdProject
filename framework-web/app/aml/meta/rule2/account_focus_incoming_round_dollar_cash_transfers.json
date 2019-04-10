@@ -136,9 +136,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 11,
+              "attributeId": 47,
               "value": null,
-              "attributeName": "in_cash_transfers_trans_count",
+              "attributeName": "in_cash_transfers_round_amount_count",
               "attributeType": null
             },
             {
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 12,
+              "attributeId": 54,
               "value": null,
-              "attributeName": "in_cash_transfers_trans_amount_usd",
+              "attributeName": "in_cash_transfers_round_amount_sum",
               "attributeType": null
             },
             {

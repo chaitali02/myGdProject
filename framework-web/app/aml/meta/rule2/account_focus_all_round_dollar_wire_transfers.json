@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 20,
+              "attributeId": 17,
               "value": null,
-              "attributeName": "all_wire_transfers_round_amount_count",
+              "attributeName": "all_wire_transfers_round_amount_usd",
               "attributeType": null
             },
             {
