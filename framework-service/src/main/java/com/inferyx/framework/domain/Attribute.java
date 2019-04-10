@@ -28,7 +28,17 @@ public class Attribute {
     private String piiFlag = "N";
     private String cdeFlag = "N";
     private Integer Precision;
+    private String nullFlag = "N";
+
 	
+	public String getNullFlag() {
+		return nullFlag;
+	}
+
+	public void setNullFlag(String nullFlag) {
+		this.nullFlag = nullFlag;
+	}
+
 	public String getPiiFlag() {
 		return piiFlag;
 	}
