@@ -15,6 +15,8 @@ import { ExpressionInfoIO } from '../../metadata/domainIO/domain.expressionInfoI
 import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
 import { DropDownIO } from '../../metadata/domainIO/domain.dropDownIO';
 import { MetaType } from '../../metadata/enums/metaType';
+import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
 @Component({
   selector: 'app-expression',
   templateUrl: './expression.template.html',
@@ -372,7 +374,7 @@ export class ExpressionComponent implements OnInit {
     for (const i in response) {
       let ver = new DropDownIO();
       ver.label = response[i].version;
-      ver.value = { 'label': '', 'uuid': '' }
+      ver.value = { label: '', uuid: '' }
       ver.value.label = response[i].version;
       ver.value.uuid = response[i].uuid;
       this.VersionList[i] = ver;
@@ -609,23 +611,23 @@ export class ExpressionComponent implements OnInit {
   }
   submitExpression() {
     this.isSubmitEnable = true;
-    var expressionjson = {}
-    expressionjson["uuid"] = this.expression.uuid;
-    expressionjson["name"] = this.expression.name;
+    var expressionjson = new Expression()
+    expressionjson.uuid = this.expression.uuid;
+    expressionjson.name = this.expression.name;
     //expressionjson["active"]=this.expression.active;
-    expressionjson["desc"] = this.expression.desc;
+    expressionjson.desc = this.expression.desc;
     //expressionjson["published"]=this.expression.published;
-    expressionjson["active"] = this.expression.active == true ? 'Y' : "N"
-    expressionjson["published"] = this.expression.published == true ? 'Y' : "N"
+    expressionjson.active = this.expression.active == true ? 'Y' : "N"
+    expressionjson.published = this.expression.published == true ? 'Y' : "N"
   
-    expressionjson['tags'] = this.expression.tags
+    expressionjson.tags = this.expression.tags
 
-    var dependsOn = {};
-    var ref = {};
+    var dependsOn =new MetaIdentifierHolder;
+    var ref = new MetaIdentifier;
     ref["type"] = this.depends;
     ref["uuid"] = this.dependsOn.uuid;
     dependsOn["ref"] = ref;
-    expressionjson["dependsOn"] = dependsOn
+   // expressionjson["dependsOn"] = dependsOn
     var met = {};
     var metref = {};
     if (this.expressionmetnotmat["metinfo"]["mettype"] == "string") {
@@ -641,7 +643,7 @@ export class ExpressionComponent implements OnInit {
       met["ref"] = metref;
 
     }
-    expressionjson["match"] = met
+  //  expressionjson["match"] = met
     var notMet = {};
     var notMetref = {};
     if (this.expressionmetnotmat["notmetinfo"]["notmettype"] == "string") {
@@ -657,7 +659,7 @@ export class ExpressionComponent implements OnInit {
       notMet["ref"] = notMetref;
 
     }
-    expressionjson["noMatch"] = notMet
+   // expressionjson["noMatch"] = notMet
 
     var expressioninfoArray = [];
     if (this.expressionTableArray.length > 0) {
