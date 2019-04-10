@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1558,7 +1559,8 @@ public class MetadataServiceImpl {
 	 */
 	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("Ref : " + ref);
-		
+		if(paramValMap==null)
+			paramValMap=new HashMap<String,String>();
 		if(execParams != null && (execParams.getCurrParamSet() != null 
 									|| execParams.getParamListHolder() != null 
 									|| execParams.getParamListInfo() != null)) {
