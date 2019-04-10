@@ -25,8 +25,8 @@ import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
 export class ExpressionComponent implements OnInit {
   @Input()
   childMessage: string;
-  VersionList: SelectItem[] = [];
-  selectedVersion: Version
+  selectedVersion: Version;
+  VersionList: Array<DropDownIO>;
   allNames: SelectItem[] = [];
   dependsOn: DependsOn
   msgs: any[];
