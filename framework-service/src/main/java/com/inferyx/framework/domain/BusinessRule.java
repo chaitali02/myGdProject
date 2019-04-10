@@ -18,7 +18,7 @@ import com.inferyx.framework.enums.ScoringMethod;
 import com.inferyx.framework.enums.ScoringMethod;
 
 @Document(collection = "rule2")
-public class Rule2 extends BaseRule {
+public class BusinessRule extends BaseRule {
 
 	private MetaIdentifierHolder sourceInfo;
 	private List<FilterInfo> filterInfo;

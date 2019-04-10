@@ -136,9 +136,9 @@
                 "version": null,
                 "name": "customer_summary_daily"
               },
-              "attributeId": 16,
+              "attributeId": 21,
               "value": null,
-              "attributeName": "all_wire_transfers_round_amount_usd",
+              "attributeName": "all_wire_transfers_trans_count",
               "attributeType": null
             },
             {
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "customer_summary_daily"
               },
-              "attributeId": 19,
+              "attributeId": 16,
               "value": null,
-              "attributeName": "all_wire_transfers_round_amount_count",
+              "attributeName": "all_wire_transfers_round_amount_usd",
               "attributeType": null
             },
             {

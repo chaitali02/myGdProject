@@ -591,7 +591,7 @@ public class Helper {
 		case dashboardExec:
 			return DashboardExec.class;
 		case rule2:
-			return Rule2.class;
+			return BusinessRule.class;
 		case rule2Exec:
 			return RuleExec.class;
 		case domain:

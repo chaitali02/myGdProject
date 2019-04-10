@@ -343,15 +343,15 @@ public class DQOperator implements IParsable {
 			select = select.concat(commaSepAttrNames(getRowKeyList(datapod)));
 		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat((commaSepAttrNames(getRowKeyList(datapod)) == null) ? "null" : commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
 						.concat(ROWKEY_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(getAttributeDesc(datapod,attributeName)).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat((getAttributeDesc(datapod,attributeName) == null) ? "null" : getAttributeDesc(datapod,attributeName)).concat(SINGLE_QUOTE).concat(AS)
 				.concat(ATTRIBUTE_DESC).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getPiiFlag(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(PII_FLAG).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getCdeFlag(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(CDE_FLAG).concat(COMMA);
-		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+		select = select.concat((tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)) == null) ? "null" : tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
 			.concat(ROWKEY_VALUE).concat(COMMA);
 		
 //		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
@@ -635,6 +635,32 @@ public class DQOperator implements IParsable {
 		}
 		for (Attribute attr : datapod.getAttributes()) {
 			if (StringUtils.isNotBlank(attr.getKey())) {
+				return attr;
+			}
+		}
+		return (Attribute) attribute;
+	}
+	
+	private Attribute getPiiFlag(Datapod datapod) {
+		List<Attribute> attribute = new ArrayList<>();
+		if (datapod == null) {
+			return null;
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (StringUtils.isNotBlank(attr.getPiiFlag())) {
+				return attr;
+			}
+		}
+		return (Attribute) attribute;
+	}
+	
+	private Attribute getCdeFlag(Datapod datapod) {
+		List<Attribute> attribute = new ArrayList<>();
+		if (datapod == null) {
+			return null;
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (StringUtils.isNotBlank(attr.getCdeFlag())) {
 				return attr;
 			}
 		}
