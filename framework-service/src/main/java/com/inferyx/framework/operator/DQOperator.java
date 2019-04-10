@@ -343,15 +343,15 @@ public class DQOperator implements IParsable {
 			select = select.concat(commaSepAttrNames(getRowKeyList(datapod)));
 		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat((commaSepAttrNames(getRowKeyList(datapod)) == null) ? "null" : commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
 						.concat(ROWKEY_NAME).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(getAttributeDesc(datapod,attributeName)).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat((getAttributeDesc(datapod,attributeName) == null) ? "null" : getAttributeDesc(datapod,attributeName)).concat(SINGLE_QUOTE).concat(AS)
 				.concat(ATTRIBUTE_DESC).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrPii(getPiiFlag(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(PII_FLAG).concat(COMMA);
-		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getRowKey(datapod))).concat(SINGLE_QUOTE).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrCde(getCdeFlag(datapod))).concat(SINGLE_QUOTE).concat(AS)
 				.concat(CDE_FLAG).concat(COMMA);
-		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+		select = select.concat((tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)) == null) ? "null" : tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
 			.concat(ROWKEY_VALUE).concat(COMMA);
 		
 //		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
@@ -635,6 +635,32 @@ public class DQOperator implements IParsable {
 		}
 		for (Attribute attr : datapod.getAttributes()) {
 			if (StringUtils.isNotBlank(attr.getKey())) {
+				return attr;
+			}
+		}
+		return (Attribute) attribute;
+	}
+	
+	private Attribute getPiiFlag(Datapod datapod) {
+		List<Attribute> attribute = new ArrayList<>();
+		if (datapod == null) {
+			return null;
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (StringUtils.isNotBlank(attr.getPiiFlag())) {
+				return attr;
+			}
+		}
+		return (Attribute) attribute;
+	}
+	
+	private Attribute getCdeFlag(Datapod datapod) {
+		List<Attribute> attribute = new ArrayList<>();
+		if (datapod == null) {
+			return null;
+		}
+		for (Attribute attr : datapod.getAttributes()) {
+			if (StringUtils.isNotBlank(attr.getCdeFlag())) {
 				return attr;
 			}
 		}
@@ -1502,14 +1528,27 @@ public class DQOperator implements IParsable {
 		} else {
 			dqBuilder.append("'' as ").append(CUSTOM_CHECK_PASS).append(COMMA);
 		} // End customCheck If
-		if (dq.getDomainCheck() != null && dq.getDomainCheck().getRef() != null) {
-			AttributeDomain attributeDomain = (AttributeDomain) commonServiceImpl.getOneByUuidAndVersion(dq.getDomainCheck().getRef().getUuid()
-													, dq.getDomainCheck().getRef().getVersion()
-													, dq.getDomainCheck().getRef().getType().toString()
-													, "N");
-			check = tableAttr.concat(" RLIKE ( '").concat(attributeDomain.getRegEx()).concat("'").concat(BRACKET_CLOSE);
-			colName = DOMAIN_CHECK_PASS;
-			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		
+		if (dq.getDomainCheck() !=null && dq.getDomainCheck().size()>0 ) {
+			StringBuilder domainCheckBuilder = new StringBuilder();
+			AttributeDomain attributeDomain;
+			int count=1;
+			for(MetaIdentifierHolder mi:dq.getDomainCheck()) {
+				 attributeDomain = (AttributeDomain) commonServiceImpl.getOneByUuidAndVersion(mi.getRef().getUuid()
+						, mi.getRef().getVersion()
+						, mi.getRef().getType().toString()
+						, "N");
+				 check = tableAttr.concat(" RLIKE ( '").concat(attributeDomain.getRegEx()).concat("'").concat(BRACKET_CLOSE);
+				 colName = DOMAIN_CHECK_PASS;
+				 if(dq.getDomainCheck().size()>count)
+				 domainCheckBuilder.append(check).append("OR ");
+				 else
+				 domainCheckBuilder.append(check);
+				 
+				 count++;
+			}
+			dqBuilder.append(caseWrapper(domainCheckBuilder.toString(), colName)).append(COMMA);
+				
 		} else {
 			dqBuilder.append("'' as ").append(DOMAIN_CHECK_PASS).append(COMMA);
 		} // End domainCheck If

@@ -110,7 +110,8 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param version
 	 * @param execType
 	 */
-	public void RESUME (String uuid, String version, MetaType execType) {
+	/**********************************Unused*******************************/
+	/*public void RESUME (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
@@ -129,7 +130,7 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	/**
 	 * Set status of BaseExec to PAUSE if status is KILLED, PENDING, or RESUME 
@@ -137,7 +138,9 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param version
 	 * @param execType
 	 */
-	public void PAUSE (String uuid, String version, MetaType execType) {
+
+	/**************************Unused*****************************/
+	/*	public void PAUSE (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
@@ -156,7 +159,7 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Kill meta thread if RUNNING
@@ -183,7 +186,8 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 		}*/
 	}
 	
-	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
+	/*******************Unused************************************/
+	/*public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
 		
 		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
@@ -199,7 +203,8 @@ public class IngestExecServiceImpl extends BaseRuleExecTemplate {
 		execHolder.setRunMode(dataStore.getRunMode());
 		return execHolder;
 	}
-
+*/
+	
 	public Object findReconExecByReconGroupExec(String reconGroupExecUuid, String reconGroupExecVersion) throws JsonProcessingException {
 		List<IngestExec> ingestExecList = new ArrayList<>();
 		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(reconGroupExecUuid, reconGroupExecVersion, MetaType.ingestgroupExec.toString());

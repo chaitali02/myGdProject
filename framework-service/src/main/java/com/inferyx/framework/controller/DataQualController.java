@@ -38,13 +38,11 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataQualExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupServiceImpl;
 import com.inferyx.framework.service.DataQualServiceImpl;
-import com.inferyx.framework.service.RegisterService;
 import com.inferyx.framework.service.TaskHolder;
 
 /**
@@ -55,14 +53,11 @@ import com.inferyx.framework.service.TaskHolder;
 @RequestMapping(value = "/dataqual")
 public class DataQualController {
 
-	@Autowired
-	DQOperator dataQualOperator;
+	
 	@Autowired
 	DataQualServiceImpl dataQualServiceImpl;
 	@Autowired
 	DataQualGroupServiceImpl dataQualGroupServiceImpl;
-	@Autowired
-	RegisterService registerService;
 	@Autowired
 	DataQualExecServiceImpl dataQualExecServiceImpl;
 	@Autowired

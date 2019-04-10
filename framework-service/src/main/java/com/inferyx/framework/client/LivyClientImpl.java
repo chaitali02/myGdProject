@@ -23,14 +23,12 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.livy.LivyClient;
 import org.apache.livy.LivyClientBuilder;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.SparkInfo;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.livyjob.FileReadJob;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
@@ -139,9 +137,11 @@ public class LivyClientImpl {
 	 * @throws ExecutionException
 	 * @throws Exception
 	 */
-	public Dataset<Row> readFile(String clientContext, String filePath) throws InterruptedException, ExecutionException, Exception {
+	
+	/****************************Unused****************************/
+	/*public Dataset<Row> readFile(String clientContext, String filePath) throws InterruptedException, ExecutionException, Exception {
 		return getClient(clientContext).submit(new FileReadJob(filePath)).get();
-	}
+	}*/
 		
 	private Properties getSessionParams(String sessionParams) throws IOException {
 		final Properties p = new Properties();

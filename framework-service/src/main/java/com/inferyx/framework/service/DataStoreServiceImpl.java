@@ -42,15 +42,12 @@ import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataStoreDao;
-import com.inferyx.framework.dao.IDatapodDao;
-import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -58,16 +55,14 @@ import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.enums.Layout;
-import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.StorageContext;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
+
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
@@ -77,22 +72,10 @@ public class DataStoreServiceImpl {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	/*@Autowired
-	HiveContext hiveContext;*/
-	@Autowired
-	IDatasourceDao iDatasourceDao;
 	@Autowired
 	IDataStoreDao iDataStoreDao;
 	@Autowired
-	IDatapodDao iDatapodDao;
-	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	DagExecServiceImpl dagExecImpl;
-	@Autowired
-	DatasourceServiceImpl datasourceServiceImpl;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
 	@Autowired
@@ -100,34 +83,12 @@ public class DataStoreServiceImpl {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
 	ExecutorFactory execFactory;
-	@Autowired
-	DataSourceFactory datasourceFactory;
-	@Autowired
-	LoadExecServiceImpl loadExecServiceImpl;
-	@Autowired
-	MapExecServiceImpl mapExecServiceImpl;
-	@Autowired
-	RuleServiceImpl ruleServiceImpl;
-	@Autowired
-	RuleExecServiceImpl ruleExecServiceImpl;
-	@Autowired
-	DataQualExecServiceImpl dqExecServiceImpl;
 	@Autowired
 	DatapodRegister datapodRegister;
 	@Autowired
-	DataSourceFactory dataSourceFactory;
-	@Autowired
-	ConnectionFactory connFactory;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	RunMode runMode;
-	@Autowired
-	DataFrameService dataFrameService;
 	@Autowired
 	Engine engine;
 	@Autowired
@@ -219,7 +180,8 @@ public class DataStoreServiceImpl {
 		// return iDataStoreDao.findDataStoreByMeta(appUuid, uuid, version);
 	}
 
-	public List<DataStore> findAllLatest() {
+	/**********************Unused****************************/
+	/*public List<DataStore> findAllLatest() {
 		{
 			// String appUuid =
 			// securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -249,9 +211,10 @@ public class DataStoreServiceImpl {
 			}
 			return result;
 		}
-	}
+	}*/
 
-	public List<DataStore> findAllLatestActive() {
+	/****************************Unused********************/
+	/*public List<DataStore> findAllLatestActive() {
 		Aggregation dataStoreAggr = newAggregation(match(Criteria.where("active").is("Y")),
 				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
 		AggregationResults<DataStore> dataStoreResults = mongoTemplate.aggregate(dataStoreAggr, "dataStore",
@@ -275,7 +238,7 @@ public class DataStoreServiceImpl {
 			}
 		}
 		return result;
-	}
+	}*/
 
 	public List<DataStore> findDataStoreByDatapod(String datapodUUID) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException {
 		// String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -801,29 +764,32 @@ public class DataStoreServiceImpl {
 		return data;
 	}
 
-	public List<DataStore> findAllByVersion(String uuid) {
+/*****************************Unused**********************/
+	/*public List<DataStore> findAllByVersion(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		if (appUuid != null) {
 			return iDataStoreDao.findAllVersion(appUuid, uuid);
 		} else
 			return iDataStoreDao.findAllVersion(uuid);
-	}
+	}*/
 
 	public DataStore getDatastore(String uuid, String version) throws JsonProcessingException {
 		return (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 	}
 
-	public DataStore getAsOf(String uuid, String asOf) {
+	/**************************Unused**************************/
+	/*public DataStore getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		if (appUuid != null) {
 			return iDataStoreDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 		} else
 			return iDataStoreDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}
+	}*/
 
-	public MetaIdentifierHolder saveAs(DataStore datastore) throws Exception {
+/************************Unused****************************/
+	/*	public MetaIdentifierHolder saveAs(DataStore datastore) throws Exception {
 		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
 		MetaIdentifier ref = new MetaIdentifier();
 		DataStore dsNew = new DataStore();
@@ -841,7 +807,7 @@ public class DataStoreServiceImpl {
 		ref.setUuid(dsNew.getUuid());
 		refMeta.setRef(ref);
 		return refMeta;
-	}
+	}*/
 	
 	public void create(String filePath,String fileName, MetaIdentifier metaId, MetaIdentifier execId,List<MetaIdentifierHolder> appInfo, MetaIdentifierHolder createdBy,
 			String saveMode, MetaIdentifierHolder resultRef) throws Exception{

@@ -20,14 +20,13 @@ import com.inferyx.framework.domain.ParamSet;
 @Service
 public class OperatorUtilServiceImpl {
 
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
 
 	public OperatorUtilServiceImpl() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<Param> getParamList(Operator operator, ExecParams execParams) throws JsonProcessingException {
+	/****************************Unused********************************/
+	/*public List<Param> getParamList(Operator operator, ExecParams execParams) throws JsonProcessingException {
 		Param param = null;
 		List<Param> newParamList = new ArrayList<>();
 		ParamSet paramSet = null;//execParams.getParamSetHolder().getRef();
@@ -47,9 +46,10 @@ public class OperatorUtilServiceImpl {
 			}
 		}
 		return newParamList;
-	}
+	}*/
 	
-	public ExecParams getExecParams (com.inferyx.framework.domain.TaskOperator operator) {
+	/****************************Unused*************************/
+	/*public ExecParams getExecParams (com.inferyx.framework.domain.TaskOperator operator) {
 		if (operator == null 
 				|| operator.getOperatorParams() == null 
 				|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
@@ -57,6 +57,6 @@ public class OperatorUtilServiceImpl {
 			return null;
 		}
 		return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
-	}
+	}*/
 	
 }

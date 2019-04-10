@@ -4,20 +4,13 @@
 package com.inferyx.framework.executor;
 
 import java.io.IOException;
-import java.util.Properties;
 
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.executor.helper.KafkaStreamToTableHelper;
-import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
  * @author joy
@@ -25,8 +18,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
  */
 public class KafkaStreamExecutor<T, K> {
 	
-	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private KafkaStreamToTableHelper kafkaStreamToTableHelper;
 	
@@ -44,7 +35,9 @@ public class KafkaStreamExecutor<T, K> {
 	 * @param ds
 	 * @param streamInput
 	 */
-	public void stream(Datasource ds, StreamInput<T, K> streamInput, Map map) {
+	
+	/*************************Unused**********************************/
+	/*public void stream(Datasource ds, StreamInput<T, K> streamInput, Map map) {
 		
 		Properties streamsConfiguration = streamInput.getProps();
 		streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -67,7 +60,7 @@ public class KafkaStreamExecutor<T, K> {
 		
 		KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
 		streams.start();
-	}
+	}*/
 	
 	public void write(StreamInput streamInput, KStream<T, K> lines) throws IOException {
 		kafkaStreamToTableHelper.help(streamInput, lines);

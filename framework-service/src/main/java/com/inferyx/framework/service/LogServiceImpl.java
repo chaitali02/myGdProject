@@ -30,8 +30,6 @@ public class LogServiceImpl {
 	@Autowired
 	ILogDao iLogDao;
 	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
 	GraphRegister<?> registerGraph;
 	
 

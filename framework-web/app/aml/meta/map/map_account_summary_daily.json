@@ -1752,6 +1752,68 @@
         "attrUnitType": null,
         "function": null
       }
+    },
+    {
+      "attrMapId": "55",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "aeeb6281-9fd6-4c7b-ac0d-50d8ca9069c8",
+          "version": null,
+          "name": "ds_account_summary_daily"
+        },
+        "value": null,
+        "attrId": "55",
+        "attrName": "all_cash_trans_velocity_ratio",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+          "version": null,
+          "name": "account_summary_daily"
+        },
+        "value": null,
+        "attrId": "55",
+        "attrName": "all_cash_trans_velocity_ratio",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "56",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "aeeb6281-9fd6-4c7b-ac0d-50d8ca9069c8",
+          "version": null,
+          "name": "ds_account_summary_daily"
+        },
+        "value": null,
+        "attrId": "56",
+        "attrName": "all_wire_trans_velocity_ratio",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+          "version": null,
+          "name": "account_summary_daily"
+        },
+        "value": null,
+        "attrId": "56",
+        "attrName": "all_wire_trans_velocity_ratio",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
     }
   ]
 }

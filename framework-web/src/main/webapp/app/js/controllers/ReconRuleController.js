@@ -1624,11 +1624,6 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
   $scope.isD3RGEexecGraphShow=false;
   $scope.gridOptions = dagMetaDataService.gridOptionsDefault;
   $scope.download={};
-  $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-  $scope.download.formates=CF_DOWNLOAD.formate;
-  $scope.download.selectFormate=CF_DOWNLOAD.formate[0];
-  $scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
-  $scope.download.limit_to=CF_DOWNLOAD.limit_to;
   // ui grid
   var notify = {
     type: 'success',
@@ -1839,53 +1834,11 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="recon";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
-	};
+  }
+  
 	$scope.onDownloaed=function(data){
 		console.log(data);
 		$scope.isDownloadDirective=data.isDownloadDirective;
 	}
-
-
-	// $scope.submitDownload=function(){
-	// 	var uuid = $scope.download.data.uuid;
-	// 	var version = $scope.download.data.version;
-	// 	var url = $location.absUrl().split("app")[0];
-	// 	$('#downloadSample').modal("hide"); 
-  //   $http({
-  //     method: 'GET',
-  //     url:url+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-  //     responseType: 'arraybuffer'
-  //   }).success(function(data, status, headers) {
-  //     headers = headers();
-  //     $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-			
-  //     var filename = headers['filename'];
-  //     var contentType = headers['content-type'];
-  //     var linkElement = document.createElement('a');
-  //     try {
-  //       var blob = new Blob([data], {
-  //         type: contentType
-  //       });
-  //       var url = window.URL.createObjectURL(blob);
-  //       linkElement.setAttribute('href', url);
-  //       linkElement.setAttribute("download",filename);
-  //       var clickEvent = new MouseEvent("click", {
-  //         "view": window,
-  //         "bubbles": true,
-  //         "cancelable": false
-  //       });
-  //       linkElement.dispatchEvent(clickEvent);
-  //     } 
-  //     catch (ex) {
-  //       console.log(ex);
-  //     }
-  //   }).error(function(data) {
-  //     console.log(data);
-  //   });
-	// }
 
 });

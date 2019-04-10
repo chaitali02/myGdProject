@@ -118,7 +118,7 @@
     "attrUnitType": null,
     "function": null
   },
-  "criteriaInfo": [
+    "criteriaInfo": [
     {
       "criteriaId": "0",
       "criteriaName": "Transaction Volume",
@@ -136,9 +136,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 7,
+              "attributeId": 49,
               "value": null,
-              "attributeName": "out_wire_transfers_trans_count",
+              "attributeName": "out_wire_transfers_round_amount_count",
               "attributeType": null
             },
             {
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 8,
+              "attributeId": 52,
               "value": null,
-              "attributeName": "out_wire_transfers_trans_amount_usd",
+              "attributeName": "out_wire_transfers_round_amount_sum",
               "attributeType": null
             },
             {

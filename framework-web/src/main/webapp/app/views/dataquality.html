@@ -591,8 +591,21 @@
                 <!--Start Tab3-->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
+                    
+                    <div class="form-group">
+                      <label class="control-label col-md-3">Auto</label>
+                      <div class="col-md-6">
+                        <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.autoFlag='N'">
+                          <label class="mt-checkbox " style="margin-bottom:-1px;">
+                            <input type="checkbox" ng-model="dataqualitydata.autoFlag" ng-disabled="{{mode}}"
+                              ng-true-value="'Y'" ng-false-value="'N'" ng-change="onChagneAuto()">
+                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                              ng-disabled="{{mode}}"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                     <div class="col-md-12">
-
                       <div class="col-md-4 form-group">
                         <label class="control-label col-md-8 col-sm-8 col-xs-12 col-md-offset-1" style="margin-top:-4px;">Duplicate
                           Key Check
@@ -600,10 +613,10 @@
                         <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: 7px;">
                           <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
                             <label class="mt-checkbox " style="margin-bottom:-1px;">
-                              <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
+                              <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}} || isSelectAuto"
                                 ng-true-value="'Y'" ng-false-value="'N'">
                               <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                                ng-disabled="{{mode}}"></span>
+                                ng-disabled="{{mode}} || isSelectAuto"></span>
                             </label>
                           </div>
                         </div>
@@ -615,46 +628,21 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
                             <label class="mt-checkbox " style="margin-bottom:-1px;">
-                              <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
+                              <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto"
                                 ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
                               <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                                ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
+                                ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto"></span>
                             </label>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Duplicate Key Check</label>
-                      <div class="col-md-6">
-                        <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
-                          <label class="mt-checkbox " style="margin-bottom:-1px;">
-                            <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
-                              ng-true-value="'Y'" ng-false-value="'N'">
-                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                              ng-disabled="{{mode}}"></span>
-                          </label>
-                        </div>
-                      </div>
-                    </div> -->
-                    <!-- <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Null Check</label>
-                      <div class="col-md-6">
-                        <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
-                          <label class="mt-checkbox " style="margin-bottom:-1px;">
-                            <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
-                              ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
-                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                              ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
-                          </label>
-                        </div>
-                      </div>
-                    </div> -->
+                  
 
                     <div class="form-group">
                       <label class="control-label col-md-3">Value Check</label>
                       <div class="col-md-6">
-                        <tags-input ng-model="dataqualitydata.valueCheck" min-length="0" ng-disabled="{{mode}}|| !isSelectSoureceAttr"></tags-input>
+                        <tags-input ng-model="dataqualitydata.valueCheck" min-length="0" ng-disabled="{{mode}}|| !isSelectSoureceAttr || isSelectAuto"></tags-input>
                       </div>
                     </div>
                     <!-- <div class="form-group">
@@ -678,7 +666,7 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input title="Lower Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Lower Bound"
-                            type="text" class="form-control" ng-model="dataqualitydata.lowerBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                            type="text" class="form-control" ng-model="dataqualitydata.lowerBound" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto">
                         </div>
                       </div>
 
@@ -688,7 +676,7 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12" style=" padding-left: 0px;">
                           <input title="Upper Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Upper Bound"
-                            type="text" class="form-control" ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                            type="text" class="form-control" ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto">
                         </div>
                       </div>
                     </div>
@@ -696,7 +684,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Data Type Check</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectDataType" ng-options="x for x in datatype | orderBy"
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="selectDataType" ng-options="x for x in datatype | orderBy"
                           class="form-control" ng-change="OnselectType()">
                           <option value="">-Select-</option>
                         </select>
@@ -706,7 +694,7 @@
                       <label class="control-label col-md-3">Date Format Check</label>
                       <div class=" selectSimulationType col-md-6">
                         <!-- || selectType -->
-                        <select ng-disabled="{{mode}}  || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate"
+                        <select ng-disabled="{{mode}}  || !isSelectSoureceAttr || isSelectAuto" title="Type" ng-model="selectdatefromate"
                           ng-options="x for x in datefromate" class="form-control">
                           <option value="">-Select-</option>
                         </select>
@@ -716,7 +704,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Format Check</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.customFormatCheck">
+                        <input type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="dataqualitydata.customFormatCheck">
 
                       </div>
                     </div>
@@ -742,7 +730,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input title="Min Length" data-toggle="tooltip" ng-model="dataqualitydata.minLength"
                             data-placement="top" tooltip placeholder="Min Length" type="text" class="form-control"
-                            ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                            ng-disabled="{{mode}} || !isSelectSoureceAttr ||isSelectAuto">
                         </div>
                       </div>
 
@@ -753,7 +741,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12" style=" padding-left: 0px;">
                           <input title="Max Length" data-toggle="tooltip" ng-model="dataqualitydata.maxLength"
                             data-placement="top" tooltip placeholder="Max Length" type="text" class="form-control"
-                            ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                            ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto">
                         </div>
                       </div>
                     </div>
@@ -763,7 +751,7 @@
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select class="form-control" data-ng-model="selectedRIType" ng-options="r for r in refIntegrityTypes"
-                          ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-change="OnChangeRIType()">
+                          ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-change="OnChangeRIType()">
                           <option value="">-Select-</option>
                         </select>
                         </div>
@@ -775,7 +763,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck"
                           ng-options="x as x.name for x in refIntegrityCheck track by x.uuid" ng-change="onRefIntegrityCheck()"
-                          class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                          class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto">
                           <option value="">-Select-</option>
                         </select>
                         </div>
@@ -787,7 +775,7 @@
                       <div class="col-md-6">
                         <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top"
                           tooltip data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId"
-                          ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                          ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto">
                           <option value="">-Select-</option>
                         </select>
                       </div>
@@ -796,7 +784,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Blank Space Check</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.blankSpaceCheck"
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="dataqualitydata.blankSpaceCheck"
                           ng-options="x for x in blankSpaceTypes | orderBy" class="form-control" ng-change="OnselectType()">
                           <option value="">-Select-</option>
                         </select>
@@ -805,7 +793,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Domain Check</label>
                       <div class="col-md-6">
-                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain"
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="selectedDomain"
                           ng-options="x as x.name for x in allDomain | orderBy track by x.uuid" class="form-control"
                           ng-change="OnselectType()">
                           <option value="">-Select-</option>
@@ -815,7 +803,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Expression Check</label>
                       <div class="col-md-6">
-                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedExpression"
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="selectedExpression"
                           ng-options="x as x.name for x in allExpress | orderBy track by x.uuid" class="form-control"
                           ng-change="OnselectType()">
                           <option value="">-Select-</option>
@@ -825,7 +813,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Case Check</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.caseCheck"
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="dataqualitydata.caseCheck"
                           ng-options="x for x in CaseCheckType | orderBy" class="form-control">
                           <option value="">-Select-</option>
                         </select>
@@ -834,7 +822,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Threshold Type</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}}" ng-model="thresholdInfo.type" ng-options="x for x in thresholdType | orderBy"
+                        <select ng-disabled="{{mode}} || isSelectAuto" ng-model="thresholdInfo.type" ng-options="x for x in thresholdType | orderBy"
                           class="form-control"></select>
                       </div>
                     </div>
@@ -842,30 +830,30 @@
                       <label class="control-label col-md-3">Threshold Limit (L-M-H)</label>
                       <div class="col-md-2 col-sm-2 col-xs-12">
                         <input title="Low" data-toggle="tooltip" ng-model="thresholdInfo.low" data-placement="top"
-                          tooltip placeholder="Low Limit " type="number" class="form-control" ng-disabled="{{mode}}"
-                          required min="{{thresholdInfo.lowMin}}" max="{{thresholdInfo.lowMax}}" ng-change="onChangeTLow()">
+                          tooltip placeholder="Low Limit " type="number" class="form-control" ng-disabled="{{mode}} || isSelectAuto"
+                          ng-required="!isSelectAuto" min="{{thresholdInfo.lowMin}}" max="{{thresholdInfo.lowMax}}" ng-change="onChangeTLow()">
                       </div>
                       <div class="col-md-1 col-sm-1 " style="width:10px;padding-left:0px;padding-right: 0px;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-8px;"></i>
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: -10px;">
                         <input title="Medium" data-toggle="tooltip" ng-model="thresholdInfo.medium" data-placement="top"
-                          tooltip placeholder="Medium Limit" type="number" class="form-control" ng-disabled="{{mode}}"
-                          required min="{{thresholdInfo.mediumMin}}" max="{{thresholdInfo.mediumMax}}" ng-change="onChangeTMedium()">
+                          tooltip placeholder="Medium Limit" type="number" class="form-control" ng-disabled="{{mode}} ||isSelectAuto"
+                          ng-required="!isSelectAuto" min="{{thresholdInfo.mediumMin}}" max="{{thresholdInfo.mediumMax}}" ng-change="onChangeTMedium()">
                       </div>
                       <div class="col-md-1 col-sm-1 " style="width:10px;padding-left:0px;padding-right: 0px;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-8px;"></i>
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: -10px;">
                         <input title="High" data-toggle="tooltip" ng-model="thresholdInfo.high" data-placement="top"
-                          tooltip placeholder="High Limit" type="number" class="form-control" ng-disabled="{{mode}}"
-                          required min="{{thresholdInfo.highMin}}" max="{{thresholdInfo.highMax}}" ng-change="onChangeTHigh()">
+                          tooltip placeholder="High Limit" type="number" class="form-control" ng-disabled="{{mode}} || isSelectAuto"
+                          ng-required="!isSelectAuto" min="{{thresholdInfo.highMin}}" max="{{thresholdInfo.highMax}}" ng-change="onChangeTHigh()">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3">Abort Condition</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}}" ng-model="dataqualitydata.abortCondition" ng-options="x for x in abortConditionTypes"
+                        <select ng-disabled="{{mode}} || isSelectAuto" ng-model="dataqualitydata.abortCondition" ng-options="x for x in abortConditionTypes"
                           class="form-control">
                         <option value="">-Select-</option>
                         </select>

@@ -10,11 +10,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.spark.sql.SaveMode;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.streaming.api.java.JavaInputDStream;
+
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +19,7 @@ import org.springframework.stereotype.Service;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.KafkaConnector;
 import com.inferyx.framework.connector.ZKConnector;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.StreamInput;
 
 /**
  * @author joy
@@ -64,27 +58,29 @@ public class KafkaExecutor<T, K> {
         return topics;
 	}
 	
-	public Consumer<T, K> stream(Datasource ds, String topic, StreamInput<T, K> streamInput) {
+	/*************************Unused******************************/
+	/*public Consumer<T, K> stream(Datasource ds, String topic, StreamInput<T, K> streamInput) {
 		Consumer<T, K> consumer = kafkaConnector.createConsumer(ds, topic, streamInput);
 		return consumer;
-	  }
+	  }*/
 	
-	
-	public void write (String topic, 
+	/*************************Unused******************************/
+	/*public void write (String topic, 
 			String []fieldNames, 
 			DataType []dataTypes, 
 			Datapod datapod, 
 			SaveMode saveMode, 
 			JavaInputDStream<ConsumerRecord<T, K>> stream) throws IOException {
 		// not implemented here
-	}
+	}*/
 	
 	/**
 	 * 
 	 * @param ds
 	 * @param topic
 	 */
-	public void read(Datasource ds, String topic) {
+/*******************************Unused**************************/
+	/*public void read(Datasource ds, String topic) {
 		
 		Consumer consumer = kafkaConsumerMap.get(topic);
 		
@@ -96,8 +92,8 @@ public class KafkaExecutor<T, K> {
 
 	            if (consumerRecords.count()==0) {
 	            	break;
-/*	                if (noRecordsCount > giveUp) break;
-	                else continue;*/
+	                if (noRecordsCount > giveUp) break;
+	                else continue;
 	            }
 
 	            consumerRecords.forEach(record -> {
@@ -110,7 +106,7 @@ public class KafkaExecutor<T, K> {
 	        }
 //	        consumer.close();
 	        System.out.println("DONE");
-	}
+	}*/
 	
 	/**
 	 * 

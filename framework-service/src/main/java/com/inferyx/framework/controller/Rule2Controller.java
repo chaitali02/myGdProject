@@ -38,7 +38,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
@@ -66,7 +66,7 @@ public class Rule2Controller {
 	static final Logger logger = Logger.getLogger(Rule2Controller.class);
 	
 	@RequestMapping(value = "/getRule2Sql", method = RequestMethod.POST)
-	public String getRule2Sql(@RequestBody Rule2 rule,
+	public String getRule2Sql(@RequestBody BusinessRule rule,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();

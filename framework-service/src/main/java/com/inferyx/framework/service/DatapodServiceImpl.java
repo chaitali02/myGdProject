@@ -39,10 +39,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.spark.sql.types.DataType;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
+
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -59,12 +56,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
-//import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
-import com.inferyx.framework.dao.IDatasourceDao;
-import com.inferyx.framework.dao.IUploadDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
@@ -95,31 +88,25 @@ import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.HistogramOperator;
 import com.inferyx.framework.operator.RelationOperator;
 import com.inferyx.framework.operator.RuleOperator;
-import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class DatapodServiceImpl {
 
 	static final Logger logger = Logger.getLogger(DatapodServiceImpl.class);
-
-	@Autowired
-	DatapodRegister datapodRegister;	
+	
 	@Autowired
 	GraphRegister<?> registerGraph;
 	@Autowired
 	IDatapodDao idatapodDao;
 	@Autowired
 	Helper helper;
-	@Autowired
-	IDataStoreDao idatastoreDao;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -129,29 +116,13 @@ public class DatapodServiceImpl {
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired 
-	RegisterService registerService;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ExecutorFactory execFactory;
 	@Autowired
-	DataSourceFactory dataSourceFactory;
-//	@Autowired
-//	HDFSInfo hdfsInfo;
-	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	DataFrameService dataFrameService;
-	@Autowired
-	IUploadDao iDownloadDao;
 	@Autowired
 	private MessageServiceImpl messageServiceImpl;
 	@Autowired
@@ -220,9 +191,10 @@ public class DatapodServiceImpl {
 		return alias;
 	}
 
-	public StructType populateSchema(String dpuuid, String version) throws JsonProcessingException {
+	/*****************************Unused************************************/
+	/*public StructType populateSchema(String dpuuid, String version) throws JsonProcessingException {
 		Datapod datapod;
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		if (null != version) {
 			//datapod = idatapodDao.findLatestByUuid(appUuid, dpuuid, new Sort(Sort.Direction.DESC, "version"));
 			datapod = (Datapod) commonServiceImpl.getLatestByUuid(dpuuid, MetaType.datapod.toString());
@@ -254,7 +226,7 @@ public class DatapodServiceImpl {
 		}
 		return DataTypes.createStructType(fields);
 
-	}
+	}*/
 
 	public MetaIdentifierHolder createAndLoad(String csvFileName, RunMode runMode) throws Exception {		
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -432,6 +404,27 @@ public class DatapodServiceImpl {
 		 Aggregation filterAggr = 
 					newAggregation(	
 					match(Criteria.where("appInfo.ref.uuid").is(appUuid).andOperator(Criteria.where("name").is(name))),
+					group("uuid").max("version").as("version"));
+
+				 AggregationResults<Datapod> groupResults 
+					= mongoTemplate.aggregate(filterAggr, MetaType.datapod.toString(), Datapod.class);
+				List<Datapod> datapodList = groupResults.getMappedResults();
+				List<Datapod> result = new ArrayList<Datapod>();
+				for (Datapod datapod : datapodList) {
+					//Datapod datapodLatest = idatapodDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
+					Datapod datapodLatest = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapod.getId(), datapod.getVersion(), MetaType.datapod.toString());
+					if(datapodLatest != null)
+						result.add(datapodLatest);
+				}				
+		return result;
+}
+	
+	public List<Datapod> searchDatapodByNameAndDsUuid(String name, String datasourceUuid) throws JsonProcessingException {	
+		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;		
+		 Aggregation filterAggr = 
+					newAggregation(	
+					match(Criteria.where("appInfo.ref.uuid").is(appUuid).andOperator(Criteria.where("name").is(name),Criteria.where("datasource.ref.uuid").is(datasourceUuid))),
 					group("uuid").max("version").as("version"));
 
 				 AggregationResults<Datapod> groupResults 

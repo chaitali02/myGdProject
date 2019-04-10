@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +97,6 @@ import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.Message;
-import com.inferyx.framework.domain.Meta;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -118,7 +118,7 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Session;
@@ -145,11 +145,7 @@ public class MetadataServiceImpl {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	LoadServiceImpl loadServiceImpl;
-	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -205,11 +201,12 @@ public class MetadataServiceImpl {
 		return baseEntity;
 	}	
 	
-	public Meta findOne(String id) throws JsonProcessingException{
-		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
+	 /*************************Unused****************************/
+/*	public Meta findOne(String id) throws JsonProcessingException{
+		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//return iMetadataDao.findOneById(appUuid,id);
 		return (Meta) commonServiceImpl.getOneById(id, MetaType.meta.toString());
-	}
+	}*/
 
 
 	@SuppressWarnings("unchecked")
@@ -1064,7 +1061,8 @@ public class MetadataServiceImpl {
 		return holderList;
 	}
 	
-	public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
+	/********************************Unused************************************/
+	/*public List<ParamListHolder> getParamListByOperatorType(String operatorTypeUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
 		Operator operator = (Operator) commonServiceImpl.getLatestByUuid(operatorTypeUuid, MetaType.operator.toString(),"N");			
@@ -1086,7 +1084,7 @@ public class MetadataServiceImpl {
 			holderList.add(paramListHolder);
 		}
 		return holderList;
-	}
+	}*/
 	
 
 	@SuppressWarnings("unchecked")
@@ -1473,7 +1471,7 @@ public class MetadataServiceImpl {
 		return plHolderList;
 	}
 	public List<ParamListHolder> getParamListByRule2(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Rule2 rule = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule2.toString());
+		BusinessRule rule = (BusinessRule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule2.toString());
 
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		if(rule.getParamList() != null) {
@@ -1562,7 +1560,8 @@ public class MetadataServiceImpl {
 	 */
 	public String getParamValue(ExecParams execParams, Integer attributeId, MetaIdentifier ref, Map<String, String> paramValMap) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		logger.info("Ref : " + ref);
-		
+		if(paramValMap==null)
+			paramValMap=new HashMap<String,String>();
 		if(execParams != null && (execParams.getCurrParamSet() != null 
 									|| execParams.getParamListHolder() != null 
 									|| execParams.getParamListInfo() != null)) {

@@ -31,9 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
@@ -81,10 +79,6 @@ public class DataQualServiceImpl extends RuleTemplate {
 	DQOperator dqOperator;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	DQInfo dqInfo;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -335,14 +329,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
+	/*********************Unused*******************************/
+	/*public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString());
 //		MetaIdentifier mi = new MetaIdentifier();
 //		mi.setType(MetaType.dq);
 //		mi.setUuid(dataQualExec.getDependsOn().getRef().getUuid());
 //		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
 		return new MetaIdentifier(MetaType.dq, dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion());
-	}
+	}*/
 
 	/**
 	 * 
@@ -350,7 +345,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	 * @return
 	 * @throws Exception
 	 */
-	public Status restart(BaseExec baseExec) throws Exception {
+/****************************Unused*************************/
+	/*public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -358,7 +354,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}
+	}*/
 
 	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {

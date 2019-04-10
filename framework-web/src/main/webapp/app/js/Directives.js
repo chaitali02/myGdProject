@@ -1805,6 +1805,7 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           scope.body=null;
         }
         scope.cancel=function(){
+          $('#downloadSample').modal("hide");
           setTimeout(function(){
             scope.onDownloade({
               isDownloadInprogess:false,
@@ -2229,18 +2230,28 @@ InferyxApp.directive('execParamDirective', function (CommonService,$filter) {
           console.log(JSON.stringify(execParams))
           $scope.executeCall (execParams);
           setTimeout(function(){
-            $scope.onExecute({isParamModelEnable:false,isExecutionInprogess:false,isExecutionCancel:false});
+            $scope.onExecute({isParamModelEnable:false,isExecutionInprogess:true,isExecutionCancel:false});
          },100);
         }
 
         
         $scope.executeCall = function (data) {
-          CommonService.execute($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
-          var onSuccessExecute = function (response) {
-            $scope.execData = response;
-          }
-          var onError = function (response) {
-      
+          if($scope.exeDetail.type !="train"){
+            CommonService.execute($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
+            var onSuccessExecute = function (response) {
+              $scope.execData = response;
+            }
+            var onError = function (response) {
+        
+            }
+          }else{
+            CommonService.executeWithParams($scope.exeDetail.type, $scope.exeDetail.uuid, $scope.exeDetail.version, data).then(function (response) { onSuccessExecute(response.data) }, function (response) { onError(response.data) })
+            var onSuccessExecute = function (response) {
+              $scope.execData = response;
+            }
+            var onError = function (response) {
+        
+            }
           }
         }
       

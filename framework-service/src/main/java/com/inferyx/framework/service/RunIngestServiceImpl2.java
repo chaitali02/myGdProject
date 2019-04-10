@@ -576,12 +576,13 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			
 			/***************  Initializing paramValMap - START ****************/
 			Map<String, String> paramValMap = null;
-			if (execParams.getParamValMap() == null) {
+			if (execParams !=null && execParams.getParamValMap() == null) {
 				execParams.setParamValMap(new HashMap<String, Map<String, String>>());
 			}
-			if (!execParams.getParamValMap().containsKey(ingestExec.getUuid())) {
+			if (execParams !=null && !execParams.getParamValMap().containsKey(ingestExec.getUuid())) {
 				execParams.getParamValMap().put(ingestExec.getUuid(), new HashMap<String, String>());
 			}
+			if (execParams !=null)
 			paramValMap = execParams.getParamValMap().get(ingestExec.getUuid());
 			/***************  Initializing paramValMap - END ****************/
 			

@@ -54,8 +54,8 @@ public class UserServiceImpl {
 	ISessionDao iSessionDao;
 	@Autowired 
 	MongoTemplate mongoTemplate;
-	@Autowired
-	DagExecServiceImpl dagExecImpl;
+//	@Autowired
+//	DagExecServiceImpl dagExecImpl;
 	@Autowired
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired

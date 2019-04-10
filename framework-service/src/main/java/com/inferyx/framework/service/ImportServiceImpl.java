@@ -36,8 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IDataStoreDao;
-import com.inferyx.framework.dao.IDatasourceDao;
+
 import com.inferyx.framework.dao.IImportDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Export;
@@ -56,19 +55,9 @@ public class ImportServiceImpl {
 	@Autowired
 	GraphRegister registerGraph;
 	@Autowired
-	IDataStoreDao idatastoreDao;
-	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	IDatasourceDao iDatasourceDao;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired 
-	RegisterService registerService;
 	@Autowired
 	IImportDao iImportDao ;
 	@Autowired

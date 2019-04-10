@@ -35,7 +35,6 @@ import com.inferyx.framework.domain.GraphpodResult;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.service.GraphServiceImpl;
-import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.RegisterService;
 
 
@@ -46,8 +45,6 @@ public class GraphController {
 	@Autowired
 	RegisterService  registerService;
 	GraphRegister<?>  graphRegister;
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
 	@Autowired
 	GraphServiceImpl graphServiceImpl;
 	

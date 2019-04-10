@@ -162,22 +162,7 @@
             </div><!-- /.modal-dialog -->
           </div>
 
-          <!-- <div class="modal fade in" id="showMsgModel" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
-            <div class="modal-dialog">
-              <div class="modal-content rulemodel">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Info</h4>
-                </div>
-                <div class="modal-body">{{message}}</div>
-                <div class="modal-footer">
-                  <button type="button" class="btn green" data-dismiss="modal">OK</button>
-                </div>
-              </div>
-            
-            </div>
-           
-          </div> -->
+       
           
           <div class="modal fade in" id="killmodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
             <div class="modal-dialog">
@@ -235,29 +220,13 @@
             </div><!-- /.modal-dialog -->
           </div>
 
-          <!-- <div class="modal fade in" id="executionsubmit" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
-            <div class="modal-dialog">
-              <div class="modal-content rulemodel">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Info</h4>
-                </div>
-                <div class="modal-body">{{executionmsg}}
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn green" data-dismiss="modal">OK</button>
-                </div>
-              </div>
-            </div>
-          </div> -->
+        
 
           <div id="responsive" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
             <div class="modal-dialog">
               <div class="modal-content" style="resize: both;overflow: auto;">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <!-- <h4 class="modal-title">{{caption}} Execution</h4> -->
                   <h4 class="modal-title">Run Params</h4>
                 </div>
                 <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()"  novalidate="novalidate">
@@ -442,7 +411,7 @@
             </div>
           </div>
           <div ng-if="isParamModelEnable">
-            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="'dq'" on-execute="onExecute"></exec-param-directive>
+            <exec-param-directive uuid="exeDetail.uuid" version="exeDetail.version" meta-type="select" on-execute="onExecute"></exec-param-directive>
         </div>
 
           <div id="executeParamList" class="modal fade bs-modal-lg in" style="display: none;">

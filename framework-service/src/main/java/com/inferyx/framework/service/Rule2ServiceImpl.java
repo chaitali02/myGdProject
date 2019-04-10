@@ -45,7 +45,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.Rule2Exec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
@@ -77,7 +77,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	static final Logger logger = Logger.getLogger(Rule2ServiceImpl.class);
 
 
-	public Rule2 resolveName(Rule2 rule2) throws JsonProcessingException {
+	public BusinessRule resolveName(BusinessRule rule2) throws JsonProcessingException {
 		String createdByRefUuid = rule2.getCreatedBy().getRef().getUuid();
 		// User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
 		User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
@@ -404,7 +404,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 * @param attributeId
 	 * @return
 	 */
-	public String getAttributeSql(Rule2 rule2, String attributeId) {
+	public String getAttributeSql(BusinessRule rule2, String attributeId) {
 	/*	List<AttributeSource> sourceAttrs = rule2.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null && sourceAttr.getAttrSourceId() != null
@@ -425,7 +425,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside ruleServiceImpl.parse");
-		Rule2 rule2 = null;
+		BusinessRule rule2 = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
@@ -446,7 +446,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		}
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
-		rule2 = (Rule2) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
+		rule2 = (BusinessRule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule2.toString(), "N");
 		
 		List<String> listSql=new ArrayList<String>();
@@ -616,9 +616,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		List<String> ruleUUIDlist = new ArrayList<String>();
 		List<RuleExec> result = new ArrayList<RuleExec>();
 
-		List<Rule2> rule2obj = (List<Rule2>) commonServiceImpl
+		List<BusinessRule> rule2obj = (List<BusinessRule>) commonServiceImpl
 				.getAllLatestCompleteObjects(MetaType.rule.toString(), null);
-		for (Rule2 rule2: rule2obj) {
+		for (BusinessRule rule2: rule2obj) {
 			if (datapodUUID.equalsIgnoreCase( rule2.getSourceInfo().getRef().getUuid())) {
 				ruleUUIDlist.add(rule2.getUuid().toString());
 			}
@@ -724,7 +724,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				MetaType.ruleExec.toString());
 //		DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
 //				ruleExec.getResult().getRef().getVersion());
-		Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getDependsOn().getRef().getUuid(),
+		BusinessRule rule2 = (BusinessRule) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getDependsOn().getRef().getUuid(),
 				ruleExec.getDependsOn().getRef().getVersion(), MetaType.rule2.toString());
 		dataStoreServiceImpl.setRunMode(runMode);
 //		String tableName = null;

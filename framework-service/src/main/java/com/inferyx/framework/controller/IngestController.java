@@ -29,7 +29,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.IngestExecServiceImpl;
 import com.inferyx.framework.service.IngestGroupServiceImpl;
 import com.inferyx.framework.service.IngestServiceImpl;

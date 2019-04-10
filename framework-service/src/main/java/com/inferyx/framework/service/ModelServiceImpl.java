@@ -73,13 +73,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
-import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.datascience.MonteCarloSimulation;
 import com.inferyx.framework.domain.Algorithm;
@@ -110,7 +107,6 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Simulate;
@@ -133,7 +129,6 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.PythonExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.GenerateDataOperator;
@@ -141,18 +136,11 @@ import com.inferyx.framework.operator.ImputeOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ModelServiceImpl {
-	@Autowired
-	GraphRegister<?> registerGraph;
-	@Autowired
-	IModelDao iModelDao;
-	@Autowired
-	IAlgorithmDao iAlgorithmDao;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
+	
+	
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
@@ -190,8 +178,6 @@ public class ModelServiceImpl {
 	@Autowired
 	private SimulateMLOperator simulateMLOperator;
 	@Autowired
-	DataSourceFactory dataSourceFactory;
-	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
@@ -201,8 +187,6 @@ public class ModelServiceImpl {
 	private MonteCarloSimulation monteCarloSimulation;
 	@Autowired
 	private GenerateDataOperator generateDataOperator;
-	@Autowired
-	Engine engine;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 	@Autowired
@@ -547,7 +531,8 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	/********************************Unused*********************************/
+	/*public List<String> readLog(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type);
 			MetaIdentifierHolder dependsOn = trainExec.getDependsOn();
@@ -568,7 +553,7 @@ public class ModelServiceImpl {
 		fstream.close();
 		return logList;
 	}
-	
+	*/
 	public String readLog2(String filePath, String type, String trainExecUuid, String trainExecVersion) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(filePath == null) {
 			TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, type, "N");
@@ -2290,7 +2275,8 @@ public class ModelServiceImpl {
 		return holderList;
 	}	
 	
-	public List<Predict> getPredictByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	/*****************************Unused****************************/
+	/*public List<Predict> getPredictByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<Predict> predictList = new ArrayList<>();
 		Query query = new Query();
 		query.fields().include("uuid");
@@ -2313,7 +2299,7 @@ public class ModelServiceImpl {
 		
 		predictList = mongoTemplate.find(query, Predict.class);
 		return predictList;
-	}
+	}*/
 	
 	@SuppressWarnings({ "unchecked", "rawtypes"})
 	public List<Map<String, Object>> getPrediction(String trainExecUuid, Object feature) throws Exception {

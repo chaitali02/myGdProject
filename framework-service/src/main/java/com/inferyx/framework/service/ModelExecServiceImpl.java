@@ -25,7 +25,6 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.param.ParamMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +68,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
@@ -225,7 +222,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 				model.getDependsOn().getRef().getVersion(), MetaType.algorithm.toString());
 	}
 
-	public TrainExec getLatestTrainExecByModel(String modelUuid, String modelVersion) throws Exception {
+	/*************************Unused************************************/
+	/*public TrainExec getLatestTrainExecByModel(String modelUuid, String modelVersion) throws Exception {
 
 		Query query = new Query();
 		query.fields().include("uuid");
@@ -284,7 +282,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		} else {
 			throw new Exception("No train collection available.");
 		}
-	}
+	}*/
 
 	public List<Map<String, Object>> getPredictResults(String execUuid, String execVersion, int rowLimit) throws Exception {
 		try {
@@ -534,9 +532,10 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	public void kill (String uuid, String version) {
+	/*****************************Unused******************************/
+	/*public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.trainExec);
-	}
+	}*/
 	
 	public void setStatus (String type, String uuid, String version,String status){
 		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){

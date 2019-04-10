@@ -17,33 +17,33 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import com.inferyx.framework.domain.Role;
-import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.BusinessRule;
 
-public interface IRule2Dao extends MongoRepository<Rule2, String> {
+public interface IRule2Dao extends MongoRepository<BusinessRule, String> {
 
 	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
-	public Rule2 findOneByUuidAndVersion(String appUuid,String uuid, String version);	
+	public BusinessRule findOneByUuidAndVersion(String appUuid,String uuid, String version);	
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
-	public Rule2 findOneByUuidAndVersion(String uuid, String version);
+	public BusinessRule findOneByUuidAndVersion(String uuid, String version);
 	
 	@Query(value="{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
-	public List<Rule2> test(String param1);
+	public List<BusinessRule> test(String param1);
 
 	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
-	public List<Rule2> findAllByUuid(String appUuid,String uuid);
+	public List<BusinessRule> findAllByUuid(String appUuid,String uuid);
 	
 	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
-	public Rule2 findLatestByUuid(String appUuid,String uuid, Sort sort);
+	public BusinessRule findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
-	public Rule2 findLatestByUuid(String uuid, Sort sort);
+	public BusinessRule findLatestByUuid(String uuid, Sort sort);
 	
 	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
-	public List<Rule2> findAll(String appUuid);	
+	public List<BusinessRule> findAll(String appUuid);	
 	
 	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
-	public Rule2 findOneById(String appUuid, String id);
+	public BusinessRule findOneById(String appUuid, String id);
 	
 	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
@@ -52,33 +52,33 @@ public interface IRule2Dao extends MongoRepository<Rule2, String> {
 	public void delete(String id);
 	
 	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
-	public List<Rule2> findAllVersion(String appUuid, String uuid);
+	public List<BusinessRule> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
-	public List<Rule2> findAllVersion(String uuid);
+	public List<BusinessRule> findAllVersion(String uuid);
 	
 	@Query(value = "{}")
-	public Rule2 findLatest(Sort sort);
+	public BusinessRule findLatest(Sort sort);
 	
 	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
-	public Rule2 findLatest(String appUuid, Sort sort);
+	public BusinessRule findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
-	public Rule2 findAsOf(String appUuid, String uuid, String version, Sort sort);
+	public BusinessRule findAsOf(String appUuid, String uuid, String version, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")
-	public Rule2 findOneById(String id);
+	public BusinessRule findOneById(String id);
 
 	@Query(value = "{'uuid':?0}")
-	public Rule2 findAllByUuid(String uuid);
+	public BusinessRule findAllByUuid(String uuid);
 	
 	@Query(value="{}")
-	public List<Rule2> findAll();
+	public List<BusinessRule> findAll();
 	
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
-	public Rule2 save(String appUuid, String id);
+	public BusinessRule save(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
-	public Rule2 save(String id);		
+	public BusinessRule save(String id);		
 
 }

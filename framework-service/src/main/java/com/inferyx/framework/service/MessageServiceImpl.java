@@ -28,8 +28,6 @@ public class MessageServiceImpl {
 	@Autowired
 	IMessageDao iMessageDao;
 	@Autowired
-	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
 	GraphRegister<?> registerGraph;
 
 	public Message save(Message message) throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {

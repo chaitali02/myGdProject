@@ -42,7 +42,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dag;
@@ -51,7 +50,6 @@ import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.StageStatusHolder;
@@ -60,64 +58,33 @@ import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskStatusHolder;
 import com.inferyx.framework.domain.User;
-import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class DagExecServiceImpl {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
 	IDagExecDao iDagExec;
 	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
 	@Autowired
 	private BatchExecServiceImpl btchServ;
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	ExecutorFactory execFactory;
-	@Autowired
-	DagServiceImpl dagServiceImpl;
-	@Autowired
-	DataQualGroupServiceImpl dataQualGroupServiceImpl;
-	@Autowired
-	LoadExecServiceImpl loadExecServiceImpl;
-	@Autowired
-	MapExecServiceImpl mapExecServiceImpl;
-	@Autowired
-	DataQualServiceImpl dataQualServiceImpl;
-	@Autowired
-	DataQualExecServiceImpl dataQualExecServiceImpl;
-	@Autowired
-	DataQualGroupExecServiceImpl dataQualGroupExecServiceImpl;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	IDagDao iDagDao;
 	@Resource(name="taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
-	@Autowired
-	SessionContext sessionContext;
- 
+	
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
 	MetaIdentifierHolder location = new MetaIdentifierHolder();
 	static final Logger logger = Logger.getLogger(DagExecServiceImpl.class);
 	
-	public List<DagExec> findLatestDagExec(String dagUUID, String dagVersion) {
+	/**************************Unused************************/
+	/*public List<DagExec> findLatestDagExec(String dagUUID, String dagVersion) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iDagExec.findLatestDagExec(appUuid, dagUUID, dagVersion);
-	}
+	}*/
 
 	public List<DagExec> findDagExecByDatapod(String datapodUUID) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -324,8 +291,8 @@ public class DagExecServiceImpl {
 		return btchServ.fetchAllTaskThread();
 	}
 
-	
-	public void setStageKILLED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
+	/*************************Unused*****************************/
+	/*public void setStageKILLED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		//DagExec dagexec  = iDagExec.findOneByUuidAndVersion(appUuid, uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 
@@ -353,7 +320,7 @@ public class DagExecServiceImpl {
 			}
 		}
 	}
-	
+*/	
 	public void setTaskKILLED(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 
@@ -454,9 +421,11 @@ public class DagExecServiceImpl {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public DagExec getDagExec(String Uuid, String version) throws JsonProcessingException {
+	
+	/*************************Unused*****************************/
+	/*public DagExec getDagExec(String Uuid, String version) throws JsonProcessingException {
 		return (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
-	}
+	}*/
 	
 	/**
 	 * 
@@ -466,7 +435,9 @@ public class DagExecServiceImpl {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public StageExec getStageExec(String Uuid, String version, String stageId) throws JsonProcessingException {
+	
+	/**********************Unused******************************/
+	/*public StageExec getStageExec(String Uuid, String version, String stageId) throws JsonProcessingException {
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
@@ -477,7 +448,7 @@ public class DagExecServiceImpl {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	
 	public TaskExec getTaskExec(DagExec dagexec, String stageId, String taskId) {
@@ -536,8 +507,8 @@ public class DagExecServiceImpl {
 		return;
 	}
 
-	
-	public void setTaskRUNNING(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+/**********************************Unused****************************/	
+	/*public void setTaskRUNNING(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
@@ -586,7 +557,7 @@ public class DagExecServiceImpl {
 		dagexec.setStages(DagExecUtil.convertToStageList(stageExecList));
 		//iDagExec.save(dagexec);
 		commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
-	}
+	}*/
 
 	public void setTaskResult(String Uuid, String version, String stageId, String taskId,
 			MetaIdentifierHolder resultRef) throws JsonProcessingException, JSONException, ParseException {
@@ -610,7 +581,8 @@ public class DagExecServiceImpl {
 		commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
 	}
 
-	public void setTaskComplete(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	/**************************Unused***************************/
+	/*public void setTaskComplete(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		{
 			//DagExec dagexec = iDagExec.findOneByUuidAndVersion(appUuid, Uuid, version);
 			DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
@@ -646,8 +618,8 @@ public class DagExecServiceImpl {
 							} else {
 								status = new Status(com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());
 							}
-							/*com.inferyx.framework.domain.Status status = new Status(
-									com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());*/
+							com.inferyx.framework.domain.Status status = new Status(
+									com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());
 							taskStatusList.add(status);
 							indvTaskExec.setStatusList(taskStatusList);
 						}
@@ -694,9 +666,10 @@ public class DagExecServiceImpl {
 			//iDagExec.save(dagexec);
 			commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
 		}
-	}
+	}*/
 	
-	public void setStageComplete (String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
+	/**************************Unused**************************/
+	/*public void setStageComplete (String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		boolean allTasksComplete = true;
 		@SuppressWarnings("unused")
@@ -743,7 +716,7 @@ public class DagExecServiceImpl {
 		setDagStatus(dagexec);
 		//iDagExec.save(dagexec);
 		commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
-	}
+	}*/
 	
 	public void setDagStatus(DagExec dagexec) {		
 		boolean allStagesComplete = true;
@@ -804,7 +777,8 @@ public class DagExecServiceImpl {
 		statusList.add(status);
 	}
 
-	public void setTaskStatus(String uuid, String version, String stageId, String taskId, com.inferyx.framework.domain.Status.Stage status ) throws JsonProcessingException, JSONException, ParseException {
+	/****************************Unused*********************************/
+	/*public void setTaskStatus(String uuid, String version, String stageId, String taskId, com.inferyx.framework.domain.Status.Stage status ) throws JsonProcessingException, JSONException, ParseException {
 		{
 			//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 			DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
@@ -890,7 +864,7 @@ public class DagExecServiceImpl {
 			commonServiceImpl.save(MetaType.dagExec.toString(), dagexec);
 		}
 	}	
-	
+*/	
 	public boolean checkStatusCOMPLETED(List<Status> statusList) {
 		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.COMPLETED)) {
 			return true;
@@ -947,8 +921,8 @@ public class DagExecServiceImpl {
 		return null;
 	}
 	
-	
-	public List<Status> getStageStatusList(String uuid, String version, String stageId) throws JsonProcessingException {
+/**********************************Unused*************************/	
+	/*public List<Status> getStageStatusList(String uuid, String version, String stageId) throws JsonProcessingException {
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
@@ -958,7 +932,7 @@ public class DagExecServiceImpl {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	public com.inferyx.framework.domain.Status.Stage getTaskStatus(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
@@ -1199,7 +1173,8 @@ public class DagExecServiceImpl {
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
-	public DagExec setStageFAILED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
+	/***************************Unused************************************/
+	/*public DagExec setStageFAILED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		
 		List<Status> dagStatusList = null;
 		Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
@@ -1226,7 +1201,7 @@ public class DagExecServiceImpl {
 		}		
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
-	
+*/	
 	public DagExec setStageResume(String uuid, String version, String stageId) throws Exception {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());

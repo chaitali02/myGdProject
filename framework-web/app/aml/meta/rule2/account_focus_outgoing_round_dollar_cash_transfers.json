@@ -118,7 +118,7 @@
     "attrUnitType": null,
     "function": null
   },
-  "criteriaInfo": [
+   "criteriaInfo": [
     {
       "criteriaId": "0",
       "criteriaName": "Transaction Volume",
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "account_summary_daily"
               },
-              "attributeId": 14,
+              "attributeId": 51,
               "value": null,
-              "attributeName": "out_cash_transfers_trans_amount_usd",
+              "attributeName": "out_cash_transfers_round_amount_sum",
               "attributeType": null
             },
             {

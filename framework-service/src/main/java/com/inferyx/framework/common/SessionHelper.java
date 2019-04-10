@@ -20,7 +20,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.SessionContext;
-import com.inferyx.framework.service.RuleGroupTemplate;
 
 /**
  * @author joy

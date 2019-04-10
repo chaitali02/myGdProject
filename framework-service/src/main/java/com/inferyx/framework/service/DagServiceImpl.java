@@ -27,7 +27,6 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +37,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -85,7 +83,6 @@ import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class DagServiceImpl {
@@ -93,14 +90,6 @@ public class DagServiceImpl {
 	private static final String GET = "get";
 //	private static final String SET = "set";
 
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	IDagDao iDagDao;
-	@Autowired
-	MongoTemplate mongoTemplate;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -115,14 +104,6 @@ public class DagServiceImpl {
 	private RuleServiceImpl ruleServiceImpl;
 	@Autowired
 	private RuleGroupServiceImpl ruleGroupServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DataQualServiceImpl dataQualServiceImpl;
 	@Autowired
@@ -182,7 +163,8 @@ public class DagServiceImpl {
 	 * @return
 	 * @throws Exception
 	 */
-	public MetaIdentifierHolder submitDag(MetaIdentifier dagRef, ExecParams execParams, RunMode runMode) throws Exception {
+	/******************************Unused***********************/
+	/*public MetaIdentifierHolder submitDag(MetaIdentifier dagRef, ExecParams execParams, RunMode runMode) throws Exception {
 		Dag dag = null;
 		if (dagRef == null) {
 			logger.info("No ref object. Aborting submitDAG");
@@ -194,7 +176,7 @@ public class DagServiceImpl {
 			dag = (Dag) commonServiceImpl.getOneByUuidAndVersion(dagRef.getUuid(), dagRef.getVersion(), MetaType.dag.toString(), "N");
 		}
 		return submitDag(dag, null, execParams, runMode);
-	}
+	}*/
 
 	/**
 	 * To handle old style submitDag
@@ -1156,7 +1138,8 @@ public class DagServiceImpl {
 	 * @throws JsonProcessingException
 	 */
 	// Get paramList from appInfo and populate param
-	public List<ParamListHolder> getDagParamList(Dag dag) throws JsonProcessingException {
+	/***********************Unused***********************/
+	/*public List<ParamListHolder> getDagParamList(Dag dag) throws JsonProcessingException {
 		List<ParamListHolder> paramHolderList = null;
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(dag.getParamList().getRef().getUuid(), dag.getParamList().getRef().getVersion(), dag.getParamList().getRef().getType().toString());
 		ParamListHolder paramListHolder = null;
@@ -1173,7 +1156,7 @@ public class DagServiceImpl {
 			}
 		}
 		return paramHolderList;
-	}
+	}*/
 	
 	/**
 	 * 
