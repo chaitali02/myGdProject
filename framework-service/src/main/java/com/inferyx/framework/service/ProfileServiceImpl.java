@@ -87,23 +87,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Autowired
 	IProfileDao iProfileDao;
 	@Autowired
-	RelationServiceImpl relationServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	HDFSInfo hdfsInfo;
-	@Autowired
-	protected DataSourceFactory datasourceFactory;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
@@ -118,12 +104,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 	IProfileGroupExecDao iProfileGroupExecDao;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	ProfileInfo profileInfo;
-	@Autowired
-	ConnectionFactory connFactory;
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
 	@Autowired
 	Engine engine;
 	@Autowired

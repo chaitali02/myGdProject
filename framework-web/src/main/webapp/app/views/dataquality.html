@@ -790,7 +790,7 @@
                         </select>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-3">Domain Check</label>
                       <div class="col-md-6">
                         <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" ng-model="selectedDomain"
@@ -799,7 +799,18 @@
                           <option value="">-Select-</option>
                         </select>
                       </div>
+                    </div> -->
+                    <div class="form-group">
+                      <label class="control-label col-md-3">Domain Check</label>
+                      <div class="col-md-6">
+                        <tags-input class="tag-scroll" ng-model="domainCheckTags" ng-disabled="{{mode}} || !isSelectSoureceAttr || isSelectAuto" display-property="name" key-property="uuid" add-from-autocomplete-only="true">
+                        <auto-complete source="loadDomain($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                          load-on-empty="true" required>
+                        </auto-complete>
+                        </tags-input>
+                      </div>
                     </div>
+
                     <div class="form-group">
                       <label class="control-label col-md-3">Expression Check</label>
                       <div class="col-md-6">
