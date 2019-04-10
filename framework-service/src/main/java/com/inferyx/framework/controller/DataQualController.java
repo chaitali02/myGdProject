@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -80,11 +81,21 @@ public class DataQualController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+		
 		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, execParams, null, null, null, runMode);
-		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualUUID, dataQualVersion, MetaType.dq.toString(), "N");
+		
+		List<FutureTask<TaskHolder>> taskList = null;
+		if(dataQual.getAutoFlag().equalsIgnoreCase("N")) {
+			dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
+			taskList = new ArrayList<FutureTask<TaskHolder>>();
+		} else {
+			dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
+		}
 		dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
-		commonServiceImpl.completeTaskThread(taskList);
+		if(taskList != null) {
+			commonServiceImpl.completeTaskThread(taskList);
+		}
 		return dataQualExec;
 	}
 

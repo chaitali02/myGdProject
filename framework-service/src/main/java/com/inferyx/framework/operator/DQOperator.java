@@ -1609,4 +1609,47 @@ public class DQOperator implements IParsable {
 		return dataQualExec;
 	}
 
+	public String generateCustomSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag, 
+			Map<String, String> paramValMap) throws Exception {
+		return generateCustomSelect(dataQual)
+				.concat(generateCustomFrom(dataQual, dagExec, datapodList, otherParams, runMode))
+				.concat(WHERE_1_1).concat(" AND ")
+				.concat(generateFilter(dataQual, usedRefKeySet, dataQualExec, runMode, paramValMap));
+	}
+
+	/**
+	 * @param dataQual
+	 * @return
+	 * @throws JsonProcessingException 
+	 */
+	private String generateCustomSelect(DataQual dataQual) throws JsonProcessingException {
+		MetaIdentifier sourceMI = dataQual.getDependsOn().getRef();
+		Datapod srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString(), "N");
+		StringBuilder selectBuilder = new StringBuilder(SELECT);
+		int i = 0;
+		for(Attribute attribute : srcDP.getAttributes()) {
+			selectBuilder.append(attribute.getName());
+			if(i < srcDP.getAttributes().size()-1) {
+				selectBuilder.append(", ");
+			}
+			i++;
+		}
+		
+		return selectBuilder.toString();
+	}
+
+	/**
+	 * @param dataQual
+	 * @return
+	 * @throws Exception 
+	 */
+	private String generateCustomFrom(DataQual dataQual, DagExec dagExec, List<String> datapodList, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		MetaIdentifier sourceMI = dataQual.getDependsOn().getRef();
+		Datapod srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString(), "N");
+		
+		return FROM.concat(datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true)).concat("  ").concat(srcDP.getName());
+	}
+
+	
 }

@@ -65,6 +65,7 @@ import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -2305,4 +2306,25 @@ public class MetadataServiceImpl {
 		return attributeRefHolders;
 	}
 
+
+	/**
+	 * @param appUuid
+	 * @return
+	 */
+	public List<AttributeDomain> getDomainByApp(String appUuid) {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("regEx");
+		
+		if(!StringUtils.isBlank(appUuid)) {
+			query.addCriteria(new Criteria("appInfo.ref.uuid").is(appUuid).andOperator(new Criteria("publicFlag").is("Y")));
+		} else {
+			query.addCriteria(new Criteria("publicFlag").is("Y"));
+		}		
+		
+		return mongoTemplate.find(query, AttributeDomain.class, MetaType.domain.toString().toLowerCase());
+	}
 }
