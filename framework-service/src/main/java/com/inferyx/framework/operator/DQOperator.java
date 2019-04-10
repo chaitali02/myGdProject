@@ -1528,14 +1528,27 @@ public class DQOperator implements IParsable {
 		} else {
 			dqBuilder.append("'' as ").append(CUSTOM_CHECK_PASS).append(COMMA);
 		} // End customCheck If
-		if (dq.getDomainCheck() != null && dq.getDomainCheck().getRef() != null) {
-			AttributeDomain attributeDomain = (AttributeDomain) commonServiceImpl.getOneByUuidAndVersion(dq.getDomainCheck().getRef().getUuid()
-													, dq.getDomainCheck().getRef().getVersion()
-													, dq.getDomainCheck().getRef().getType().toString()
-													, "N");
-			check = tableAttr.concat(" RLIKE ( '").concat(attributeDomain.getRegEx()).concat("'").concat(BRACKET_CLOSE);
-			colName = DOMAIN_CHECK_PASS;
-			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		
+		if (dq.getDomainCheck() !=null && dq.getDomainCheck().size()>0 ) {
+			StringBuilder domainCheckBuilder = new StringBuilder();
+			AttributeDomain attributeDomain;
+			int count=1;
+			for(MetaIdentifierHolder mi:dq.getDomainCheck()) {
+				 attributeDomain = (AttributeDomain) commonServiceImpl.getOneByUuidAndVersion(mi.getRef().getUuid()
+						, mi.getRef().getVersion()
+						, mi.getRef().getType().toString()
+						, "N");
+				 check = tableAttr.concat(" RLIKE ( '").concat(attributeDomain.getRegEx()).concat("'").concat(BRACKET_CLOSE);
+				 colName = DOMAIN_CHECK_PASS;
+				 if(dq.getDomainCheck().size()>count)
+				 domainCheckBuilder.append(check).append("OR ");
+				 else
+				 domainCheckBuilder.append(check);
+				 
+				 count++;
+			}
+			dqBuilder.append(caseWrapper(domainCheckBuilder.toString(), colName)).append(COMMA);
+				
 		} else {
 			dqBuilder.append("'' as ").append(DOMAIN_CHECK_PASS).append(COMMA);
 		} // End domainCheck If

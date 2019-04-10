@@ -22,6 +22,15 @@ public class Datapod extends BaseEntity {
 	private MetaIdentifierHolder datasource;
 	private String cache;
 	private List<Attribute> attributes = new ArrayList<Attribute>();
+	private String prefix;
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 
 	public MetaIdentifierHolder getDatasource() {
 		return datasource;
