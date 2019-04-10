@@ -52,7 +52,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.vizpod = {};
 	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart','heat-map','score-card','form-card','image']
 	$scope.VizpodSourceTypes = ['datapod','dataset','relation'];
-	$scope.colorPalette=["Standard","Palette 1","Palette 2","Palette 3"]
+	// $scope.colorPalette=["Standard","Palette 1","Palette 2","Palette 3"];
+	$scope.colorPalette=[{"text":"Standard","codes":COLORPALETTE.Random_4},{"text":"Palette 1","codes":COLORPALETTE.Palette_1},{"text":"Palette 2","codes":COLORPALETTE.Palette_2},{"text":"Palette 3","codes":COLORPALETTE.Palette_3}]
+
 	$scope.sortOrders=["ASC","DESC"];
 	$scope.vizpod.versions = [];
 	$scope.isshowmodel = false;
@@ -161,8 +163,13 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	}
 
 	$scope.onChangeColorPalette=function(colorPalette){
+		debugger
 		if(colorPalette !=null){
-			var str=colorPalette.replace(" ", "_");
+			var str="Random_4";
+			if(colorPalette !="Standard"){
+				str=colorPalette.replace(" ", "_");
+			}
+			
 			$scope.cPCodes=COLORPALETTE[str];
 	    }
 	}

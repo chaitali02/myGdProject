@@ -1458,8 +1458,7 @@ public class RegisterService {
 				DatabaseMetaData dbMetaData = con.getMetaData();
 				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 				while(rs.next()) {
-		
-					if(rs.getString(2)!=null && rs.getString(2).equalsIgnoreCase(datasource.getDbname()))
+					if(rs.getString(1)!=null && rs.getString(1).equalsIgnoreCase(datasource.getDbname()))
 					tablesWithPath.put(rs.getString(3).toLowerCase(), (datasource.getDbname()+"."+rs.getString(3).toLowerCase()));
 //					tables.add(rs.getString(3));
 				}

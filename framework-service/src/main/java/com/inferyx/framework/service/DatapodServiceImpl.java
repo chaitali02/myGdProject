@@ -256,6 +256,7 @@ public class DatapodServiceImpl {
 		dp.setCache("Y");
 		dp.setName(fileName.toLowerCase());
 		dp.setAttributes(attributes);
+		dp.setPrefix(getPrefix(fileName.toLowerCase()));
 		
 		try {
 			dp = save(dp);
@@ -1312,5 +1313,26 @@ public class DatapodServiceImpl {
 			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 	}
-	
+
+	public String getPrefix(String datapodName)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		String prefixStr = null;
+		List<String> prefixList = Helper.genaretePrefix(datapodName, 5);
+		Query query = new Query();
+		List<Datapod> datapodObjectList = new ArrayList<>();
+
+		for (String prefix : prefixList) {
+			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
+			query.addCriteria(Criteria.where("prefix").is(prefix));
+			datapodObjectList = (List<Datapod>) mongoTemplate.find(query, Datapod.class);
+			if (datapodObjectList.size() == 0) {
+				prefixStr = prefix;
+				break;
+			}
+		}
+		return prefixStr;
+	}
+
 }

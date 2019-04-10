@@ -256,7 +256,13 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   }
 
   $scope.getAllLatestDomain();
-
+  
+  $scope.loadDomain = function (query) {
+    console.log(query)
+    return $timeout(function () {
+      return $filter('filter')($scope.allDomain, query);
+    });
+  };
   $scope.getExpressionByType = function () {
     if ($scope.selectDependsOn) {
       DataqulityService.getExpressionByType($scope.selectDependsOn.uuid, $scope.selectDependsOn).then(function (response) { onSuccessExpression(response.data) });
@@ -426,12 +432,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.getAllLatestActiveDependsOn($scope.dataqualitysourceType);
 
       $scope.getExpressionByType();
-
-      if (response.dqdata.domainCheck != null) {
-        var domainCheck = {};
-        domainCheck.uuid = response.dqdata.domainCheck.ref.uuid;
-        domainCheck.name = response.dqdata.domainCheck.attrName;
-        $scope.selectedDomain = domainCheck;
+      $scope.domainCheckTags=[];
+      if(response.dqdata.domainCheck != null && response.dqdata.domainCheck.length >0) {
+        for(var i=0;i<response.dqdata.domainCheck.length;i++){
+          var domainCheck = {};
+          domainCheck.uuid = response.dqdata.domainCheck[i].ref.uuid;
+          domainCheck.name = response.dqdata.domainCheck[i].ref.name;
+          $scope.domainCheckTags[i] = domainCheck;
+        }
       }
 
       if (response.dqdata.expressionCheck != null) {
@@ -551,12 +559,14 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
       $scope.filterTableArray = response.filterInfo;
       $scope.getExpressionByType();
-
-      if (response.dqdata.domainCheck != null) {
-        var domainCheck = {};
-        domainCheck.uuid = response.dqdata.domainCheck.ref.uuid;
-        domainCheck.name = response.dqdata.domainCheck.attrName;
-        $scope.selectedDomain = domainCheck;
+      $scope.domainCheckTags=[];
+      if(response.dqdata.domainCheck != null && response.dqdata.domainCheck.length >0) {
+        for(var i=0;i<response.dqdata.domainCheck.length;i++){
+          var domainCheck = {};
+          domainCheck.uuid = response.dqdata.domainCheck[i].ref.uuid;
+          domainCheck.name = response.dqdata.domainCheck[i].ref.name;
+          $scope.domainCheckTags[i] = domainCheck;
+        }
       }
 
       if (response.dqdata.expressionCheck != null) {
@@ -636,7 +646,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.onChagneAuto();
   }
   $scope.onChagneAuto = function () {
-	  debugger
     if ($scope.dataqualitydata.autoFlag == "Y") {
       $scope.isSelectAuto = true
       $scope.dataqualitydata.duplicateKeyCheck="N";
@@ -1260,14 +1269,27 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       dataqualityjosn.expressionCheck = expressionInfo;
     }
     dataqualityjosn.caseCheck = $scope.dataqualitydata.caseCheck;
-    if ($scope.selectedDomain) {
+    /*if ($scope.selectedDomain) {
       var domainInfo = {};
       var ref = {};
       ref.type = "domain"
       ref.uuid = $scope.selectedDomain.uuid;
       domainInfo.ref = ref;
       dataqualityjosn.domainCheck = domainInfo;
+    }*/
+    var domainInfoArray=[];
+    if($scope.domainCheckTags && $scope.domainCheckTags.length >0) {
+      for(var i=0;i<$scope.domainCheckTags.length;i++){
+        var domainInfo = {};
+        var ref = {};
+        ref.type = "domain"
+        ref.uuid = $scope.domainCheckTags[i].uuid;
+        domainInfo.ref = ref;
+        domainInfoArray[i]=domainInfo;
+      }
     }
+    dataqualityjosn.domainCheck = domainInfoArray;
+    
     dataqualityjosn.abortCondition = $scope.dataqualitydata.abortCondition;
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
