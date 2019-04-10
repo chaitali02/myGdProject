@@ -171,14 +171,17 @@
                   <p-checkbox [(ngModel)]="dqgroupdata.inParallel" name="inParallel" binary="true"></p-checkbox>
                 </div>
               </div>
-              <div class="form-group" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">DQ Rule
+              <div class="form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
+                  DQ Rule
                   <span class="required" aria-required="true"> * </span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
-                  <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
+                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
+                    <div style="border: 1px solid #c2cad8;border-radius: 3px;" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
+                        <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
                     name="attributeInfo" #attributeInfo="ngModel" required>
                   </angular2-multiselect>
+                    </div>
                   <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)">
                     <div class="help-block has-error error-msg">
                       This field is required

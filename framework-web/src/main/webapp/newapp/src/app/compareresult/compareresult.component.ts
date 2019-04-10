@@ -280,7 +280,8 @@ export class CompareResultComponent {
     let endDate;
     if (this.searchForm.startDate) {
       let startDateUtc = new Date(this.searchForm.startDate.getUTCFullYear(), this.searchForm.startDate.getUTCMonth(), this.searchForm.startDate.getUTCDate(), this.searchForm.startDate.getUTCHours(), this.searchForm.startDate.getUTCMinutes(), this.searchForm.startDate.getUTCSeconds())
-      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC";
+        
     }
     else {
       startDate = '';
@@ -288,12 +289,12 @@ export class CompareResultComponent {
 
     if (this.searchForm.endDate) {
       let endDateUtc = new Date(this.searchForm.endDate.getUTCFullYear(), this.searchForm.endDate.getUTCMonth(), this.searchForm.endDate.getUTCDate(), this.searchForm.endDate.getUTCHours(), this.searchForm.endDate.getUTCMinutes(), this.searchForm.endDate.getUTCSeconds())
-      endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC";
     }
     else {
       endDate = '';
     }
-    debugger
+    
     if (this.type == MetaTypeEnum.MetaType.DQ && this.searchForm.selectedTypeRadio == MetaTypeEnum.MetaType.DQ) {
       this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
