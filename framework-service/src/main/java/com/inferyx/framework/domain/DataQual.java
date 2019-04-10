@@ -35,7 +35,7 @@ public class DataQual extends BaseRule{
 	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
 	private Threshold thresholdInfo;
-	private MetaIdentifierHolder domainCheck;
+	private List<MetaIdentifierHolder> domainCheck;
 	private String blankSpaceCheck;
 	private MetaIdentifierHolder expressionCheck;
 	private CaseCheckType caseCheck;
@@ -43,10 +43,11 @@ public class DataQual extends BaseRule{
 	private MetaIdentifierHolder paramList;
 	private String autoFlag = "N";
 	
-	public MetaIdentifierHolder getDomainCheck() {
+	
+	public List<MetaIdentifierHolder> getDomainCheck() {
 		return domainCheck;
 	}
-	public void setDomainCheck(MetaIdentifierHolder domainCheck) {
+	public void setDomainCheck(List<MetaIdentifierHolder> domainCheck) {
 		this.domainCheck = domainCheck;
 	}
 	public String getBlankSpaceCheck() {
