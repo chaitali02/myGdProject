@@ -230,7 +230,6 @@ export class DataQualityResultComponent {
   }
 
   submitRestartDialogBox() {
-    debugger
     console.log("submitRestartDialogBox() call...");
     this._commonListService.restart(this._uuid, this._version, "dqgroupExec", "execute")
       .subscribe(

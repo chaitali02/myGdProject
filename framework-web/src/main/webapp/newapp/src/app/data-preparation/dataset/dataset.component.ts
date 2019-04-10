@@ -31,6 +31,11 @@ import { AttributeRefHolder } from '../../metadata/domain/domain.attributeRefHol
 import { RoutesParam } from '../../metadata/domain/domain.routeParams';
 import { ParamListHolder } from '../../metadata/domain/domain.paramListHolder';
 import { Function } from '../../metadata/domain/domain.function';
+
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.template.html',
@@ -132,7 +137,7 @@ export class DatasetComponent implements OnInit {
   invalideMinRow: boolean = false;
   invalideMaxRow: boolean = false;
   moveTo: number;
-  
+
   moveToEnableAttr: boolean;
   countAttr: any[];
   txtQueryChangedAttr: Subject<string> = new Subject<string>();
@@ -154,10 +159,17 @@ export class DatasetComponent implements OnInit {
   isGraphInprogess: boolean;
   isGraphError: boolean;
   checkAll: boolean;
+  downloadUuid: any;
+  downloadVersion: any;
+  showDownloadModel: boolean = false;
+  downloadFormat: string;
+  numRows: any;
+  downloadFormatArray: { "value": string; "label": string; }[];
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService, private appHelper : AppHelper) {
+  constructor(private http: Http, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService, private appHelper: AppHelper) {
     this.baseUrl = config.getBaseUrl();
     //this.myNewForm = {}
+    this.numRows = 100;
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.showdatapod = true;
@@ -172,6 +184,7 @@ export class DatasetComponent implements OnInit {
     this.sourcedata = {}
     this.dialogSelectName = {}
     this.attributesArray = [];
+    this.dataset.active = true;
 
     this.showGraph = false;
     this.showForm = true;
@@ -213,7 +226,8 @@ export class DatasetComponent implements OnInit {
     ]
     this.sources = [
       { 'value': 'datapod', 'label': 'datapod' },
-      { 'value': 'relation', 'label': 'relation' }
+      { 'value': 'relation', 'label': 'relation' },
+      { 'value': 'dataset', 'label': 'dataset' }
     ];
     this.sourceAttributeTypes = [
       { "value": "function", "label": "function" },
@@ -238,6 +252,10 @@ export class DatasetComponent implements OnInit {
       { value: 'function', label: 'function' },
       { value: 'paramlist', label: 'paramlist' }
     ]
+
+    this.downloadFormatArray = [
+      { "value": "excel", "label": "excel" }
+    ];
 
     this.moveToEnable = false;
     this.count = [];
@@ -334,7 +352,7 @@ export class DatasetComponent implements OnInit {
   onChangeName() {
     this.breadcrumbDataFrom[2].caption = this.dataset.name;
   }
-  
+
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dataset']);
@@ -390,7 +408,7 @@ export class DatasetComponent implements OnInit {
     this.datasetCompare = response;
     this.dataset.uuid = response.datasetData.uuid;
     this.dataset.createdBy = response.datasetData.createdBy.ref.name;
-   
+
     if (response.datasetData.tags != null) {
       this.dataset.tags = response.datasetData.tags;
     }
@@ -402,7 +420,7 @@ export class DatasetComponent implements OnInit {
     version.label = response.datasetData.version
     version.uuid = response.datasetData.uuid;
     this.dataset.selectedVersion = version;
-    
+
     console.log(JSON.stringify(this.dataset.version));
 
     this.breadcrumbDataFrom[2].caption = this.dataset.name;
@@ -421,7 +439,7 @@ export class DatasetComponent implements OnInit {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
           error => console.log("Error ::", error))
-      
+
       this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs1(response) },
           error => console.log("Error ::", error))
@@ -437,19 +455,23 @@ export class DatasetComponent implements OnInit {
 
     this.dataset.filterTableArray = response.filterInfo
 
-    for(const i in response.attributeInfo){
-    if (response.attributeInfo[i].sourceAttributeType.value == "datapod") {
-      this.getAllAttributeBySource();}
-    if (response.attributeInfo[i].sourceAttributeType.value == "expression") {
-      this.getAllExpression(false, 0)}
-    if (response.attributeInfo[i].sourceAttributeType.value == "formula") {
-      this.getAllFormula(false, 0);}
-    if (response.attributeInfo[i].sourceAttributeType.value == "function") {
-      this.getAllFunctions(false, 0);}
+    for (const i in response.attributeInfo) {
+      if (response.attributeInfo[i].sourceAttributeType.value == "datapod") {
+        this.getAllAttributeBySource();
+      }
+      if (response.attributeInfo[i].sourceAttributeType.value == "expression") {
+        this.getAllExpression(false, 0)
+      }
+      if (response.attributeInfo[i].sourceAttributeType.value == "formula") {
+        this.getAllFormula(false, 0);
+      }
+      if (response.attributeInfo[i].sourceAttributeType.value == "function") {
+        this.getAllFunctions(false, 0);
+      }
     }
-      this.dataset.attributeTableArray = response.attributeInfo
+    this.dataset.attributeTableArray = response.attributeInfo
 
-      this.isEditInprogess = false;
+    this.isEditInprogess = false;
   }
 
   onSuccessgetFunctionByCriteria(response: Function[]) {
@@ -537,14 +559,14 @@ export class DatasetComponent implements OnInit {
 
       let attributeObj = new AttributeIO;
       attributeObj.label = response[i].dname;
-      attributeObj.value = {'name':'', 'id':'', 'label': '', 'uuid': '', 'attributeId': '' };
+      attributeObj.value = { 'name': '', 'id': '', 'label': '', 'uuid': '', 'attributeId': '' };
       attributeObj.value.id = response[i].id;
       attributeObj.value.label = response[i].dname;
       attributeObj.value.attributeId = response[i].attributeId;
 
       attributeObj.value.name = response[i].name;
       attributeObj.value.datapodname = response[i].datapodname;
-      
+
       attributeObj.value.uuid = response[i].uuid;
       temp[i] = attributeObj;
     }
@@ -746,7 +768,7 @@ export class DatasetComponent implements OnInit {
     //this.allMapFormula = response
     let temp = []
     for (const n in response) {
-    
+
       let allname = new AttributeIO();
       allname.label = response[n].name;
       allname.value = {};
@@ -763,13 +785,13 @@ export class DatasetComponent implements OnInit {
         this.dataset.attributeTableArray[index].sourceformula = sourceformula;
       }
     }
-    
+
     this.allMapFormula.splice(0, 0, {
       "label": "---CreateNew---",
       "value": { "label": "---CreateNew---", "uuid": "01" }
     });
   }
-  
+
   addRow() {
     var filtertable = new FilterInfoIO;
     if (this.dataset.filterTableArray == null || this.dataset.filterTableArray.length == 0) {
@@ -787,7 +809,7 @@ export class DatasetComponent implements OnInit {
     filtertable.rhsAttribute = null
     this.dataset.filterTableArray.splice(this.dataset.filterTableArray.length, 0, filtertable);
 
-    this.checkSelected(false,null);
+    this.checkSelected(false, null);
   }
   removeRow() {
     let newDataList = [];
@@ -971,7 +993,7 @@ export class DatasetComponent implements OnInit {
   onChangeRhsType(index) {
     this.dataset.filterTableArray[index].rhsAttribute == null;
 
-    if (this.dataset.filterTableArray[index].rhsType =='formula') {
+    if (this.dataset.filterTableArray[index].rhsType == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
           error => console.log("Error ::", error))
@@ -1375,7 +1397,7 @@ export class DatasetComponent implements OnInit {
       sourceAttr.id = this.allMapSourceAttribute[i].value.id;
 
       attributeinfo.sourceattribute = sourceAttr;
-      
+
       let obj = { "value": "", "label": "" }
       obj.value = "datapod"
       obj.label = "attribute"
@@ -1444,14 +1466,14 @@ export class DatasetComponent implements OnInit {
     }
     if (count > 0) {
       this.dataset.attributeTableArray[ind].dup = true;
-      if(this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")){
+      if (this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")) {
         var indx = this.dataset.attributeTableArray[ind].dupIndex;
         this.dataset.attributeTableArray[indx].dup = true;
-      }  
+      }
     }
     else {
       this.dataset.attributeTableArray[ind].dup = false;
-        if(this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")){
+      if (this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")) {
         var indx = this.dataset.attributeTableArray[ind].dupIndex;
         this.dataset.attributeTableArray[indx].dup = false;
       }
@@ -1546,7 +1568,7 @@ export class DatasetComponent implements OnInit {
       this.isSubmitEnable1 = true;
     }
   }
-  
+
   updateArray(new_index, range, event) {
     for (let i = 0; i < this.dataset.filterTableArray.length; i++) {
       if (this.dataset.filterTableArray[i].selected) {
@@ -1650,8 +1672,8 @@ export class DatasetComponent implements OnInit {
             this.txtQueryChangedAttr.next(new_index);
           }
           else {
-             this.dataset.attributeTableArray[new_index].selected = "";
-             this.checkSelected(false, null);
+            this.dataset.attributeTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           break;
         }
@@ -1700,6 +1722,34 @@ export class DatasetComponent implements OnInit {
     }
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr;
+  }
+
+  downloadShow(uuid: any, version: any) {debugger
+    this.downloadUuid = uuid;
+    this.downloadVersion = version;
+    //this.downloadType = type;
+    this.showDownloadModel = true
+  }
+
+  downloadDatasetResult() {debugger
+    const headers = new Headers();
+    this.http.get(this.baseUrl + '/dataset/download?action=view&uuid=' + this.downloadUuid + '&version=' + this.downloadVersion + '&rows=' + this.numRows + '&formate=' + this.downloadFormat,
+      { headers: headers, responseType: ResponseContentType.Blob })
+      .toPromise()
+      .then(response => this.saveToFileSystem(response));
+  }
+
+  saveToFileSystem(response) {debugger
+    const contentDispositionHeader: string = response.headers.get('Content-Type');
+    const parts: string[] = contentDispositionHeader.split(';');
+    const filename = parts[1];
+    const blob = new Blob([response._body], { type: 'application/vnd.ms-excel' });
+    saveAs(blob, filename);
+    this.showDownloadModel = false
+  }
+
+  cancelDownloadDialogBox(){
+    this.showDownloadModel = false
   }
 
   ngOnDestroy() {
