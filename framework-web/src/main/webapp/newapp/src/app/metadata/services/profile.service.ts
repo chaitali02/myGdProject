@@ -101,7 +101,7 @@ export class ProfileService {
                 rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
                 filterInfoIO.rhsAttribute = rhsAttribute;
               }
-              else if (response.filterInfo[k].operand[1].ref.type == this.metaType.DATAPOD) {
+              else if (response.filterInfo[k].operand[1].ref.type == this.metaType.DATAPOD) {debugger
                 profileIO.isAttributeExits = true;
                 let rhsAttribute = new AttributeIO();
                 rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;

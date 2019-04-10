@@ -235,8 +235,28 @@ export class RuleService {
                 let lhsFilter = {};
                 filterInfo.logicalOperator = response.filterInfo[k].logicalOperator
                 filterInfo.lhsType = response.filterInfo[k].operand[0].ref.type;
+                if (filterInfo.lhsType == MetaTypeEnum.MetaType.DATAPOD || filterInfo.lhsType == MetaTypeEnum.MetaType.DATASET ||
+                  filterInfo.lhsType == MetaTypeEnum.MetaType.RELATION || filterInfo.lhsType == MetaTypeEnum.MetaType.RULE) {
+                  // filterInfo.lhsType = response.filterInfo[k].operand[0].ref.type;
+                  filterInfo.lhsType = MetaTypeEnum.MetaType.DATAPOD;
+
+                }
+
                 filterInfo.operator = response.filterInfo[k].operator;
+
                 filterInfo.rhsType = response.filterInfo[k].operand[1].ref.type;
+                if (response.filterInfo[k].operand[1].ref.uuid == response.source.ref.uuid) {
+                  if (filterInfo.rhsType == MetaTypeEnum.MetaType.DATAPOD || filterInfo.rhsType == MetaTypeEnum.MetaType.DATASET ||
+                    filterInfo.lhsType == MetaTypeEnum.MetaType.RELATION || filterInfo.lhsType == MetaTypeEnum.MetaType.RULE) {
+
+                    // filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
+                    filterInfo.rhsType = MetaTypeEnum.MetaType.DATAPOD;
+                  }
+                  else {
+                    filterInfo.rhsType = MetaTypeEnum.MetaType.DATASET;
+                  }
+                }
+
 
                 if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.FORMULA) {
                   // this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
@@ -251,7 +271,10 @@ export class RuleService {
                   ruleIO.isFormulaExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
+                else if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.DATAPOD ||
+                  response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.DATASET ||
+                  response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.RELATION ||
+                  response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.RULE) {
 
                   // this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
                   //   .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
@@ -276,7 +299,7 @@ export class RuleService {
                   filterInfo.lhsAttribute = response.filterInfo[k].operand[0].value;
                 }
 
-                if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FORMULA) {
+                if (filterInfo.rhsType == MetaTypeEnum.MetaType.FORMULA) {
                   // this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
                   //   .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
                   //     error => console.log("Error ::", error))
@@ -290,7 +313,9 @@ export class RuleService {
                   ruleIO.isFormulaExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
+                else if (filterInfo.rhsType == MetaTypeEnum.MetaType.DATAPOD ||
+                  filterInfo.rhsType == MetaTypeEnum.MetaType.RELATION ||
+                  filterInfo.rhsType == MetaTypeEnum.MetaType.RULE) {
                   // this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
                   //   .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
                   //     error => console.log("Error ::", error))
@@ -304,7 +329,7 @@ export class RuleService {
                   ruleIO.isAttributeExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FUNCTION) {
+                else if (filterInfo.rhsType == MetaTypeEnum.MetaType.FUNCTION) {
                   // this._commonService.getFunctionByCriteria("", "N", "function")
                   //   .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
                   //     error => console.log("Error ::", error))
@@ -318,29 +343,23 @@ export class RuleService {
                   ruleIO.isFunctionExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.PARAMLIST) {
-                  
-                 let rhsAttri = new AttributeIO(); 
-                  
-                  if (response.paramList != null && response.paramList != "")
+                else if (filterInfo.rhsType == MetaTypeEnum.MetaType.PARAMLIST) {
+                  let rhsAttri = new AttributeIO();
+                  if (response.paramList != null && response.paramList != "") {
                     rhsAttri.label = "rule." + response.filterInfo[k].operand[1].attributeName;
-                  else
+                  }
+                  else {
                     rhsAttri.label = "app." + response.filterInfo[k].operand[1].ref.type;
+                  }
                   rhsAttri.uuid = response.filterInfo[k].operand[1].ref.uuid;
                   rhsAttri.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
-
                   filterInfo.rhsAttribute = rhsAttri;
                   console.log("filterInfo.rhsAttribute : " + JSON.stringify(filterInfo.rhsAttribute));
-                  
-                  // ruleIO.paramlistArray1 = [{ "label": "rule.id", "value": { "label": "rule.id", "uuid": "12158dec-ab10-49f6-9ce0-6a2805df5a5f", "attributeId": "0" } }];
-    
-                  // this._commonService.getParamByApp("", MetaTypeEnum.MetaType.APPLICATION)
-                  //   .subscribe(response => { this.onSuccessgetParamByApp(response) },
-                  //     error => console.log("Error ::", error));
+
                   ruleIO.isParamlistExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATASET) {
+                else if (filterInfo.rhsType == MetaTypeEnum.MetaType.DATASET) {
                   let rhsAttri = new AttributeIO();
                   rhsAttri.uuid = response.filterInfo[k].operand[1].ref.uuid;
                   rhsAttri.attributeId = response.filterInfo[k].operand[1].attributeId;
@@ -351,7 +370,7 @@ export class RuleService {
                   ruleIO.isDatasetExits = true;
                 }
 
-                else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.SIMPLE) {
+                else if (filterInfo.rhsType == MetaTypeEnum.MetaType.SIMPLE) {
                   let stringValue = response.filterInfo[k].operand[1].value;
                   let onlyNumbers = /^[0-9]+$/;
                   let result = onlyNumbers.test(stringValue);
@@ -506,9 +525,9 @@ export class RuleService {
         }), catchError(error => this.handleError<string>(error, "Network Error!")))
 
   }
-  onSuccessgetParamByApp(response: any[]): any {debugger
+  onSuccessgetParamByApp(response: any[]): any {
     let paramlistArray = [{ "label": "rule.id", "value": { "label": "rule.id", "uuid": "12158dec-ab10-49f6-9ce0-6a2805df5a5f", "attributeId": "0" } }];
-    
+
   }
 
 

@@ -371,12 +371,12 @@
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
-                                      {{data.lhsAttribute|json}}
+                                      
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','box-sizing': 'border-box','border':'none'}"
                                         [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" datakey="label"
                                         required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
-                                      </p-dropdown>{{attributesArray|json}}
+                                      </p-dropdown>
                                     </div>
                                   </td>
                                   <td>
@@ -506,8 +506,7 @@
 
                                     <p-dialog class="dialog-titlebar" header="Search Attribute" [(visible)]="displayDialogBox"
                                       [modal]="true" [responsive]="true" [width]="430" [resizable]="true"
-                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','border': '1px solid','padding': '10px','box-shadow': '5px 10px 8px 10px #888888'}">
-
+                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','border': '1px solid','padding': '10px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">

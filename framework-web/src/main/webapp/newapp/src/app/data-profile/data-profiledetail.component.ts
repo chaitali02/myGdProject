@@ -715,7 +715,7 @@ export class DataProfileDetailComponent {
     }
     filertable.lhsType = "string";
     filertable.lhsAttribute = null;
-    filertable.operator = this.operators[0].label;
+    filertable.operator = this.operators[0].value;
     filertable.rhsType = "string"
     filertable.rhsAttribute = null
     this.profiledata.filterTableArray.splice(this.profiledata.filterTableArray.length, 0, filertable);
