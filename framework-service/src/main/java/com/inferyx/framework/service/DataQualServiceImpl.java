@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,12 +33,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -57,6 +61,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
+import com.inferyx.framework.enums.CheckType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
@@ -1026,6 +1031,72 @@ public class DataQualServiceImpl extends RuleTemplate {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
 					(message != null) ? message : "Can not create DQExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create DQExec.");
+		}
+	}
+
+	/**
+	 * @param datapodUuid
+	 * @param datapodVersion
+	 * @param checkTypeList
+	 * @param runMode
+	 * @throws JsonProcessingException 
+	 */
+	public void generateDq(String datapodUuid, String datapodVersion, List<Map<String, String>> checkTypeList,
+			RunMode runMode) throws JsonProcessingException {
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
+		for(Map<String, String> checkType : checkTypeList) {
+			try {
+				DataQual dataQual = new DataQual();
+				//******************* setting base entity *******************//
+				dataQual.setName("dq_"+datapod.getPrefix()+"_"+checkType.get("attributeName"));
+//				dataQual.setCreatedOn(new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").format(new Date()));
+//				dataQual.setCreatedBy(securityServiceImpl.getuserInfo());
+//				dataQual.setActive("Y");
+				dataQual.setLocked("N");
+				dataQual.setPublished("N");
+				dataQual.setPublicFlag("N");
+//				List<MetaIdentifierHolder> appInfo = new ArrayList<>();
+//				appInfo.add(securityServiceImpl.getAppInfo());
+//				dataQual.setAppInfo(appInfo);
+				dataQual.setBaseEntity();
+				
+				//******************* setting dq specific properties *******************//
+				MetaIdentifier ref = datapod.getRef(MetaType.datapod);
+				dataQual.setDependsOn(new MetaIdentifierHolder(ref));
+				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+				attrRefHolder.setRef(ref);
+				attrRefHolder.setAttrName(checkType.get("attributeName"));
+				attrRefHolder.setAttrId(""+datapod.getAttributeId(checkType.get("attributeName")));
+				dataQual.setAttribute(attrRefHolder);
+				
+				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+	
+	public DataQual getCheckType(DataQual dataQual, Map<String, String> checkTypeMap, Datapod datapod)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+		CheckType checkType = Helper.getCheckType(checkTypeMap.get("checkType"));
+		switch (checkType) {
+		case DOMAIN:
+			List<AttributeDomain> domainList = metadataServiceImpl.getDomainByName(checkTypeMap.get("checkValue"));
+			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
+			if (domainCheck != null) {
+				domainCheck = new ArrayList<>();
+			}
+
+			for (AttributeDomain attrDomain : domainList) {
+				domainCheck.add(new MetaIdentifierHolder(attrDomain.getRef(MetaType.domain)));
+			}
+
+			dataQual.setDomainCheck(domainCheck);
+
+		default:
+			return dataQual;
 		}
 	}
 }

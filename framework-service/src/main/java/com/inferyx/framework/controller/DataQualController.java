@@ -275,7 +275,7 @@ public class DataQualController {
 		return dataQualServiceImpl.createDQRuleForDatapod(datapodUuid,datapodVersion, runMode);
 	}
 	
-	@RequestMapping(value = "/genIntelligence")
+	@RequestMapping(value = "/genIntelligence", method = RequestMethod.GET)
 	public List<Map<String, String>> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
 			@RequestParam(value = "version", required = false) String datapodVersion,
 			@RequestParam(value = "type", required = false) String type,
@@ -285,5 +285,16 @@ public class DataQualController {
 		DataQualExec dataQualExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, null, runMode);
 		return dqIntelligenceOperator.genIntelligence(dataQualExec, null, runMode);
+	}
+	
+	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)
+	public void generateDq(@RequestParam(value = "uuid") String datapodUuid,
+			@RequestParam(value = "version", required = false) String datapodVersion,
+			@RequestBody List<Map<String, String>> checkTypeList,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
+		RunMode runMode = Helper.getExecutionMode(mode);
+		dataQualServiceImpl.generateDq(datapodUuid, datapodVersion, checkTypeList, runMode);
 	}
 }
