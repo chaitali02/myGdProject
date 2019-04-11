@@ -924,7 +924,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 		profileExec = execute(profileExec.getUuid(), profileExec.getVersion(), profileExec, metaExecutor, null,
 				taskList, null, profileExec.getRunMode());
 		while (!Helper.getLatestStatus(profileExec.getStatusList()).getStage().equals(Status.Stage.COMPLETED)) {
-			System.out.println("inside while" + Helper.getLatestStatus(profileExec.getStatusList()).getStage());
 			continue;
 		}
 		return profileExec;
