@@ -14,6 +14,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.miscellaneous.LimitTokenOffsetFilterFactory;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -841,26 +843,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 						profileExec.getRunMode());
 			}
 		}
-		/*else {
-			Profile newProfile = new Profile();
-			newProfile.setBaseEntity();
-			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
-			MetaIdentifier metaIdentifier = new MetaIdentifier();
-			metaIdentifier.setUuid(datapodUuid);
-			metaIdentifier.setType(MetaType.datapod);
-			metaIdentifier.setVersion(datapodUuid);
 
-			MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
-			metaIdentifierHolder.setRef(metaIdentifier);
-			attributeRefHolder.setRef(metaIdentifier);
-			for (Attribute attr : datapod.getAttributes()) {
-
-				attributeInfo.set(attr.getAttributeId(), attributeRefHolder);
-			}
-			newProfile.setAttributeInfo(attributeInfo);
-			newProfile.setDependsOn(metaIdentifierHolder);
-			newProfile.setName("dp_" + datapod.getName());
-		}*/
 		return result;
 	}
 	
@@ -899,6 +882,51 @@ public class ProfileServiceImpl extends RuleTemplate {
 					MetaType.profileExec.toString(), "N");
 		}
 
+		return profileExec;
+	}
+
+	public ProfileExec genrateProfile(String datapodUuid, String datapodVersion, String type) throws Exception {
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString());
+		Profile profile = getProfileByDatapod(datapodUuid, MetaType.datapod.toString());
+		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+		List<AttributeRefHolder> attributeInfo = new ArrayList<>();
+		List<MetaIdentifierHolder> appinfo = new ArrayList<>();
+		appinfo.add(securityServiceImpl.getAppInfo());
+		ProfileExec profileExec = new ProfileExec();
+		if (profile == null) {
+			profile = new Profile();
+			profile.setBaseEntity();
+			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
+			MetaIdentifier metaIdentifier = new MetaIdentifier();
+			metaIdentifier.setUuid(datapodUuid);
+			metaIdentifier.setType(MetaType.datapod);
+			metaIdentifier.setVersion(datapodVersion);
+
+			MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
+			metaIdentifierHolder.setRef(metaIdentifier);
+			attributeRefHolder.setRef(metaIdentifier);
+			for (Attribute attr : datapod.getAttributes()) {
+				attributeRefHolder.setAttrId(attr.getAttributeId().toString());
+				attributeInfo.add(attr.getAttributeId(), attributeRefHolder);
+			}
+			profile.setAttributeInfo(attributeInfo);
+			profile.setDependsOn(metaIdentifierHolder);
+			profile.setName("profile_" + datapod.getName());
+			profile.setAppInfo(appinfo);
+			commonServiceImpl.save(MetaType.profile.toString(), profile);
+
+		}
+
+		profileExec = create(profile.getUuid(), profile.getVersion(), null, null, null, null, RunMode.ONLINE);
+		profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, null,
+				profileExec.getRunMode());
+		profileExec = execute(profileExec.getUuid(), profileExec.getVersion(), profileExec, metaExecutor, null,
+				taskList, null, profileExec.getRunMode());
+		while (!Helper.getLatestStatus(profileExec.getStatusList()).getStage().equals(Status.Stage.COMPLETED)) {
+			System.out.println("inside while" + Helper.getLatestStatus(profileExec.getStatusList()).getStage());
+			continue;
+		}
 		return profileExec;
 	}
 
