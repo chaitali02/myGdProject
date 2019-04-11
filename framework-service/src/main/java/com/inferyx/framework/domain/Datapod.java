@@ -82,4 +82,14 @@ public class Datapod extends BaseEntity {
 		//return  attr.getName();
 		return String.format("%s.%s", getName(), attr.getName());
 	}
+	
+	public Integer getAttributeId(String attributeName) {
+		for (Attribute attr : getAttributes()) {
+			if (attr.getName().equals(attributeName)) {
+				return attr.getAttributeId();
+			}
+		}
+
+		return null;
+	}
 }
