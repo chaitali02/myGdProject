@@ -1317,9 +1317,9 @@ public class DatapodServiceImpl {
 	public String getPrefix(String datapodName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		String prefixStr = null;
-		List<String> prefixList = Helper.genaretePrefix(datapodName, 5);
+		List<String> prefixList = Helper.genaretePrefix(datapodName, 5, 3);
 		Query query = new Query();
 		List<Datapod> datapodObjectList = new ArrayList<>();
 

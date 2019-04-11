@@ -1983,36 +1983,105 @@ public class Helper {
 		return formatter.format(new Date());
 	}
 
-	public static List<String> genaretePrefix(String datapodName, int numCombination) {
+	public static List<String> genaretePrefix(String datapodName, int numCombination, int numChar) {
 		List<String> result = new ArrayList<>();
-		StringBuilder str;
+		StringBuilder str = null;
 		datapodName = datapodName.replace("_", "");
-		if (datapodName.length() > 8)
+		if (numChar == 3)
 			for (int i = 0; i < numCombination; i++) {
 				str = new StringBuilder();
 				str.append(datapodName.charAt(i));
-				str.append(datapodName.charAt(i + 2));
-				str.append(datapodName.charAt(i + 4));
+				for (int j = i + 2; i < numCombination; j++) {
+					str.append((j >= (datapodName.length()) ? datapodName.charAt((j % datapodName.length()) + 1)
+							: datapodName.charAt(j)));
+					for (int k = i + 4; i < numCombination; k++) {
+						result.add(
+								str.append(k >= (datapodName.length()) ? datapodName.charAt((k % datapodName.length()))
+										: datapodName.charAt(k)).toString());
+						System.out.println(result);
+						break;
+					}
+					break;
 
-				/*
-				 * for (int j = 0; j < datapodName.length(); j++) { if
-				 * (Character.isUpperCase(datapodName.charAt(j))) {
-				 * str.append(datapodName.charAt(j)); } }
-				 */
-
-				result.add(str.toString());
-
+				}
 			}
-		else {
-			if(datapodName.length()<3)
-			permute(datapodName, 0, datapodName.length() - 1, result);
-			else
-			permute(datapodName, 0,3, result);
+		if (numChar == 4)
+			for (int i = 0; i < numCombination; i++) {
+				str = new StringBuilder();
+				str.append(datapodName.charAt(i));
+				for (int j = i + 2; i < numCombination; j++) {
+					str.append((j >= (datapodName.length()) ? datapodName.charAt((j % datapodName.length()) + 1)
+							: datapodName.charAt(j)));
+					for (int k = i + 4; i < numCombination; k++) {
+						str.append(k >= (datapodName.length()) ? datapodName.charAt((k % datapodName.length()))
+								: datapodName.charAt(k)).toString();
+						for (int l = i + 6; i < numCombination; l++) {
+							result.add(str
+									.append(l >= (datapodName.length()) ? datapodName.charAt((l % datapodName.length()))
+											: datapodName.charAt(l))
+									.toString());
+							System.out.println(result);
+							break;
+						}
+						break;
+					}
+					break;
+				}
+			}
+		/*
+		 * if (datapodName.length() > 8) for (int i = 0; i < numCombination; i++) { str
+		 * = new StringBuilder(); str.append(datapodName.charAt(i));
+		 * str.append(datapodName.charAt(i + 2)); str.append(datapodName.charAt(i + 4));
+		 * 
+		 * 
+		 * for (int j = 0; j < datapodName.length(); j++) { if
+		 * (Character.isUpperCase(datapodName.charAt(j))) {
+		 * str.append(datapodName.charAt(j)); } }
+		 * 
+		 * 
+		 * result.add(str.toString());
+		 * 
+		 * } else { if(datapodName.length()<3) permute(datapodName, 0,
+		 * datapodName.length() - 1, result); else permute(datapodName, 0,3, result);
+		 * 
+		 * }
+		 */
+		
+		
+		
+		/*int m = 0;
+		int n = 0;
+		while (n < numCombination) {
+			str = new StringBuilder();
+			for (int d = 0; d <= numChar - 1; d++) {
+				str.append(getPermute(m, datapodName, m));
 
-		}
+				m = m + 2;
+			}
+			result.add(str.toString());
+			System.out.println(result);
+			n++;
+
+		}*/
+		
+		
+		
+		
+		
+		
+		
 		return result;
 	}
-
+	public static StringBuilder getPermute(int postion,String name, int increment){
+		StringBuilder str=new StringBuilder();
+		if (postion  <= (name.length())) {
+			str.append(name.charAt(postion));
+		} else {
+			str.append(name.charAt((postion % name.length())));
+		}
+		return str;
+	}
+	
 	private static void permute(String str, int l, int r, List<String> result) {
 		if (l == r) {
 			result.add(str);
