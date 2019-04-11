@@ -895,16 +895,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 		if (profile == null) {
 			profile = new Profile();
 			profile.setBaseEntity();
-			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
+			AttributeRefHolder attributeRefHolder = null;
 			MetaIdentifier metaIdentifier = new MetaIdentifier();
 			metaIdentifier.setUuid(datapodUuid);
 			metaIdentifier.setType(MetaType.datapod);
-			metaIdentifier.setVersion(datapodVersion);
-
 			MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 			metaIdentifierHolder.setRef(metaIdentifier);
-			attributeRefHolder.setRef(metaIdentifier);
 			for (Attribute attr : datapod.getAttributes()) {
+				attributeRefHolder = new AttributeRefHolder();
+				attributeRefHolder.setRef(metaIdentifier);
 				attributeRefHolder.setAttrId(attr.getAttributeId().toString());
 				attributeInfo.add(attr.getAttributeId(), attributeRefHolder);
 			}
