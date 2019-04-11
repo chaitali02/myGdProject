@@ -1,0 +1,31 @@
+{
+    "_id" : ObjectId("5caef71bd02c773b6d2a7261"),
+    "regEx" : "^[-\\w]+(?:\\W+[-\\w]+){9,14}\\W*$",
+    "uuid" : "ed0ed4d5-6af9-4d7f-a956-64e3e6f38ecd",
+    "version" : "1554970395",
+    "name" : "Word_Limit",
+    "desc" : "Word Limit",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-04-11T08:13:15.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1548315769"
+            }
+        }
+    ],
+    "publicFlag" : "Y"
+}
