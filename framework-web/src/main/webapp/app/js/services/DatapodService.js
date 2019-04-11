@@ -127,12 +127,79 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			},
 		}).then(function (response) { return response })
 	}
-
+	factory.findProfileResults = function (type, uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "profile/getProfileResults?action=view&datapodUuid=" + uuid + "&datapodVersion=" + version + "&type=" + type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.findGenerateProfile = function (type, uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "profile/genrateProfile?action=view&datapodUuid=" + uuid + "&datapodVersion=" + version + "&type=" + type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.genIntelligence = function (type, uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "dq/genIntelligence?action=view&datapodUuid=" + uuid + "&datapodVersion=" + version + "&type=" + type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
+    
 	return factory;
 });
 
-MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
-	
+MetadataModule.service('MetadataDatapodSerivce',function ($q, sortFactory, MetadataDatapodFactory) {
+
+	this.genIntelligence = function (type, uuid, version) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.genIntelligence(type, uuid, version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
+	this.generateProfile = function (type, uuid, version) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findGenerateProfile(type, uuid, version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.getProfileResults = function (type, uuid, version) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findProfileResults(type, uuid, version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	this.getPrefix = function (type,datapodName) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findPrefix(type, datapodName).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

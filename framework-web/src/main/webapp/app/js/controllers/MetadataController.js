@@ -225,6 +225,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.showGraphDiv = false
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
+
 	}/*End showPage*/
 
 	$scope.showGraph = function (uuid, version) {
@@ -237,6 +240,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.showGraphDiv = true;
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
 
 	}/*End ShowGraph*/
 	
@@ -532,7 +537,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 		datapodJson.attributes = attributesarray;
 		console.log(JSON.stringify(datapodJson));
-		debugger
 		if($scope.isAdd){
 			$scope.getPrefix(datapodJson,upd_tag);
 		}else{
@@ -884,6 +888,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
 		$scope.isDownloadDatapod=false;
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
 		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
 			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;	
@@ -1100,6 +1106,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 		$scope.isDownloadDatapod=true;
 		$scope.gridOptionsDataStrore.data=[];
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
 		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatastoreByDatapode = function (response) {
 			$scope.isShowDatastore=true;
@@ -1201,6 +1209,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
 		$scope.isDownloadDatapod=true;
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
 		$scope.gridOptionsDataStrore.data=[];
 		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatastoreByDatapode = function (response) {
@@ -1362,6 +1372,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowDatastore=false;
 		$scope.showGraphDiv = false
 		$scope.isDatastoreResult=false;
+		$scope.isShowProfile=false;
+		$scope.isShowQuality=false;
 		$scope.gridOptionsCompareMetaData.isDataError=false;
 		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
 		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
@@ -1417,6 +1429,268 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 	}
 /******************************************************************End CompareMeta*******************************************************/
+
+/******************************************************************Start Dataprofile*******************************************************/
+	
+	$scope.gridOptionsDataProfile={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: false,
+	};
+
+	$scope.gridOptionsDataProfile.columnDefs = [];
+	$scope.filteredRowsDataProfile = [];
+	$scope.gridOptionsDataProfile.onRegisterApi = function (gridApi) {
+		$scope.gridApiDataProfile = gridApi;
+		$scope.filteredRowsDataProfile = $scope.gridApiDataProfile.core.getVisibleRows($scope.gridApiDataProfile.grid);
+	};
+
+	$scope.getGridStyleDataProfile = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsDataProfile && $scope.filteredRowsDataProfile.length > 0) {
+			style['height'] = (($scope.filteredRowsDataProfile.length < 10 ? $scope.filteredRowsDataProfile.length * 40 : 400) + 50) + 'px';
+		}
+		else {
+		
+			style['height'] = "100px";
+		}
+		return style;
+	}
+	
+	$scope.refreshDataProfile=function(searchtext){
+		$scope.gridOptionsDataProfile.data = $filter('filter')($scope.originalDataProfile,searchtext, undefined);
+	}
+
+    /*Start showProfile*/
+	$scope.showProfile = function (isRefersh) {
+		if($scope.isShowProfile && isRefersh==false){
+			return false
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isShowProfile=true;
+		$scope.isShowQuality=false;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.getProfileResult();
+	}/*End showProfile*/
+	
+	$scope.getProfileResult=function(){
+		$scope.isProfileInprogres=true;
+		$scope.isProfileDataError = false;
+		$scope.tableClassDP = "centercontent";
+		$scope.dataErrorMsgDP="";
+		MetadataDatapodSerivce.getProfileResults("profile", $scope.datapoddata.uuid, $scope.datapoddata.version)
+		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+			$scope.getColumnDetail("profile","",respone);
+		}
+		var onError=function(response){
+			$scope.isProfileDataError=true;
+			$scope.isProfileInprogres=false;
+			$scope.dataErrorMsgDP="Some error occurred";
+		}
+	}
+
+	$scope.getColumnDetail = function (type,resultType,result) {
+		CommonService.getColunmDetail(type, resultType)
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+		    $scope.gridOptionsDataProfile.columnDefs = [];
+		    $scope.ColumnDetails = respone;
+			$scope.isProfileDataError = false;
+			$scope.isProfileInprogres=false;
+			$scope.tableClassDP = "";
+		    if($scope.ColumnDetails && $scope.ColumnDetails.length > 0) {
+				for (var i = 0; i < $scope.ColumnDetails.length; i++) {
+					var attribute = {};
+					var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+					if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
+						attribute.visible = false
+					} else {
+						attribute.visible = true
+					}
+					attribute.name = $scope.ColumnDetails[i].name
+					attribute.displayName = $scope.ColumnDetails[i].displayName
+					attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+					$scope.gridOptionsDataProfile.columnDefs.push(attribute)	
+				}
+			}
+			
+			$scope.gridOptionsDataProfile.data = result;
+			$scope.originalDataProfile =result;
+		}
+		var onError=function(respone){
+			$scope.isProfileDataError=true;
+			$scope.isProfileInprogres=false;
+			$scope.dataErrorMsgDP="Some error occurred";
+		}
+	}
+
+	$scope.runDataprofile=function(){
+		$scope.isProfileInprogres=true;
+		$scope.isProfileDataError = false;
+		$scope.tableClassDP = "centercontent";
+		$scope.dataErrorMsgDP="";
+		MetadataDatapodSerivce.generateProfile("profile", $scope.datapoddata.uuid, $scope.datapoddata.version)
+		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+			$scope.getProfileResult();
+		}
+		var onError=function(response){
+			$scope.isProfileDataError=true;
+			$scope.isProfileInprogres=false;
+			$scope.dataErrorMsgDP="Some error occurred";
+		}
+	}
+/******************************************************************End Dataprofile*******************************************************/
+/******************************************************************Start DataQuality*******************************************************/
+	$scope.gridOptionsDataQuality={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: false,
+	};
+
+	$scope.gridOptionsDataQuality.columnDefs = [
+		{
+			name: "selected",
+			maxWidth: 40,
+			visible: true,
+			headerCellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:9px;"><input  type="checkbox" style="width: 30px;height:16px;" ng-model="grid.appScope.selectedQualityAllRow" ng-change="grid.appScope.OnSelectQualityAllRow()"/></div>',
+			cellTemplate:'<div class="ui-grid-cell-contents"  style="padding-top:2px;padding-left:4px;"><input type="checkbox" style="width:20px;height:16px;" ng-model="row.entity.selected" ng-change="grid.appScope.onSelectQualityRow()"/></div>'
+		},
+		{
+			name: 'attrName',
+			width: '30%',
+			enableCellEdit: false,
+			visible: true,
+			displayName: 'Attribute Name',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'checkType',
+			width: '30%',
+			enableCellEdit: false,
+			visible: true,
+			displayName: 'Check Type',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'checkValue',
+			width: '30%',
+			enableCellEdit: false,
+			visible: true,
+			displayName: 'Check Value',
+			headerCellClass: 'text-center'
+		},
+	];
+	
+	$scope.filteredRowsDataQuality = [];
+	$scope.gridOptionsDataQuality.onRegisterApi = function (gridApi) {
+		$scope.gridApiDataQuality = gridApi;
+		$scope.filteredRowsDataQuality = $scope.gridApiDataQuality.core.getVisibleRows($scope.gridApiDataQuality.grid);
+	};
+
+	$scope.getGridStyleDataQuality = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsDataQuality && $scope.filteredRowsDataQuality.length > 0) {
+			style['height'] = (($scope.filteredRowsDataQuality.length < 10 ? $scope.filteredRowsDataQuality.length * 40 : 400) + 50) + 'px';
+		}
+		else {
+			style['height'] = "100px";
+	    }
+		return style;
+	}
+	
+	$scope.OnSelectQualityAllRow = function() {
+		angular.forEach($scope.gridOptionsDataQuality.data, function(source) {
+		  if(source.status !="Registered")
+		  source.selected = $scope.selectedQualityAllRow;
+		});
+		if($scope.selectedQualityAllRow){
+			$scope.isAttrForDqSelected=false
+		}else{
+			$scope.isAttrForDqSelected=true;
+		}
+	}
+	$scope.onSelectQualityRow=function(){
+		if($scope.getSelectedRow().length > 0){
+			$scope.isAttrForDqSelected=false
+		}
+		else{
+			$scope.isAttrForDqSelected=true;
+		}
+	}
+
+	$scope.getSelectedRow= function() {
+		var newDataList = [];
+		angular.forEach($scope.gridOptionsDataQuality.data, function(selected) {
+		  if (selected.selected) {
+			newDataList.push(selected);
+		  }
+		});
+		return newDataList;
+	}
+	/*Start showQuality*/
+	$scope.showQuality = function (isRefersh) {
+		if($scope.isShowQuality && isRefersh==false){
+			return false
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isShowQuality=true;
+		$scope.isShowProfile=false;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		//$scope.genIntelligence();
+	}/*End showQuality*/
+	
+	$scope.genIntelligence=function(){
+		$scope.isQualityInprogres=true;
+		$scope.isQualityDataError = false;
+		$scope.tableClassDQ = "centercontent";
+		$scope.dataErrorMsgDQ="";
+		MetadataDatapodSerivce.getProfileResults("profile", $scope.datapoddata.uuid, $scope.datapoddata.version)
+		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+			$scope.isQualityInprogres=false;
+			$scope.gridOptionsDataQuality.data=respone;
+		}
+		var onError=function(response){
+			$scope.isQualityDataError=true;
+			$scope.isQualityDataError=false;
+			$scope.dataErrorMsgDQ="Some error occurred";
+		}
+	}
+	$scope.attrForDqGenerated=function(){
+		console.log($scope.getSelectedRow());
+		
+	}
+
+
+/******************************************************************End DataQuality*******************************************************/
+
+
 
 })/* End MetadataDatapodController*/
 
