@@ -51,14 +51,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
-//	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-//	$scope.download.formates=CF_DOWNLOAD.formate;
-	//$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
-//	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
-//	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
 	$scope.sample={};
 	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrows;
-	$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
+	$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;
 	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
 	
@@ -101,6 +96,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
+
+
 	$scope.pagination = {
 		currentPage: 1,
 		pageSize: 10,
@@ -117,6 +114,98 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		exporterPdfPageSize: 'A4',
 		exporterPdfDefaultStyle: { fontSize: 9 },
 		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+	
+	$scope.gridOptions = {
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+
+
+
+	$scope.gridOptions.columnDefs = [];
+	$scope.filteredRows = [];
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+	};
+
+	$scope.getGridStyle = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+		}
+		if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 50 : 400) + 50) + 'px';
+		}
+		else {
+			style['height'] = "100px";
+		}
+		return style;
+	}
+
+    
+	$window.addEventListener('resize', function(e) {
+		$scope.isResizeCompareMetadata=false
+		$timeout(function() {
+		   $scope.isResizeCompareMetadata=true;
+		  },10);
+	});
+	
+
+	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+		$sessionStorage.fromStateName = fromState.name
+		$sessionStorage.fromParams = fromParams
+	});
+
+
+	if ($stateParams.mode == 'true') {
+		if ($sessionStorage.fromStateName == "metadata") {
+			$scope.StateName = "metadata({'type':'datapod'})"
+		}
+		else {
+			$scope.StateName = $sessionStorage.fromStateName;
+		}
+	}
+
+
+	$scope.getLovByType = function () {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag = response[0].value
+		}
+	}
+	
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+
+	$scope.getLovByType();
+	 
+
+    $scope.getAllLatestDomain = function () {
+		CommonService.getAllLatest("domain").then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+		$scope.allDomain = response;
+		}
+    }
+
+	$scope.getAllLatestDomain(); 
+	
+	$scope.selectType = function () {
+		MetadataDatapodSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
+		var onSuccessGetDatasourceByType = function (response) {
+			$scope.alldatasource = response
+		}
 	}
 	
 	$scope.checkIsInrogess=function(){
@@ -191,396 +280,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			});
 		}
 	}
-	
-	$scope.gridOptionsHitogram={
-		rowHeight: 40,
-		enableGridMenu: true,
-		useExternalPagination: true,
-		exporterMenuPdf: true,
-		exporterPdfOrientation: 'landscape',
-		exporterPdfPageSize: 'A4',
-		exporterPdfDefaultStyle: { fontSize: 9 },
-		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
-	}
 
-	$scope.filteredRowsHitogram = [];
-	$scope.gridOptionsHitogram.onRegisterApi = function (gridApi) {
-		$scope.gridOptionsHitogram = gridApi;
-		$scope.filteredRowsHitogram = $scope.gridOptionsHitogram.core.getVisibleRows($scope.gridOptionsHitogram.grid);
-	};
-	
-	$scope.getGridStyleHistogram = function () {
-		var style = {
-			'margin-top': '10px',
-			'margin-bottom': '10px',
-			'width':'100%;'
-		}
-		if ($scope.filteredRowsHitogram && $scope.filteredRowsHitogram.length > 0) {
-			style['height'] = (($scope.filteredRowsHitogram.length < 10 ? $scope.filteredRowsHitogram.length * 50 : 400) + 70) + 'px';
-		}
-		else {
-		
-			style['height'] = "150px";
-		}
-		return style;
-	}
-
-	$scope.gridOptions = {
-		rowHeight: 40,
-		enableGridMenu: true,
-		useExternalPagination: true,
-		exporterMenuPdf: true,
-		exporterPdfOrientation: 'landscape',
-		exporterPdfPageSize: 'A4',
-		exporterPdfDefaultStyle: { fontSize: 9 },
-		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
-	}
-
-	$scope.gridOptionsDatapod = {
-		enableGridMenu: true,
-		rowHeight: 40,
-		enableRowSelection: true,
-		enableSelectAll: true
-	};
-
-    $scope.gridOptionsCompareMetaData={
-		enableGridMenu: true,
-		rowHeight: 40,
-		enableRowSelection: true,
-		enableSelectAll: true,
-		headerTemplate: 'views/header-template.html',
-		superColDefs: [{
-			name: 'sourceParant',
-			displayName:'Source'
-		}, {
-			name: 'targetParant',
-			displayName:'Datapod'
-		},
-		 {
-			name: 'statusParant',
-			displayName:'Status'
-		}
-		],
-		columnDefs: [{
-			name: 'sourceAttribute',
-			displayName: 'Atrribute',
-			superCol: 'sourceParant'
-		}, {
-			name: 'sourceType',
-			displayName: 'Type',
-			superCol: 'sourceParant'
-		}, {
-			name: 'sourceLength',
-			displayName: 'Length',
-			superCol: 'sourceParant'
-  
-		},
-		{
-			name: 'targetAttribute',
-			displayName: 'Atrribute',
-			superCol: 'targetParant'
-		}, {
-			name: 'targetType',
-			displayName: 'Type',
-			superCol: 'targetParant'
-		},
-		{
-			name: 'targetLength',
-			displayName: 'Length',
-			superCol: 'targetParant'
-  
-		},
-		{
-			name: 'status',
-			displayName: '',
-			superCol: 'statusParant',
-			enableColumnMenu: false,
-			cellClass: 'text-center',
-			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
-		}],
-	};  
-
-
-	$scope.filteredRowsCompareMetaData = [];
-	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
-		$scope.gridApiCompareMetaData = gridApi;
-		$scope.filteredRowsCompareMetaData = $scope.gridApiCompareMetaData.core.getVisibleRows($scope.gridApiCompareMetaData.grid);
-	};
-	$window.addEventListener('resize', function(e) {
-		$scope.isResizeCompareMetadata=false
-		$timeout(function() {
-		   $scope.isResizeCompareMetadata=true;
-		  },10);
-	  });
-	  
-	$scope.getGridStyleCompareMetaData = function () {
-		var style = {
-			'margin-top': '10px',
-			'margin-bottom': '10px',
-			'width':'100%;'
-		}
-		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
-			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 40 : 400) + 40) + 'px';
-		}
-		else {
-		
-			style['height'] = "100px";
-		}
-		return style;
-	}
-
-	$scope.gridOptionsDataStrore={
-		rowHeight: 40,
-		enableGridMenu: true,
-		useExternalPagination: true,
-		exporterMenuPdf: true,
-		exporterPdfOrientation: 'landscape',
-		exporterPdfPageSize: 'A4',
-		exporterPdfDefaultStyle: { fontSize: 9 },
-		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
-	};
-    $scope.gridOptionsDataStrore.columnDefs = [
-		{
-			name: 'uuid',
-			width: '30%',
-			enableCellEdit: false,
-			visible: false,
-			displayName: 'Uuid',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'name',
-			minWidth: 220,
-			displayName: 'Name',
-			headerCellClass: 'text-center',
-			cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
-
-		},
-		{
-			name: 'version',
-			maxWidth:110,
-			cellClass: 'text-center',
-			visible: true,
-			displayName: 'Version',
-			headerCellClass: 'text-center',
-			sort: {
-				direction: uiGridConstants.DESC,
-			   // priority: 0,
-			  },
-		},
-		{
-			displayName: 'Created By',
-			name: 'createdBy.ref.name',
-			cellClass: 'text-center',
-			maxWidth:100,
-			headerCellClass: 'text-center'
-		  },
-		  {
-			displayName: 'Created On',
-			name: 'createdOn',
-			minWidth: 220,
-			cellClass: 'text-center',
-			headerCellClass: 'text-center',
-	
-		  },
-		
-		{
-			name: 'numRows',
-			width: '10%',
-			enableCellEdit: false,
-			displayName: 'Rows',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'action',
-			displayName: 'Action',
-			width: '10%',
-			cellTemplate: '<input type="radio" name="action" style="margin:11px;width:16px;height:16px;" ng-click="grid.appScope.onSelectDataStore(row.entity,$index)"  ng-disabled="row.entity.isSelectedDatastore"></input>',
-			cellEditableCondition:false,
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		}
-		
-	];
-
-    $scope.filteredRowsDatastore = [];
-	$scope.gridOptionsDataStrore.onRegisterApi = function (gridApi) {
-		$scope.gridApiDatastore = gridApi;
-		$scope.filteredRowsDatastore = $scope.gridApiDatastore.core.getVisibleRows($scope.gridApiDatastore.grid);
-	};
-
-	$scope.getGridStyleDatastore = function () {
-		console.log($scope.filteredRowsDatastore.length)
-		var style = {
-			'margin-top': '10px',
-			'margin-bottom': '10px',
-		}
-		if ($scope.filteredRowsDatastore && $scope.filteredRowsDatastore.length > 0) {
-			style['height'] = (($scope.filteredRowsDatastore.length < 5 ? $scope.filteredRowsDatastore.length * 40 : 200) + 40) + 'px';
-		}
-		else {
-			style['height'] = "100px";
-		}
-		return style;
-	}
-	$scope.gridOptions.columnDefs = [];
-	$scope.gridOptionsDatapod.columnDefs = [
-		{
-			name: 'attributeId',
-			displayName: 'Id',
-			enableCellEdit: false,
-			visible: true,
-			width: '5%',
-			headerCellClass: 'text-center',
-			cellClass: 'text-center'
-		},
-		{
-			name: 'key',
-			width: '5%',
-			enableCellEdit: false,
-			displayName: 'Key',
-			cellTemplate: '<input type="checkbox" ng-model="row.entity.key"  style="width: 16px;height:16px;"   ng-disabled="{{grid.appScope.mode}}"  ng-true-value="\'Y\'" ng-false-value="\'N\'"></input>',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'partition',
-			width: '9%',
-			enableCellEdit: false,
-			displayName: 'Partition',
-			cellTemplate: '<input type="checkbox" ng-model="row.entity.partition" style="width: 16px;height:16px;"  ng-disabled="{{grid.appScope.mode}}"  ng-true-value="\'Y\'" ng-false-value="\'N\'"></input>',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'active',
-			width: '7%',
-			enableCellEdit: false,
-			displayName: 'Active',
-			cellTemplate: '<input type="checkbox" ng-model="row.entity.active" style="width: 16px;height:16px;"  ng-disabled="{{grid.appScope.mode}}"  ng-true-value="\'Y\'" ng-false-value="\'N\'"></input>',
-			cellClass: 'text-center',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'dispName',
-			displayName: 'Display Name',
-			width: '18%',
-			cellEditableCondition: $scope.canEdit,
-			headerCellClass: 'text-center'
-		},
-		//enableCellEdit: false , displayName: 'Display Name',cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.dispName" title="{{row.entity.dispName}}" ng-disabled="{{grid.appScope.mode}}"class="form-control">'},
-		{
-			name: 'name',
-			displayName: 'Name',
-			width: '14%',
-			cellEditableCondition: $scope.canEdit,
-			headerCellClass: 'text-center'
-		},
-		//, displayName: 'Name', cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.name"  title="{{row.entity.name}}" ng-disabled="row.entity.isAttributeEnable ||{{grid.appScope.mode}}"class="form-control">'},
-		{
-			name: 'type',
-			width: '13%',
-			enableCellEdit: false,
-			displayName: 'Type',
-			cellTemplate: ' <select select2 style="margin:10px;" ng-model="row.entity.type" ng-options="x for x in grid.appScope.type"  ng-disabled="{{grid.appScope.mode}}" class="form-control"></select>',
-			cellClass: 'customPadding',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'length',
-			displayName: 'Length',
-			width: '10%',
-			cellTemplate: ' <input type="number" min="1" style="margin: 7px 0px 0px 3px;height: 72%;width: 90%;" ng-model="row.entity.length" ng-disabled="{{grid.appScope.mode}}"></input>',
-			headerCellClass: 'text-center'
-		},
-		{
-			name: 'desc',
-			displayName: 'Desc',
-			width: '17%',
-			cellEditableCondition: $scope.canEdit,
-			headerCellClass: 'text-center'
-		}
-		//enableCellEdit: false , displayName: 'Desc',cellTemplate:'<input type="text" style="height: 40px;" ng-model="row.entity.desc" title="{{row.entity.desc}}" ng-disabled="{{grid.appScope.mode}}" class="form-control">'}
-	];
-
-
-	$scope.gridOptions.columnDefs = [];
-	$scope.filteredRows = [];
-	
-	$scope.gridOptions.onRegisterApi = function (gridApi) {
-		$scope.gridApi = gridApi;
-		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-	};
-
-	$scope.gridOptionsDatapod.onRegisterApi = function (gridApi) {
-		$scope.gridApi = gridApi;
-		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-		
-	};
-
-	$scope.getGridStyle = function () {
-		var style = {
-			'margin-top': '10px',
-			'margin-bottom': '10px',
-		}
-		if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 50 : 400) + 50) + 'px';
-		}
-		else {
-			style['height'] = "100px";
-		}
-		return style;
-	}
-
-	$scope.canEdit = function () {
-		if ($stateParams.mode == "true") {
-			return false;
-		}
-		else {
-			return true;
-		}
-	};
-	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-		$sessionStorage.fromStateName = fromState.name
-		$sessionStorage.fromParams = fromParams
-	});
-
-
-	if ($stateParams.mode == 'true') {
-		if ($sessionStorage.fromStateName == "metadata") {
-			$scope.StateName = "metadata({'type':'datapod'})"
-		}
-		else {
-			$scope.StateName = $sessionStorage.fromStateName;
-		}
-	}
-
-
-	$scope.getLovByType = function () {
-		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetLovByType = function (response) {
-			console.log(response)
-			$scope.lobTag = response[0].value
-		}
-	}
-	
-	$scope.loadTag = function (query) {
-		return $timeout(function () {
-			return $filter('filter')($scope.lobTag, query);
-		});
-	};
-
-	$scope.getLovByType();
-	
-    $scope.getAllLatestDomain = function () {
-		CommonService.getAllLatest("domain").then(function (response) { onSuccess(response.data) });
-		var onSuccess = function (response) {
-		$scope.allDomain = response;
-		}
-    }
-
-    $scope.getAllLatestDomain(); 
 	$scope.datapodFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.datapodHasChanged = true;
@@ -593,385 +293,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.onChangeName = function (data) {
 		$scope.datapodName = data;
 	}
-	
 
-	$scope.refreshDataDatastore=function(){
-		$scope.gridOptionsDataStrore.data= $filter('filter')($scope.originalDataDatastore, $scope.searchtextDatastore, undefined);
-	}
-	
-	
-	$scope.isDisabledDSRB=function(data){
-		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
-			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
-			
-		}
-	}
-	$scope.isEnableDSRB=function(data){
-		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
-			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=false;
-			if(data !=null && (data.uuid == $scope.gridOptionsDataStrore.data[i].uuid)){
-				$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
-				 
-			}
-		}
-	}
 
-	$scope.onSelectDataStore=function(data,index){
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.isDisabledDSRB();
-		$scope.sample.data=null;
-		$scope.datastoreDetail=data
-		$scope.sample.data=data;
-		//$scope.sample.type="datastore";
-		$scope.getResultByDatastore(data);
-	}
-
-	$scope.showDatastrores=function(data){
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.showFrom = false;
-		$scope.isShowSimpleData = false;
-		$scope.showGraphDiv = false;
-		$scope.isDatastoreResult=false;
-		$scope.isShowCompareMetaData=false;
-		$scope.isDownloadDatapod=true;
-		$scope.gridOptionsDataStrore.data=[];
-		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetDatastoreByDatapode = function (response) {
-			$scope.isShowDatastore=true;
-			$scope.originalDataDatastore=response;
-			$scope.gridOptionsDataStrore.data=response;
-			console.log(response)
-		}
-	
-	}
-	
-	$scope.getResultByDatastore = function (data) {
-		//$('#SampleModel').modal("hide");
-		$scope.isDataError = false;
-		$scope.isDataInpogress = true
-		$scope.tableclass = "centercontent";
-		$scope.showFrom = false;
-		$scope.showGraphDiv = false;
-		$scope.spinner = true;
-		$scope.isDatastoreResult=true;
-		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetResultByDatastore = function (response) {
-			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
-			$scope.isEnableDSRB(data);
-		    $scope.gridOptions.columnDefs = [];
-			$scope.isDataInpogress = false;
-			$scope.tableclass = "";
-			$scope.spinner = false
-			$scope.pagination.pageSize=5;
-			var columnDefs=[];
-			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
-				var attribute = {};
-				attribute.name = $scope.datapoddata.attributes[j].name;
-				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
-				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-				columnDefs.push(attribute)
-			}
-			setTimeout(function(){
-				$scope.gridOptions.columnDefs=columnDefs;
-			},10);
-			$scope.counter = 0;
-			$scope.originalData = response;
-			$scope.gridOptions.data=[];
-			
-				$scope.gridOptions.data=$scope.getResults($scope.originalData);
-			
-			$scope.spinner = false;
-
-		}
-
-		var onError = function (response) {
-			$scope.isDataError = true;
-			$scope.msgclass = "errorMsg"
-			$scope.datamessage = "Some Error Occurred";
-			$scope.isDataInpogress = true;
-			$scope.spinner = false;
-			$scope.isEnableDSRB(data);
-		}
-	}
-	function ConvertTwoDisit(data, propName) {
-		// if(isNaN(data[0][propName])){
-		 if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
-		   for (var i = 0; i < data.length; i++) {
-			 a = data[i][propName].split(' - ')[0];
-			 b = data[i][propName].split('-')[1]
-			 data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
-			 // console.log(data[i][propName])
-		   }
-		 }
-		// }
-		// console.log(data)
-		 return data;
-	}
-	
-	$scope.refreshDataHistogram=function(str){
-       console.log(str)
-		var data = $filter('filter')($scope.originalDataHistogram, str, undefined);
-		$scope.gridOptionsHitogram.data= data;//$scope.getResults(data);
-	}
-
-	$scope.onClickChart=function(){
-		$scope.isShowDataGrid=false;
-		$scope.isShowChart=true;
-	}
-
-	$scope.onClickGrid=function(){
-		$scope.searchTextHostogram;
-		$scope.isShowDataGrid=true;
-		$scope.isShowChart=false;
-		$scope.gridOptionsHitogram.columnDefs=[];
-		$scope.gridOptionsHitogram.columnDefs=[
-			{
-				name: 'bucket',
-				displayName: 'Bucket',
-				cellClass: 'text-center',
-				headerCellClass: 'text-center'
-			},
-			{
-				name: 'frequency',
-				displayName: 'Frequency',
-				cellClass: 'text-center',
-				headerCellClass: 'text-center'
-		    }
-		]
-		$scope.gridOptionsHitogram.data=$scope.originalDataHistogram//$scope.getResults($scope.originalDataHistogram);
-	}
-
-	$scope.calculateHistrogram=function(row){
-		$scope.histogramDetail=row.colDef;
-		$scope.isShowDataGrid=false;
-		$scope.isShowChart=false;
-		console.log(row);
-		$('#histogamModel').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		$scope.datacol=null;
-		$scope.isHistogramInprogess=true;
-		$scope.isHistogramError=false;
-		MetadataDatapodSerivce.getAttrHistogram(row.colDef.uuid,row.colDef.version,'datapod',row.colDef.attributeId).then(function (response) { onSuccessGetAttrHistogram(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetAttrHistogram = function (response) {
-			console.log(response);
-			$scope.isShowDataGrid=false;
-			$scope.isShowChart=true;
-//			if(row.colDef.attrType !="string"){
-//				ConvertTwoDisit(response, 'bucket');
-//			}
-			$scope.isHistogramInprogess=false;
-			$scope.isHistogramError=false;
-			$scope.datacol={};
-			if(response.length >=20){
-				$scope.datacol.datapoints=response.slice(0,20);
-
-			}else{
-				$scope.datacol.datapoints=response;
-			}
-			$scope.originalDataHistogram=response;
-			var dataColumn={}
-			dataColumn.id="frequency";
-			dataColumn.name="frequency"
-			dataColumn.type="bar"
-			dataColumn.color="#D8A2DE";
-			$scope.datacol.datacolumns=[];
-			$scope.datacol.datacolumns[0]=dataColumn;
-			var datax={};
-			datax.id ="bucket";
-			$scope.datacol.datax=datax;
-			
-		}
-		var onError =function(){
-			$scope.isHistogramInprogess=false;
-			$scope.isHistogramError=true;
-		}
-	}
-
-	$scope.showSampleTable = function (data) {
-		if($scope.isDataInpogress){
-			return false;
-		};
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.isDataError = false;
-		$scope.isShowSimpleData = true
-		$scope.isDataInpogress = true
-		$scope.tableclass = "centercontent";
-		$scope.showFrom = false;
-		$scope.showGraphDiv = false;
-		$scope.spinner = true;
-		$scope.isShowDatastore=false;
-		$scope.isDatastoreResult=false;
-		$scope.isShowCompareMetaData=false;
-		$scope.isDownloadDatapod=false;
-	//	$('#SampleModel').modal("hide");
-		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
-		var onSuccessGetDatasourceByType = function (response) {
-			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows//CF_SAMPLE.framework_sample_minrows;	
-			$scope.gridOptions.columnDefs = [];
-			$scope.isDataInpogress = false;
-			$scope.tableclass = "";
-			$scope.spinner = false
-			//console.log(data.attributes)
-			$scope.pagination.pageSize=10;
-
-			for (var j = 0; j <data.attributes.length; j++) {
-				var attribute = {};
-				attribute.name =data.attributes[j].name;
-				attribute.dname =data.name;
-				attribute.uuid=data.uuid;
-				attribute.version=data.version;
-				attribute.attributeId=data.attributes[j].attributeId;
-                attribute.headerCellTemplate='views/datapod-sample-header-template.html'
-				attribute.displayName =data.attributes[j].dispName;
-				attribute.attrType =data.attributes[j].type;
-				attribute.width = attribute.displayName.split('').length + 5 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-				$scope.gridOptions.columnDefs.push(attribute)
-			}
-			$scope.counter = 0;
-			$scope.originalData = response;
-			if ($scope.originalData.length > 0) {
-				$scope.gridOptions.data=$scope.getResults($scope.originalData);
-			}
-			$scope.spinner = false;
-
-		}
-
-		var onError = function (response) {
-			$scope.isDataError = true;
-			$scope.msgclass = "errorMsg"
-			$scope.datamessage = "Some Error Occurred";
-			$scope.isDataInpogress = false;
-			$scope.spinner = false;
-		}
-	}
-
-	
-	$scope.ondrop = function(e) {
-		console.log(e);
-		$scope.myform.$dirty=true;
-	}
-	$scope.selectPage = function (pageNo) {
-		$scope.pagination.currentPage = pageNo;
-	};
-
-	$scope.onPerPageChange = function () {
-		$scope.pagination.currentPage = 1;
-		$scope.gridOptions.data=$scope.getResults($scope.originalData)
-	}
-
-	$scope.pageChanged = function () {
-		$scope.gridOptions.data=$scope.getResults($scope.originalData)
-	};
-	$scope.pageChangedHistogram=function(){
-		$scope.gridOptionsHitogram.data=$scope.getResults($scope.originalDataHistogram);
-	}
-
-	$scope.getResults = function (params) {
-		$scope.pagination.totalItems = params.length;
-		if ($scope.pagination.totalItems > 0) {
-			$scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
-		}
-		else {
-			$scope.pagination.to = 0;
-		}
-		if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
-			$scope.pagination.from = $scope.pagination.totalItems;
-		} else {
-			$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-		}
-		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
-		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-	//	$scope.gridOptions.data = params.slice(offset, limit);
-		return params.slice(offset, limit);
-		console.log($scope.gridOptions.data)
-	}
-
-	$scope.refreshData = function () {
-		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-		$scope.gridOptions.data=$scope.getResults(data);
-	};
-	$scope.refreshCompareMetaData = function (searchtext) {
-		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
-		
-	};
-
-    $scope.showCompareMetaData=function(data , isRefersh){
-		if($scope.isShowCompareMetaData && isRefersh==false){
-			return false
-		}
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
-		$scope.isShowCompareMetaData=true;
-		$scope.showFrom = false;
-		$scope.isShowSimpleData = false
-		$scope.isShowDatastore=false;
-		$scope.showGraphDiv = false
-		$scope.isDatastoreResult=false;
-		$scope.gridOptionsCompareMetaData.isDataError=false;
-		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
-		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
-		MetadataDatapodSerivce.compareMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessCompareMetadata(response.data) }, function (response) { onError(response.data) })
-		var onSuccessCompareMetadata = function (response) {
-			$scope.gridOptions.columnDefs.data = [];
-			$scope.gridOptionsCompareMetaData.data=response;
-			var count=0;
-			for(var i=0;i<response.length;i++){
-				if(response[i].status == "NOCHANGE"){
-					count=count+1;
-				}
-			}
-			if(response.length == count){
-				$scope.isMetaSysn=true;
-			}else{
-				$scope.isMetaSysn=false;
-			}
-
-			$scope.originalCompareMetaData=response;
-			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
-			$scope.gridOptionsCompareMetaData.tableclass = "";
-		}
-
-		var onError = function (response) {
-			$scope.gridOptionsCompareMetaData.isDataError=true;
-			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
-		}
-	}
-	
-	$scope.synchronousMetadata=function(data){
-		if($scope.isMetaSysn || $scope.selectSourceType=='file'){
-			return false
-		}
-
-		$scope.isShowCompareMetaData=true;
-		$scope.showFrom = false;
-		$scope.isShowSimpleData = false
-		$scope.isShowDatastore=false;
-		$scope.showGraphDiv = false
-		$scope.isDatastoreResult=false;
-		$scope.gridOptionsCompareMetaData.isDataError=false;
-		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
-		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
-		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
-		var onSuccessSynchronizeMetadata = function (response) {
-			$scope.datapoddata=response;
-			$scope.isShowCompareMetaData=false;
-			$scope.showCompareMetaData($scope.datapoddata)
-		}
-		var onError = function (response) {
-			$scope.gridOptionsCompareMetaData.isDataError=true;
-			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
-		}
-	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		//var resultvalue=value.split(/[\_]?/);
@@ -980,13 +303,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			resultjoint[j] = resultvalue[j].charAt(0).toUpperCase() + resultvalue[j].slice(1);
 		}
 		return resultjoint.toString().replace(/,/g, " ");
-	}
-
-	$scope.selectType = function () {
-		MetadataDatapodSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
-		var onSuccessGetDatasourceByType = function (response) {
-			$scope.alldatasource = response
-		}
 	}
 
 	if (typeof $stateParams.id != "undefined") {
@@ -1018,7 +334,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.tags = tags;
 				}
 			}
-			$scope.gridOptionsDatapod.data = response.attributes;	
 			$scope.attributetable = response.attributes
 			defaultversion.version = response.datapodata.version;
 			defaultversion.uuid = response.datapodata.uuid;
@@ -1059,7 +374,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			var defaultversion = {};
 			$scope.isEditInprogess=false;
 			$scope.datapoddata = response.datapodata
-			$scope.gridOptionsDatapod.data = $scope.datapoddata.attributes;
 			$scope.attributetable = response.attributes
 			defaultversion.version = response.datapodata.version;
 			defaultversion.uuid = response.datapodata.uuid;
@@ -1093,6 +407,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		};
 	}/* End selectVersion*/
 
+
+/************************************************************************Start SubmitDatapod****************************************/
 	$scope.okdatapodsave = function () {
 		$('#datapodsave').css("dispaly", "none");
 		var hidemode = "yes";
@@ -1100,8 +416,39 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			setTimeout(function () { $state.go('metadata', { 'type': 'datapod' }); }, 2000);
 		}
 	}
+	$scope.getPrefix=function(datapodJson,upd_tag){
+		debugger
+		MetadataDatapodSerivce.getPrefix('datapod',datapodJson.name).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			datapodJson.prefix=response;
+			$scope.callSubmit(datapodJson,upd_tag);
+		}
+		var onError = function (response) {
+			notify.type = 'error',
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
+			$scope.$emit('notify', notify);
+		}	
+	}
 
-	/*Start SubmitDatapod*/
+	$scope.callSubmit=function(datapodJson,upd_tag){
+		MetadataDatapodSerivce.submit(datapodJson, 'datapod', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			$scope.dataLoading = false;
+			$scope.iSSubmitEnable = false;
+			notify.type = 'success',
+			notify.title = 'Success',
+			notify.content = 'Datapod Saved Successfully'
+			$scope.$emit('notify', notify);
+			$scope.okdatapodsave();
+		}
+		var onError = function (response) {
+			notify.type = 'error',
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
+			$scope.$emit('notify', notify);
+		}	
+	}
 	$scope.submitDatapod = function () {
 		if($scope.isDuplication ==true){
 			return false;
@@ -1113,10 +460,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.datapodHasChanged = true;
 		$scope.isshowmodel = true;
 		$scope.myform.$dirty = false;
-		datapodJson.uuid = $scope.datapoddata.uuid
-		datapodJson.name = $scope.datapoddata.name
-		datapodJson.desc = $scope.datapoddata.desc
-
+		datapodJson.uuid = $scope.datapoddata.uuid;
+		datapodJson.name = $scope.datapoddata.name;
+		datapodJson.desc = $scope.datapoddata.desc;
+		datapodJson.prefix = $scope.datapoddata.prefix
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -1143,30 +490,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		datapodJson.datasource = datasource;
 		var attributesarray = [];
 		var count = 0;
-		// for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
-			for (var datapodattr = 0; datapodattr < $scope.attributetable.length; datapodattr++) {
-			var attributes = {};
-			/*attributes.attributeId = datapodattr
-			attributes.name = $scope.gridOptionsDatapod.data[datapodattr].name;
-			attributes.type = $scope.gridOptionsDatapod.data[datapodattr].type;
-			attributes.desc = $scope.gridOptionsDatapod.data[datapodattr].desc;
-			attributes.dispName = $scope.gridOptionsDatapod.data[datapodattr].dispName;
-			attributes.active = $scope.gridOptionsDatapod.data[datapodattr].active;
-			attributes.length = $scope.gridOptionsDatapod.data[datapodattr].length;
-			if ($scope.gridOptionsDatapod.data[datapodattr].key == "Y") {
-				attributes.key = count;
-				count = count + 1;
-			}
-			else {
-				attributes.key = ""
-			}
-			if ($scope.gridOptionsDatapod.data[datapodattr].partition == "Y") {
-				attributes.partition = $scope.gridOptionsDatapod.data[datapodattr].partition;
-			}
-			else {
-				attributes.partition = "N"
-			}*/
-            
+		for (var datapodattr = 0; datapodattr < $scope.attributetable.length; datapodattr++) {
+			var attributes = {};   
 			attributes.attributeId = $scope.attributetable[datapodattr].attributeId
 			attributes.displaySeq=datapodattr;
 			attributes.name = $scope.attributetable[datapodattr].name;
@@ -1177,6 +502,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			attributes.length = $scope.attributetable[datapodattr].length;
 			attributes.piiFlag = $scope.attributetable[datapodattr].piiFlag;
 			attributes.cdeFlag = $scope.attributetable[datapodattr].cdeFlag;
+			attributes.nullFlag = $scope.attributetable[datapodattr].nullFlag;
 			attributes.attrUnitType = $scope.attributetable[datapodattr].attrUnitType;
 			if ($scope.attributetable[datapodattr].key == "Y") {
 				attributes.key = count;
@@ -1205,26 +531,19 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			attributesarray[datapodattr] = attributes
 		}
 		datapodJson.attributes = attributesarray;
-		console.log(JSON.stringify(datapodJson))
-		MetadataDatapodSerivce.submit(datapodJson, 'datapod', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
-		var onSuccess = function (response) {
-			$scope.dataLoading = false;
-			$scope.iSSubmitEnable = false;
-			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Datapod Saved Successfully'
-			$scope.$emit('notify', notify);
-			$scope.okdatapodsave();
+		console.log(JSON.stringify(datapodJson));
+		debugger
+		if($scope.isAdd){
+			$scope.getPrefix(datapodJson,upd_tag);
+		}else{
+			$scope.callSubmit(datapodJson,upd_tag);
 		}
-		var onError = function (response) {
-			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
-			$scope.$emit('notify', notify);
-		}
-	}/*End SubmitDatapod*/
+	}
+/******************************************************************End SubmitDatapod****************************************/
 	
 	
+/******************************************************************Start Attribute Table****************************************/
+
 	function isDublication (arr, field, index, name,darray) {
 		var res = [];
 		for(var i = 0; i < arr.length;i++){
@@ -1262,9 +581,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.attributetable=[];
 		}
 		var attributejson = {}
-		attributejson.attributeId = $scope.attributetable.length//$scope.attributetable.length;
+		attributejson.attributeId = $scope.attributetable.length
 		attributejson.active="Y";
-		//$scope.gridOptionsDatapod.data.push(attributejson);
 		$scope.attributetable.push(attributejson)
 	}
 
@@ -1275,9 +593,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	$scope.removeRow = function () {
 		$scope.iSSubmitEnable = true;
-		// angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
-		// 	$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
-		// });
 		var newDataList = [];
 		$scope.selectallattribute = false;
 		angular.forEach($scope.attributetable, function (selected) {
@@ -1288,92 +603,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		});
 		$scope.attributetable = newDataList;
 	}
-
-	$scope.onAttrRowDown=function(index){
-		var rowTempIndex=$scope.attributetable[index];
-        var rowTempIndexPlus=$scope.attributetable[index+1];
-		$scope.attributetable[index]=rowTempIndexPlus;
-		$scope.attributetable[index+1]=rowTempIndex;
-
-	}
-	
-	$scope.onAttrRowUp=function(index){
-		var rowTempIndex=$scope.attributetable[index];
-        var rowTempIndexMines=$scope.attributetable[index-1];
-		$scope.attributetable[index]=rowTempIndexMines;
-		$scope.attributetable[index-1]=rowTempIndex;
-	}
-	$scope.downloadFileByDatastore = function (data) {
-		$scope.download.uuid = data.uuid;
-		$scope.download.version = data.version;
-		$scope.download.type="datastore";
-		$scope.isDownloadDirective=true;
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
-	};
-
-	$scope.downloadFile = function (data) {
-		if($scope.isDownloadDatapod)
-		  return false;
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.isDownloadDirective=true;
-		$scope.download.uuid = data.uuid;
-		$scope.download.version = data.version;
-		$scope.download.type="datapod";
-		// $('#downloadSample').modal({
-		// 	backdrop: 'static',
-		// 	keyboard: false
-		// });
-	};
-	$scope.onDownloaed=function(data){
-		console.log(data);
-		$scope.isDownloadDatapod=data.isDownloadInprogess;
-		$scope.isDownloadDatapod=data.isDownloadInprogess;
-		$scope.isDownloadDirective=data.isDownloadDirective;
-	}
-
-    // $scope.submitDownload =function(){
-	// 	$scope.isDownloadDatapod=true;
-	// 	$('#downloadSample').modal("hide");
-	// 	var url = $location.absUrl().split("app")[0]
-	// 	$http({
-	// 		method: 'GET',
-	// 		url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-	// 		responseType: 'arraybuffer'
-	// 	}).success(function (data, status, headers) {
-	// 		$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-	// 		$scope.isDownloadDatapod=false;
-	// 		headers = headers();
-	// 		var filename = headers['filename'];
-	// 		var contentType = headers['content-type'];
-	// 		var linkElement = document.createElement('a');
-	// 		try {
-	// 			var blob = new Blob([data], {
-	// 				type: contentType
-	// 			});
-	// 			var url = window.URL.createObjectURL(blob);
-	// 			linkElement.setAttribute('href', url);
-	// 			linkElement.setAttribute("download",filename);
-
-	// 			var clickEvent = new MouseEvent("click", {
-	// 				"view": window,
-	// 				"bubbles": true,
-	// 				"cancelable": false
-	// 			});
-	// 			linkElement.dispatchEvent(clickEvent);
-	// 		} catch (ex) {
-	// 			console.log(ex);
-	// 		}
-	// 	}).error(function (data) {
-	// 		$scope.isDownloadDatapod=false;
-	// 		console.log(data);
-	// 		$('#downloadSample').modal("hide");
-	// 	});
-	// }
 
 	$scope.attrTableSelectedItem=[];
 	$scope.onChangeAttrRow=function(index,status){
@@ -1406,8 +635,43 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 	}
 
+	$scope.ondrop = function(e) {
+		$scope.myform.$dirty=true;
+	}
+/******************************************************************End Attribute Table****************************************/
+
+/******************************************************************Start Download*********************************************/
+	
+	$scope.downloadFileByDatastore = function (data) {
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datastore";
+		$scope.isDownloadDirective=true;
+	
+	};
+	$scope.downloadFile = function (data) {
+		if($scope.isDownloadDatapod)
+		  return false;
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isDownloadDirective=true;
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="datapod";
+	};
+	$scope.onDownloaed=function(data){
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
+	}
+
+   
+/******************************************************************End  Download*********************************************/
+
+/******************************************************************Start Upload*********************************************/
+
 	$scope.getDetailForUpload = function (data) {
-		//console.log(data)
 		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
@@ -1468,7 +732,692 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		  notify.content = "Some Error Occurred"
 		 // $scope.$emit('notify', notify);
 		}
-	  }
+	}
+/******************************************************************End Upload*********************************************/
+
+/******************************************************************Start Histogram*********************************************/
+	$scope.gridOptionsHitogram={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+
+	$scope.filteredRowsHitogram = [];
+	$scope.gridOptionsHitogram.onRegisterApi = function (gridApi) {
+		$scope.gridOptionsHitogram = gridApi;
+		$scope.filteredRowsHitogram = $scope.gridOptionsHitogram.core.getVisibleRows($scope.gridOptionsHitogram.grid);
+	};
+
+	$scope.getGridStyleHistogram = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsHitogram && $scope.filteredRowsHitogram.length > 0) {
+			style['height'] = (($scope.filteredRowsHitogram.length < 10 ? $scope.filteredRowsHitogram.length * 50 : 400) + 70) + 'px';
+		}
+		else {
+		
+			style['height'] = "150px";
+		}
+		return style;
+	}
+
+	function ConvertTwoDisit(data, propName) {
+		// if(isNaN(data[0][propName])){
+		if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
+			for (var i = 0; i < data.length; i++) {
+				a = data[i][propName].split(' - ')[0];
+				b = data[i][propName].split('-')[1]
+				data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+				// console.log(data[i][propName])
+			}
+		}
+		return data;
+	}
+
+	$scope.refreshDataHistogram=function(str){
+		var data = $filter('filter')($scope.originalDataHistogram, str, undefined);
+		$scope.gridOptionsHitogram.data= data;
+	}
+
+	$scope.onClickChart=function(){
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=true;
+	}
+
+	$scope.onClickGrid=function(){
+		$scope.searchTextHostogram;
+		$scope.isShowDataGrid=true;
+		$scope.isShowChart=false;
+		$scope.gridOptionsHitogram.columnDefs=[];
+		$scope.gridOptionsHitogram.columnDefs=[
+			{
+				name: 'bucket',
+				displayName: 'Bucket',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+			},
+			{
+				name: 'frequency',
+				displayName: 'Frequency',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+			}
+		]
+		$scope.gridOptionsHitogram.data=$scope.originalDataHistogram;
+	}
+
+	$scope.calculateHistrogram=function(row){
+		$('#histogamModel').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+		$scope.histogramDetail=row.colDef;
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=false;
+		$scope.datacol=null;
+		$scope.isHistogramInprogess=true;
+		$scope.isHistogramError=false;
+		MetadataDatapodSerivce.getAttrHistogram(row.colDef.uuid,row.colDef.version,'datapod',row.colDef.attributeId).then(function (response) { onSuccessGetAttrHistogram(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetAttrHistogram = function (response) {
+			$scope.isShowDataGrid=false;
+			$scope.isShowChart=true;
+	//			if(row.colDef.attrType !="string"){
+	//				ConvertTwoDisit(response, 'bucket');
+	//			}
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=false;
+			$scope.datacol={};
+			if(response.length >=20){
+				$scope.datacol.datapoints=response.slice(0,20);
+
+			}else{
+				$scope.datacol.datapoints=response;
+			}
+			$scope.originalDataHistogram=response;
+			var dataColumn={}
+			dataColumn.id="frequency";
+			dataColumn.name="frequency"
+			dataColumn.type="bar"
+			dataColumn.color="#D8A2DE";
+			$scope.datacol.datacolumns=[];
+			$scope.datacol.datacolumns[0]=dataColumn;
+			var datax={};
+			datax.id ="bucket";
+			$scope.datacol.datax=datax;
+			
+		}
+		var onError =function(){
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=true;
+		}
+	}
+/******************************************************************End Histogram*********************************************/
+
+/******************************************************************Start DatapodSample*********************************************/
+	$scope.refreshData = function () {
+		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+		$scope.gridOptions.data=$scope.getResults(data);
+	};
+	$scope.showSampleTable = function (data) {
+		if($scope.isDataInpogress){
+			return false;
+		};
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isDataError = false;
+		$scope.isShowSimpleData = true
+		$scope.isDataInpogress = true
+		$scope.tableclass = "centercontent";
+		$scope.showFrom = false;
+		$scope.showGraphDiv = false;
+		$scope.spinner = true;
+		$scope.isShowDatastore=false;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=false;
+		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetDatasourceByType = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;	
+			$scope.gridOptions.columnDefs = [];
+			$scope.isDataInpogress = false;
+			$scope.tableclass = "";
+			$scope.spinner = false
+			$scope.pagination.pageSize=10;
+
+			for (var j = 0; j <data.attributes.length; j++) {
+				var attribute = {};
+				attribute.name =data.attributes[j].name;
+				attribute.dname =data.name;
+				attribute.uuid=data.uuid;
+				attribute.version=data.version;
+				attribute.attributeId=data.attributes[j].attributeId;
+				attribute.headerCellTemplate='views/datapod-sample-header-template.html'
+				attribute.displayName =data.attributes[j].dispName;
+				attribute.attrType =data.attributes[j].type;
+				attribute.width = attribute.displayName.split('').length + 5 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				$scope.gridOptions.columnDefs.push(attribute)
+			}
+			$scope.counter = 0;
+			$scope.originalData = response;
+			if ($scope.originalData.length > 0) {
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
+			}
+			$scope.spinner = false;
+
+		}
+
+		var onError = function (response) {
+			$scope.isDataError = true;
+			$scope.msgclass = "errorMsg"
+			$scope.datamessage = "Some Error Occurred";
+			$scope.isDataInpogress = false;
+			$scope.spinner = false;
+		}
+	}
+
+	$scope.selectPage = function (pageNo) {
+		$scope.pagination.currentPage = pageNo;
+	};
+
+	$scope.onPerPageChange = function () {
+		$scope.pagination.currentPage = 1;
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
+	}
+
+	$scope.pageChanged = function () {
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
+	};
+
+	$scope.pageChangedHistogram=function(){
+		$scope.gridOptionsHitogram.data=$scope.getResults($scope.originalDataHistogram);
+	}
+
+	$scope.getResults = function (params) {
+		$scope.pagination.totalItems = params.length;
+		if ($scope.pagination.totalItems > 0) {
+			$scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
+		}
+		else {
+			$scope.pagination.to = 0;
+		}
+		if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
+			$scope.pagination.from = $scope.pagination.totalItems;
+		} else {
+			$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
+		}
+		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
+		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
+		return params.slice(offset, limit);
+	}
+/******************************************************************End DatapodSample*********************************************/
+
+/******************************************************************Start DatastoreSample*********************************************/
+	$scope.gridOptionsDataStrore={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	};
+
+	$scope.gridOptionsDataStrore.columnDefs = [
+		{
+			name: 'uuid',
+			width: '30%',
+			enableCellEdit: false,
+			visible: false,
+			displayName: 'Uuid',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'name',
+			minWidth: 220,
+			displayName: 'Name',
+			headerCellClass: 'text-center',
+			cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
+
+		},
+		{
+			name: 'version',
+			maxWidth:110,
+			cellClass: 'text-center',
+			visible: true,
+			displayName: 'Version',
+			headerCellClass: 'text-center',
+			sort: {
+				direction: uiGridConstants.DESC,
+			// priority: 0,
+			},
+		},
+		{
+			displayName: 'Created By',
+			name: 'createdBy.ref.name',
+			cellClass: 'text-center',
+			maxWidth:100,
+			headerCellClass: 'text-center'
+		},
+		{
+			displayName: 'Created On',
+			name: 'createdOn',
+			minWidth: 220,
+			cellClass: 'text-center',
+			headerCellClass: 'text-center',
+
+		},
+		
+		{
+			name: 'numRows',
+			width: '10%',
+			enableCellEdit: false,
+			displayName: 'Rows',
+			cellClass: 'text-center',
+			headerCellClass: 'text-center'
+		},
+		{
+			name: 'action',
+			displayName: 'Action',
+			width: '10%',
+			cellTemplate: '<input type="radio" name="action" style="margin:11px;width:16px;height:16px;" ng-click="grid.appScope.onSelectDataStore(row.entity,$index)"  ng-disabled="row.entity.isSelectedDatastore"></input>',
+			cellEditableCondition:false,
+			cellClass: 'text-center',
+			headerCellClass: 'text-center'
+		}
+		
+	];
+
+	$scope.filteredRowsDatastore = [];
+	$scope.gridOptionsDataStrore.onRegisterApi = function (gridApi) {
+		$scope.gridApiDatastore = gridApi;
+		$scope.filteredRowsDatastore = $scope.gridApiDatastore.core.getVisibleRows($scope.gridApiDatastore.grid);
+	};
+
+	$scope.getGridStyleDatastore = function () {
+		console.log($scope.filteredRowsDatastore.length)
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+		}
+		if ($scope.filteredRowsDatastore && $scope.filteredRowsDatastore.length > 0) {
+			style['height'] = (($scope.filteredRowsDatastore.length < 5 ? $scope.filteredRowsDatastore.length * 40 : 200) + 40) + 'px';
+		}
+		else {
+			style['height'] = "100px";
+		}
+		return style;
+	}
+	$scope.refreshDataDatastore=function(){
+		$scope.gridOptionsDataStrore.data= $filter('filter')($scope.originalDataDatastore, $scope.searchtextDatastore, undefined);
+	}
+	
+	
+	$scope.isDisabledDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+			
+		}
+	}
+	$scope.isEnableDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=false;
+			if(data !=null && (data.uuid == $scope.gridOptionsDataStrore.data[i].uuid)){
+				$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+				 
+			}
+		}
+	}
+
+	$scope.onSelectDataStore=function(data,index){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isDisabledDSRB();
+		$scope.sample.data=null;
+		$scope.datastoreDetail=data
+		$scope.sample.data=data;
+		$scope.getResultByDatastore(data);
+	}
+
+	$scope.showDatastrores=function(data){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false;
+		$scope.showGraphDiv = false;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=true;
+		$scope.gridOptionsDataStrore.data=[];
+		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetDatastoreByDatapode = function (response) {
+			$scope.isShowDatastore=true;
+			$scope.originalDataDatastore=response;
+			$scope.gridOptionsDataStrore.data=response;
+			console.log(response)
+		}
+	
+	}
+	
+	$scope.getResultByDatastore = function (data) {
+		$scope.isDataError = false;
+		$scope.isDataInpogress = true
+		$scope.tableclass = "centercontent";
+		$scope.showFrom = false;
+		$scope.showGraphDiv = false;
+		$scope.spinner = true;
+		$scope.isDatastoreResult=true;
+		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetResultByDatastore = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;
+			$scope.isEnableDSRB(data);
+		    $scope.gridOptions.columnDefs = [];
+			$scope.isDataInpogress = false;
+			$scope.tableclass = "";
+			$scope.spinner = false
+			$scope.pagination.pageSize=5;
+			var columnDefs=[];
+			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
+				var attribute = {};
+				attribute.name = $scope.datapoddata.attributes[j].name;
+				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
+				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				columnDefs.push(attribute)
+			}
+			setTimeout(function(){
+				$scope.gridOptions.columnDefs=columnDefs;
+			},10);
+			$scope.counter = 0;
+			$scope.originalData = response;
+			$scope.gridOptions.data=[];
+			
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
+			
+			$scope.spinner = false;
+
+		}
+
+		var onError = function (response) {
+			$scope.isDataError = true;
+			$scope.msgclass = "errorMsg"
+			$scope.datamessage = "Some Error Occurred";
+			$scope.isDataInpogress = true;
+			$scope.spinner = false;
+			$scope.isEnableDSRB(data);
+		}
+	}
+
+
+	$scope.refreshDataDatastore=function(){
+		$scope.gridOptionsDataStrore.data= $filter('filter')($scope.originalDataDatastore, $scope.searchtextDatastore, undefined);
+	}
+	
+	
+	$scope.isDisabledDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+			
+		}
+	}
+	$scope.isEnableDSRB=function(data){
+		for(var i=0;i<$scope.gridOptionsDataStrore.data.length;i++){
+			$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=false;
+			if(data !=null && (data.uuid == $scope.gridOptionsDataStrore.data[i].uuid)){
+				$scope.gridOptionsDataStrore.data[i].isSelectedDatastore=true;
+				 
+			}
+		}
+	}
+
+	$scope.onSelectDataStore=function(data,index){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isDisabledDSRB();
+		$scope.sample.data=null;
+		$scope.datastoreDetail=data
+		$scope.sample.data=data;
+		$scope.getResultByDatastore(data);
+	}
+
+	$scope.showDatastrores=function(data){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false;
+		$scope.showGraphDiv = false;
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.isDownloadDatapod=true;
+		$scope.gridOptionsDataStrore.data=[];
+		MetadataDatapodSerivce.getDatastoreByDatapod(data,"datapod").then(function (response) { onSuccessGetDatastoreByDatapode(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetDatastoreByDatapode = function (response) {
+			$scope.isShowDatastore=true;
+			$scope.originalDataDatastore=response;
+			$scope.gridOptionsDataStrore.data=response;
+			console.log(response)
+		}
+	
+	}
+	
+	$scope.getResultByDatastore = function (data) {
+		$scope.isDataError = false;
+		$scope.isDataInpogress = true
+		$scope.tableclass = "centercontent";
+		$scope.showFrom = false;
+		$scope.showGraphDiv = false;
+		$scope.spinner = true;
+		$scope.isDatastoreResult=true;
+		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetResultByDatastore = function (response) {
+			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;
+			$scope.isEnableDSRB(data);
+		    $scope.gridOptions.columnDefs = [];
+			$scope.isDataInpogress = false;
+			$scope.tableclass = "";
+			$scope.spinner = false
+			$scope.pagination.pageSize=5;
+			var columnDefs=[];
+			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
+				var attribute = {};
+				attribute.name = $scope.datapoddata.attributes[j].name;
+				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
+				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				columnDefs.push(attribute)
+			}
+			setTimeout(function(){
+				$scope.gridOptions.columnDefs=columnDefs;
+			},10);
+			$scope.counter = 0;
+			$scope.originalData = response;
+			$scope.gridOptions.data=[];
+			
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
+			
+			$scope.spinner = false;
+
+		}
+
+		var onError = function (response) {
+			$scope.isDataError = true;
+			$scope.msgclass = "errorMsg"
+			$scope.datamessage = "Some Error Occurred";
+			$scope.isDataInpogress = true;
+			$scope.spinner = false;
+			$scope.isEnableDSRB(data);
+		}
+	}
+
+/******************************************************************End DatastoreSample*********************************************/
+
+/******************************************************************Start CompareMeta*********************************************/
+	$scope.gridOptionsCompareMetaData={
+		enableGridMenu: true,
+		rowHeight: 40,
+		enableRowSelection: true,
+		enableSelectAll: true,
+		headerTemplate: 'views/header-template.html',
+		superColDefs: [{
+			name: 'sourceParant',
+			displayName:'Source'
+		}, {
+			name: 'targetParant',
+			displayName:'Datapod'
+		},
+		{
+			name: 'statusParant',
+			displayName:'Status'
+		}
+		],
+		columnDefs: [{
+			name: 'sourceAttribute',
+			displayName: 'Atrribute',
+			superCol: 'sourceParant'
+		}, {
+			name: 'sourceType',
+			displayName: 'Type',
+			superCol: 'sourceParant'
+		}, {
+			name: 'sourceLength',
+			displayName: 'Length',
+			superCol: 'sourceParant'
+
+		},
+		{
+			name: 'targetAttribute',
+			displayName: 'Atrribute',
+			superCol: 'targetParant'
+		}, {
+			name: 'targetType',
+			displayName: 'Type',
+			superCol: 'targetParant'
+		},
+		{
+			name: 'targetLength',
+			displayName: 'Length',
+			superCol: 'targetParant'
+
+		},
+		{
+			name: 'status',
+			displayName: '',
+			superCol: 'statusParant',
+			enableColumnMenu: false,
+			cellClass: 'text-center',
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
+		}],
+	};  
+
+
+	$scope.filteredRowsCompareMetaData = [];
+	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
+		$scope.gridApiCompareMetaData = gridApi;
+		$scope.filteredRowsCompareMetaData = $scope.gridApiCompareMetaData.core.getVisibleRows($scope.gridApiCompareMetaData.grid);
+	};
+
+	$scope.getGridStyleCompareMetaData = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
+			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 40 : 400) + 40) + 'px';
+		}
+		else {
+		
+			style['height'] = "100px";
+		}
+		return style;
+	}
+
+	$scope.refreshCompareMetaData = function (searchtext) {
+		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
+		
+	};
+
+	$scope.showCompareMetaData=function(data , isRefersh){
+		if($scope.isShowCompareMetaData && isRefersh==false){
+			return false
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.compareMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessCompareMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessCompareMetadata = function (response) {
+			$scope.gridOptions.columnDefs.data = [];
+			$scope.gridOptionsCompareMetaData.data=response;
+			var count=0;
+			for(var i=0;i<response.length;i++){
+				if(response[i].status == "NOCHANGE"){
+					count=count+1;
+				}
+			}
+			if(response.length == count){
+				$scope.isMetaSysn=true;
+			}else{
+				$scope.isMetaSysn=false;
+			}
+
+			$scope.originalCompareMetaData=response;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+			$scope.gridOptionsCompareMetaData.tableclass = "";
+		}
+
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
+
+	$scope.synchronousMetadata=function(data){
+		if($scope.isMetaSysn || $scope.selectSourceType=='file'){
+			return false
+		}
+		$scope.isShowCompareMetaData=true;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.gridOptionsCompareMetaData.isDataError=false;
+		$scope.gridOptionsCompareMetaData.isDataInpogress=true;
+		$scope.gridOptionsCompareMetaData.tableclass = "centercontent";
+		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
+		var onSuccessSynchronizeMetadata = function (response) {
+			$scope.datapoddata=response;
+			$scope.isShowCompareMetaData=false;
+			$scope.showCompareMetaData($scope.datapoddata)
+		}
+		var onError = function (response) {
+			$scope.gridOptionsCompareMetaData.isDataError=true;
+			$scope.gridOptionsCompareMetaData.isDataInpogress=false;
+		}
+	}
+/******************************************************************End CompareMeta*******************************************************/
+
 })/* End MetadataDatapodController*/
 
 

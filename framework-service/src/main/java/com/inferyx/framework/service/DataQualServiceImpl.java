@@ -61,6 +61,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.intelligence.DQIntelligenceOperator;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
@@ -84,6 +85,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	Engine engine;
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
+	@Autowired
+	private DQIntelligenceOperator dQIntelligenceOperator;
 	
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -260,8 +263,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
-												getTargetResultDp(), taskList, execParams, runMode);
+			MetaIdentifier dependsOnMI = dataqualExec.getDependsOn().getRef();
+			DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+			if(dataQual.getAutoFlag().equalsIgnoreCase("Y")) {
+				dQIntelligenceOperator.execute(dataqualExec, execParams, runMode);
+				dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataqualExec.getUuid(), dataqualExec.getVersion(), MetaType.dqExec.toString(), "N");
+			} else {
+				dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
+													getTargetResultDp(), taskList, execParams, runMode);
+			}
 			return dataqualExec;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -927,4 +937,75 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 		return baseEntities;
 	}
+	
+	public BaseRuleExec parseCustom(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			throws Exception {
+		logger.info("Inside dataQualServiceImpl.parse");
+		logger.info("OtherParams : " + otherParams);
+		if (datapodList != null) {
+			logger.info(" Size of datapodList : " + datapodList.size());
+		}
+
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.dqExec.toString(), "Y");
+		ExecParams execParams = dataQualExec.getExecParams();
+		if (execParams == null) {
+			execParams = new ExecParams();
+			dataQualExec.setExecParams(execParams);
+		}
+		/***************  Initializing paramValMap - START ****************/
+		Map<String, String> paramValMap = null;
+		if (execParams.getParamValMap() == null) {
+			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
+		}
+		if (!execParams.getParamValMap().containsKey(dataQualExec.getUuid())) {
+			execParams.getParamValMap().put(dataQualExec.getUuid(), new HashMap<String, String>());
+		}
+		paramValMap = execParams.getParamValMap().get(dataQualExec.getUuid());
+		/***************  Initializing paramValMap - END ****************/
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
+		}
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(
+				dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
+				MetaType.dq.toString(), "Y");
+		try {
+			dataQualExec.setExec(dqOperator.generateCustomSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+					otherParams, runMode, null, paramValMap));
+			
+			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			
+			logger.info(String.format("DQ Result sql for DQExec : %s is : %s", execUuid, dataQualExec.getExec()));
+			synchronized (dataQualExec.getUuid()) {
+//				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(
+						dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
+				dataQualExec1.setExec(dataQualExec.getExec());
+				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
+				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
+				dataQualExec1 = null;
+			}
+		} catch (Exception e) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.FAILED);
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "FAILED data quality parsing.", dependsOn);
+			throw new Exception((message != null) ? message : "FAILED data quality parsing.");
+		}
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.READY);
+		}
+		return dataQualExec;
+	}
+
 }

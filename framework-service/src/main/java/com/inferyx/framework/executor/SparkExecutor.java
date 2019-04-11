@@ -3986,8 +3986,6 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 
 		Dataset<Row> df = sparkSession.createDataFrame(rowList, new StructType(schema));
-		df.printSchema();
-		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setType(ResultType.dataframe);
 		rsHolder.setResultSet(null);
@@ -4025,5 +4023,30 @@ public class SparkExecutor<T> implements IExecutor {
 	        return DataTypes.BooleanType;
 	    default : return null;
 	    }
+	}
+
+	/**
+	 * @param string
+	 * @param tempTableName
+	 * @param appUuid
+	 * @return
+	 * @throws IOException 
+	 */
+	public ResultSetHolder executeAndRegisterByTempTable(String sql, String tempTableName, boolean registerTempTable, String appUuid) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		Dataset<Row> df = sparkSession.sql(sql);
+		
+		if(registerTempTable) {
+			registerTempTable(df, tempTableName);
+		}
+		df.show();
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setDataFrame(df);
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setCountRows(df.count());
+		rsHolder.setTableName(tempTableName);
+		return rsHolder;
 	}
 }

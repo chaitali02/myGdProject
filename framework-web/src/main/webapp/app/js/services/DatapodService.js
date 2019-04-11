@@ -112,16 +112,42 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 	factory.findAttrHistogram = function (uuid, version, type, attributeId) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "datapod/getAttrHistogram?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&attributeId="+attributeId,
+			url: url + "datapod/getAttrHistogram?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type + "&attributeId=" + attributeId,
 			method: "GET",
 		}).then(function (response) { return response })
 	}
-    
+	factory.findPrefix = function (type,datapodName) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "datapod/getPrefix?action=view&datapodName=" + datapodName +"&type=" + type,
+			method: "GET",
+			headers: {
+				'Accept': '*/*',
+				'content-Type': "application/json",
+			},
+		}).then(function (response) { return response })
+	}
+
 	return factory;
 });
 
 MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, MetadataDatapodFactory) {
 	
+	this.getPrefix = function (type,datapodName) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.findPrefix(type, datapodName).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	this.getAttrHistogram = function (uuid, version, type, attributeId) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.findAttrHistogram(uuid, version, type, attributeId).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -360,6 +386,7 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.length = response.attributes[i].length;
 				attribute.piiFlag = response.attributes[i].piiFlag;
 				attribute.cdeFlag = response.attributes[i].cdeFlag;
+				attribute.nullFlag = response.attributes[i].nullFlag;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -367,12 +394,12 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 					attribute.key = "N";
 				}
 				attribute.partition = response.attributes[i].partition;
-				if(response.attributes[i].domain !=null){
-					var selectDomain={};
-					selectDomain.uuid=response.attributes[i].domain.ref.uuid;
-					selectDomain.type=response.attributes[i].domain.ref.type;
-					selectDomain.name=response.attributes[i].domain.ref.name;
-					attribute.selectDomain=selectDomain;
+				if (response.attributes[i].domain != null) {
+					var selectDomain = {};
+					selectDomain.uuid = response.attributes[i].domain.ref.uuid;
+					selectDomain.type = response.attributes[i].domain.ref.type;
+					selectDomain.name = response.attributes[i].domain.ref.name;
+					attribute.selectDomain = selectDomain;
 				}
 				attributearray[i] = attribute
 			}
