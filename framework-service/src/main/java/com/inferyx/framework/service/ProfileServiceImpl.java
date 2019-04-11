@@ -869,7 +869,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 			throws JsonProcessingException {
 
 		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid)
-				.andOperator(new Criteria("dependsOn.ref.version").is(profileVersion)));
+				.andOperator(new Criteria("dependsOn.ref.version").is(profileVersion)
+						.andOperator(new Criteria("stausList.stage").in(Status.Stage.COMPLETED.toString()))));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		LimitOperation limitOperation = limit(1);
