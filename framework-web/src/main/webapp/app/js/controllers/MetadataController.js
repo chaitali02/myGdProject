@@ -1561,6 +1561,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		useExternalPagination: true,
 		exporterMenuPdf: false,
 	};
+	$scope.isAttrForDqSelected=false;
     $scope.selectedQualityAllRow=false;
 	$scope.gridOptionsDataQuality.columnDefs = [
 		{
@@ -1622,17 +1623,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		  source.selected = $scope.selectedQualityAllRow;
 		});
 		if($scope.selectedQualityAllRow){
-			$scope.isAttrForDqSelected=false
+			$scope.isAttrForDqSelected=true
 		}else{
-			$scope.isAttrForDqSelected=true;
+			$scope.isAttrForDqSelected=false;
 		}
 	}
 	$scope.onSelectQualityRow=function(){
 		if($scope.getSelectedRow().length > 0){
-			$scope.isAttrForDqSelected=false
+			$scope.isAttrForDqSelected=true
 		}
 		else{
-			$scope.isAttrForDqSelected=true;
+			$scope.isAttrForDqSelected=false;
 		}
 	}
 
@@ -1683,6 +1684,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 	}
 	$scope.attrForDqGenerated=function(){
+		debugger
+		if($scope.isAttrForDqSelected==false){
+          return false;
+		}
 		console.log($scope.getSelectedRow());
 		var attrDqlist=$scope.getSelectedRow();
 		var attrdqArray=[];
