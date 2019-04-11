@@ -14,9 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1062,16 +1060,19 @@ public class DataQualServiceImpl extends RuleTemplate {
 				
 				//******************* setting dq specific properties *******************//
 				MetaIdentifier ref = datapod.getRef(MetaType.datapod);
+				ref.setVersion(null);
 				dataQual.setDependsOn(new MetaIdentifierHolder(ref));
 				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
 				attrRefHolder.setRef(ref);
 				attrRefHolder.setAttrName(checkType.get("attributeName"));
 				attrRefHolder.setAttrId(""+datapod.getAttributeId(checkType.get("attributeName")));
 				dataQual.setAttribute(attrRefHolder);
+				dataQual = getCheckType(dataQual, checkType, datapod);
 				
 				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 	}
@@ -1085,16 +1086,18 @@ public class DataQualServiceImpl extends RuleTemplate {
 		case DOMAIN:
 			List<AttributeDomain> domainList = metadataServiceImpl.getDomainByName(checkTypeMap.get("checkValue"));
 			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
-			if (domainCheck != null) {
+			if (domainCheck == null) {
 				domainCheck = new ArrayList<>();
 			}
 
 			for (AttributeDomain attrDomain : domainList) {
-				domainCheck.add(new MetaIdentifierHolder(attrDomain.getRef(MetaType.domain)));
+				MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
+				domainCheckMI.setVersion(null);
+				domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
 			}
 
 			dataQual.setDomainCheck(domainCheck);
-
+			return dataQual;
 		default:
 			return dataQual;
 		}

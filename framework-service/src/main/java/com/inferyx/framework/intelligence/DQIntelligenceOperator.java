@@ -252,13 +252,15 @@ public class DQIntelligenceOperator {
 		
 		Dataset<Row> df = rsHolder.getDataFrame();
 		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
-		
+		df.printSchema();
 		for(Row row : rows) {
-			Map<String, String> rowMap = new LinkedHashMap<>();
-			rowMap.put("attributeName", row.get(2).toString());
-			rowMap.put("checkType", CheckType.DOMAIN.toString());
-			rowMap.put("checkValue", row.get(0).toString());
-			checkTypeList.add(rowMap);
+			if(row.getDouble(1) > 0.0) {
+				Map<String, String> rowMap = new LinkedHashMap<>();
+				rowMap.put("attributeName", row.get(2).toString());
+				rowMap.put("checkType", CheckType.DOMAIN.toString());
+				rowMap.put("checkValue", row.get(0).toString());
+				checkTypeList.add(rowMap);
+			}
 		}
 		
 		return checkTypeList;
