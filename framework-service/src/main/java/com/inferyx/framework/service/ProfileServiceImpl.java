@@ -858,9 +858,16 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public ProfileExec getLatestProfileExecByProfile(String profileUuid, String profileVersion, String type)
 			throws JsonProcessingException {
 
-		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid)
-				.andOperator(new Criteria("dependsOn.ref.version").is(profileVersion)
-						.andOperator(new Criteria("stausList.stage").in(Status.Stage.COMPLETED.toString()))));
+		/*MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid).andOperator(
+				new Criteria("dependsOn.ref.version").is(profileVersion),
+				new Criteria("stausList.stage").is(Status.Stage.COMPLETED.toString())));*/
+		
+		MatchOperation filter = match(new Criteria().andOperator(
+				Criteria.where("dependsOn.ref.uuid").is(profileUuid),
+				Criteria.where("dependsOn.ref.version").is(profileVersion),
+				Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString())
+
+		));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		LimitOperation limitOperation = limit(1);
@@ -914,7 +921,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 				profileExec.getRunMode());
 		profileExec = execute(profileExec.getUuid(), profileExec.getVersion(), profileExec, metaExecutor, null,
 				taskList, null, profileExec.getRunMode());
+		
 		while (!Helper.getLatestStatus(profileExec.getStatusList()).getStage().equals(Status.Stage.COMPLETED)) {
+			profileExec=(ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExec.getUuid(), profileExec.getVersion(),
+					MetaType.profileExec.toString(),"N");
 			continue;
 		}
 		return profileExec;
