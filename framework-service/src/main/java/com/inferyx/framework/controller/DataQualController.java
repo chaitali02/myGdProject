@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.intelligence.DQIntelligenceOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataQualExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupExecServiceImpl;
@@ -52,8 +53,6 @@ import com.inferyx.framework.service.TaskHolder;
 @RestController
 @RequestMapping(value = "/dataqual")
 public class DataQualController {
-
-	
 	@Autowired
 	DataQualServiceImpl dataQualServiceImpl;
 	@Autowired
@@ -66,6 +65,8 @@ public class DataQualController {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
+	@Autowired
+	private DQIntelligenceOperator dqIntelligenceOperator;
 	
 
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
@@ -77,19 +78,20 @@ public class DataQualController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		
-		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, execParams, null, null, null, runMode);
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualUUID, dataQualVersion, MetaType.dq.toString(), "N");
 		
-		List<FutureTask<TaskHolder>> taskList = null;
+		DataQualExec dataQualExec = null;
 		if(dataQual.getAutoFlag().equalsIgnoreCase("N")) {
+			dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, execParams, null, null, null, runMode);
 			dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
-			taskList = new ArrayList<FutureTask<TaskHolder>>();
-		} else {
-			dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
-		}
-		dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
-		if(taskList != null) {
+			List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+			dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
 			commonServiceImpl.completeTaskThread(taskList);
+		} else {
+			MetaIdentifier dqDependsOn = dataQual.getDependsOn().getRef();
+			dataQualExec = dataQualServiceImpl.createCustom(dqDependsOn.getUuid(), dqDependsOn.getVersion(), execParams, null, null, null, runMode);
+			dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), dataQual.getFilterInfo(), null, null, null, null, runMode);
+			dqIntelligenceOperator.genIntelligence(dataQualExec, null, runMode);
 		}
 		return dataQualExec;
 	}
@@ -273,5 +275,15 @@ public class DataQualController {
 		return dataQualServiceImpl.createDQRuleForDatapod(datapodUuid,datapodVersion, runMode);
 	}
 	
-	
+	@RequestMapping(value = "/genIntelligence")
+	public List<Map<String, String>> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
+			@RequestParam(value = "version", required = false) String datapodVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
+		RunMode runMode = Helper.getExecutionMode(mode);
+		DataQualExec dataQualExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode);
+		dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, null, runMode);
+		return dqIntelligenceOperator.genIntelligence(dataQualExec, null, runMode);
+	}
 }
