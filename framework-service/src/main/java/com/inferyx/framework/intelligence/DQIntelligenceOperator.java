@@ -22,13 +22,12 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.functions;
+import org.apache.spark.sql.expressions.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.AttributeDomain;
-import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -67,11 +66,9 @@ public class DQIntelligenceOperator {
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 
-	public List<Object> execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-
-		DataQualExec dqExec = (DataQualExec) baseExec;
+	public List<Map<String, String>> genIntelligence(DataQualExec dqExec, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			List<Object> recommendationList = new ArrayList<>();
+			List<Map<String, String>> recommendationList = new ArrayList<>();
 			try {
 				synchronized (dqExec.getUuid()) {
 					dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
@@ -84,10 +81,8 @@ public class DQIntelligenceOperator {
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			MetaIdentifier execDependsOnMI = dqExec.getDependsOn().getRef();
-			DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(execDependsOnMI.getUuid(), execDependsOnMI.getVersion(), execDependsOnMI.getType().toString(), "N");
+			Datapod sourceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execDependsOnMI.getUuid(), execDependsOnMI.getVersion(), execDependsOnMI.getType().toString(), "N");
 			
-			MetaIdentifier srcDependsOnMI = dataQual.getDependsOn().getRef();
-			Datapod sourceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(srcDependsOnMI.getUuid(), srcDependsOnMI.getVersion(), srcDependsOnMI.getType().toString(), "N");
 			Datasource sourceDS = commonServiceImpl.getDatasourceByObject(sourceDp);
 			
 			ExecContext execContext = commonServiceImpl.getExecContext(runMode);
@@ -113,8 +108,8 @@ public class DQIntelligenceOperator {
 
 			String defaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
 			defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
-			String filePath = String.format("%s/%s/%s/", dataQual.getUuid(), dataQual.getVersion(), dqExec.getVersion());
-			String tempTableName = String.format("%s_%s_%s", dataQual.getUuid().replaceAll("-", "_"), dataQual.getVersion(), dqExec.getVersion());
+			String filePath = String.format("%s/%s/%s/", sourceDp.getUuid(), sourceDp.getVersion(), dqExec.getVersion());
+			String tempTableName = String.format("%s_%s_%s", sourceDp.getUuid().replaceAll("-", "_"), sourceDp.getVersion(), dqExec.getVersion());
 			
 			String sampleFilePathUrl = defaultPath.concat(filePath).concat("sample");
 			ResultSetHolder sampleHolder = new ResultSetHolder();
@@ -123,6 +118,7 @@ public class DQIntelligenceOperator {
 			
 			String sampleTempTableName = String.format("%s_%s", tempTableName, "sample");
 			sampleHolder = save(sampleHolder, sampleFilePathUrl, sampleTempTableName, true);
+			sampleHolder.setCountRows(sampleHolder.getDataFrame().count());
 			
 			sampleHolder.setTableName(sampleTempTableName);
 			//check domain for recommendation
@@ -158,36 +154,30 @@ public class DQIntelligenceOperator {
 		}
 	}
 
-	public List<Object> domainCheck(ResultSetHolder rsHolder, String defaultPath, String filePath, String defaultTempTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+	public List<Map<String, String>> domainCheck(ResultSetHolder rsHolder, String defaultPath, String filePath, String defaultTempTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
 		String appUuid = commonServiceImpl.getApp().getUuid();
-		
-		List<Object> domainRecommendation = new ArrayList<>();
+
+		List<String> tempTableList = new ArrayList<>();
 		
 		String[] dfColumns = rsHolder.getDataFrame().columns();
 		List<AttributeDomain> attrDomainList = metadataServiceImpl.getDomainByApp(appUuid);
-				
+			
+		//***************** applying regex for each domain vs each column of sample *****************//
 		StringBuilder regextQuery = new StringBuilder();
 		for(AttributeDomain domain : attrDomainList) { 
 			regextQuery.append("SELECT ");
-//			regextQuery.append(i).append(" AS ").append("rowId").append(", ");
 			regextQuery.append("'").append(domain.getName()).append("'").append(" AS ").append("domain_name").append(", ");
 			
 			int i = 0;
 			for(String colName : dfColumns) {
 				String colCheck = colName.concat(" RLIKE (").concat("'").concat(domain.getRegEx()).concat("') ");
 				regextQuery.append(caseWrapper(colCheck, colName));
-//				regextQuery.append("CASE WHEN ");
-//				regextQuery.append(colName).append(" RLIKE (").append("'").append(domain.getRegEx()).append("'").append(")");
-//				regextQuery.append(" ").append(" THEN 'Y' ").append(" ELSE 'N' ").append(" END ");
-//				regextQuery.append(" AS ").append(colName);
 				if(i < dfColumns.length - 1) {
 					regextQuery.append(", ");
 				}
 				i++;
 			}
 			regextQuery.append(" FROM ").append(rsHolder.getTableName()).append(" ");
-//			domainMap.put(domain.getName(), sparkExecutor.executeAndRegisterByTempTable(regextQuery.toString(), null, false, appUuid));
-//			regextQuery.append(" GROUP BY domain_name ");
 			regextQuery.append(" UNION ALL ");
 		}
 		
@@ -195,45 +185,52 @@ public class DQIntelligenceOperator {
 		String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
 		ResultSetHolder domainUnion = sparkExecutor.executeAndRegisterByTempTable(sql, domainTempTableName, true, appUuid);
 		
-		Map<String, ResultSetHolder> scodeCountMap = new LinkedHashMap<>();
+		tempTableList.add(domainTempTableName);
+		
+		//***************** calculating score for each column formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
+		String colScoreTempTable = defaultTempTableName.concat("_").concat("_score");		
+		tempTableList.add(colScoreTempTable);
+		
+		StringBuilder scoreCountBuilder = new StringBuilder();
+		long sampleTotalRows = rsHolder.getCountRows();
 		for(AttributeDomain domain : attrDomainList) {
-			String totalRowsSql = "SELECT * FROM "+domainTempTableName+" WHERE domain_name = '"+domain.getName()+"'";
-			ResultSetHolder totalRowsCountHolder = sparkExecutor.executeAndRegisterByTempTable(totalRowsSql, domainTempTableName, false, appUuid);
-			long totalRows = totalRowsCountHolder.getCountRows();
-
-			if(totalRows > 0) {
-				String colScoreTempTable = defaultTempTableName.concat("_").concat(domain.getName()).concat("_score");
-				StringBuilder scoreCountBuilder = new StringBuilder();
-				for(String colName : dfColumns) {
-					scoreCountBuilder.append("SELECT domain_name, (COUNT(" + colName + ")/" + totalRows + ") AS score_count, '"
-									+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
-									+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column");
+			if(sampleTotalRows > 0) {
+				for(String colName : dfColumns) {					
+					scoreCountBuilder.append("SELECT domain_name, "
+							+ "COUNT(" + colName + ")/" + sampleTotalRows + " AS score_count, '"
+							+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
+							+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column");
+					
 					scoreCountBuilder.append(" UNION ALL ");
 				}
-				
-				String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
-				ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(scoreSql, colScoreTempTable, true, appUuid);
-				scodeCountMap.put(domain.getName(), scoreCountHolder);
-//				scoreCountHolder.getDataFrame().show(false);
 			}
 		}
 		
-		Map<String, ResultSetHolder> maxScoreHolderMap = new LinkedHashMap<>();
-		for(String key : scodeCountMap.keySet()) {
-			ResultSetHolder scoreCountHolder = scodeCountMap.get(key);
-			String maxScoreCount = "SELECT domain_name, MAX(score_count) AS max_score, score_column FROM "
-					+ scoreCountHolder.getTableName()+" GROUP BY domain_name, score_column";
-			scoreCountHolder.getDataFrame().sqlContext()
-					.sql("SELECT domain_name, MAX(score_count) AS max_score, score_column FROM "
-							+ scoreCountHolder.getTableName()+" GROUP BY domain_name, score_column")
-					.show(false);
-			ResultSetHolder maxScoreHolder = sparkExecutor.executeAndRegisterByTempTable(maxScoreCount, null, false, appUuid);
-			maxScoreHolder.getDataFrame().show(false);
-			maxScoreHolderMap.put(key, maxScoreHolder);
-		}
+		String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
+		ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(scoreSql, colScoreTempTable, true, appUuid);
+//		scoreCountHolder.getDataFrame().show(false);
 		
-		domainUnion.getDataFrame().show(Integer.parseInt(""+domainUnion.getCountRows()), false);
+		//***************** saving score *****************//
+		String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
+		save(scoreCountHolder, scoreFilePathUrl, null, false);
+		
+		List<Map<String, String>> domainRecommendation = getCheckTypeList(scoreCountHolder);
+		
+		//***************** finding max score of a columns *****************//
+		String maxScoreCountSql = "SELECT domain_name, score_count, score_column FROM "
+				+ colScoreTempTable+" WHERE score_count = (SELECT MAX(score_count) FROM "+colScoreTempTable+")";
+		sparkExecutor.executeAndRegisterByTempTable(maxScoreCountSql, null, false, appUuid);
+//		maxScoreHolder.getDataFrame().show(false);
+		
+//		domainUnion.getDataFrame().show(Integer.parseInt(""+domainUnion.getCountRows()), false);
+		
+		//***************** dropping temporary tables created *****************//
+		sparkExecutor.dropTempTable(tempTableList);
 		return domainRecommendation;
+	}
+	
+	public Dataset<Row> addRowNumberToDF(Dataset<Row> df){
+		return df.withColumn("rowNum", functions.row_number().over(Window.orderBy(df.columns()[df.columns().length-1])));
 	}
 	
 	private String caseWrapper(String check, String colName) {
@@ -242,9 +239,22 @@ public class DQIntelligenceOperator {
 		return caseBuilder.toString();
 	}
 	
-//	public double getScoreCount(ResultSetHolder scoreCountHolder) {
-//		
-//	}
+	public List<Map<String, String>> getCheckTypeList(ResultSetHolder rsHolder) {
+		List<Map<String, String>> checkTypeList = new ArrayList<>();
+		
+		Dataset<Row> df = rsHolder.getDataFrame();
+		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		
+		for(Row row : rows) {
+			Map<String, String> rowMap = new LinkedHashMap<>();
+			rowMap.put("attributeName", row.get(2).toString());
+			rowMap.put("checkType", "DOMAIN");
+			rowMap.put("checkValue", row.get(0).toString());
+			checkTypeList.add(rowMap);
+		}
+		
+		return checkTypeList;
+	}
 	
 	public ResultSetHolder save(ResultSetHolder rsHolder, String filePathUrl, String tempTableName, boolean registerTempTable) throws IOException {		
 		try {
