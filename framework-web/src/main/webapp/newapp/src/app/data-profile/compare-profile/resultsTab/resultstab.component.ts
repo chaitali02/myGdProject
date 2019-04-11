@@ -104,6 +104,7 @@ export class ResultsTabComponent {
       this.allNameDatapod = [];
       for (const i in response) {
         let ver = new DropDownIO();
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         ver.label = response[i].name;
         ver.value = { label: String, uuid: String, version: String };
         ver.value.label = response[i].name;
