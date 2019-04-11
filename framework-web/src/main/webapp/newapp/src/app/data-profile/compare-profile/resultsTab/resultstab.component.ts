@@ -8,6 +8,11 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { Http } from '@angular/http';
 import { AppConfig } from '../../../app.config';
 import { ProfileService } from '../../../metadata/services/profile.service';
+import { AttributeIO } from '../../../metadata/domainIO/domain.attributeIO';
+import { DropDownIO } from '../../../metadata/domainIO/domain.dropDownIO';
+import { CompareResult } from '../../../metadata/domain/domain.compareResult';
+import { MetaType } from '../../../metadata/enums/metaType';
+import { RoutesParam } from '../../../metadata/domain/domain.routeParams';
 
 @Component({
   selector: 'app-resultstab',
@@ -17,6 +22,7 @@ import { ProfileService } from '../../../metadata/services/profile.service';
 
 export class ResultsTabComponent {
 
+  metaType = MetaType;
   type: any;
   searchForm: any;
   allNameDatapod: any[];
@@ -46,13 +52,14 @@ export class ResultsTabComponent {
   selectedSource: any;
   selectedTarget: any;
 
-
+  caretdown = 'fa fa-caret-down';
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
     private _commonService: CommonService, private _profileService: ProfileService, private _metadataService: MetadataService, private datePipe: DatePipe) {
 
     this._activatedRoute.params.subscribe((params: Params) => {
-      this.type = (params['type']).toLowerCase();
+      let param = <RoutesParam>params;
+      this.type = (param.type).toLowerCase();
       this.getAllLatest(this.type);
       this.isSubmitDisable = true;
     });
@@ -92,16 +99,16 @@ export class ResultsTabComponent {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetAllLatest(response: any[], type: String): any {
+  onSuccessgetAllLatest(response: AttributeIO[], type: String): any {
     if (type == this.type) {
       this.allNameDatapod = [];
       for (const i in response) {
-        let ver = {};
-        ver["label"] = response[i]['name'];
-        ver["value"] = {};
-        ver["value"]["label"] = response[i]['name'];
-        ver["value"]["uuid"] = response[i]['uuid'];
-        ver["value"]["version"] = response[i]['version'];
+        let ver = new DropDownIO();
+        ver.label = response[i].name;
+        ver.value = { label: String, uuid: String, version: String };
+        ver.value.label = response[i].name;
+        ver.value.uuid = response[i].uuid;
+        ver.value.version = response[i].version;
         this.allNameDatapod[i] = ver;
       }
     }
@@ -121,7 +128,8 @@ export class ResultsTabComponent {
     let endDate;
     if (this.searchForm.startDate) {
       let startDateUtc = new Date(this.searchForm.startDate.getUTCFullYear(), this.searchForm.startDate.getUTCMonth(), this.searchForm.startDate.getUTCDate(), this.searchForm.startDate.getUTCHours(), this.searchForm.startDate.getUTCMinutes(), this.searchForm.startDate.getUTCSeconds())
-      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      // startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC"; 
     }
     else {
       startDate = '';
@@ -129,29 +137,30 @@ export class ResultsTabComponent {
 
     if (this.searchForm.endDate) {
       let endDateUtc = new Date(this.searchForm.endDate.getUTCFullYear(), this.searchForm.endDate.getUTCMonth(), this.searchForm.endDate.getUTCDate(), this.searchForm.endDate.getUTCHours(), this.searchForm.endDate.getUTCMinutes(), this.searchForm.endDate.getUTCSeconds())
-      endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      // endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC";
+      endDate = this.datePipe.transform(endDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC";
     }
     else {
       endDate = '';
     }
 
-    this._profileService.getProfileExecByDatapod(this.searchForm.selectedDatapodName.uuid, 'profileexec', startDate, endDate).subscribe(
+    this._profileService.getProfileExecByDatapod(this.searchForm.selectedDatapodName.uuid, this.metaType.PROFILEEXEC, startDate, endDate).subscribe(
       response => { this.onSuccessgetRuleExecByRule(response) },
       error => console.log("Error : " + error));
 
   }
 
-  onSuccessgetRuleExecByRule(response: any[]): any {
+  onSuccessgetRuleExecByRule(response: CompareResult[]): any {
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['createdOn'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['createdOn'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
+      let ver = new DropDownIO();
+      ver.label = response[i].createdOn;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response[i].createdOn;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
       this.allsource[i] = ver;
     }
     this.alltarget = [];
@@ -167,18 +176,18 @@ export class ResultsTabComponent {
 
     this.alltarget = [];
     for (const i in this.alltargetTemp) {
-      if (this.alltargetTemp[i]['uuid'] !== selectedSource.uuid) {
-        let ver = {};
-        ver["label"] = this.alltargetTemp[i]['createdOn'];
-        ver["value"] = {};
-        ver["value"]["label"] = this.alltargetTemp[i]['createdOn'];
-        ver["value"]["uuid"] = this.alltargetTemp[i]['uuid'];
-        ver["value"]["version"] = this.alltargetTemp[i]['version'];
+      if (this.alltargetTemp[i].uuid !== selectedSource.uuid) {
+        let ver = new DropDownIO();
+        ver.label = this.alltargetTemp[i].createdOn;
+        ver.value = { label: String, uuid: String, version: "" };
+        ver.value.label = this.alltargetTemp[i].createdOn;
+        ver.value.uuid = this.alltargetTemp[i].uuid;
+        ver.value.version = this.alltargetTemp[i].version;
         this.alltarget.push(ver);
       }
     }
 
-    this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "profileexec").subscribe(
+    this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, this.metaType.PROFILEEXEC).subscribe(
       response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
       error => console.log("Error :: " + error));
   }
@@ -188,7 +197,7 @@ export class ResultsTabComponent {
     this.isTargetTableShow = false;
     this.isTargetDataError = false;
 
-    this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "profileexec").subscribe(
+    this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, this.metaType.PROFILEEXEC).subscribe(
       response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
       error => console.log("Error :: " + error));
   }
@@ -254,18 +263,18 @@ export class ResultsTabComponent {
 
   onChangeDatapod(selectedDatapodName) {
     this.allNameAttribute = [];
-    this._metadataService.getAttributesByDatapod(selectedDatapodName.uuid, "datapod").subscribe(
+    this._metadataService.getAttributesByDatapod(selectedDatapodName.uuid, this.metaType.DATAPOD).subscribe(
       response => { this.onSuccessgetAttributesByDatapod(response) },
       error => console.log("Error :: " + error));
   }
   onSuccessgetAttributesByDatapod(response: any): any {
     this.allNameAttribute = [];
     for (let i = 0; i < response.length; i++) {
-      let ver = {};
-      ver["label"] = response[i].attrName;
-      ver["value"] = {};
-      ver["value"]["label"] = response[i].attrName;
-      ver["value"]["uuid"] = response[i].attrId;
+      let ver = new DropDownIO();
+      ver.label = response[i].attrName;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response[i].attrName;
+      ver.value.uuid = response[i].attrId;
       this.allNameAttribute[i] = ver;
     }
   }

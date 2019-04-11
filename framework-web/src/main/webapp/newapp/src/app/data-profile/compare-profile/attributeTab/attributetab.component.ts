@@ -1,3 +1,4 @@
+import { MetaType } from './../../../metadata/enums/metaType';
 import { MetadataService } from '../../../metadata/services/metadata.service';
 import { DataQualityService } from '../../../metadata/services/dataQuality.services';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
@@ -9,6 +10,11 @@ import { Http } from '@angular/http';
 import { AppConfig } from '../../../app.config';
 import { ProfileService } from '../../../metadata/services/profile.service';
 import { DatapodService } from '../../../metadata/services/datapod.service';
+import { RoutesParam } from '../../../metadata/domain/domain.routeParams';
+import { AttributeIO } from '../../../metadata/domainIO/domain.attributeIO';
+import { DropDownIO } from '../../../metadata/domainIO/domain.dropDownIO';
+import { HistogramIO } from '../../../metadata/domainIO/domain.histogramIO';
+import { DataxIO } from '../../../metadata/domainIO/domain.dataxIO';
 
 @Component({
   selector: 'app-attributetab',
@@ -18,6 +24,7 @@ import { DatapodService } from '../../../metadata/services/datapod.service';
 
 export class AttributeTabComponent {
 
+  metaType = MetaType;
   type: any;
   searchForm: any;
   allNameSourceDatapod: any[];
@@ -42,12 +49,14 @@ export class AttributeTabComponent {
   targetHistrogramError: boolean = false;
   showSourceGraph: boolean = false;
   showTargetGraph: boolean = false;
+  caretdown = 'fa fa-caret-down';
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
     private _commonService: CommonService, private _profileService: ProfileService, private _datapodService: DatapodService, private _metadataService: MetadataService, private datePipe: DatePipe) {
 
     this._activatedRoute.params.subscribe((params: Params) => {
-      this.type = (params['type']).toLowerCase();
+      let param = <RoutesParam>params;
+      this.type = (param.type).toLowerCase();
       this.getAllLatest(this.type);
     });
 
@@ -102,45 +111,45 @@ export class AttributeTabComponent {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetAllLatest(response: any[], type: String): any {
+  onSuccessgetAllLatest(response: AttributeIO[], type: String): any {
 
     this.allNameSourceDatapod = [];
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['name'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['name'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
+      let ver = new DropDownIO();
+      ver.label = response[i].name;
+      ver.value =  { label: String, uuid: String, version: String };
+      ver.value.label = response[i].name;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
       this.allNameSourceDatapod[i] = ver;
     };
 
     this.allNameTargetDatapod = [];
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['name'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['name'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
+      let ver = new DropDownIO();
+      ver.label = response[i].name;
+      ver.value = { label: String, uuid: String, version: String };
+      ver.value.label = response[i].name;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
       this.allNameTargetDatapod[i] = ver;
     }
   }
 
   onChangeSourceDatapod(selectedSourceDatapodAttribute) {
     this.allNameSourceDatapodAttribute = [];
-    this._metadataService.getAttributesByDatapod(selectedSourceDatapodAttribute.uuid, "datapod").subscribe(
+    this._metadataService.getAttributesByDatapod(selectedSourceDatapodAttribute.uuid, this.metaType.DATAPOD).subscribe(
       response => { this.onSuccessgetAttributesByDatapod(response) },
       error => console.log("Error :: " + error));
   }
   onSuccessgetAttributesByDatapod(response: any): any {
     this.allNameSourceDatapodAttribute = [];
     for (let i = 0; i < response.length; i++) {
-      let ver = {};
-      ver["label"] = response[i].attrName;
-      ver["value"] = {};
-      ver["value"]["label"] = response[i].attrName;
-      ver["value"]["id"] = response[i].attrId;
+      let ver = new DropDownIO();
+      ver.label = response[i].attrName;
+      ver.value = { label: "", id: "" };
+      ver.value.label = response[i].attrName;
+      ver.value.id = response[i].attrId;
       this.allNameSourceDatapodAttribute[i] = ver;
     }
   }
@@ -148,18 +157,18 @@ export class AttributeTabComponent {
   onChangeTargetDatapod(selectedTargetPeriod) {
     console.log("onChangeTargetDatapod call...");
     this.allNameTargetDatapodAttribute = [];
-    this._metadataService.getAttributesByDatapod(selectedTargetPeriod.uuid, "datapod").subscribe(
+    this._metadataService.getAttributesByDatapod(selectedTargetPeriod.uuid, this.metaType.DATAPOD).subscribe(
       response => { this.onSuccessgetAttributesByDatapod1(response) },
       error => console.log("Error :: " + error));
   }
   onSuccessgetAttributesByDatapod1(response: any): any {
     this.allNameTargetDatapodAttribute = [];
     for (let i = 0; i < response.length; i++) {
-      let ver = {};
-      ver["label"] = response[i].attrName;
-      ver["value"] = {};
-      ver["value"]["label"] = response[i].attrName;
-      ver["value"]["id"] = response[i].attrId;
+      let ver = new DropDownIO();
+      ver.label = response[i].attrName;
+      ver.value = { label: "", id: "" };
+      ver.value.label = response[i].attrName;
+      ver.value.id = response[i].attrId;
       this.allNameTargetDatapodAttribute[i] = ver;
     }
   }
@@ -176,7 +185,7 @@ export class AttributeTabComponent {
     let speriod = this.searchForm.selectedSourcePeriod.value;
     let sprofileAttr = this.searchForm.selectedSourceProfileAttribute.value;
 
-    this._profileService.getProfileResults('profileexec', suuid, sversion, sDatapodAttrId, speriod, sprofileAttr).subscribe(
+    this._profileService.getProfileResults(this.metaType.PROFILEEXEC, suuid, sversion, sDatapodAttrId, speriod, sprofileAttr).subscribe(
       response => { this.onSuccessgetProfileResults(response, 'source') },
       error => {
         this.sourceHistrogramError = true;
@@ -190,19 +199,16 @@ export class AttributeTabComponent {
     let tperiod = this.searchForm.selectedTargetPeriod.value;
     let tprofileAttr = this.searchForm.selectedTargetProfileAttribute.value;
 
-    this._profileService.getProfileResults('profileexec', tuuid, tversion, tDatapodAttrId, tperiod, tprofileAttr).subscribe(
+    this._profileService.getProfileResults(this.metaType.PROFILEEXEC, tuuid, tversion, tDatapodAttrId, tperiod, tprofileAttr).subscribe(
       response => { this.onSuccessgetProfileResults(response, 'target') },
       error => {
       this.targetHistrogramError = true;
       this.targetHistrogramSpinner = false;
       console.log("Error : " + error);
       });
-
-
   }
 
   onSuccessgetProfileResults(response: any[], sourceOrTarget): any {
-
     if (sourceOrTarget == 'source') {
       this.sdatacol = {};
       if (response.length >= 20) {
@@ -210,15 +216,15 @@ export class AttributeTabComponent {
       } else {
         this.sdatacol.datapoints = response;
       }
-      var dataColumn = {};
-      dataColumn["id"] = this.searchForm.selectedSourceProfileAttribute.value;
-      dataColumn["name"] = this.searchForm.selectedSourceProfileAttribute.value;
-      dataColumn["type"] = "bar"
-      dataColumn["color"] = "#D8A2DE";
+      var dataColumn = new HistogramIO();
+      dataColumn.id = this.searchForm.selectedSourceProfileAttribute.value;
+      dataColumn.name = this.searchForm.selectedSourceProfileAttribute.value;
+      dataColumn.type = "bar"
+      dataColumn.color = "#D8A2DE";
       this.sdatacol.datacolumns = [];
       this.sdatacol.datacolumns[0] = dataColumn;
-      var datax = {};
-      datax["id"] = "createdOn";
+      var datax = new DataxIO();
+      datax.id = "createdOn";
       this.sdatacol.datax = datax;
       this.sourceHistrogramSpinner = false;
     }
@@ -230,15 +236,15 @@ export class AttributeTabComponent {
       } else {
         this.tdatacol.datapoints = response;
       }
-      var dataColumn = {}
-      dataColumn["id"] = this.searchForm.selectedTargetProfileAttribute.value;
-      dataColumn["name"] = this.searchForm.selectedTargetProfileAttribute.value;
-      dataColumn["type"] = "bar"
-      dataColumn["color"] = "#D8A2DE";
+      var dataColumn = new HistogramIO();
+      dataColumn.id = this.searchForm.selectedTargetProfileAttribute.value;
+      dataColumn.name = this.searchForm.selectedTargetProfileAttribute.value;
+      dataColumn.type = "bar"
+      dataColumn.color = "#D8A2DE";
       this.tdatacol.datacolumns = [];
       this.tdatacol.datacolumns[0] = dataColumn;
-      var datax = {};
-      datax["id"] = "createdOn";
+      var datax = new DataxIO();
+      datax.id = "createdOn";
       this.tdatacol.datax = datax;      
       this.targetHistrogramSpinner = false;
     }

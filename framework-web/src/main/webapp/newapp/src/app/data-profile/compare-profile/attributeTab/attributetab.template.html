@@ -7,11 +7,11 @@
                     <div class="caption">
                         <i class="icon-magnifier"></i>Search Criteria</div>
                     <div class="tools">
-                        <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshSearchCriteria()"
+                        <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshSearchCriteria()"
                             data-original-title="" title="">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
-                        <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                        <a class="left-marginpage" href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
                     </div>
                 </div>
                 <!--End portlet-title -->
@@ -36,7 +36,8 @@
                                             <p-dropdown [options]="allNameSourceDatapod" [(ngModel)]="searchForm.selectedSourceDatapodName"
                                                 name="selectedSourceDatapodName" [style]="{'width':'100%','padding':'3px'}"
                                                 [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
-                                                (onChange)="onChangeSourceDatapod(searchForm.selectedSourceDatapodName)">
+                                                (onChange)="onChangeSourceDatapod(searchForm.selectedSourceDatapodName)"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -49,7 +50,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameSourceProfileAttribute" [(ngModel)]="searchForm.selectedSourceProfileAttribute.value"
                                                 name="selectedSourceProfileAttribute.value" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'">
+                                                [filter]="true" [disabled]="mode == 'false'" [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -64,7 +65,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameSourceDatapodAttribute" [(ngModel)]="searchForm.selectedSourceDatapodAttribute"
                                                 name="selectedSourceDatapodAttribute" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -77,7 +79,7 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameSourcePeriod" [(ngModel)]="searchForm.selectedSourcePeriod"
                                                 name="selectedSourcePeriod" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'">
+                                                [filter]="true" [disabled]="mode == 'false'" [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -101,7 +103,8 @@
                                             <p-dropdown [options]="allNameTargetDatapod" [(ngModel)]="searchForm.selectedTargetDatapodName"
                                                 name="selectedTargetDatapodName" [style]="{'width':'100%','padding':'3px'}"
                                                 [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
-                                                (onChange)="onChangeTargetDatapod(searchForm.selectedTargetDatapodName)">
+                                                (onChange)="onChangeTargetDatapod(searchForm.selectedTargetDatapodName)"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -114,7 +117,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameTargetProfileAttribute" [(ngModel)]="searchForm.selectedTargetProfileAttribute.value"
                                                 name="selectedTargetProfileAttribute.value" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -129,7 +133,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameTargetDatapodAttribute" [(ngModel)]="searchForm.selectedTargetDatapodAttribute"
                                                 name="selectedTargetDatapodAttribute" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -142,7 +147,8 @@
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <p-dropdown [options]="allNameTargetPeriod" [(ngModel)]="searchForm.selectedTargetPeriod.value"
                                                 name="selectedTargetPeriod.value" [style]="{'width':'100%','padding':'3px'}"
-                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-">
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                [dropdownIcon]="caretdown">
                                             </p-dropdown>
                                         </div>
                                     </div>
@@ -157,7 +163,7 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
                                             <input type="submit" class="btn btn-success" value="Search" name="submit"
-                                                [disabled]="isSubmitDisable" />
+                                                style="border-radius: 4px;" [disabled]="isSubmitDisable" />
                                         </div>
                                     </div>
                                 </div>
@@ -182,11 +188,11 @@
                         <i class=""></i>Trend Analysis
                     </div>
                     <div class="tools">
-                        <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshTrendAnalysis()"
+                        <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshTrendAnalysis()"
                             data-original-title="" title="">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
-                        <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                        <a class="left-marginpage" href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
                     </div>
                 </div>
 
@@ -196,11 +202,11 @@
                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-right: 3%; border-right: 1px solid #d4d4d4;">
                                 <div class="row">
                                     <div class="col-md-12" *ngIf="showSourceGraph">
-                                            <div class="spinner centercontent" *ngIf="sourceHistrogramSpinner">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </div>
+                                        <div class="spinner centercontent" *ngIf="sourceHistrogramSpinner">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </div>
                                         <div *ngIf="sdatacol!=null">
                                             <span style="font-size:20px;"><b>Source</b></span>
                                             <br><br>
@@ -210,7 +216,7 @@
                                         </div>
                                         <div class="centercontent" style="min-height: 370px;" *ngIf="sourceHistrogramError">
                                             <h3 style="font-size:14px;color:blue">No Data Found</h3>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
