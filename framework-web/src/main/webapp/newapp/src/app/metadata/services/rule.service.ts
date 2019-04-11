@@ -247,7 +247,7 @@ export class RuleService {
                 filterInfo.rhsType = response.filterInfo[k].operand[1].ref.type;
                 if (response.filterInfo[k].operand[1].ref.uuid == response.source.ref.uuid) {
                   if (filterInfo.rhsType == MetaTypeEnum.MetaType.DATAPOD || filterInfo.rhsType == MetaTypeEnum.MetaType.DATASET ||
-                    filterInfo.lhsType == MetaTypeEnum.MetaType.RELATION || filterInfo.lhsType == MetaTypeEnum.MetaType.RULE) {
+                    filterInfo.rhsType == MetaTypeEnum.MetaType.RELATION || filterInfo.rhsType == MetaTypeEnum.MetaType.RULE) {
 
                     // filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
                     filterInfo.rhsType = MetaTypeEnum.MetaType.DATAPOD;
@@ -282,7 +282,7 @@ export class RuleService {
                   let lhsAttri = new AttributeIO();
                   lhsAttri.uuid = response.filterInfo[k].operand[0].ref.uuid;
                   lhsAttri.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
-                  lhsAttri.attributeId = response.filterInfo[k].operand[0].attributeId.toString();;
+                  lhsAttri.attributeId = response.filterInfo[k].operand[0].attributeId.toString();
                   filterInfo.lhsAttribute = lhsAttri;
                   ruleIO.isAttributeExits = true;
                 }
@@ -325,8 +325,13 @@ export class RuleService {
                   rhsAttri1.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
                   rhsAttri1.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
                   filterInfo.rhsAttribute = rhsAttri1;
-
-                  ruleIO.isAttributeExits = true;
+                    debugger
+                  if (response.source.ref.type == MetaTypeEnum.MetaType.RELATION) {
+                    ruleIO.isRelationExists = true;
+                  }
+                  else {
+                    ruleIO.isAttributeExits = true;
+                  }
                 }
 
                 else if (filterInfo.rhsType == MetaTypeEnum.MetaType.FUNCTION) {

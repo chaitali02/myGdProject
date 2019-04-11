@@ -417,11 +417,11 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source).subscribe(
-      response => { this.OnSuccesgetAllAttributeBySource(response) },
+      response => { this.onSuccesgetAllAttributeBySource(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllAttributeBySource(response: AttributeIO[]) {
+  onSuccesgetAllAttributeBySource(response: AttributeIO[]) {
     this.allAttribute = [];
     let firstObj = new AttributeIO();
     firstObj.label = "-Select-"

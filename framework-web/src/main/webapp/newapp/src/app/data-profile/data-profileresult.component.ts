@@ -135,18 +135,18 @@ export class DataProfileresultComponent {
     }
   }
   public goBack() {
-    // this.isResultTable = false
-    // if (this.istableShow == true) {
+    this.isResultTable = false
+    if (this.istableShow == true) {
       this._location.back();
-    // }
-    // else {
-    //   if (this.d_JointjsGroupComponent.IsGraphShow == true) {
-    //     this._location.back();
-    //   }
-    //   else {
-    //     this.d_JointjsGroupComponent.IsGraphShow = true;
-    //   }
-    // }
+    }
+    else {
+      if (this.d_JointjsGroupComponent.IsGraphShow == true) {
+        this._location.back();
+      }
+      else {
+        this.d_JointjsGroupComponent.IsGraphShow = true;
+      }
+    }
   }
   opendownloadResult() {
     if (this.isHomeEnable == false) {
@@ -199,6 +199,7 @@ export class DataProfileresultComponent {
     if (graphFlag) {
       this.isHomeEnable = true;
       this.showKnowledgeGraph = true;
+      this.isResultTable = false;
       setTimeout(() => {
         this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
       }, 1000);
@@ -212,7 +213,7 @@ export class DataProfileresultComponent {
   }
 
   downloadShow(param: any) {
-    this.isResultTable = true;;
+    this.isResultTable = true;
     console.log(param)
     this.downloadUuid = param.uuid;
     this.downloadVersion = param.version;

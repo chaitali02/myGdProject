@@ -34,6 +34,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
 import { RuleIO } from '../metadata/domainIO/domain.ruleIO';
+import { RelationService } from '../data-preparation/relation/relation.service';
+import { typeWithParameters } from '@angular/compiler/src/render3/util';
 
 @Component({
   selector: 'app-business-rulesdetail',
@@ -127,7 +129,8 @@ export class BusinessRulesDetailComponent {
   caretdown = 'fa fa-caret-down';
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
-    private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper) {
+    private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper,
+    private _relationService : RelationService) {
 
     this.isHomeEnable = false;
     this.ruledata = {};
@@ -854,8 +857,15 @@ export class BusinessRulesDetailComponent {
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
           error => console.log("Error ::", error))
     }
+    if (response.isRelationExists == true) {
+      this._relationService.getAttributesByRelation(this.sourcedata.uuid, "relation")
+        .subscribe(response => { this.onSuccessgetAttributesByRelation(response) },
+          error => console.log("Error ::", error));
+
+    }
     if (response.isSimpleExits == true) {
     }
+
     if (response.isParamlistExits == true) {
       this._commonService.getParamByApp("", this.metaType.APPLICATION)
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
@@ -937,6 +947,33 @@ export class BusinessRulesDetailComponent {
       attributeObj.value.attributeId = response[i].attributeId;
       temp1[i] = attributeObj
       this.attributesArray = temp1;
+    }
+  }
+
+  onSuccessgetAttributesByRelation(response){debugger
+    this.attributesArray = []
+    let temp1 = [];
+    for (const n in response.allattributes) {
+      let attributeObj = new DropDownIO();
+      attributeObj.label = response.allattributes[n].dname;
+      attributeObj.value = { label: "", uuid: "", attributeId: "" };
+      attributeObj.value.uuid = response.allattributes[n].uuid;
+      attributeObj.value.label = response.allattributes[n].dname;
+      attributeObj.value.attributeId = response.allattributes[n].attributeId;
+      temp1[n] = attributeObj
+      this.attributesArray = temp1;
+
+      // let temp = []
+      //         for (const n in response.allattributes) {
+      //           let allname = {};
+      //           allname["label"] = response.allattributes[n]['dname'];
+      //           allname["value"] = response.allattributes[n]['uuid'];
+      //           allname["value"] = {};
+      //           allname["value"]["label"] = response.allattributes[n]['dname'];
+      //           allname["value"]["uuid"] = response.allattributes[n]['uuid'] + "_" + response.allattributes[n].attributeId;;
+      //           temp[n] = allname;
+      //           this.allAttribute.push(temp[n])
+      //         }
     }
   }
 
@@ -1318,7 +1355,12 @@ export class BusinessRulesDetailComponent {
           else if (this.ruledata.filterTableArray[i].rhsType == this.metaType.DATAPOD) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = this.source;
+            if (this.ruledata.filterTableArray[i].rhsType = this.metaType.RELATION) {
+              ref.type = this.metaType.DATAPOD;
+            }
+            else{
+              ref.type = this.source;
+            }
             ref.uuid = this.ruledata.filterTableArray[i].rhsAttribute.uuid;
             operatorObj.ref = ref;
             operatorObj.attributeId = this.ruledata.filterTableArray[i].rhsAttribute.attributeId;

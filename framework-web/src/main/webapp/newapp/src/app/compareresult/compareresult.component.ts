@@ -280,8 +280,7 @@ export class CompareResultComponent {
     let endDate;
     if (this.searchForm.startDate) {
       let startDateUtc = new Date(this.searchForm.startDate.getUTCFullYear(), this.searchForm.startDate.getUTCMonth(), this.searchForm.startDate.getUTCDate(), this.searchForm.startDate.getUTCHours(), this.searchForm.startDate.getUTCMinutes(), this.searchForm.startDate.getUTCSeconds())
-      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC";
-        
+      startDate = this.datePipe.transform(startDateUtc, "EEE MMM dd HH:mm:ss yyyy").toString() + " UTC";        
     }
     else {
       startDate = '';

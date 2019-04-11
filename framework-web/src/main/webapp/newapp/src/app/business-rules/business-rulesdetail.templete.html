@@ -516,10 +516,10 @@
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
-                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
+                                      {{data.rhsAttribute|json}}<p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="attributeId" required #rhsAttribute="ngModel" [dropdownIcon]="caretdown">
-                                      </p-dropdown>
+                                      </p-dropdown>{{attributesArray|json}}
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'dataset' && data.rhsAttribute != null">

@@ -17,6 +17,7 @@ export class RuleIO{
 	isFunctionExits:Boolean;
 	isParamlistExits:Boolean;
 	isDatasetExits:Boolean;
+	isRelationExists: Boolean;
 
 
 }
