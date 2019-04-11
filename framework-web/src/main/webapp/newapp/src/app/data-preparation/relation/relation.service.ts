@@ -81,7 +81,7 @@ export class RelationService {
     }
     return attributes;
   }
-  getAttributesByRelation(uuid, version, type): Observable<any> {
+  getAttributesByRelation(uuid, type): Observable<any> {
     let url = "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type
     return this._sharedService.getCall(url)
     .pipe(

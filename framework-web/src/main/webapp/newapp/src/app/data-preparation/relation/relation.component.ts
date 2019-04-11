@@ -223,7 +223,7 @@ export class RelationComponent implements OnInit {
     console.log(JSON.stringify(this.relationTableArray))
     this.getallLatest()
     //this.getRhsData();
-    this._RelationService.getAttributesByRelation(this.id, this.version, "relation").subscribe(
+    this._RelationService.getAttributesByRelation(this.id, "relation").subscribe(
       response => {
         let temp = []
         for (const n in response.allattributes) {
