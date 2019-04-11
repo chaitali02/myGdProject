@@ -82,5 +82,6 @@ public interface IProfileDao extends MongoRepository<Profile, String>{
 	public Profile save(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
-	public Profile save(String id);	
+	public Profile save(String id);
+	
 }

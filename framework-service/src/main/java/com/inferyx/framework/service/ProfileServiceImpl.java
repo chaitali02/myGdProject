@@ -13,6 +13,9 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -21,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -32,11 +36,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.lucene.analysis.miscellaneous.LimitTokenOffsetFilterFactory;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -51,6 +62,8 @@ import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
+import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
@@ -66,6 +79,7 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -813,6 +827,107 @@ public class ProfileServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+	}
+
+	public List<Map<String, Object>> getProfileResults(String datapodUuid, String datapodVersion, String type)
+			throws Exception {
+		List<Map<String, Object>> result = new ArrayList<>();
+
+		Profile profile = getProfileByDatapod(datapodUuid, MetaType.datapod.toString());
+
+		if (profile != null) {
+			ProfileExec profileExec = getLatestProfileExecByProfile(profile.getUuid(), profile.getVersion(),
+					MetaType.profile.toString());
+			if (profileExec != null) {
+				result = getResults(profileExec.getUuid(), profileExec.getVersion(), 1, 200, null, null, null,
+						profileExec.getRunMode());
+			}
+		}
+
+		return result;
+	}
+	
+	
+	public Profile getProfileByDatapod(String datapodUuid, String type) throws JsonProcessingException {
+
+		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(datapodUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitOperation = limit(1);
+		Aggregation userAggr = newAggregation(filter, groupByUuid, sortByVersion, limitOperation);
+		AggregationResults<Profile> userAggrResults = mongoTemplate.aggregate(userAggr,
+				MetaType.profile.toString().toLowerCase(), Profile.class);
+		Profile profile = (Profile) userAggrResults.getUniqueMappedResult();
+		if (profile != null) {
+			profile = (Profile) commonServiceImpl.getLatestByUuid(profile.getId(), MetaType.profile.toString(), "N");
+		}
+
+		return profile;
+	}
+
+	public ProfileExec getLatestProfileExecByProfile(String profileUuid, String profileVersion, String type)
+			throws JsonProcessingException {
+
+		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid)
+				.andOperator(new Criteria("dependsOn.ref.version").is(profileVersion)
+						.andOperator(new Criteria("stausList.stage").in(Status.Stage.COMPLETED.toString()))));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitOperation = limit(1);
+		Aggregation userAggr = newAggregation(filter, groupByUuid, sortByVersion, limitOperation);
+		AggregationResults<ProfileExec> userAggrResults = mongoTemplate.aggregate(userAggr,
+				MetaType.profileExec.toString().toLowerCase(), ProfileExec.class);
+		ProfileExec profileExec = (ProfileExec) userAggrResults.getUniqueMappedResult();
+		if (profileExec != null) {
+			profileExec = (ProfileExec) commonServiceImpl.getLatestByUuid(profileExec.getId(),
+					MetaType.profileExec.toString(), "N");
+		}
+
+		return profileExec;
+	}
+
+	public ProfileExec genrateProfile(String datapodUuid, String datapodVersion, String type) throws Exception {
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString());
+		Profile profile = getProfileByDatapod(datapodUuid, MetaType.datapod.toString());
+		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
+		List<AttributeRefHolder> attributeInfo = new ArrayList<>();
+		List<MetaIdentifierHolder> appinfo = new ArrayList<>();
+		appinfo.add(securityServiceImpl.getAppInfo());
+		ProfileExec profileExec = new ProfileExec();
+		if (profile == null) {
+			profile = new Profile();
+			profile.setBaseEntity();
+			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
+			MetaIdentifier metaIdentifier = new MetaIdentifier();
+			metaIdentifier.setUuid(datapodUuid);
+			metaIdentifier.setType(MetaType.datapod);
+			metaIdentifier.setVersion(datapodVersion);
+
+			MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
+			metaIdentifierHolder.setRef(metaIdentifier);
+			attributeRefHolder.setRef(metaIdentifier);
+			for (Attribute attr : datapod.getAttributes()) {
+				attributeRefHolder.setAttrId(attr.getAttributeId().toString());
+				attributeInfo.add(attr.getAttributeId(), attributeRefHolder);
+			}
+			profile.setAttributeInfo(attributeInfo);
+			profile.setDependsOn(metaIdentifierHolder);
+			profile.setName("profile_" + datapod.getName());
+			profile.setAppInfo(appinfo);
+			commonServiceImpl.save(MetaType.profile.toString(), profile);
+
+		}
+
+		profileExec = create(profile.getUuid(), profile.getVersion(), null, null, null, null, RunMode.ONLINE);
+		profileExec = (ProfileExec) parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, null,
+				profileExec.getRunMode());
+		profileExec = execute(profileExec.getUuid(), profileExec.getVersion(), profileExec, metaExecutor, null,
+				taskList, null, profileExec.getRunMode());
+		while (!Helper.getLatestStatus(profileExec.getStatusList()).getStage().equals(Status.Stage.COMPLETED)) {
+			continue;
+		}
+		return profileExec;
 	}
 
 }

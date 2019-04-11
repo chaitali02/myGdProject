@@ -222,4 +222,24 @@ public class ProfileController {
 		return profileServiceImpl.getProfileResults(datapodUuid, datapodVersion, attributeId, profileAttrType, numDays,
 				startDate, endDate);
 	}
+	
+	@RequestMapping(value = "/getProfileResults", method = RequestMethod.GET, params = { "datapodUuid", "datapodVersion" })
+	public List<Map<String, Object>> getResults(@RequestParam("datapodUuid") String datapodUuid,
+			@RequestParam(value = "datapodVersion", required = false) String datapodVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+//		RunMode runMode = Helper.getExecutionMode(mode);
+		return profileServiceImpl.getProfileResults(datapodUuid, datapodVersion,type);
+	}
+	
+	@RequestMapping(value = "/genrateProfile", method = RequestMethod.GET)
+	public ProfileExec genrateProfile(@RequestParam("datapodUuid") String datapodUuid,
+			@RequestParam(value = "datapodVersion", required = false) String datapodVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+//		RunMode runMode = Helper.getExecutionMode(mode);
+		return profileServiceImpl.genrateProfile(datapodUuid, datapodVersion,type);
+	}
 }

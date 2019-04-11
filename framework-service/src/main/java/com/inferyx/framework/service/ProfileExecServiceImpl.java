@@ -164,7 +164,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		}
 
 		List<ProfileExec> profileExecObjList = new ArrayList<>();
-		profileExecObjList = (List<ProfileExec>) mongoTemplate.find(query, ProfileExec.class);
+		profileExecObjList = (List<ProfileExec>) mongoTemplate. find(query, ProfileExec.class);
 		
 		return profileExecObjList;		
 	}
