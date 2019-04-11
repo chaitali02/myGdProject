@@ -38,15 +38,9 @@ public class ReconViewServiceImpl {
 	@Autowired
 	IReconDao iReconDao;
 	@Autowired
-	MapServiceImpl mapServiceImpl;
-	@Autowired
 	FilterServiceImpl filterServiceImpl;
 	@Autowired
-	ExpressionServiceImpl expressionServiceImpl;
-	@Autowired
 	ReconServiceImpl reconServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;    
     @Autowired
@@ -56,16 +50,17 @@ public class ReconViewServiceImpl {
 	static final Logger logger = Logger.getLogger(ReconViewServiceImpl.class);
 
 
-	public ReconView findLatestByUuid(String uuid) throws JsonProcessingException {
+	/*********************Unused****************************/
+	/*public ReconView findLatestByUuid(String uuid) throws JsonProcessingException {
 		ReconView reconView = new ReconView();	
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 		Rule rule;
 		if (appUuid != null) {
 			rule = iRuleDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 		} else {
 			rule = iRuleDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}*/
+		}
 		Recon recon = (Recon) commonServiceImpl.getLatestByUuid(uuid, MetaType.recon.toString());
 		Recon resolvedRule = reconServiceImpl.resolveName(recon);
 		reconView.setUuid(resolvedRule.getUuid());
@@ -81,7 +76,7 @@ public class ReconViewServiceImpl {
 		reconView.setSourceFunc(resolvedRule.getSourceFunc());
 	    reconView.setTargetFunc(resolvedRule.getTargetFunc());
 		
-		/*if(resolvedRule.getSourceFilter() != null) {
+		if(resolvedRule.getSourceFilter() != null) {
 		List<AttributeRefHolder> filterInfo = resolvedRule.getSourceFilter();
 		Filter resolvedFilter = null;
 		for (int i = 0; i < filterInfo.size(); i++) {
@@ -90,10 +85,10 @@ public class ReconViewServiceImpl {
 			
 		}
 		reconView.setSourcefilter(resolvedFilter);
-		}*/
+		}
 		
 		
-		/*if(resolvedRule.getTargetFilter() != null) {
+		if(resolvedRule.getTargetFilter() != null) {
 			List<AttributeRefHolder> filterInfo = resolvedRule.getTargetFilter();
 			Filter resolvedFilter = null;
 			for (int i = 0; i < filterInfo.size(); i++) {
@@ -102,10 +97,10 @@ public class ReconViewServiceImpl {
 				
 			}
 			reconView.setTargetfilter(resolvedFilter);
-			}*/
+			}
 		    
 		return reconView;
-	}
+	}*/
 
 	public ReconView findOneByUuidAndVersion(String uuid, String version) throws JsonProcessingException {		
 		ReconView reconView = new ReconView();
