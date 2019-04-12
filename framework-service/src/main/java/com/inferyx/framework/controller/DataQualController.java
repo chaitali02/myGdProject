@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.DQIntelligence;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
@@ -276,7 +277,7 @@ public class DataQualController {
 	}
 	
 	@RequestMapping(value = "/genIntelligence", method = RequestMethod.GET)
-	public List<Map<String, String>> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
+	public List<DQIntelligence> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
 			@RequestParam(value = "version", required = false) String datapodVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
@@ -290,7 +291,7 @@ public class DataQualController {
 	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)
 	public void generateDq(@RequestParam(value = "uuid") String datapodUuid,
 			@RequestParam(value = "version", required = false) String datapodVersion,
-			@RequestBody List<Map<String, String>> checkTypeList,
+			@RequestBody List<DQIntelligence> checkTypeList,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{

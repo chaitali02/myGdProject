@@ -1320,10 +1320,11 @@ public class DatapodServiceImpl {
 		// TODO Auto-generated method stub 
 		String prefixStr = null;
 		List<String> prefixList = Helper.genaretePrefix(datapodName, 5, 3);
-		Query query = new Query();
+		Query query = null;
 		List<Datapod> datapodObjectList = new ArrayList<>();
 
 		for (String prefix : prefixList) {
+			query = new Query();
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 			query.addCriteria(Criteria.where("prefix").is(prefix));
 			datapodObjectList = (List<Datapod>) mongoTemplate.find(query, Datapod.class);
