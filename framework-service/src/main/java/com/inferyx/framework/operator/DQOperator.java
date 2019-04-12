@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Expression;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -1648,13 +1649,13 @@ public class DQOperator implements IParsable {
 		return dataQualExec;
 	}
 
-	public String generateCustomSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
+	public String generateCustomSql(Datapod datapod, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag, 
-			Map<String, String> paramValMap) throws Exception {
-		return generateCustomSelect(dataQual)
-				.concat(generateCustomFrom(dataQual, dagExec, datapodList, otherParams, runMode))
+			Map<String, String> paramValMap, List<FilterInfo> filterInfo) throws Exception {
+		return generateCustomSelect(datapod)
+				.concat(generateCustomFrom(datapod, dagExec, datapodList, otherParams, runMode))
 				.concat(WHERE_1_1)
-				.concat(generateFilter(dataQual, usedRefKeySet, dataQualExec, runMode, paramValMap));
+				.concat(generateCustomFilter(datapod, usedRefKeySet, dataQualExec, runMode, paramValMap, filterInfo));
 	}
 
 	/**
@@ -1662,14 +1663,12 @@ public class DQOperator implements IParsable {
 	 * @return
 	 * @throws JsonProcessingException 
 	 */
-	private String generateCustomSelect(DataQual dataQual) throws JsonProcessingException {
-		MetaIdentifier sourceMI = dataQual.getDependsOn().getRef();
-		Datapod srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString(), "N");
+	private String generateCustomSelect(Datapod datapod) throws JsonProcessingException {
 		StringBuilder selectBuilder = new StringBuilder(SELECT);
 		int i = 0;
-		for(Attribute attribute : srcDP.getAttributes()) {
+		for(Attribute attribute : datapod.getAttributes()) {
 			selectBuilder.append(attribute.getName());
-			if(i < srcDP.getAttributes().size()-1) {
+			if(i < datapod.getAttributes().size()-1) {
 				selectBuilder.append(", ");
 			}
 			i++;
@@ -1683,12 +1682,32 @@ public class DQOperator implements IParsable {
 	 * @return
 	 * @throws Exception 
 	 */
-	private String generateCustomFrom(DataQual dataQual, DagExec dagExec, List<String> datapodList, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
-		MetaIdentifier sourceMI = dataQual.getDependsOn().getRef();
-		Datapod srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString(), "N");
-		
-		return FROM.concat(datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true)).concat("  ").concat(srcDP.getName());
+	private String generateCustomFrom(Datapod datapod, DagExec dagExec, List<String> datapodList, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		return FROM.concat(datapodServiceImpl.genTableNameByDatapod(datapod, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true)).concat("  ").concat(datapod.getName());
+	}
+	/**
+	 * @param dataQual
+	 * @param dataQual
+	 * @param dataQual
+	 * @param dataQual
+	 * 
+	 * @return
+	 * @throws Exception 
+	 */
+	public String generateCustomFilter(Datapod datapod, Set<MetaIdentifier> usedRefKeySet, DataQualExec dataQualExec,
+			RunMode runMode, Map<String, String> paramValMap, List<FilterInfo> filterInfo) throws Exception {
+		if (filterInfo == null || (filterInfo != null && filterInfo.isEmpty())) {
+			return "";
+		}
+		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion()));
+
+		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(datapod);
+		String filterStr = filterOperator2.generateSql(filterInfo, null, filterSource, null, usedRefKeySet,
+				dataQualExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
+
+		return filterStr; // filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false,
+							// false, null);
 	}
 
-	
 }

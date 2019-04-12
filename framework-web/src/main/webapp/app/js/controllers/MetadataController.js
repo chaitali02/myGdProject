@@ -1561,17 +1561,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		useExternalPagination: true,
 		exporterMenuPdf: false,
 	};
-
+	$scope.isAttrForDqSelected=false;
+    $scope.selectedQualityAllRow=false;
 	$scope.gridOptionsDataQuality.columnDefs = [
 		{
 			name: "selected",
 			maxWidth: 40,
 			visible: true,
-			headerCellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:9px;"><input  type="checkbox" style="width: 30px;height:16px;" ng-model="grid.appScope.selectedQualityAllRow" ng-change="grid.appScope.OnSelectQualityAllRow()"/></div>',
+			headerCellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:9px;"><input  type="checkbox" style="width: 30px;height:16px;" ng-model="grid.appScope.$parent.selectedQualityAllRow" ng-change="grid.appScope.OnSelectQualityAllRow()"/></div',
 			cellTemplate:'<div class="ui-grid-cell-contents"  style="padding-top:2px;padding-left:4px;"><input type="checkbox" style="width:20px;height:16px;" ng-model="row.entity.selected" ng-change="grid.appScope.onSelectQualityRow()"/></div>'
 		},
 		{
-			name: 'attrName',
+			name: 'attributeName',
 			width: '30%',
 			enableCellEdit: false,
 			visible: true,
@@ -1619,21 +1620,20 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	
 	$scope.OnSelectQualityAllRow = function() {
 		angular.forEach($scope.gridOptionsDataQuality.data, function(source) {
-		  if(source.status !="Registered")
 		  source.selected = $scope.selectedQualityAllRow;
 		});
 		if($scope.selectedQualityAllRow){
-			$scope.isAttrForDqSelected=false
+			$scope.isAttrForDqSelected=true
 		}else{
-			$scope.isAttrForDqSelected=true;
+			$scope.isAttrForDqSelected=false;
 		}
 	}
 	$scope.onSelectQualityRow=function(){
 		if($scope.getSelectedRow().length > 0){
-			$scope.isAttrForDqSelected=false
+			$scope.isAttrForDqSelected=true
 		}
 		else{
-			$scope.isAttrForDqSelected=true;
+			$scope.isAttrForDqSelected=false;
 		}
 	}
 
@@ -1662,7 +1662,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.showGraphDiv = false
 		$scope.isDatastoreResult=false;
 		$scope.isShowCompareMetaData=false;
-		//$scope.genIntelligence();
+		$scope.genIntelligence();
 	}/*End showQuality*/
 	
 	$scope.genIntelligence=function(){
@@ -1670,21 +1670,56 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isQualityDataError = false;
 		$scope.tableClassDQ = "centercontent";
 		$scope.dataErrorMsgDQ="";
-		MetadataDatapodSerivce.getProfileResults("profile", $scope.datapoddata.uuid, $scope.datapoddata.version)
+		MetadataDatapodSerivce.genIntelligence("dq", $scope.datapoddata.uuid, $scope.datapoddata.version)
 		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
 		var onSuccess = function (respone) {
 			$scope.isQualityInprogres=false;
+			$scope.tableClassDQ = "";
 			$scope.gridOptionsDataQuality.data=respone;
 		}
 		var onError=function(response){
 			$scope.isQualityDataError=true;
-			$scope.isQualityDataError=false;
+			$scope.isQualityInprogres=false;
 			$scope.dataErrorMsgDQ="Some error occurred";
 		}
 	}
 	$scope.attrForDqGenerated=function(){
+		debugger
+		if($scope.isAttrForDqSelected==false){
+          return false;
+		}
 		console.log($scope.getSelectedRow());
-		
+		var attrDqlist=$scope.getSelectedRow();
+		var attrdqArray=[];
+		if(attrDqlist && attrDqlist.length >0){
+			for (var i=0;i<attrDqlist.length;i++){
+				var attrDq={};
+				attrDq.attributeName=attrDqlist[i].attributeName;
+				attrDq.checkType=attrDqlist[i].checkType;
+				attrDq.checkValue=attrDqlist[i].checkValue;
+				attrdqArray[i]=attrDq;
+			}
+			$scope.generateDq(attrdqArray);
+		}
+	}
+	$scope.generateDq=function(data){
+		$scope.isQualityInprogres=true;
+		$scope.isQualityDataError = false;
+		$scope.tableClassDQ = "centercontent";
+		$scope.dataErrorMsgDQ="";
+		MetadataDatapodSerivce.generateDq("dq", $scope.datapoddata.uuid, $scope.datapoddata.version, data)
+		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+			$scope.isQualityInprogres=false;
+			$scope.tableClassDQ = "";
+			$scope.selectedQualityAllRow=false;
+			$scope.genIntelligence();
+		}
+		var onError=function(response){
+			$scope.isQualityDataError=true;
+			$scope.isQualityInprogres=false;
+			$scope.dataErrorMsgDQ="Some error occurred";
+		}
 	}
 
 

@@ -14,7 +14,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -36,8 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.lucene.analysis.miscellaneous.LimitTokenOffsetFilterFactory;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -56,15 +52,12 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
@@ -79,13 +72,10 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -868,9 +858,16 @@ public class ProfileServiceImpl extends RuleTemplate {
 	public ProfileExec getLatestProfileExecByProfile(String profileUuid, String profileVersion, String type)
 			throws JsonProcessingException {
 
-		MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid)
-				.andOperator(new Criteria("dependsOn.ref.version").is(profileVersion)
-						.andOperator(new Criteria("stausList.stage").in(Status.Stage.COMPLETED.toString()))));
+		/*MatchOperation filter = match(new Criteria("dependsOn.ref.uuid").is(profileUuid).andOperator(
+				new Criteria("dependsOn.ref.version").is(profileVersion),
+				new Criteria("stausList.stage").is(Status.Stage.COMPLETED.toString())));*/
+		
+		MatchOperation filter = match(new Criteria().andOperator(
+				Criteria.where("dependsOn.ref.uuid").is(profileUuid),
+				Criteria.where("dependsOn.ref.version").is(profileVersion),
+				Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString())
+
+		));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		LimitOperation limitOperation = limit(1);
@@ -898,16 +895,15 @@ public class ProfileServiceImpl extends RuleTemplate {
 		if (profile == null) {
 			profile = new Profile();
 			profile.setBaseEntity();
-			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
+			AttributeRefHolder attributeRefHolder = null;
 			MetaIdentifier metaIdentifier = new MetaIdentifier();
 			metaIdentifier.setUuid(datapodUuid);
 			metaIdentifier.setType(MetaType.datapod);
-			metaIdentifier.setVersion(datapodVersion);
-
 			MetaIdentifierHolder metaIdentifierHolder = new MetaIdentifierHolder();
 			metaIdentifierHolder.setRef(metaIdentifier);
-			attributeRefHolder.setRef(metaIdentifier);
 			for (Attribute attr : datapod.getAttributes()) {
+				attributeRefHolder = new AttributeRefHolder();
+				attributeRefHolder.setRef(metaIdentifier);
 				attributeRefHolder.setAttrId(attr.getAttributeId().toString());
 				attributeInfo.add(attr.getAttributeId(), attributeRefHolder);
 			}
@@ -924,7 +920,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 				profileExec.getRunMode());
 		profileExec = execute(profileExec.getUuid(), profileExec.getVersion(), profileExec, metaExecutor, null,
 				taskList, null, profileExec.getRunMode());
+		
 		while (!Helper.getLatestStatus(profileExec.getStatusList()).getStage().equals(Status.Stage.COMPLETED)) {
+			profileExec=(ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExec.getUuid(), profileExec.getVersion(),
+					MetaType.profileExec.toString(),"N");
 			continue;
 		}
 		return profileExec;

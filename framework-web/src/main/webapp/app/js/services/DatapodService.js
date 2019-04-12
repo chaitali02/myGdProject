@@ -144,8 +144,20 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 	factory.genIntelligence = function (type, uuid, version) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "dq/genIntelligence?action=view&datapodUuid=" + uuid + "&datapodVersion=" + version + "&type=" + type,
+			url: url + "dataqual/genIntelligence?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
 			method: "GET",
+		}).then(function (response) { return response })
+	}
+	factory.generateDq = function (type, uuid, version,data) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "dataqual/generateDq?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+			method: "POST",
+			data:JSON.stringify(data),
+			headers: {
+				'Accept': '*/*',
+				'content-Type': "application/json",
+			}
 		}).then(function (response) { return response })
 	}
     
@@ -154,6 +166,21 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 
 MetadataModule.service('MetadataDatapodSerivce',function ($q, sortFactory, MetadataDatapodFactory) {
 
+    this.generateDq = function (type, uuid, version, data) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.generateDq(type, uuid, version, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	this.genIntelligence = function (type, uuid, version) {
 		var deferred = $q.defer();
 		MetadataDatapodFactory.genIntelligence(type, uuid, version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

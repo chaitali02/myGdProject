@@ -31,12 +31,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
@@ -50,18 +52,19 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
+import com.inferyx.framework.enums.CheckType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.intelligence.DQIntelligenceOperator;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
@@ -85,8 +88,6 @@ public class DataQualServiceImpl extends RuleTemplate {
 	Engine engine;
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
-	@Autowired
-	private DQIntelligenceOperator dQIntelligenceOperator;
 	
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -263,15 +264,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			MetaIdentifier dependsOnMI = dataqualExec.getDependsOn().getRef();
-			DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			if(dataQual.getAutoFlag().equalsIgnoreCase("Y")) {
-				dQIntelligenceOperator.execute(dataqualExec, execParams, runMode);
-				dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataqualExec.getUuid(), dataqualExec.getVersion(), MetaType.dqExec.toString(), "N");
-			} else {
-				dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
+			dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
 													getTargetResultDp(), taskList, execParams, runMode);
-			}
 			return dataqualExec;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -938,7 +932,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return baseEntities;
 	}
 	
-	public BaseRuleExec parseCustom(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public BaseRuleExec parseCustom(String execUuid, String execVersion, List<FilterInfo> filterInfo, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
@@ -968,12 +962,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 				dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
-				MetaType.dq.toString(), "Y");
+				MetaType.datapod.toString(), "Y");
 		try {
-			dataQualExec.setExec(dqOperator.generateCustomSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-					otherParams, runMode, null, paramValMap));
+			dataQualExec.setExec(dqOperator.generateCustomSql(datapod, datapodList, dataQualExec, dagExec, usedRefKeySet,
+					otherParams, runMode, null, paramValMap, filterInfo));
 			
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
@@ -1007,5 +1001,105 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 		return dataQualExec;
 	}
+	
+	public DataQualExec createCustom(String datapodUuid, String datapodVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		try {
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
+			DataQualExec dataQualExec =  new DataQualExec();
+			dataQualExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion())));
+			dataQualExec.setBaseEntity();
+			dataQualExec.setRunMode(runMode);
+			dataQualExec.setName(datapod.getName());
+			dataQualExec.setAppInfo(datapod.getAppInfo());
+			dataQualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.PENDING);
+			dataQualExec.setExecParams(execParams);
+			commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec);
+			return dataQualExec;
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not create DQExec.", dependsOn);
+			throw new Exception((message != null) ? message : "Can not create DQExec.");
+		}
+	}
 
+	/**
+	 * @param datapodUuid
+	 * @param datapodVersion
+	 * @param checkTypeList
+	 * @param runMode
+	 * @throws JsonProcessingException 
+	 */
+	public void generateDq(String datapodUuid, String datapodVersion, List<Map<String, String>> checkTypeList,
+			RunMode runMode) throws JsonProcessingException {
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
+		for(Map<String, String> checkType : checkTypeList) {
+			try {
+				DataQual dataQual = new DataQual();
+				//******************* setting base entity *******************//
+				dataQual.setName("dq_"+datapod.getPrefix()+"_"+checkType.get("attributeName"));
+//				dataQual.setCreatedOn(new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").format(new Date()));
+//				dataQual.setCreatedBy(securityServiceImpl.getuserInfo());
+//				dataQual.setActive("Y");
+				dataQual.setLocked("N");
+				dataQual.setPublished("N");
+				dataQual.setPublicFlag("N");
+//				List<MetaIdentifierHolder> appInfo = new ArrayList<>();
+//				appInfo.add(securityServiceImpl.getAppInfo());
+//				dataQual.setAppInfo(appInfo);
+				dataQual.setBaseEntity();
+				
+				//******************* setting dq specific properties *******************//
+				MetaIdentifier ref = datapod.getRef(MetaType.datapod);
+				ref.setVersion(null);
+				dataQual.setDependsOn(new MetaIdentifierHolder(ref));
+				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+				attrRefHolder.setRef(ref);
+				attrRefHolder.setAttrName(checkType.get("attributeName"));
+				attrRefHolder.setAttrId(""+datapod.getAttributeId(checkType.get("attributeName")));
+				dataQual.setAttribute(attrRefHolder);
+				dataQual = getCheckType(dataQual, checkType, datapod);
+				
+				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public DataQual getCheckType(DataQual dataQual, Map<String, String> checkTypeMap, Datapod datapod)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+		CheckType checkType = Helper.getCheckType(checkTypeMap.get("checkType"));
+		switch (checkType) {
+		case DOMAIN:
+			List<AttributeDomain> domainList = metadataServiceImpl.getDomainByName(checkTypeMap.get("checkValue"));
+			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
+			if (domainCheck == null) {
+				domainCheck = new ArrayList<>();
+			}
+
+			for (AttributeDomain attrDomain : domainList) {
+				MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
+				domainCheckMI.setVersion(null);
+				domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
+			}
+
+			dataQual.setDomainCheck(domainCheck);
+			return dataQual;
+		default:
+			return dataQual;
+		}
+	}
 }

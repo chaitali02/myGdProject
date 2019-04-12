@@ -658,7 +658,7 @@
                   <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataQuality(searchtextDataQuality)"
                     ng-model="$parent.searchtextDataQuality">
                     <a class="btn btn-primary fa fa-tasks" tooltip-placement="left" uib-tooltip="Generate DQ"
-                    ng-disabled="isAttrForDqSelected" ng-class="isQualityInprogres? 'currentpage':'notcurrentpage'"
+                   ng-class="isAttrForDqSelected ==false? 'currentpage':'notcurrentpage'"
                     ng-click="attrForDqGenerated()" style="line-height:1;padding: 6px 5px;border: none;"></a>
                 </div>
               </div>

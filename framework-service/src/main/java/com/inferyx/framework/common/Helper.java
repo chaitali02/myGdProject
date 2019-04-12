@@ -61,6 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.*;
+import com.inferyx.framework.enums.CheckType;
 import com.inferyx.framework.enums.IngestionType;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
@@ -2101,5 +2102,16 @@ public class Helper {
 		charArray[i] = charArray[j];
 		charArray[j] = temp;
 		return String.valueOf(charArray);
+	}
+	
+	public static CheckType getCheckType(String checkType) {
+		switch (checkType.toLowerCase()) {
+		case "domain": return CheckType.DOMAIN;
+		case "null": return CheckType.NULL;
+		case "pass": return CheckType.PASS;
+		case "value": return CheckType.VALUE;
+
+		default: return null;
+		}
 	}
 }

@@ -2319,10 +2319,44 @@ public class MetadataServiceImpl {
 		query.fields().include("regEx");
 		
 		if(!StringUtils.isBlank(appUuid)) {
-			query.addCriteria(new Criteria("appInfo.ref.uuid").is(appUuid).andOperator(new Criteria("publicFlag").is("Y")));
+			query.addCriteria(where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),
+					where("publicFlag").is("Y")));
 		} else {
 			query.addCriteria(new Criteria("publicFlag").is("Y"));
 		}		
+		
+		return mongoTemplate.find(query, AttributeDomain.class, MetaType.domain.toString().toLowerCase());
+	}
+	
+	/**
+	 * @param appUuid
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public List<AttributeDomain> getDomainByName(String domainName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("regEx");
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		if(!StringUtils.isBlank(appUuid)) {
+			query.addCriteria(where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),
+					where("publicFlag").is("Y")));
+		} else {
+			query.addCriteria(new Criteria("publicFlag").is("Y"));
+		}		
+		
+		query.addCriteria(new Criteria("name").is(domainName));
 		
 		return mongoTemplate.find(query, AttributeDomain.class, MetaType.domain.toString().toLowerCase());
 	}
