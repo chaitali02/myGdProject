@@ -821,8 +821,8 @@ public class MetadataController {
 	public @ResponseBody Datapod getdqDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
-		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(),resultType);
+			@RequestParam(value = "resultType", required = false, defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(), resultType);
 	}
 
 	@RequestMapping(value = "/getRuleDatapod",method=RequestMethod.GET)

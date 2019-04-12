@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.DQIntelligence;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -1039,14 +1040,14 @@ public class DataQualServiceImpl extends RuleTemplate {
 	 * @param runMode
 	 * @throws JsonProcessingException 
 	 */
-	public void generateDq(String datapodUuid, String datapodVersion, List<Map<String, String>> checkTypeList,
+	public void generateDq(String datapodUuid, String datapodVersion, List<DQIntelligence> checkTypeList,
 			RunMode runMode) throws JsonProcessingException {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
-		for(Map<String, String> checkType : checkTypeList) {
+		for(DQIntelligence checkType : checkTypeList) {
 			try {
 				DataQual dataQual = new DataQual();
 				//******************* setting base entity *******************//
-				dataQual.setName("dq_"+datapod.getPrefix()+"_"+checkType.get("attributeName"));
+				dataQual.setName("dq_"+datapod.getPrefix()+"_"+checkType.getAttributeName().getAttrName());
 //				dataQual.setCreatedOn(new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").format(new Date()));
 //				dataQual.setCreatedBy(securityServiceImpl.getuserInfo());
 //				dataQual.setActive("Y");
@@ -1064,8 +1065,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 				dataQual.setDependsOn(new MetaIdentifierHolder(ref));
 				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
 				attrRefHolder.setRef(ref);
-				attrRefHolder.setAttrName(checkType.get("attributeName"));
-				attrRefHolder.setAttrId(""+datapod.getAttributeId(checkType.get("attributeName")));
+				attrRefHolder.setAttrName(checkType.getAttributeName().getAttrName());
+				attrRefHolder.setAttrId(""+datapod.getAttributeId(checkType.getAttributeName().getAttrName()));
 				dataQual.setAttribute(attrRefHolder);
 				dataQual = getCheckType(dataQual, checkType, datapod);
 				
@@ -1077,14 +1078,14 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public DataQual getCheckType(DataQual dataQual, Map<String, String> checkTypeMap, Datapod datapod)
+	public DataQual getCheckType(DataQual dataQual, DQIntelligence dqColCheck, Datapod datapod)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		CheckType checkType = Helper.getCheckType(checkTypeMap.get("checkType"));
-		switch (checkType) {
+		switch (dqColCheck.getCheckType()) {
 		case DOMAIN:
-			List<AttributeDomain> domainList = metadataServiceImpl.getDomainByName(checkTypeMap.get("checkValue"));
+			dqColCheck.getCheckValue();
+			List<AttributeDomain> domainList = metadataServiceImpl.getDomainByUuid(dqColCheck.getCheckValue().getRef().getUuid());
 			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
 			if (domainCheck == null) {
 				domainCheck = new ArrayList<>();

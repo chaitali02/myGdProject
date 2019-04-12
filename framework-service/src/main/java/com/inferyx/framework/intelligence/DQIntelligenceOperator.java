@@ -15,9 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
@@ -27,7 +25,11 @@ import org.apache.spark.sql.expressions.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
+import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.DQIntelligence;
+import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -67,9 +69,9 @@ public class DQIntelligenceOperator {
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 
-	public List<Map<String, String>> genIntelligence(DataQualExec dqExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public List<DQIntelligence> genIntelligence(DataQualExec dqExec, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			List<Map<String, String>> recommendationList = new ArrayList<>();
+			List<DQIntelligence> recommendationList = new ArrayList<>();
 			try {
 				synchronized (dqExec.getUuid()) {
 					dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
@@ -93,7 +95,7 @@ public class DQIntelligenceOperator {
 				rsHolder = sparkExecutor.convertResultsetToDataframe(rsHolder);
 			}
 			
-			rsHolder.getDataFrame().printSchema();
+			List<DataQual> latestDQList = metadataServiceImpl.getAllDQByDatapod(sourceDp.getUuid());
 			
 			String sampleSize = commonServiceImpl.getConfigValue("framework.dataqual.sample.rows");
 			
@@ -123,7 +125,7 @@ public class DQIntelligenceOperator {
 			
 			sampleHolder.setTableName(sampleTempTableName);
 			//check domain for recommendation
-			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName));
+			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList));
 			
 			synchronized (dqExec.getUuid()) {
 				dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
@@ -159,7 +161,10 @@ public class DQIntelligenceOperator {
 		}
 	}
 
-	public List<Map<String, String>> domainCheck(ResultSetHolder rsHolder, String defaultPath, String filePath, String defaultTempTableName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+	public List<DQIntelligence> domainCheck(ResultSetHolder rsHolder, String defaultPath, String filePath,
+			String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, IOException {
 		String appUuid = commonServiceImpl.getApp().getUuid();
 
 		List<String> tempTableList = new ArrayList<>();
@@ -173,6 +178,8 @@ public class DQIntelligenceOperator {
 			for(AttributeDomain domain : attrDomainList) { 
 				regextQuery.append("SELECT ");
 				regextQuery.append("'").append(domain.getName()).append("'").append(" AS ").append("domain_name").append(", ");
+				regextQuery.append("'").append(domain.getUuid()).append("'").append(" AS ").append("domain_uuid").append(", ");
+				regextQuery.append("'").append(datapod.getUuid()).append("'").append(" AS ").append("datapod_uuid").append(", ");
 				
 				int i = 0;
 				for(String colName : dfColumns) {
@@ -202,10 +209,10 @@ public class DQIntelligenceOperator {
 			for(AttributeDomain domain : attrDomainList) {
 				if(sampleTotalRows > 0) {
 					for(String colName : dfColumns) {					
-						scoreCountBuilder.append("SELECT domain_name, "
+						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, "
 								+ "COUNT(" + colName + ")/" + sampleTotalRows + " AS score_count, '"
 								+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
-								+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column");
+								+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column, domain_uuid, datapod_uuid");
 						
 						scoreCountBuilder.append(" UNION ALL ");
 					}
@@ -220,10 +227,10 @@ public class DQIntelligenceOperator {
 			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
 			save(scoreCountHolder, scoreFilePathUrl, null, false);
 			
-			List<Map<String, String>> domainRecommendation = getCheckTypeList(scoreCountHolder);
+			List<DQIntelligence> domainRecommendation = getCheckTypeList(scoreCountHolder, attrDomainList, datapod, latestDQList);
 			
 			//***************** finding max score of a columns *****************//
-			String maxScoreCountSql = "SELECT domain_name, score_count, score_column FROM "
+			String maxScoreCountSql = "SELECT domain_name, domain_uuid, datapod_uuid, score_count, score_column FROM "
 					+ colScoreTempTable+" WHERE score_count = (SELECT MAX(score_count) FROM "+colScoreTempTable+")";
 			sparkExecutor.executeAndRegisterByTempTable(maxScoreCountSql, null, false, appUuid);
 //			maxScoreHolder.getDataFrame().show(false);
@@ -247,19 +254,62 @@ public class DQIntelligenceOperator {
 		return caseBuilder.toString();
 	}
 	
-	public List<Map<String, String>> getCheckTypeList(ResultSetHolder rsHolder) {
-		List<Map<String, String>> checkTypeList = new ArrayList<>();
+	public List<DQIntelligence> getCheckTypeList(ResultSetHolder rsHolder, List<AttributeDomain> attrDomainList,
+			Datapod datapod, List<DataQual> latestDQList) {
+		List<DQIntelligence> checkTypeList = new ArrayList<>();
 		
 		Dataset<Row> df = rsHolder.getDataFrame();
 		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
-		df.printSchema();
+
 		for(Row row : rows) {
-			if(row.getDouble(1) > 0.0) {
-				Map<String, String> rowMap = new LinkedHashMap<>();
-				rowMap.put("attributeName", row.get(2).toString());
-				rowMap.put("checkType", CheckType.DOMAIN.toString());
-				rowMap.put("checkValue", row.get(0).toString());
-				checkTypeList.add(rowMap);
+			try {
+				if(row.getDouble(3) > 0.0) {
+					//********* 0: domain_name, 1: domain_uuid, 2: datapod_uuid, 3: score_count, 4: score_column *********//
+		
+					DQIntelligence dqIntelligence = new DQIntelligence();
+					
+					dqIntelligence.setCheckType(CheckType.DOMAIN);
+					
+					//******** setting attribute name ********//
+					for(Attribute attribute : datapod.getAttributes()) {
+						if(attribute.getName().equals(row.getString(4))) {
+							AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+							attrRefHolder.setRef(datapod.getRef(MetaType.datapod));
+							attrRefHolder.setAttrId(attribute.getAttributeId().toString());
+							attrRefHolder.setAttrName(attribute.getName());
+							dqIntelligence.setAttributeName(attrRefHolder);
+							
+							break;
+						}
+					}
+					
+					for(AttributeDomain attributeDomain : attrDomainList) {
+						if(attributeDomain.getUuid().equals(row.get(1).toString())) {
+							MetaIdentifier ref = attributeDomain.getRef(MetaType.domain);
+							ref.setName(attributeDomain.getName());
+							dqIntelligence.setCheckValue(new MetaIdentifierHolder(ref));
+							
+							break;
+						}
+					}
+					
+					if(latestDQList != null && !latestDQList.isEmpty()) {
+						for(DataQual dq : latestDQList) {
+							if(dq.getDependsOn().getRef().getUuid().equals(row.getString(2))) {
+								dqIntelligence.setCreated(true);
+							} else {
+								dqIntelligence.setCreated(false);
+							}
+						}
+					} else {
+						dqIntelligence.setCreated(false);
+					}
+				
+					checkTypeList.add(dqIntelligence);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 		
