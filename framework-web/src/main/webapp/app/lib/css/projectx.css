@@ -1417,8 +1417,12 @@ transition: right 1m
 .table-bordered.vartifanalysis>tbody>tr>td , .table-bordered.vartifanalysis>thead>tr>th{
   border-left:1px solid white !important;
   border-right:1px solid white !important;
-
 }
+.table-bordered.dqstats>tbody>tr>td , .table-bordered.dqstats>thead>tr>th{
+  border-left:1px solid white !important;
+  border-right:1px solid white !important;
+}
+
 .vartifanalysis .rz-bubble{
   bottom:8px !important;
 }

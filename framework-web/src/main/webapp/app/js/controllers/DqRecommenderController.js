@@ -413,7 +413,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			CellClass: 'text-center'
 		},
 		{
-			name: 'minthreshold',
+			name: 'sampleScore',
 			width: '20%',
 			enableCellEdit: false,
 			visible: true,
@@ -477,7 +477,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 						intelligenceResult.checkValueName=response.intelligenceResult[i].checkValue.ref.name;
 					}
 					intelligenceResult.checkValue=response.intelligenceResult[i].checkValue;
-					intelligenceResult.minthreshold=response.intelligenceResult[i].minthreshold;
+					intelligenceResult.sampleScore=response.intelligenceResult[i].sampleScore;
                     intelligenceResultArray[i]=intelligenceResult;
 				}
 				$scope.gridOptionsDataQuality.data=intelligenceResultArray;
@@ -547,7 +547,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 				attrDq.attributeName=attrDqlist[i].attributeName;
 				attrDq.checkType=attrDqlist[i].checkType;
 				attrDq.checkValue=attrDqlist[i].checkValue;
-				attrDq.minthreshold=attrDqlist[i].minthreshold;
+				attrDq.sampleScore=attrDqlist[i].sampleScore;
 				attrdqArray[i]=attrDq;
 			}
 			$scope.generateDq(attrdqArray);

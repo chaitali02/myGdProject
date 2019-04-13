@@ -647,25 +647,41 @@
           <div ng-if="isQualityDataError">
             <h3 style="font-size:14px;color:red">{{dataErrorMsgDQ}}</h3>
           </div>
-          <div ng-if="!isQualityInprogres && !isQualityDataError">
+          <div ng-if="!isQualityInprogres && !isQualityDataError &&  dqStatsCol.length ==0">
+              <h3 style="font-size:14px;color:blue">No data found</h3>
+            </div>
+          <div ng-if="!isQualityInprogres && !isQualityDataError && dqStatsCol.length >0">
             <div class="row">
               <div class="col-md-6"></div>
               <div class="col-md-6">
-                  <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectPeriod" select2 ng-options="r.name as r.caption for r in periods">
-                  </select>
+                <!-- <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Period</label>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectPeriod" select2 ng-options="r.name as r.caption for r in periods">
+                      </select>
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <div class="col-md-5 col-sm-5 col-xs-5"style="padding:0px;float: right;">
+                      <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" ng-model="$parent.selectPeriod" select2 ng-options="r as r.caption for r in periods"  ng-change="onChangePriode()">
+                      </select>
+                    </div>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3" style="margin-top:7px;float:right;margin-right:-4%;">Period</label>
+                  </div>
               </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col-md-12">
-                    <h4>DQ Stats</h4>
-                    <hr>
-                    <table class="table table-bordered" style="width:100%">
-                        <tr ng-repeat="data in dqStatsCol">
-                            <td style="width:40%">{{data}}</td>
-                            <td style="width:60%">
-                                <b>{{dqStatsData[data]}}</b>
-                            </td>
-                        </tr>
+                    <table class="table table-bordered dqstats" style="width:100%">
+                       <tbody>
+                          <tr ng-repeat="data in dqStatsCol">
+                              <td style="width:40%">{{data}}</td>
+                              <td style="width:60%">
+                                <b>{{dqStatsData[0][data]}}</b>
+                              </td>
+                          </tr>
+                      </tbody>
                     </table>
                 </div>
             </div>

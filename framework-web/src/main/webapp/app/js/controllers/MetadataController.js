@@ -1558,13 +1558,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	
 	$scope.periods=[
 		{ name:"all",caption:"All"},
-		{ name:"7",caption:" 1 Week" },
-		{ name:"30",caption:"1 Month"},
-		{ name:"90",caption:"3 Month"},
-		{ name:"365",caption:"1 Year"},
+		{ name:"7",caption:" Last 7 Days" },
+		{ name:"30",caption:"Last 30 Days"},
+		{ name:"90",caption:"Last 90 Days"},
+		{ name:"365",caption:"Last 365 Days"},
 		
 	]
-	$scope.selectPeriod=
+	$scope.selectPeriod=$scope.periods[0];
     /*$scope.gridOptionsDataQuality={
 		rowHeight: 40,
 		enableGridMenu: true,
@@ -1696,13 +1696,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 		$scope.dqStats();
 	}/*End showQuality*/
+	
+	$scope.onChangePriode=function(){
+		$scope.dqStats();
+	}
 
 	$scope.dqStats=function(){
 		$scope.isQualityInprogres=true;
 		$scope.isQualityDataError = false;
 		$scope.tableClassDQ = "centercontent";
 		$scope.dataErrorMsgDQ="";
-		MetadataDatapodSerivce.DqStats("dq", $scope.datapoddata.uuid, $scope.datapoddata.version,$scope.selectPeriod)
+		MetadataDatapodSerivce.DqStats("dq", $scope.datapoddata.uuid, $scope.datapoddata.version,$scope.selectPeriod.name)
 		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
 		var onSuccess = function (respone) {
 			$scope.isQualityInprogres=false;
