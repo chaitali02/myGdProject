@@ -73,6 +73,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Config;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DashboardExec;
@@ -290,8 +291,7 @@ public class MetadataServiceImpl {
 		List<BaseEntityStatus> baseEntityStatusList = new ArrayList<>();
 		
 		
-		for (Object metaObject: metaObjectList)
-		{
+		for (Object metaObject: metaObjectList) {
 			List<Status> execStatus = null;
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			//type.toLowerCase() == MetaType.dagexec.toString().toLowerCase()
@@ -475,6 +475,13 @@ public class MetadataServiceImpl {
 				execObject = (DashboardExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 				baseEntityStatus.setRunMode(execObject.getRunMode());
+
+			}
+			else if(type.equalsIgnoreCase(MetaType.dqrecExec.toString())){
+				DQRecExec dqRecExec = new DQRecExec();
+				dqRecExec = (DQRecExec) metaObject;
+				execStatus = (List<Status>) dqRecExec.getStatusList();	
+				baseEntityStatus.setRunMode(dqRecExec.getRunMode());
 
 			} 
 				
