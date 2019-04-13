@@ -515,7 +515,8 @@ public class DQRecOperator {
 			distinctBuilder.append("SELECT ");
 			distinctBuilder.append("'").append(datapod.getUuid()).append("' AS ").append("datapod_uuid").append(", ");
 			distinctBuilder.append("'").append(attribute.getName()).append("' AS ").append("dup_col").append(", ");
-			distinctBuilder.append("COUNT(DISTINCT(").append(attribute.getName()).append(") / ").append(totalRows).append(") * ").append("100").append(" AS score_col");
+			distinctBuilder.append("(COUNT(DISTINCT(").append(attribute.getName()).append(") ").append(") / ")
+					.append(totalRows).append(") * ").append("100").append(" AS score_col");
 			distinctBuilder.append(" FROM ").append(rsHolder.getTableName());
 			distinctBuilder.append(" UNION ALL ");
 		}
@@ -524,8 +525,9 @@ public class DQRecOperator {
 		outerSqlBuilder.append(" WHERE score_col >= ").append(minThreshold);
 		
 		ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
-		distinctValHolder.getDataFrame().show(false);
-		return getCheckTypeListForDupCheck(rsHolder, datapod, latestDQList);
+//		distinctValHolder.getDataFrame().show(false);
+	
+		return getCheckTypeListForDupCheck(distinctValHolder, datapod, latestDQList);
 	}
 	
 	public List<DQIntelligence> getCheckTypeListForDupCheck(ResultSetHolder rsHolder, Datapod datapod, List<DataQual> latestDQList) {
@@ -557,6 +559,7 @@ public class DQRecOperator {
 				checkTypeList.add(dqIntelligence);
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 		
