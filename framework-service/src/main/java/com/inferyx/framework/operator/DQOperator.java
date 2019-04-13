@@ -32,6 +32,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BlankSpaceCheckOptions;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -1649,13 +1650,13 @@ public class DQOperator implements IParsable {
 		return dataQualExec;
 	}
 
-	public String generateCustomSql(Datapod datapod, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
+	public String generateCustomSql(Datapod datapod, List<String> datapodList, DQRecExec dqRecExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag, 
 			Map<String, String> paramValMap, List<FilterInfo> filterInfo) throws Exception {
 		return generateCustomSelect(datapod)
 				.concat(generateCustomFrom(datapod, dagExec, datapodList, otherParams, runMode))
 				.concat(WHERE_1_1)
-				.concat(generateCustomFilter(datapod, usedRefKeySet, dataQualExec, runMode, paramValMap, filterInfo));
+				.concat(generateCustomFilter(datapod, usedRefKeySet, dqRecExec, runMode, paramValMap, filterInfo));
 	}
 
 	/**
@@ -1694,7 +1695,7 @@ public class DQOperator implements IParsable {
 	 * @return
 	 * @throws Exception 
 	 */
-	public String generateCustomFilter(Datapod datapod, Set<MetaIdentifier> usedRefKeySet, DataQualExec dataQualExec,
+	public String generateCustomFilter(Datapod datapod, Set<MetaIdentifier> usedRefKeySet, DQRecExec dqRecExec,
 			RunMode runMode, Map<String, String> paramValMap, List<FilterInfo> filterInfo) throws Exception {
 		if (filterInfo == null || (filterInfo != null && filterInfo.isEmpty())) {
 			return "";
@@ -1704,7 +1705,7 @@ public class DQOperator implements IParsable {
 
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(datapod);
 		String filterStr = filterOperator2.generateSql(filterInfo, null, filterSource, null, usedRefKeySet,
-				dataQualExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
+				dqRecExec.getExecParams(), false, false, runMode, mapSourceDS, paramValMap);
 
 		return filterStr; // filterOperator.generateSql(filterInfo, null, null, usedRefKeySet, false,
 							// false, null);

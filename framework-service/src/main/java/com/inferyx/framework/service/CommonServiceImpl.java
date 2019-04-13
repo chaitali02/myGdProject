@@ -92,6 +92,7 @@ import com.inferyx.framework.dao.IBatchDao;
 import com.inferyx.framework.dao.IBatchExecDao;
 import com.inferyx.framework.dao.ICommentDao;
 import com.inferyx.framework.dao.IConditionDao;
+import com.inferyx.framework.dao.IDQRecExecDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
 import com.inferyx.framework.dao.IDashboardDao;
@@ -533,7 +534,27 @@ public class CommonServiceImpl<T> {
 	EncryptionUtil encryptionUtil;
 	@Autowired
 	private ConnectionFactory connectionFactory;
-	
+	@Autowired
+	private IDQRecExecDao idqRecExecDao;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the idqRecExecDao
+	 */
+	public IDQRecExecDao getidqRecExecDao() {
+		return idqRecExecDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param idqRecExecDao the idqRecExecDao to set
+	 */
+	public void setidqRecExecDao(IDQRecExecDao idqRecExecDao) {
+		this.idqRecExecDao = idqRecExecDao;
+	}
+
 	public IngestServiceImpl getIngestServiceImpl() {
 		return ingestServiceImpl;
 	}
