@@ -1191,7 +1191,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public List<Map<String, Object>> getDataQualStat(String period) throws Exception {
+	public List<Map<String, Object>> getDqStats(String period) throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, String> paramValMap = new HashMap<String, String>();
