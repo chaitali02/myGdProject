@@ -389,7 +389,7 @@ public class DQRecOperator {
 		StringBuilder nullCheckBuilder = new StringBuilder("SELECT ");	
 		
 		for(Attribute attribute : datapod.getAttributes()) {
-			if(attribute.getNullFlag() != null && attribute.getNullFlag().equalsIgnoreCase("Y")) {
+			if(attribute.getNullFlag() != null && attribute.getNullFlag().equalsIgnoreCase("N")) {
 				String check = attribute.getName().concat(" IS NOT NULL ");
 				nullCheckBuilder.append(caseWrapper(check, attribute.getName()));
 				
@@ -424,7 +424,7 @@ public class DQRecOperator {
 					scoreBuilder.append(" '").append(col).append("' AS ").append("null_col").append(", ");
 					scoreBuilder.append("(COUNT(").append(col).append(") / "+sampleTotalRows+") * 100 AS ").append("score_count");
 					scoreBuilder.append(" FROM ").append(nullCheckTempTableName);
-					scoreBuilder.append(" WHERE ").append(col).append(" = 'N'").append(" GROUP BY datapod_uuid, null_col");
+					scoreBuilder.append(" WHERE ").append(col).append(" = 'Y'").append(" GROUP BY datapod_uuid, null_col");
 					
 					if(j < dfCols.length - 1) {
 						scoreBuilder.append(" UNION ALL ");
@@ -508,26 +508,36 @@ public class DQRecOperator {
 		String nullCheckTempTableName = defaultTempTableName.concat("_").concat("duplicate_check");		
 		tempTableList.add(nullCheckTempTableName);
 		
+		boolean anyPrimaryKey = false;
+		
 		StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
 		StringBuilder distinctBuilder = new StringBuilder();
 		long totalRows = rsHolder.getCountRows();
 		for(Attribute attribute : datapod.getAttributes()) {
-			distinctBuilder.append("SELECT ");
-			distinctBuilder.append("'").append(datapod.getUuid()).append("' AS ").append("datapod_uuid").append(", ");
-			distinctBuilder.append("'").append(attribute.getName()).append("' AS ").append("dup_col").append(", ");
-			distinctBuilder.append("(COUNT(DISTINCT(").append(attribute.getName()).append(") ").append(") / ")
-					.append(totalRows).append(") * ").append("100").append(" AS score_col");
-			distinctBuilder.append(" FROM ").append(rsHolder.getTableName());
-			distinctBuilder.append(" UNION ALL ");
+			if(!StringUtils.isBlank(attribute.getKey())) {
+				distinctBuilder.append("SELECT ");
+				distinctBuilder.append("'").append(datapod.getUuid()).append("' AS ").append("datapod_uuid").append(", ");
+				distinctBuilder.append("'").append(attribute.getName()).append("' AS ").append("dup_col").append(", ");
+				distinctBuilder.append("(COUNT(DISTINCT(").append(attribute.getName()).append(") ").append(") / ")
+						.append(totalRows).append(") * ").append("100").append(" AS score_col");
+				distinctBuilder.append(" FROM ").append(rsHolder.getTableName());
+				distinctBuilder.append(" UNION ALL ");
+				
+				anyPrimaryKey = true;
+			}
 		}
 		
-		outerSqlBuilder.append(distinctBuilder.substring(0, distinctBuilder.lastIndexOf(" UNION ALL "))).append(")");
-		outerSqlBuilder.append(" WHERE score_col >= ").append(minThreshold);
+		if(anyPrimaryKey) {
+			outerSqlBuilder.append(distinctBuilder.substring(0, distinctBuilder.lastIndexOf(" UNION ALL "))).append(")");
+			outerSqlBuilder.append(" WHERE score_col >= ").append(minThreshold);
+			
+			ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
+//			distinctValHolder.getDataFrame().show(false);
 		
-		ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
-//		distinctValHolder.getDataFrame().show(false);
-	
-		return getCheckTypeListForDupCheck(distinctValHolder, datapod, latestDQList);
+			return getCheckTypeListForDupCheck(distinctValHolder, datapod, latestDQList);
+		}
+		
+		return new ArrayList<>();
 	}
 	
 	public List<DQIntelligence> getCheckTypeListForDupCheck(ResultSetHolder rsHolder, Datapod datapod, List<DataQual> latestDQList) {
