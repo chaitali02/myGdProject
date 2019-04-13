@@ -1,0 +1,295 @@
+<style>
+    .tags {
+        height: 35px !important;
+        overflow-y: scroll !important;
+    }
+
+    .input-group-addon {
+        padding: 6px 6px !important;
+    }
+
+    .input-group-addon>i {
+        color: #666;
+    }
+</style>
+<div ng-controller="DqRecommenderSearchController">
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a ui-sref="home">Home</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>{{$state.current.data.pageTitle}}</span>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>Recommender</span>
+                    </li>
+                </ul>
+                <div class="page-toolbar">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                        data-placement="bottom" data-original-title="Change dashboard date range">
+
+                        <i class="icon-calendar"></i>&nbsp;
+                        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-magnifier"></i>Search Criteria
+                    </div>
+                    <div class="tools">
+                        <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()"
+                            data-original-title="" title="">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <form class="form-horizontal">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">Name</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched"
+                                                data-ng-model="searchForm.execname" ng-options="r for r in allExecName"
+                                                select2>
+                                                <option value="">-Select-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                        <div class="col-md-8 col-sm-9 col-xs-9">
+                                            <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown"
+                                                data-target="#" href="#">
+                                                <div class="input-group date">
+                                                    <span style="padding-right: 5px; text-align: right;" class="form-control"
+                                                        title="{{tz}}">{{searchForm.startdate | date :'EEE MMM dd
+                                                        HH:mm:ss yyyy'}} {{timezone}}</span>
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <datetimepicker data-ng-model="searchForm.startdate"
+                                                    data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
+                                                    data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <tags-input data-ng-model="searchForm.tags" min-length="0"></tags-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched"
+                                                data-ng-model="searchForm.username" ng-options="r.name as r.name for r in allUser"
+                                                select2>
+                                                <option value="">-Select-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5 col-sm-6 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
+                                        <div class="col-md-8 col-sm-9 col-xs-6">
+                                            <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown"
+                                                data-target="#" href="#">
+                                                <div class="input-group date">
+                                                    <span class="form-control" style="padding-right: 5px; text-align: right;"
+                                                        title="{{tz}}">{{searchForm.enddate | date :'EEE MMM dd
+                                                        HH:mm:ss yyyy'}} {{timezone}} </span>
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <datetimepicker data-ng-model="searchForm.enddate"
+                                                    data-datetimepicker-config="{ dropdownSelector: '#end_date', renderOn: 'start-date-changed' }"
+                                                    data-on-set-time="endDateOnSetTime()" data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"></datetimepicker>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div ng-show="showEndErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">End
+                                        date is lesser than start date.</div>
+                                    <div ng-show="showStartErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">Start
+                                        date is greater than end date.</div>
+                                </div>
+
+                                <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
+                                        <div class="col-md-9 col-sm-6 col-xs-12">
+                                            <select class="form-control" select2 data-ng-model="searchForm.status"
+                                                ng-options="r.name as r.caption for r in allStatus">
+                                                <option value="">All</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <input type="submit" class="btn btn-success" value="Search" name="submit"
+                                                ng-click="searchCriteria()">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12 custpadding"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Detail
+                    </div>
+                    <div class="tools tool-custom">
+                        <a title="Refresh" ng-click="refreshList()" data-toggle="tooltip" data-placement="top" tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a href="javascript:;" class="collapse" data-original-title="" style="height: 14px;" title="">
+                        </a>
+                    </div>
+                    <div class="actions" style="margin-right: 4px;">
+                        <a ng-click="generateDqRecEXec()" class="btn btn-default btn-sm">
+                            <i class="fa fa-plus"></i> Generate
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div id="datastoredatatable_filter" class="dataTables_filter">
+                                <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline"
+                                    type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange()" />
+                                <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
+                                <input style="width:55px !important;" min="5" max="99" type="number" class="form-control input-sm input-small input-inline"
+                                    ng-model="autoRefreshCounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()"
+                                    ng-model="searchtext" aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ng-style="getGridStyle()">
+                            <div class="nodatawatermark" ng-show="!gridOptions.data.length">No data available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade in" id="confModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+        <div class="modal-dialog">
+            <div class="modal-content rulemodel">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <!-- <h4 class="modal-title">Confirm</h4> -->
+                    <h4 class="modal-title" title="{{execDetail.name}}" style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{execDetail.name}}</h4>
+                </div>
+                <div class="modal-body">{{msg}}
+                    <span style="text-transform: capitalize">{{searchForm.modelType}}</span> ?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn green" ng-click="submitOk(msg)">Ok</button>
+                </div>
+            </div>
+            <!--/.modal-content -->
+        </div>
+        <!--/.modal-dialog -->
+    </div>
+
+    <div id="searchAttr" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+       
+            <div class="modal-dialog" style="width:35%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Generate</h4>
+                    </div>
+                    <form class="form-horizontal" novalidate="novalidate" name="myform5" ng-submit="genIntelligence()">
+                    <div class="modal-body">
+                        <div class="slimScrollDiv" style="padding-top:10px;">
+                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Datapod</label>
+                                    <div class="col-md-8">
+                                        <select select2 class="form-control" data-ng-model="selectedDatapod" ng-options="r as r.name for r in allDatapod track by r.uuid"
+                                            required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Sample % </label>
+                                    <div class="col-md-8">
+                                        <input type="number" min="1" class="form-control" ng-model="samplePercent" max="100"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        <button type="submit" class="btn green">Submit</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
