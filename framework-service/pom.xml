@@ -13,11 +13,7 @@
 			<artifactId>framework-livy</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-<<<<<<< HEAD
-	<!-- 	<dependency>
-=======
 		<!-- <dependency>
->>>>>>> 626e831f8730c9c0e6b6ab6187c2f1f4465e8bf1
 			<groupId>com.inferyx</groupId>
     		<artifactId>framework-ws-client</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
