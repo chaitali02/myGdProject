@@ -501,7 +501,7 @@ public class MetadataController {
 				List<BaseEntityStatus> baseEntityStatusList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, type, name, userName, startDate, endDate, tags, active,
 						status);
 				return systemServiceImpl.getBaseEntityLatestStatusList(baseEntityStatusList, Helper.getStatus(status));
-			}else
+			} else
 				return metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, type, name, userName, startDate, endDate, tags, active,
 						status);
 				

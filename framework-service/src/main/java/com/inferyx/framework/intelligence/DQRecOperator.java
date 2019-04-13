@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -29,8 +30,8 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DQIntelligence;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -56,9 +57,9 @@ import com.inferyx.framework.service.MetadataServiceImpl;
  *
  */
 @Component
-public class DQIntelligenceOperator {
+public class DQRecOperator {
 
-	static final Logger logger = Logger.getLogger(DQIntelligenceOperator.class);
+	static final Logger logger = Logger.getLogger(DQRecOperator.class);
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -69,12 +70,12 @@ public class DQIntelligenceOperator {
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 
-	public List<DQIntelligence> genIntelligence(DataQualExec dqExec, ExecParams execParams, RunMode runMode) throws Exception {
+	public List<DQIntelligence> genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode, String samplePercent) throws Exception {
 		try {
 			List<DQIntelligence> recommendationList = new ArrayList<>();
 			try {
-				synchronized (dqExec.getUuid()) {
-					dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
+				synchronized (dqRecExec.getUuid()) {
+					dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
 							Status.Stage.RUNNING);
 				}
 			} catch (Exception e1) {
@@ -83,52 +84,62 @@ public class DQIntelligenceOperator {
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			MetaIdentifier execDependsOnMI = dqExec.getDependsOn().getRef();
+			MetaIdentifier execDependsOnMI = dqRecExec.getDependsOn().getRef();
 			Datapod sourceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execDependsOnMI.getUuid(), execDependsOnMI.getVersion(), execDependsOnMI.getType().toString(), "N");
 			
 			Datasource sourceDS = commonServiceImpl.getDatasourceByObject(sourceDp);
 			
+			//***************** getting source data *****************//
 			ExecContext execContext = commonServiceImpl.getExecContext(runMode);
 			IExecutor exec = execFactory.getExecutor(execContext.toString());
-			ResultSetHolder rsHolder = exec.executeSqlByDatasource(dqExec.getExec(), sourceDS, appUuid);
+			ResultSetHolder rsHolder = exec.executeSqlByDatasource(dqRecExec.getExec(), sourceDS, appUuid);
 			if(rsHolder.getType().equals(ResultType.resultset)) {
 				rsHolder = sparkExecutor.convertResultsetToDataframe(rsHolder);
 			}
 			
 			List<DataQual> latestDQList = metadataServiceImpl.getAllDQByDatapod(sourceDp.getUuid());
 			
-			String sampleSize = commonServiceImpl.getConfigValue("framework.dataqual.sample.rows");
+			if(StringUtils.isBlank(samplePercent)) {
+				samplePercent = commonServiceImpl.getConfigValue("framework.dataqual.sample.percent");
+			} 
 			
+			//***************** gettting sample *****************//
 			Dataset<Row> sampleDf = null;
-			if(sampleSize.contains("%")) {
-				String samplePerc = sampleSize.substring(0, sampleSize.lastIndexOf("%"));
+			if(samplePercent.contains("%")) {
+				String samplePerc = samplePercent.substring(0, samplePercent.lastIndexOf("%"));
 				double sample = Double.parseDouble(samplePerc);
 				Dataset<Row>[] splits = rsHolder.getDataFrame().randomSplit(new double[] {sample/100, (100 - sample)/100}, 12345);
 				sampleDf = splits[0];
 			} else {
-				sampleDf = rsHolder.getDataFrame().limit(Integer.parseInt(sampleSize));
+				sampleDf = rsHolder.getDataFrame().limit(Integer.parseInt(samplePercent));
 			}
 
+			//***************** setting default properties *****************//
 			String defaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
 			defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
-			String filePath = String.format("%s/%s/%s/", sourceDp.getUuid(), sourceDp.getVersion(), dqExec.getVersion());
-			String tempTableName = String.format("%s_%s_%s", sourceDp.getUuid().replaceAll("-", "_"), sourceDp.getVersion(), dqExec.getVersion());
+			String filePath = String.format("%s/%s/%s/", sourceDp.getUuid(), sourceDp.getVersion(), dqRecExec.getVersion());
+			String tempTableName = String.format("%s_%s_%s", sourceDp.getUuid().replaceAll("-", "_"), sourceDp.getVersion(), dqRecExec.getVersion());
 			
 			String sampleFilePathUrl = defaultPath.concat(filePath).concat("sample");
 			ResultSetHolder sampleHolder = new ResultSetHolder();
 			sampleHolder.setDataFrame(sampleDf);
 			sampleHolder.setType(ResultType.dataframe);
-			
+
+			//***************** saving sample *****************//
 			String sampleTempTableName = String.format("%s_%s", tempTableName, "sample");
 			sampleHolder = save(sampleHolder, sampleFilePathUrl, sampleTempTableName, true);
 			sampleHolder.setCountRows(sampleHolder.getDataFrame().count());
 			
 			sampleHolder.setTableName(sampleTempTableName);
-			//check domain for recommendation
-			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList));
 			
-			synchronized (dqExec.getUuid()) {
-				dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
+			//***************** check domain for recommendation *****************//
+//			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList));
+
+			//***************** check domain for recommendation *****************//
+			recommendationList.addAll(nullCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList));
+			
+			synchronized (dqRecExec.getUuid()) {
+				dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
 						Status.Stage.COMPLETED);
 			}
 			
@@ -140,8 +151,8 @@ public class DQIntelligenceOperator {
 			e.printStackTrace();
 			// Set status to FAILED
 			try {
-				synchronized (dqExec.getUuid()) {
-					dqExec = (DataQualExec) commonServiceImpl.setMetaStatus(dqExec, MetaType.dqExec,
+				synchronized (dqRecExec.getUuid()) {
+					dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
 							Status.Stage.FAILED);
 				}
 			} catch (Exception e1) {
@@ -154,10 +165,10 @@ public class DQIntelligenceOperator {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dqExec.getUuid(), dqExec.getVersion()));
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getUuid(), dqRecExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Data Qual execution failed.", dependsOn);
-			throw new java.lang.Exception((message != null) ? message : "Data Qual execution failed.");
+					(message != null) ? message : "Data Qual recommendation failed ...", dependsOn);
+			throw new java.lang.Exception((message != null) ? message : "Data Qual recommendation failed ...");
 		}
 	}
 
@@ -227,7 +238,7 @@ public class DQIntelligenceOperator {
 			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
 			save(scoreCountHolder, scoreFilePathUrl, null, false);
 			
-			List<DQIntelligence> domainRecommendation = getCheckTypeList(scoreCountHolder, attrDomainList, datapod, latestDQList);
+			List<DQIntelligence> domainRecommendation = getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList);
 			
 			//***************** finding max score of a columns *****************//
 			String maxScoreCountSql = "SELECT domain_name, domain_uuid, datapod_uuid, score_count, score_column FROM "
@@ -254,7 +265,7 @@ public class DQIntelligenceOperator {
 		return caseBuilder.toString();
 	}
 	
-	public List<DQIntelligence> getCheckTypeList(ResultSetHolder rsHolder, List<AttributeDomain> attrDomainList,
+	public List<DQIntelligence> getCheckTypeListForDomain(ResultSetHolder rsHolder, List<AttributeDomain> attrDomainList,
 			Datapod datapod, List<DataQual> latestDQList) {
 		List<DQIntelligence> checkTypeList = new ArrayList<>();
 		
@@ -270,19 +281,21 @@ public class DQIntelligenceOperator {
 					
 					dqIntelligence.setCheckType(CheckType.DOMAIN);
 					
-					//******** setting attribute name ********//
-					for(Attribute attribute : datapod.getAttributes()) {
-						if(attribute.getName().equals(row.getString(4))) {
-							AttributeRefHolder attrRefHolder = new AttributeRefHolder();
-							attrRefHolder.setRef(datapod.getRef(MetaType.datapod));
-							attrRefHolder.setAttrId(attribute.getAttributeId().toString());
-							attrRefHolder.setAttrName(attribute.getName());
-							dqIntelligence.setAttributeName(attrRefHolder);
-							
-							break;
-						}
-					}
+					//********* setting attribute name *********//
+					dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(4)));
+//					for(Attribute attribute : datapod.getAttributes()) {
+//						if(attribute.getName().equals(row.getString(4))) {
+//							AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+//							attrRefHolder.setRef(datapod.getRef(MetaType.datapod));
+//							attrRefHolder.setAttrId(attribute.getAttributeId().toString());
+//							attrRefHolder.setAttrName(attribute.getName());
+//							dqIntelligence.setAttributeName(attrRefHolder);
+//							
+//							break;
+//						}
+//					}
 					
+					//********* setting check value  *********//
 					for(AttributeDomain attributeDomain : attrDomainList) {
 						if(attributeDomain.getUuid().equals(row.get(1).toString())) {
 							MetaIdentifier ref = attributeDomain.getRef(MetaType.domain);
@@ -293,17 +306,19 @@ public class DQIntelligenceOperator {
 						}
 					}
 					
-					if(latestDQList != null && !latestDQList.isEmpty()) {
-						for(DataQual dq : latestDQList) {
-							if(dq.getDependsOn().getRef().getUuid().equals(row.getString(2))) {
-								dqIntelligence.setCreated(true);
-							} else {
-								dqIntelligence.setCreated(false);
-							}
-						}
-					} else {
-						dqIntelligence.setCreated(false);
-					}
+					//********* setting dq creation check  *********//
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, row.getString(2)));
+//					if(latestDQList != null && !latestDQList.isEmpty()) {
+//						for(DataQual dq : latestDQList) {
+//							if(dq.getDependsOn().getRef().getUuid().equals(row.getString(2))) {
+//								dqIntelligence.setCreated(true);
+//							} else {
+//								dqIntelligence.setCreated(false);
+//							}
+//						}
+//					} else {
+//						dqIntelligence.setCreated(false);
+//					}
 				
 					checkTypeList.add(dqIntelligence);
 				}
@@ -316,6 +331,36 @@ public class DQIntelligenceOperator {
 		return checkTypeList;
 	}
 	
+	public AttributeRefHolder getAttributeName(Datapod datapod, String attrName) {
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(attribute.getName().equals(attrName)) {
+				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
+				attrRefHolder.setRef(datapod.getRef(MetaType.datapod));
+				attrRefHolder.setAttrId(attribute.getAttributeId().toString());
+				attrRefHolder.setAttrName(attribute.getName());				
+				return attrRefHolder;
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean getDQCreationCheck(List<DataQual> latestDQList, String datapodUuid) {
+		if(latestDQList != null && !latestDQList.isEmpty()) {
+			for(DataQual dq : latestDQList) {
+				if(dq.getDependsOn().getRef().getUuid().equals(datapodUuid)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		return false;
+	}
+	
 	public ResultSetHolder save(ResultSetHolder rsHolder, String filePathUrl, String tempTableName, boolean registerTempTable) throws IOException {		
 		try {
 			return sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.OVERWRITE.toString(), filePathUrl, tempTableName, "true", registerTempTable);
@@ -324,5 +369,116 @@ public class DQIntelligenceOperator {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * @param rsHolder
+	 * @param defaultPath
+	 * @param filePath
+	 * @param tempTableName
+	 * @param datapod
+	 * @param latestDQList
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	private List<DQIntelligence> nullCheck(ResultSetHolder rsHolder, String defaultPath,
+			String filePath, String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		
+		List<String> tempTableList = new ArrayList<>();
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		StringBuilder nullCheckBuilder = new StringBuilder("SELECT ");		
+		int i = 0;
+		for(Attribute attribute : datapod.getAttributes()) {
+			String check = attribute.getName().concat(" IS NOT NULL ");
+			nullCheckBuilder.append(caseWrapper(check, attribute.getName()));
+			
+			if(i < datapod.getAttributes().size() - 1) {
+				nullCheckBuilder.append(", ");
+			}
+			
+			i++;
+		}
+		
+		nullCheckBuilder.append(" FROM ").append(rsHolder.getTableName());
+		
+		String nullCheckTempTableName = defaultTempTableName.concat("_").concat("null_check");
+		
+		tempTableList.add(nullCheckTempTableName);
+		
+		ResultSetHolder nullCheckHolder = sparkExecutor.executeAndRegisterByTempTable(nullCheckBuilder.toString(), nullCheckTempTableName, true, appUuid);
+		nullCheckHolder.getDataFrame().show(false);
+		
+		if(nullCheckHolder.getCountRows() > 0) {
+			StringBuilder distinctBuilder = new StringBuilder();
+			String[] dfCols = nullCheckHolder.getDataFrame().columns();
+			
+			int j = 0;
+			for(String col : dfCols) {
+				distinctBuilder.append("SELECT ");
+				distinctBuilder.append(" '").append(col).append("' AS ").append("null_col");
+				distinctBuilder.append(" FROM ").append(nullCheckTempTableName).append(" WHERE ").append(col).append(" = 'N'");
+				
+				if(j < dfCols.length - 1) {
+					distinctBuilder.append(" UNION ALL ");
+				}
+				j++;
+			}
+			
+			ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(distinctBuilder.toString(), null, false, appUuid);
+			distinctValHolder.getDataFrame().show(false);
+			
+			return getCheckTypeListForNullCheck(distinctValHolder, datapod, latestDQList);
+		}
+		
+		//***************** dropping temporary tables created *****************//
+		sparkExecutor.dropTempTable(tempTableList);
+		
+		return new ArrayList<>();
+	}
+	
+	public List<DQIntelligence> getCheckTypeListForNullCheck(ResultSetHolder rsHolder, Datapod datapod, List<DataQual> latestDQList) {
+		List<DQIntelligence> checkTypeList = new ArrayList<>();
+		
+		Dataset<Row> df = rsHolder.getDataFrame();
+		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+
+		String[] dfCols = df.columns();
+		for (Row row : rows) {
+			for (int i = 0; i < dfCols.length; i++) {
+
+				try {
+					DQIntelligence dqIntelligence = new DQIntelligence();
+					dqIntelligence.setCheckType(CheckType.NULL);
+
+					//********* setting attribute name *********//
+					if (row.getString(i).equalsIgnoreCase("N")) {
+						dqIntelligence.setAttributeName(getAttributeName(datapod, dfCols[i]));
+					}
+					
+					//********* setting check value  *********//
+					MetaIdentifierHolder valueCheckHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null));
+					valueCheckHolder.setValue(CheckType.NULL.toString());
+					dqIntelligence.setCheckValue(valueCheckHolder);
+							
+					
+					//********* setting dq creation check  *********//
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, dfCols[i]));
+					
+					checkTypeList.add(dqIntelligence);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		
+		return checkTypeList;
 	}
 }

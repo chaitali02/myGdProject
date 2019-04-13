@@ -46,6 +46,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DQIntelligence;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -939,7 +940,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return baseEntities;
 	}
 	
-	public BaseRuleExec parseCustom(String execUuid, String execVersion, List<FilterInfo> filterInfo, Map<String, MetaIdentifier> refKeyMap,
+	public DQRecExec parseCustom(String execUuid, String execVersion, List<FilterInfo> filterInfo, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
@@ -949,47 +950,47 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.dqExec.toString(), "Y");
-		ExecParams execParams = dataQualExec.getExecParams();
+		DQRecExec dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.dqrecExec.toString(), "Y");
+		ExecParams execParams = dqRecExec.getExecParams();
 		if (execParams == null) {
 			execParams = new ExecParams();
-			dataQualExec.setExecParams(execParams);
+			dqRecExec.setExecParams(execParams);
 		}
 		/***************  Initializing paramValMap - START ****************/
 		Map<String, String> paramValMap = null;
 		if (execParams.getParamValMap() == null) {
 			execParams.setParamValMap(new HashMap<String, Map<String, String>>());
 		}
-		if (!execParams.getParamValMap().containsKey(dataQualExec.getUuid())) {
-			execParams.getParamValMap().put(dataQualExec.getUuid(), new HashMap<String, String>());
+		if (!execParams.getParamValMap().containsKey(dqRecExec.getUuid())) {
+			execParams.getParamValMap().put(dqRecExec.getUuid(), new HashMap<String, String>());
 		}
-		paramValMap = execParams.getParamValMap().get(dataQualExec.getUuid());
+		paramValMap = execParams.getParamValMap().get(dqRecExec.getUuid());
 		/***************  Initializing paramValMap - END ****************/
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
+			commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.STARTING);
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-				dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
+				dqRecExec.getDependsOn().getRef().getUuid(), dqRecExec.getDependsOn().getRef().getVersion(),
 				MetaType.datapod.toString(), "Y");
 		try {
-			dataQualExec.setExec(dqOperator.generateCustomSql(datapod, datapodList, dataQualExec, dagExec, usedRefKeySet,
+			dqRecExec.setExec(dqOperator.generateCustomSql(datapod, datapodList, dqRecExec, dagExec, usedRefKeySet,
 					otherParams, runMode, null, paramValMap, filterInfo));
 			
-			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			dqRecExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
-			logger.info(String.format("DQ Result sql for DQExec : %s is : %s", execUuid, dataQualExec.getExec()));
-			synchronized (dataQualExec.getUuid()) {
+			logger.info(String.format("DQ Result sql for DQExec : %s is : %s", execUuid, dqRecExec.getExec()));
+			synchronized (dqRecExec.getUuid()) {
 //				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(
-						dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
-				dataQualExec1.setExec(dataQualExec.getExec());
-				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
-				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
-				dataQualExec1 = null;
+				DQRecExec dqRecExec1 = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(
+						dqRecExec.getUuid(), dqRecExec.getVersion(), MetaType.dqrecExec.toString(), "N");
+				dqRecExec1.setExec(dqRecExec.getExec());
+				dqRecExec1.setRefKeyList(dqRecExec.getRefKeyList());
+				commonServiceImpl.save(MetaType.dqrecExec.toString(), dqRecExec1);
+				dqRecExec1 = null;
 			}
 		} catch (Exception e) {
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.FAILED);
+			commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -998,31 +999,31 @@ public class DataQualServiceImpl extends RuleTemplate {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getUuid(), dqRecExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "FAILED data quality parsing.", dependsOn);
-			throw new Exception((message != null) ? message : "FAILED data quality parsing.");
+					(message != null) ? message : "Recomendation creation failed ...", dependsOn);
+			throw new Exception((message != null) ? message : "Recomendation creation failed ...");
 		}
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.READY);
+			commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.READY);
 		}
-		return dataQualExec;
+		return dqRecExec;
 	}
 	
-	public DataQualExec createCustom(String datapodUuid, String datapodVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
+	public DQRecExec createCustom(String datapodUuid, String datapodVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap,
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		try {
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
-			DataQualExec dataQualExec =  new DataQualExec();
-			dataQualExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion())));
-			dataQualExec.setBaseEntity();
-			dataQualExec.setRunMode(runMode);
-			dataQualExec.setName(datapod.getName());
-			dataQualExec.setAppInfo(datapod.getAppInfo());
-			dataQualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.PENDING);
-			dataQualExec.setExecParams(execParams);
-			commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec);
-			return dataQualExec;
+			DQRecExec dqRecExec =  new DQRecExec();
+			dqRecExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion())));
+			dqRecExec.setBaseEntity();
+			dqRecExec.setRunMode(runMode);
+			dqRecExec.setName(datapod.getName());
+			dqRecExec.setAppInfo(datapod.getAppInfo());
+			dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.PENDING);
+			dqRecExec.setExecParams(execParams);
+			commonServiceImpl.save(MetaType.dqrecExec.toString(), dqRecExec);
+			return dqRecExec;
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -1034,8 +1035,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Can not create DQExec.", dependsOn);
-			throw new Exception((message != null) ? message : "Can not create DQExec.");
+					(message != null) ? message : "Can not create DQRecExec.", dependsOn);
+			throw new Exception((message != null) ? message : "Can not create DQRecExec.");
 		}
 	}
 
