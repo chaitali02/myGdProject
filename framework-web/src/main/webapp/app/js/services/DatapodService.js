@@ -160,11 +160,35 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 			}
 		}).then(function (response) { return response })
 	}
+	factory.DqStats = function (type, uuid, version,period) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "dataqual/DqStats?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&period="+period,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
     
 	return factory;
 });
 
 MetadataModule.service('MetadataDatapodSerivce',function ($q, sortFactory, MetadataDatapodFactory) {
+
+	this.DqStats = function (type, uuid, version, period) {
+		var deferred = $q.defer();
+		MetadataDatapodFactory.DqStats(type, uuid, version, period).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 
     this.generateDq = function (type, uuid, version, data) {
 		var deferred = $q.defer();

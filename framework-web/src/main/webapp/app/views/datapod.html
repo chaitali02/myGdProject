@@ -647,8 +647,31 @@
           <div ng-if="isQualityDataError">
             <h3 style="font-size:14px;color:red">{{dataErrorMsgDQ}}</h3>
           </div>
-
           <div ng-if="!isQualityInprogres && !isQualityDataError">
+            <div class="row">
+              <div class="col-md-6"></div>
+              <div class="col-md-6">
+                  <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectPeriod" select2 ng-options="r.name as r.caption for r in periods">
+                  </select>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>DQ Stats</h4>
+                    <hr>
+                    <table class="table table-bordered" style="width:100%">
+                        <tr ng-repeat="data in dqStatsCol">
+                            <td style="width:40%">{{data}}</td>
+                            <td style="width:60%">
+                                <b>{{dqStatsData[data]}}</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+          </div>
+
+          <!-- <div ng-if="!isQualityInprogres && !isQualityDataError">
             <div class="row">
               <div class="col-md-6 col-sm-6">
                 <div class="dataTables_length" id="sample_1_length">
@@ -669,7 +692,7 @@
               ng-style="getGridStyleDataQuality()">
               <div class="nodatawatermark_results" style="top:50%;" ng-show="!gridOptionsDataQuality.data.length">No data available</div>
             </div>
-          </div>
+          </div> -->
         </div>
       <!--*****************************************End DataQuality****************************************************************************-->
       

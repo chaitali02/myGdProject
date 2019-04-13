@@ -464,7 +464,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
             { "name": "paramlistdq", "type": "paramlistdq", "typeCount": "paramlistdq", "uuid": "null", "caption": "Parameter List" },
             { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" },
             // { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
+            { "name": "DqRecommenderlist", "type": "dqrecexec", "uuid": "null", "caption": "Recommender" },
 
+            
         ]
     }
 
@@ -2110,7 +2112,43 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        .state('DqRecommenderlist', {
+            url: "/RecommenderLsit",
+            templateUrl: "views/dq-recommender-search.html",
+            data: { pageTitle: 'Data Quality' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/DqRecommenderController.js',
+                            'js/services/RecommenderService.js'
 
+                        ]
+                    }]);
+                }]
+            }
+        })
+        .state('DqRecommenderResult', {
+            url: "/RecommenderResult?id&type&returnBack&version",
+            templateUrl: "views/dq-recommender.html",
+            data: { pageTitle: 'Data Quality' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/DqRecommenderController.js',
+                            'js/services/RecommenderService.js'
+
+                        ]
+                    }]);
+                }]
+            }
+        })
+        
         .state('viewprofile', {
             url: "/ListProfile",
             templateUrl: "views/common-list.html",
