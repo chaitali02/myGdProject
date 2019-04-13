@@ -28,7 +28,7 @@ ProfileModule.controller('ProfileComapreController',function($state,$stateParams
                         { name:"sixSigma",caption:"sixSigma" },
                         ]
     $scope.profilePeriods=[
-                        { name:"7",caption:" 1 week" },
+                        { name:"7",caption:" 1 Week" },
                         { name:"30",caption:"1 Month"},
                         { name:"90",caption:"3 Month"},
                         { name:"365",caption:"1 Year"},
@@ -329,7 +329,7 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
     $scope.attrSourceSearchForm.selectSourceProfileAttr=$scope.profileAttrAttributes[0].name
     $scope.attrTargetSearchForm.selectTargetProfileAttr=$scope.profileAttrAttributes[0].name
     $scope.profileAttrPeriods=[
-                        { name:"7",caption:" 1 week" },
+                        { name:"7",caption:" 1 Week" },
                         { name:"30",caption:"1 Month"},
                         { name:"90",caption:"3 Month"},
                         { name:"365",caption:"1 Year"},

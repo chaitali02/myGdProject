@@ -21,6 +21,7 @@ public class DQIntelligence {
 	private CheckType checkType;
 	private MetaIdentifierHolder checkValue;
 	private boolean isCreated;
+	private double sampleScore;
 
 	/**
 	 * @Ganesh
@@ -92,5 +93,23 @@ public class DQIntelligence {
 	 */
 	public void setCreated(boolean isCreated) {
 		this.isCreated = isCreated;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sampleScore
+	 */
+	public double getSampleScore() {
+		return sampleScore;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param sampleScore the sampleScore to set
+	 */
+	public void setSampleScore(double sampleScore) {
+		this.sampleScore = sampleScore;
 	}
 }

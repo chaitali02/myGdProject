@@ -457,18 +457,18 @@
                             </th>
                             <th style="width:7%;text-align:center">ID</th>
                             <th style="width:5%;" class="text-center">Key</th>
+                            <th class="text-center" style="width:5%;">Null</th>
                             <th style="width:6%;" class="text-center">Partition</th>
                             <th style="width:5%;" class="text-center">Active</th>
+                            <th class="text-center" style="width:5%;">PII</th>
+                            <th class="text-center" style="width:5%;">CDE</th>
                             <th class="text-center"  style="width:9%;">Display Name</th>
                             <th class="text-center"  style="width:9%;">Name</th>
                             <th class="text-center" style="width:7%;">Type</th>
                             <th class="text-center" style="width: 7%;">Length</th>
                             <th class="text-center" style="width:8%;">Unit Type</th>
                             <th class="text-center"  style="width:10%;">Desc</th>
-                            <th class="text-center" style="width:5%;">PII</th>
-                            <th class="text-center" style="width:5%;">CDE</th>
                             <th class="text-center" style="width:8%;">Domain</th>
-                            <th class="text-center" style="width:5%;">Null</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -491,6 +491,12 @@
                                   ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
                               </span>
                             </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.nullFlag"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
                             <td style="text-align:center;Vertical-align:middle;">
                               <span class="form-group" style="margin-left:0px;margin-right:0px;">
                                 <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition"
@@ -500,6 +506,18 @@
                             <td style="text-align: center; Vertical-align: middle;">
                               <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                 <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.active"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.piiFlag"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.cdeFlag"
                                   ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
                               </span>
                             </td>
@@ -542,30 +560,14 @@
                                   class="form-control">
                               </span>
                             </td>
-                            <td style="text-align: center; Vertical-align: middle;">
-                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.piiFlag"
-                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                              </span>
-                            </td>
-                            <td style="text-align: center; Vertical-align: middle;">
-                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.cdeFlag"
-                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                              </span>
-                            </td>
+                           
                             <td style="text-align: center; Vertical-align: middle;">
                               <select ng-model="tabledata.selectDomain" ng-options="x as x.name for x in allDomain track by x.uuid"
                                 ng-disabled="{{mode}}" class="form-control">
                                 <option value="">-Select-</option>
                               </select>
                             </td>
-                            <td style="text-align: center; Vertical-align: middle;">
-                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.nullFlag"
-                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                              </span>
-                            </td>
+                            
                           </tr>
                         </tbody>
                       </table>
@@ -620,9 +622,9 @@
                     <label>Search:</label>
                     <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataProfile(searchtextDataProfile)"
                       ng-model="$parent.searchtextDataProfile" >
-                      <a class="btn btn-primary fa fa-tasks" tooltip-placement="left" uib-tooltip="Run Profile"
+                      <a class="btn btn-primary fa fa-play" tooltip-placement="left" uib-tooltip="Run Profile"
                       ng-disabled="isMetaSysn" ng-class="isProfileInprogres? 'currentpage':'notcurrentpage'"
-                      ng-click="runDataprofile()" style="line-height:1;padding: 6px 5px;border: none;"></a>
+                      ng-click="runDataprofile()" style="line-height:1;border:none; background-color: green"></a>
                   </div>
                 </div>
               </div>
@@ -645,8 +647,47 @@
           <div ng-if="isQualityDataError">
             <h3 style="font-size:14px;color:red">{{dataErrorMsgDQ}}</h3>
           </div>
+          <div ng-if="!isQualityInprogres && !isQualityDataError &&  dqStatsCol.length ==0">
+              <h3 style="font-size:14px;color:blue">No data found</h3>
+            </div>
+          <div ng-if="!isQualityInprogres && !isQualityDataError && dqStatsCol.length >0">
+            <div class="row">
+              <div class="col-md-6"></div>
+              <div class="col-md-6">
+                <!-- <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Period</label>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="selectPeriod" select2 ng-options="r.name as r.caption for r in periods">
+                      </select>
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <div class="col-md-5 col-sm-5 col-xs-5"style="padding:0px;float: right;">
+                      <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" ng-model="$parent.selectPeriod" select2 ng-options="r as r.caption for r in periods"  ng-change="onChangePriode()">
+                      </select>
+                    </div>
+                    <label class="control-label col-md-3 col-sm-3 col-xs-3" style="margin-top:7px;float:right;margin-right:-4%;">Period</label>
+                  </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered dqstats" style="width:100%">
+                       <tbody>
+                          <tr ng-repeat="data in dqStatsCol">
+                              <td style="width:40%">{{data}}</td>
+                              <td style="width:60%">
+                                <b>{{dqStatsData[0][data]}}</b>
+                              </td>
+                          </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
 
-          <div ng-if="!isQualityInprogres && !isQualityDataError">
+          <!-- <div ng-if="!isQualityInprogres && !isQualityDataError">
             <div class="row">
               <div class="col-md-6 col-sm-6">
                 <div class="dataTables_length" id="sample_1_length">
@@ -667,7 +708,7 @@
               ng-style="getGridStyleDataQuality()">
               <div class="nodatawatermark_results" style="top:50%;" ng-show="!gridOptionsDataQuality.data.length">No data available</div>
             </div>
-          </div>
+          </div> -->
         </div>
       <!--*****************************************End DataQuality****************************************************************************-->
       

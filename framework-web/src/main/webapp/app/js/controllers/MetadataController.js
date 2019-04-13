@@ -1555,7 +1555,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 /******************************************************************End Dataprofile*******************************************************/
 /******************************************************************Start DataQuality*******************************************************/
-	$scope.gridOptionsDataQuality={
+	
+	$scope.periods=[
+		{ name:"all",caption:"All"},
+		{ name:"7",caption:" Last 7 Days" },
+		{ name:"30",caption:"Last 30 Days"},
+		{ name:"90",caption:"Last 90 Days"},
+		{ name:"365",caption:"Last 365 Days"},
+		
+	]
+	$scope.selectPeriod=$scope.periods[0];
+    /*$scope.gridOptionsDataQuality={
 		rowHeight: 40,
 		enableGridMenu: true,
 		useExternalPagination: true,
@@ -1647,62 +1657,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		return newDataList;
 	}
 	/*Start showQuality*/
-	$scope.showQuality = function (isRefersh) {
-		if($scope.isShowQuality && isRefersh==false){
-			return false
-		}
-		if($scope.checkIsInrogess () ==false){
-			return false;
-		}
-		$scope.isShowQuality=true;
-		$scope.isShowProfile=false;
-		$scope.showFrom = false;
-		$scope.isShowSimpleData = false
-		$scope.isShowDatastore=false;
-		$scope.showGraphDiv = false
-		$scope.isDatastoreResult=false;
-		$scope.isShowCompareMetaData=false;
-		$scope.genIntelligence();
-	}/*End showQuality*/
 	
-	$scope.genIntelligence=function(){
-		$scope.isQualityInprogres=true;
-		$scope.isQualityDataError = false;
-		$scope.tableClassDQ = "centercontent";
-		$scope.dataErrorMsgDQ="";
-		MetadataDatapodSerivce.genIntelligence("dq", $scope.datapoddata.uuid, $scope.datapoddata.version)
-		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
-		var onSuccess = function (respone) {
-			$scope.isQualityInprogres=false;
-			$scope.tableClassDQ = "";
-			$scope.gridOptionsDataQuality.data=respone;
-		}
-		var onError=function(response){
-			$scope.isQualityDataError=true;
-			$scope.isQualityInprogres=false;
-			$scope.dataErrorMsgDQ="Some error occurred";
-		}
-	}
-	$scope.attrForDqGenerated=function(){
-		debugger
-		if($scope.isAttrForDqSelected==false){
-          return false;
-		}
-		console.log($scope.getSelectedRow());
-		var attrDqlist=$scope.getSelectedRow();
-		var attrdqArray=[];
-		if(attrDqlist && attrDqlist.length >0){
-			for (var i=0;i<attrDqlist.length;i++){
-				var attrDq={};
-				attrDq.attributeName=attrDqlist[i].attributeName;
-				attrDq.checkType=attrDqlist[i].checkType;
-				attrDq.checkValue=attrDqlist[i].checkValue;
-				attrdqArray[i]=attrDq;
-			}
-			$scope.generateDq(attrdqArray);
-		}
-	}
-	$scope.generateDq=function(data){
+	/*$scope.generateDq=function(data){
 		$scope.isQualityInprogres=true;
 		$scope.isQualityDataError = false;
 		$scope.tableClassDQ = "centercontent";
@@ -1720,7 +1676,58 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isQualityInprogres=false;
 			$scope.dataErrorMsgDQ="Some error occurred";
 		}
+	}*/
+
+    /*Start showQuality*/
+	$scope.showQuality = function (isRefersh) {
+		if($scope.isShowQuality && isRefersh==false){
+			return false
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.isShowQuality=true;
+		$scope.isShowProfile=false;
+		$scope.showFrom = false;
+		$scope.isShowSimpleData = false
+		$scope.isShowDatastore=false;
+		$scope.showGraphDiv = false
+		$scope.isDatastoreResult=false;
+		$scope.isShowCompareMetaData=false;
+		$scope.dqStats();
+	}/*End showQuality*/
+	
+	$scope.onChangePriode=function(){
+		$scope.dqStats();
 	}
+
+	$scope.dqStats=function(){
+		$scope.isQualityInprogres=true;
+		$scope.isQualityDataError = false;
+		$scope.tableClassDQ = "centercontent";
+		$scope.dataErrorMsgDQ="";
+		MetadataDatapodSerivce.DqStats("dq", $scope.datapoddata.uuid, $scope.datapoddata.version,$scope.selectPeriod.name)
+		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+		var onSuccess = function (respone) {
+			$scope.isQualityInprogres=false;
+			$scope.tableClassDQ = "";
+			$scope.dqStatsData=respone;
+			$scope.dqStatsCol=$scope.getColumnData(respone);
+
+		}
+		var onError=function(response){
+			$scope.isQualityDataError=true;
+			$scope.isQualityInprogres=false;
+			$scope.dataErrorMsgDQ="Some error occurred";
+		}
+	}
+	$scope.getColumnData = function (response) {
+        var columnDefs = [];
+        angular.forEach(response[0], function (value, key) {
+          columnDefs.push(key)
+        });
+        return columnDefs;
+    }
 
 
 /******************************************************************End DataQuality*******************************************************/
