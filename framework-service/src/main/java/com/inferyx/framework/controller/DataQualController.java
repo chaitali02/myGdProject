@@ -290,14 +290,14 @@ public class DataQualController {
 	}
 	
 	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)
-	public void generateDq(@RequestParam(value = "uuid") String datapodUuid,
-			@RequestParam(value = "version", required = false) String datapodVersion,
+	public void generateDq(@RequestParam(value = "uuid") String dqRecExecUuid,
+			@RequestParam(value = "version", required = false) String dqRecExecVersion,
 			@RequestBody List<DQIntelligence> checkTypeList,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
 		RunMode runMode = Helper.getExecutionMode(mode);
-		dataQualServiceImpl.generateDq(datapodUuid, datapodVersion, checkTypeList, runMode);
+		dataQualServiceImpl.generateDq(dqRecExecUuid, dqRecExecVersion, checkTypeList, runMode);
 	}
 	
 	@RequestMapping(value="/getDqStats",method=RequestMethod.GET)

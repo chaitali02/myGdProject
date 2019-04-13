@@ -163,7 +163,7 @@ MetadataModule.factory('MetadataDatapodFactory', function ($http, $location) {
 	factory.DqStats = function (type, uuid, version,period) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "dataqual/DqStats?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&period="+period,
+			url: url + "dataqual/getDqStats?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type+"&period="+period,
 			method: "GET",
 		}).then(function (response) { return response })
 	}

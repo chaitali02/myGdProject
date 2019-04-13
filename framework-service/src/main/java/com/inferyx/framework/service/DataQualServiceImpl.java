@@ -1118,16 +1118,20 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	/**
-	 * @param datapodUuid
-	 * @param datapodVersion
+	 * @param dqRecExecUuid
+	 * @param dqRecExecVersion
 	 * @param checkTypeList
 	 * @param runMode
 	 * @throws JsonProcessingException
 	 */
-	public void generateDq(String datapodUuid, String datapodVersion, List<DQIntelligence> checkTypeList,
+	public List<DQIntelligence> generateDq(String dqRecExecUuid, String dqRecExecVersion, List<DQIntelligence> checkTypeList,
 			RunMode runMode) throws JsonProcessingException {
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
-				MetaType.datapod.toString(), "N");
+		DQRecExec dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(dqRecExecUuid, dqRecExecVersion,
+				MetaType.dqrecExec.toString(), "N");
+		
+		MetaIdentifier dependsOnMI = dqRecExec.getDependsOn().getRef();
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
+				dependsOnMI.getType().toString(), "N");
 		for (DQIntelligence checkType : checkTypeList) {
 			try {
 				DataQual dataQual = new DataQual();
@@ -1157,11 +1161,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 				dataQual = getCheckType(dataQual, checkType, datapod);
 
 				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+				checkType.setCreated(true);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
+				checkType.setCreated(false);
 			}
 		}
+		
+		return checkTypeList;
 	}
 
 	public DataQual getCheckType(DataQual dataQual, DQIntelligence dqColCheck, Datapod datapod)

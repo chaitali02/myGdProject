@@ -1162,7 +1162,7 @@ public class DQOperator implements IParsable {
 				
 				.append(PARAM_INFO).append(COMMA)
 				  .append(VERSION).append(COMMA);
-		if (dq.getThresholdInfo().getType() != null 
+		if (dq.getThresholdInfo() !=null && dq.getThresholdInfo().getType() != null 
 				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
 				  select = select.append(STD_DEV_FAIL);
 		} else {
@@ -1170,7 +1170,7 @@ public class DQOperator implements IParsable {
 		}
 				  select = select.append(FROM).append(BRACKET_OPEN)
 				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
-		if (dq.getThresholdInfo().getType() != null 
+		if (dq.getThresholdInfo() !=null &&  dq.getThresholdInfo().getType() != null 
 				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
 				  select = select.append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT)
 					// added filter by vaibhav
