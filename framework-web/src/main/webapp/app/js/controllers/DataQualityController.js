@@ -350,9 +350,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.uuid = response.uuid;
       $scope.version = response.version;
       $scope.dq.defaultVersion = defaultversion;
-      $scope.dataqualitydata.upperBound = response.dqdata.rangeCheck.upperBound;
-      $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
-
+      if(response.dqdata.rangeCheck !=null){
+        $scope.dataqualitydata.upperBound = response.dqdata.rangeCheck.upperBound;
+        $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
+      }
       $scope.getParamByApp();
 
       if (response.dqdata.dataTypeCheck != null) {
@@ -360,8 +361,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
 
       $scope.selectdatefromate = response.dqdata.dateFormatCheck;
-      $scope.dataqualitydata.maxLength = response.dqdata.lengthCheck.maxLength
-      $scope.dataqualitydata.minLength = response.dqdata.lengthCheck.minLength
+      if(response.dqdata.lengthCheck !=null){
+        $scope.dataqualitydata.maxLength = response.dqdata.lengthCheck.maxLength
+        $scope.dataqualitydata.minLength = response.dqdata.lengthCheck.minLength
+      }
       $scope.dataqualitysourceType = response.dqdata.dependsOn.ref.type;
 
       var selectDependsOn = {}

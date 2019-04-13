@@ -1,0 +1,90 @@
+<div ng-controller="DqRecommenderController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a ui-sref="home">Home</a>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>{{$state.current.data.pageTitle}}</span>
+                        <i class="fa fa-circle"></i>
+                    </li>
+                    <li>
+                        <span>Result</span>
+                    </li>
+                </ul>
+                <div class="page-toolbar">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                        <i class="icon-calendar"></i>&nbsp;
+                        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>Result
+                    </div>
+                    <div class="tools">
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="DqRecommenderlist" class=""
+                            style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+                        </a>
+                    </div>
+                    <div class="actions" style="margin-right: 4px;">
+                        <a ng-disabled="!isCreateDqSelected"  ng-class="(isCreateDqSelected==false)? 'currentpage':'notcurrentpage'"  ng-click="ConfirmCreateRule()" class="btn btn-default btn-sm">
+                            <span ng-show="isRuleCreateInprogess"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                            <span ng-show="!isRuleCreateInprogess"><i class="fa fa-plus"></i></span>  Create Rule
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body" style="min-height:100px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="dataTables_length" id="sample_1_length">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6">
+                                        <div id="dataprofile_filter" class="dataTables_filter" style="float:right;">
+                                            <label>Search:</label>
+                                            <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataQuality(searchtextDataQuality)"
+                                                ng-model="searchtextDataQuality">                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ui-grid="gridOptionsDataQuality" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter
+                                    ng-style="getGridStyleDataQuality()">
+                                    <div class="nodatawatermark_results" style="top:50%;" ng-show="!gridOptionsDataQuality.data.length">No data available</div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade in" id="confCRModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+        <div class="modal-dialog">
+            <div class="modal-content rulemodel">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancleCreateRule();">
+                    </button>
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body">Create Rule ?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal" ng-click="cancleCreateRule()">Cancel</button>
+                    <button type="button" class="btn green" ng-click="createRule()">Ok</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+</div>

@@ -73,6 +73,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Config;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DashboardExec;
@@ -86,6 +87,7 @@ import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FileRefHolder;
 import com.inferyx.framework.domain.FileType;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
@@ -115,6 +117,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Rule;
@@ -127,11 +130,13 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.StatusHolder;
+import com.inferyx.framework.domain.Threshold;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.CaseCheckType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 
@@ -286,8 +291,7 @@ public class MetadataServiceImpl {
 		List<BaseEntityStatus> baseEntityStatusList = new ArrayList<>();
 		
 		
-		for (Object metaObject: metaObjectList)
-		{
+		for (Object metaObject: metaObjectList) {
 			List<Status> execStatus = null;
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			//type.toLowerCase() == MetaType.dagexec.toString().toLowerCase()
@@ -471,6 +475,13 @@ public class MetadataServiceImpl {
 				execObject = (DashboardExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 				baseEntityStatus.setRunMode(execObject.getRunMode());
+
+			}
+			else if(type.equalsIgnoreCase(MetaType.dqrecExec.toString())){
+				DQRecExec dqRecExec = new DQRecExec();
+				dqRecExec = (DQRecExec) metaObject;
+				execStatus = (List<Status>) dqRecExec.getStatusList();	
+				baseEntityStatus.setRunMode(dqRecExec.getRunMode());
 
 			} 
 				
@@ -2359,5 +2370,92 @@ public class MetadataServiceImpl {
 		query.addCriteria(new Criteria("name").is(domainName));
 		
 		return mongoTemplate.find(query, AttributeDomain.class, MetaType.domain.toString().toLowerCase());
+	}
+	
+	/**
+	 * @param appUuid
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public List<AttributeDomain> getDomainByUuid(String domainUuid) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("regEx");
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		if(!StringUtils.isBlank(appUuid)) {
+			query.addCriteria(where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),
+					where("publicFlag").is("Y")));
+		} else {
+			query.addCriteria(new Criteria("publicFlag").is("Y"));
+		}		
+		
+		query.addCriteria(new Criteria("uuid").is(domainUuid));
+		
+		return mongoTemplate.find(query, AttributeDomain.class, MetaType.domain.toString().toLowerCase());
+	}
+	
+	/**
+	 * @param appUuid
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public List<DataQual> getAllDQByDatapod(String datapodUuid) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("appInfo");
+		query.fields().include("dependsOn");
+		query.fields().include("target");
+		query.fields().include("attribute");
+		query.fields().include("duplicateKeyCheck");
+		query.fields().include("nullCheck");
+		query.fields().include("valueCheck");
+		query.fields().include("rangeCheck");
+		query.fields().include("dataTypeCheck");
+		query.fields().include("dateFormatCheck");
+		query.fields().include("customFormatCheck");
+		query.fields().include("lengthCheck");
+		query.fields().include("refIntegrityCheck");
+		query.fields().include("filterInfo");
+		query.fields().include("userInfo");
+		query.fields().include("thresholdInfo");
+		query.fields().include("domainCheck");
+		query.fields().include("blankSpaceCheck");
+		query.fields().include("expressionCheck");
+		query.fields().include("caseCheck");
+		query.fields().include("passFailCheck");
+		query.fields().include("paramList");
+		query.fields().include("autoFlag");
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		if(!StringUtils.isBlank(appUuid)) {
+			query.addCriteria(where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),
+					where("publicFlag").is("Y")));
+		} else {
+			query.addCriteria(new Criteria("publicFlag").is("Y"));
+		}		
+		
+		query.addCriteria(new Criteria("dependsOn.ref.uuid").is(datapodUuid));
+		
+		return mongoTemplate.find(query, DataQual.class, MetaType.dq.toString().toLowerCase());
 	}
 }

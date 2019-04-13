@@ -1027,7 +1027,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
-     'dqexec':{
+      'dqexec':{
       name : 'dq',
       caption : 'Data Quality Exec',
       execType:'dqExec',
@@ -1043,6 +1043,22 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
+    'dqrecexec':{
+      name : 'dqrecExec',
+      caption : 'dqrecExec',
+      execType:'dqrecExec',
+      metaType:'dqrecExec',
+      color : '#EB54C3',
+      parentIconCaption:'',
+      allowInMenu : false,
+      listState : 'jobmonitoringlist',
+      joblistState : 'jobmonitoringlist',
+      detailState :'jobexecutorlistdqexec',
+      resultState:'DqRecommenderResult',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
+    
      'modelexec':{
       name : 'model',
       caption : 'Model Exec',

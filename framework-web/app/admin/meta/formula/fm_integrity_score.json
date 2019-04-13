@@ -1,0 +1,128 @@
+{
+  "uuid": "7dc17f5d-b5c7-4f10-bf70-b1292e052c7c",
+  "version": "1555073618",
+  "name": "fm_integrity_score",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Apr 12 18:23:38 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1548315769",
+        "name": "Enterprise Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "Y",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "version": null,
+      "name": "dq_result_summary"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "version": null,
+        "name": "dq_result_summary"
+      },
+      "attributeId": 36,
+      "value": null,
+      "attributeName": "refint_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "+",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "version": null,
+        "name": "dq_result_summary"
+      },
+      "attributeId": 39,
+      "value": null,
+      "attributeName": "dup_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "/",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "2",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "simple"
+}

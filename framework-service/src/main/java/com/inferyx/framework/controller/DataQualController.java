@@ -30,7 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DQIntelligence;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -38,7 +39,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.intelligence.DQIntelligenceOperator;
+import com.inferyx.framework.intelligence.DQRecOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataQualExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupExecServiceImpl;
@@ -66,7 +67,7 @@ public class DataQualController {
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
-	private DQIntelligenceOperator dqIntelligenceOperator;
+	private DQRecOperator dqRecOperator;
 	
 
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
@@ -78,21 +79,21 @@ public class DataQualController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualUUID, dataQualVersion, MetaType.dq.toString(), "N");
+//		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualUUID, dataQualVersion, MetaType.dq.toString(), "N");
 		
 		DataQualExec dataQualExec = null;
-		if(dataQual.getAutoFlag().equalsIgnoreCase("N")) {
+//		if(dataQual.getAutoFlag().equalsIgnoreCase("N")) {
 			dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, execParams, null, null, null, runMode);
 			dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
 			List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 			dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
 			commonServiceImpl.completeTaskThread(taskList);
-		} else {
-			MetaIdentifier dqDependsOn = dataQual.getDependsOn().getRef();
-			dataQualExec = dataQualServiceImpl.createCustom(dqDependsOn.getUuid(), dqDependsOn.getVersion(), execParams, null, null, null, runMode);
-			dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), dataQual.getFilterInfo(), null, null, null, null, runMode);
-			dqIntelligenceOperator.genIntelligence(dataQualExec, null, runMode);
-		}
+//		} else {
+//			MetaIdentifier dqDependsOn = dataQual.getDependsOn().getRef();
+//			dataQualExec = dataQualServiceImpl.createCustom(dqDependsOn.getUuid(), dqDependsOn.getVersion(), execParams, null, null, null, runMode);
+//			dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), dataQual.getFilterInfo(), null, null, null, null, runMode);
+//			dqRecOperator.genIntelligence(dataQualExec, null, runMode);
+//		}
 		return dataQualExec;
 	}
 
@@ -276,25 +277,32 @@ public class DataQualController {
 	}
 	
 	@RequestMapping(value = "/genIntelligence", method = RequestMethod.GET)
-	public List<Map<String, String>> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
+	public List<DQIntelligence> genIntelligence(@RequestParam(value = "uuid") String datapodUuid,
 			@RequestParam(value = "version", required = false) String datapodVersion,
+			@RequestParam(value = "samplePercent", required = false) String samplePercent,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
 		RunMode runMode = Helper.getExecutionMode(mode);
-		DataQualExec dataQualExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode);
-		dataQualExec = (DataQualExec) dataQualServiceImpl.parseCustom(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, null, runMode);
-		return dqIntelligenceOperator.genIntelligence(dataQualExec, null, runMode);
+		DQRecExec dqRecExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode);
+		dqRecExec = (DQRecExec) dataQualServiceImpl.parseCustom(dqRecExec.getUuid(), dqRecExec.getVersion(), null, null, null, null, null, runMode);
+		return dqRecOperator.genRecommendation(dqRecExec, null, runMode, samplePercent);
 	}
 	
 	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)
-	public void generateDq(@RequestParam(value = "uuid") String datapodUuid,
-			@RequestParam(value = "version", required = false) String datapodVersion,
-			@RequestBody List<Map<String, String>> checkTypeList,
+	public void generateDq(@RequestParam(value = "uuid") String dqRecExecUuid,
+			@RequestParam(value = "version", required = false) String dqRecExecVersion,
+			@RequestBody List<DQIntelligence> checkTypeList,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
 		RunMode runMode = Helper.getExecutionMode(mode);
-		dataQualServiceImpl.generateDq(datapodUuid, datapodVersion, checkTypeList, runMode);
+		dataQualServiceImpl.generateDq(dqRecExecUuid, dqRecExecVersion, checkTypeList, runMode);
+	}
+	
+	@RequestMapping(value="/getDqStats",method=RequestMethod.GET)
+	public List<Map<String, Object>> getDataQualStat(@RequestParam(value = "period") String period) throws Exception
+	    		{
+			return dataQualServiceImpl.getDataQualStat(period);
 	}
 }

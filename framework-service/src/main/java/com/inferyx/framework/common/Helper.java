@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.spark.sql.SaveMode;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.layers.ActivationLayer;
 import org.deeplearning4j.nn.conf.layers.AutoEncoder;
@@ -334,6 +333,8 @@ public class Helper {
 			return "iRule2ExecDao";
 		case domain:
 			return "iAttributeDomainDao";
+		case dqrecExec: 
+			return "idqRecExecDao";
 		default:
 			return null;
 		}
@@ -597,6 +598,8 @@ public class Helper {
 			return RuleExec.class;
 		case domain:
 			return AttributeDomain.class;
+		case dqrecExec:
+			return DQRecExec.class;
 		default:
 			return null;
 		}
@@ -788,6 +791,8 @@ public class Helper {
 			return MetaType.rule2Exec;
 		case "domain":
 			return MetaType.domain;
+		case "dqrecexec":
+			return MetaType.dqrecExec;
 		default:
 			return null;
 		}
@@ -1508,6 +1513,8 @@ public class Helper {
 			return new DashboardExec();
 		case rule2Exec:
 			return new RuleExec();
+		case dqrecExec:
+			return new DQRecExec();
 		default:
 			return null;
 		}

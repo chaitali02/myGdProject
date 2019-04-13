@@ -12,8 +12,8 @@ import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.factory.ConnectionFactory;
-/*import com.inferyx.framework.ws.client.disource.IngestServiceService;
-*/
+//import com.inferyx.framework.ws.client.disource.IngestServiceService;
+
 /**
  * @author joy
  *
@@ -32,11 +32,11 @@ public class WSSourceExecutor<T, K> {
 	
 	public void stream(Datasource ds, StreamInput<T, K> streamInput) {
 		try {
-			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-			ConnectionHolder conHolder = connector.getConnection();
-/*			IngestServiceService ingestService = new IngestServiceService();
-			List<String> stream = ingestService.getIngestServicePort().stream();
-*/			
+//			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//			ConnectionHolder conHolder = connector.getConnection();
+//			IngestServiceService ingestService = new IngestServiceService();
+//			List<String> stream = ingestService.getIngestServicePort().stream();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
