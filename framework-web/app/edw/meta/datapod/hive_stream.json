@@ -93,5 +93,6 @@
                 "name" : "Data Warehouse"
             }
         }
-    ]
+    ],
+      "prefix" : "hvs"
 }
