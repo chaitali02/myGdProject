@@ -105,8 +105,6 @@ public class DQRecOperator {
 				samplePercent = commonServiceImpl.getConfigValue("framework.dataqual.sample.percent");
 			} 
 			
-			samplePercent = "100%";
-			
 			//***************** gettting sample *****************//
 			Dataset<Row> sampleDf = null;
 			if(samplePercent.contains("%")) {
