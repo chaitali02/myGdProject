@@ -28,7 +28,7 @@ public class Attribute {
     private String piiFlag = "N";
     private String cdeFlag = "N";
     private Integer Precision;
-    private String nullFlag = "N";
+    private String nullFlag = "Y";
 
 	
 	public String getNullFlag() {
