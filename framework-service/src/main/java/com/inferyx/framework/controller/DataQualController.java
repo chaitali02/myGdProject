@@ -299,4 +299,10 @@ public class DataQualController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		dataQualServiceImpl.generateDq(datapodUuid, datapodVersion, checkTypeList, runMode);
 	}
+	
+	@RequestMapping(value="/getDqStat",method=RequestMethod.GET)
+	public List<Map<String, Object>> getDataQualStat(@RequestParam(value = "period") String period) throws Exception
+	    		{
+			return dataQualServiceImpl.getDataQualStat(period);
+	}
 }
