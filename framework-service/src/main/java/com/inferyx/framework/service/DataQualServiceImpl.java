@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
@@ -48,6 +50,7 @@ import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -67,6 +70,7 @@ import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.operator.DQOperator;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
 
@@ -89,6 +93,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	Engine engine;
 	@Autowired
 	private DownloadServiceImpl downloadServiceImpl;
+	@Autowired
+	DatasetOperator datasetOperator;
 	
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1102,5 +1108,42 @@ public class DataQualServiceImpl extends RuleTemplate {
 		default:
 			return dataQual;
 		}
+	}
+
+	public List<Map<String, Object>> getDataQualStat(String period) throws Exception {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> data = new ArrayList<>();
+		Map<String, String> paramValMap = new HashMap<String, String>();
+		StringBuilder outerSqlBulider = new StringBuilder();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+
+		String datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
+		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
+
+		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), new ExecParams(), RunMode.ONLINE,
+				paramValMap);
+
+		if(!period.equalsIgnoreCase("all"))
+		period = "unix_timestamp(date_format(cast(date_sub(current_date, " + period
+				+ ") as String) , \"EEE MMM dd HH:mm:ss z yyyy\"),\"EEE MMM dd HH:mm:ss z yyyy\")";
+	
+		sql = sql.replace("(dq_result_summary.rule_exec_time",
+				"(unix_timestamp(dq_result_summary.rule_exec_time,\"EEE MMM dd HH:mm:ss z yyyy\")");
+		
+		
+		if(!period.equalsIgnoreCase("all"))
+		sql = sql.replace("'$LookBackDate'", period);
+		
+		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
+				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)
+				.append(" ds_dq_result_summary");
+
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+
+		data = exec.executeAndFetchByDatasource(outerSqlBulider.toString(), dsDatasource,
+				commonServiceImpl.getApp().getUuid());
+
+		return data;
 	}
 }
