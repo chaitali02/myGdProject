@@ -48,6 +48,7 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -293,6 +294,30 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setTableName(tableName);
 		rsHolder.setType(ResultType.dataframe);
 		return rsHolder;
+	}
+	
+	/**
+	 * 
+	 * @param listOfVals
+	 * @param attributes
+	 * @param tableName
+	 * @return
+	 * @throws AnalysisException 
+	 * @throws IOException 
+	 */
+	public ResultSetHolder createAndRegisterDataset(List<T> listOfVals, List<Attribute> attributes, String tableName) throws AnalysisException, IOException {
+		List<Row> rowList = new ArrayList<Row>();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		Row row = null;
+		for (T val : listOfVals) {
+			row = RowFactory.create(val);
+			rowList.add(row);
+		}
+		JavaRDD<Row> jrr = new JavaSparkContext(sparkSession.sparkContext()).parallelize(rowList);
+		StructType schema = createSchema(attributes);
+		return createAndRegisterDataset(jrr, schema, tableName);
 	}
 	
 	@Override

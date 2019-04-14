@@ -58,6 +58,7 @@ import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.executor.WSSourceExecutor;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.IngestOperator;
 
@@ -89,6 +90,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	private List<String> location;
 	private KafkaExecutor<?, ?> kafkaExecutor;
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
+	private WSSourceExecutor<?> wsSourceExecutor;
 	private DataSet sourceDataSet;
 	private IngestOperator ingestOperator;
 	private DatasetOperator datasetOperator;
@@ -192,6 +194,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	 */
 	public void setSparkStreamingExecutor(SparkStreamingExecutor<?, ?> sparkStreamingExecutor) {
 		this.sparkStreamingExecutor = sparkStreamingExecutor;
+	}
+
+	/**
+	 * @return the wsSourceExecutor
+	 */
+	public WSSourceExecutor<?> getWsSourceExecutor() {
+		return wsSourceExecutor;
+	}
+
+	/**
+	 * @param wsSourceExecutor the wsSourceExecutor to set
+	 */
+	public void setWsSourceExecutor(WSSourceExecutor<?> wsSourceExecutor) {
+		this.wsSourceExecutor = wsSourceExecutor;
 	}
 
 	/**
@@ -1308,6 +1324,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						countRows = rsHolder.getCountRows();
 //						targetFilePathUrl = null;
 					}
+				} else if(ingestionType.equals(IngestionType.WSTOTABLE)) {	// Web Service to Table 
+					ResultSetHolder rsHolder = wsSourceExecutor.stream(sourceDS, sourceDp.getAttributes(), sourceDp.getName().toUpperCase());
+//					if (targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						sparkExecutor.executeSqlByDatasource("INSERT INTO " + targetDp.getName().toUpperCase() + " SELECT * FROM " + sourceDp.getName().toUpperCase(), targetDS, ExecContext.spark.toString());
+//					}
 				} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 					SqoopInput sqoopInput = new SqoopInput();
 					sqoopInput.setSourceDs(sourceDS);
