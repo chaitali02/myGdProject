@@ -85,6 +85,11 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	};
 	$scope.getLovByType();
+
+	$scope.onChangeName = function (data) {
+		$scope.expressiondata.displayName=data;
+	}
+
 	$scope.checkIsInrogess = function () {
 		if ($scope.isEditInprogess || $scope.isEditVeiwError) {
 			return false;
@@ -506,12 +511,13 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		var expressionjson = {}
 		expressionjson.uuid = $scope.expressiondata.uuid;
 		expressionjson.name = $scope.expressiondata.name;
+		expressionjson.displayName = $scope.expressiondata.displayName;
 		expressionjson.active = $scope.expressiondata.active;
 		expressionjson.locked = $scope.expressiondata.locked;
 		expressionjson.desc = $scope.expressiondata.desc;
 		expressionjson.published = $scope.expressiondata.published;
 		expressionjson.publicFlag = $scope.expressiondata.publicFlag;
-
+    
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

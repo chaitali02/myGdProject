@@ -206,6 +206,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 		return style;
 	}
+    
+	$scope.onChangeName = function (data) {
+		$scope.dataset.displayName=data;
+	}
 
 	$scope.countContinue = function () {
 	    if($scope.continueCount == 3){
@@ -1445,6 +1449,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var dataSetJson = {}
 		dataSetJson.uuid = $scope.dataset.uuid
 		dataSetJson.name = $scope.dataset.name;
+		dataSetJson.displayName = $scope.dataset.displayName;
 		dataSetJson.desc = $scope.dataset.desc
 		dataSetJson.active = $scope.dataset.active;
 		dataSetJson.published = $scope.dataset.published;
