@@ -26,6 +26,7 @@ import org.apache.spark.sql.expressions.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
@@ -313,7 +314,7 @@ public class DQRecOperator {
 					
 					
 					//********* setting dq creation check  *********//
-					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.DOMAIN, row.getString(2)));
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.DOMAIN, row.getString(2), row.getString(4)));
 				
 					checkTypeList.add(dqIntelligence);
 				}
@@ -340,11 +341,66 @@ public class DQRecOperator {
 		return null;
 	}
 	
-	public boolean getDQCreationCheck(List<DataQual> latestDQList, CheckType checkType, String datapodUuid) {
+	public boolean getDQCreationCheck(List<DataQual> latestDQList, CheckType checkType, String datapodUuid, String columnName) throws JsonProcessingException {
 		if(latestDQList != null && !latestDQList.isEmpty()) {
 			for(DataQual dq : latestDQList) {
 				if(dq.getDependsOn().getRef().getUuid().equals(datapodUuid)) {
-					return true;
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, null, MetaType.datapod.toString(), "N");
+					Object checkValue = checkCheckType(dq, checkType);
+					if(checkValue == null) {
+						return false;
+					} else {
+						switch(checkType) {
+						case DOMAIN: 
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getDomainCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case NULL:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getNullCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case RANGE:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getRangeCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case VALUE:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getValueCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case DUPLICATE:
+							return false;
+							
+						default: return false;
+						}
+					}
 				} else {
 					return false;
 				}
@@ -354,6 +410,18 @@ public class DQRecOperator {
 		}
 
 		return false;
+	}
+	
+	public Object checkCheckType(DataQual dq, CheckType checkType) {
+		switch(checkType) {
+		case DOMAIN: return dq.getDomainCheck();
+		case NULL: return dq.getNullCheck();
+		case DUPLICATE: return dq.getDuplicateKeyCheck();
+		case RANGE: return dq.getRangeCheck();
+		case VALUE: return dq.getValueCheck();
+			
+		default: return null;
+		}
 	}
 	
 	public ResultSetHolder save(ResultSetHolder rsHolder, String filePathUrl, String tempTableName, boolean registerTempTable) throws IOException {		
@@ -479,7 +547,7 @@ public class DQRecOperator {
 						
 				
 				//***************** setting dq creation check  *****************//
-				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.NULL,row.getString(1)));
+				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.NULL,row.getString(1), row.getString(1)));
 				
 				checkTypeList.add(dqIntelligence);
 			} catch (Exception e) {
@@ -622,7 +690,8 @@ public class DQRecOperator {
 				rangeCheckBuilder.append("MAX(").append(attribute.getName()).append(") AS ").append("max_val").append(", ");
 				rangeCheckBuilder.append("MIN(").append(attribute.getName()).append(") AS ").append("min_val").append(", ");
 				rangeCheckBuilder.append("'").append(attribute.getName()).append("' AS ").append("range_col").append(", ");
-				rangeCheckBuilder.append(100).append(" AS ").append("score_col");
+				rangeCheckBuilder.append(100).append(" AS ").append("score_col").append(", ");
+				rangeCheckBuilder.append("'").append(attribute.getName()).append("' AS ").append("datapod_uuid");
 				rangeCheckBuilder.append(" FROM ").append(rsHolder.getTableName());
 				rangeCheckBuilder.append(" GROUP BY range_col, score_col");
 				rangeCheckBuilder.append(" UNION ALL ");
@@ -635,7 +704,7 @@ public class DQRecOperator {
 			String rangeCheckSql = rangeCheckBuilder.substring(0, rangeCheckBuilder.lastIndexOf(" UNION ALL "));
 			
 			ResultSetHolder rangeCheckHolder = sparkExecutor.executeAndRegisterByTempTable(rangeCheckSql, null, false, appUuid);
-			rangeCheckHolder.getDataFrame().show(false);
+//			rangeCheckHolder.getDataFrame().show(false);
 
 			//***************** dropping temporary tables created *****************//
 			sparkExecutor.dropTempTable(tempTableList);
@@ -654,7 +723,7 @@ public class DQRecOperator {
 	 */
 	public List<DQIntelligence> getCheckTypeListForRangeCheck(ResultSetHolder rsHolder,
 			Datapod datapod, List<DataQual> latestDQList) {
-		// ********* 0: max_val, 1: min_val, 2: range_col, 3: score_col *********//
+		// ********* 0: max_val, 1: min_val, 2: range_col, 3: score_col, 4: datapod_uuid  *********//
 
 		List<DQIntelligence> checkTypeList = new ArrayList<>();
 
@@ -679,7 +748,7 @@ public class DQRecOperator {
 				dqIntelligence.setCheckValue(checkValueList);
 
 				// ***************** setting dq creation check *****************//
-				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.RANGE, row.getString(2)));
+				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.RANGE, row.getString(4), row.getString(2)));
 
 				checkTypeList.add(dqIntelligence);
 			} catch (Exception e) {
@@ -812,7 +881,7 @@ public class DQRecOperator {
 					dqIntelligence.setCheckValue(checkValueList);
 
 					// ***************** setting dq creation check *****************//
-					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.VALUE, row.getString(1)));
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.VALUE, row.getString(0), row.getString(1)));
 
 					checkTypeList.add(dqIntelligence);
 				}

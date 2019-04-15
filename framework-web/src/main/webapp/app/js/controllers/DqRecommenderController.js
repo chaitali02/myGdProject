@@ -468,7 +468,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			if(response && response.intelligenceResult && response.intelligenceResult.length){
 				for(var i=0;i<response.intelligenceResult.length;i++){
 					var intelligenceResult={};
-					intelligenceResult.attributeName="-NA-";
+					//intelligenceResult.attributeName="-NA-";
 					if(response.intelligenceResult[i].attributeName !=null){
 						intelligenceResult.attributeName=response.intelligenceResult[i].attributeName;
 					}
