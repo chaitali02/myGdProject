@@ -72,6 +72,10 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 	};
   
   $scope.getLovByType();
+
+  $scope.onChangeName = function (data) {
+		$scope.reconruledata.displayName = data;
+  }
   
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
@@ -898,6 +902,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     var jsonObj={}
     jsonObj.uuid=$scope.reconruledata.uuid;
     jsonObj.name = $scope.reconruledata.name;
+    jsonObj.displayName = $scope.reconruledata.displayName;
     jsonObj.desc = $scope.reconruledata.desc;
     jsonObj.active = $scope.reconruledata.active;
     jsonObj.locked = $scope.reconruledata.locked;
@@ -1343,6 +1348,11 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 		});
 	};
   $scope.getLovByType();
+
+  $scope.onChangeName = function (data) {
+		$scope.ruleGroupDetail.displayName = data;
+  }
+
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });  
@@ -1543,6 +1553,7 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     var ruleGroupJson = {}
     ruleGroupJson.uuid = $scope.ruleGroupDetail.uuid;
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
+    ruleGroupJson.displayName = $scope.ruleGroupDetail.displayName;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
     ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
