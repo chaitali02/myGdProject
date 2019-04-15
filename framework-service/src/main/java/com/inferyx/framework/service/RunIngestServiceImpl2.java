@@ -1325,9 +1325,21 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //						targetFilePathUrl = null;
 					}
 				} else if(ingestionType.equals(IngestionType.WSTOTABLE)) {	// Web Service to Table 
-					ResultSetHolder rsHolder = wsSourceExecutor.stream(sourceDS, sourceDp.getAttributes(), sourceDp.getName().toUpperCase());
+					List<AttributeMap> attrMapList = ingest.getAttributeMap();
+					List<Attribute> attrList = new ArrayList<>();
+					for (AttributeMap attrMap : attrMapList) {
+						Attribute attr = new Attribute();
+						attr.setAttributeId(Integer.parseInt(attrMap.getSourceAttr().getAttrId()));
+						attr.setAttrUnitType(attrMap.getSourceAttr().getAttrUnitType());
+						attr.setType(attrMap.getSourceAttr().getAttrType());
+						attr.setName(attrMap.getSourceAttr().getAttrName());
+						attrList.add(attr);
+						logger.info("attrMap.getSourceAttr() : " + attrMap.getSourceAttr());
+						logger.info("attr : " + attr);
+					}
+					ResultSetHolder rsHolder = wsSourceExecutor.stream(sourceDS, attrList, "table1");
 //					if (targetDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-						sparkExecutor.executeSqlByDatasource("INSERT INTO " + targetDp.getName().toUpperCase() + " SELECT * FROM " + sourceDp.getName().toUpperCase(), targetDS, ExecContext.spark.toString());
+						sparkExecutor.executeSqlByDatasource("INSERT INTO " + targetDp.getName().toUpperCase() + " SELECT * FROM " + "table1", targetDS, ExecContext.spark.toString());
 //					}
 				} else if(ingestionType.equals(IngestionType.TABLETOTABLE)) { 
 					SqoopInput sqoopInput = new SqoopInput();

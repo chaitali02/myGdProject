@@ -1575,6 +1575,8 @@ public class Helper {
 				return IngestionType.STREAMTOTABLE;
 			case "stream-file":
 				return IngestionType.STREAMTOFILE;
+			case "ws-table":
+				return IngestionType.WSTOTABLE;
 			}
 		}
 		return null;

@@ -305,13 +305,13 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @throws AnalysisException 
 	 * @throws IOException 
 	 */
-	public ResultSetHolder createAndRegisterDataset(List<T> listOfVals, List<Attribute> attributes, String tableName) throws AnalysisException, IOException {
+	public ResultSetHolder createAndRegisterDataset(List<T[]> listOfVals, List<Attribute> attributes, String tableName) throws AnalysisException, IOException {
 		List<Row> rowList = new ArrayList<Row>();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Row row = null;
-		for (T val : listOfVals) {
+		for (T[] val : listOfVals) {
 			row = RowFactory.create(val);
 			rowList.add(row);
 		}
