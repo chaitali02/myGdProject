@@ -103,6 +103,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 	$scope.getLovByType();
 
+	$scope.onChangeName = function (data) {
+		$scope.profileDetail.displayName = data;
+	}
+
 	$scope.$on('$destroy', function () {
 		$scope.isDestoryState = true;
 	});
@@ -694,6 +698,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		options.execution = $scope.checkboxModelexecution;
 		profileJson.uuid = $scope.profileDetail.uuid;
 		profileJson.name = $scope.profileDetail.name;
+		profileJson.displayName = $scope.profileDetail.displayName;
 		profileJson.desc = $scope.profileDetail.desc;
 		profileJson.active = $scope.profileDetail.active;
 		profileJson.locked = $scope.profileDetail.locked;
@@ -982,6 +987,11 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		});
 	};
 	$scope.getLovByType();
+
+	$scope.onChangeName = function (data) {
+		$scope.profileGroupDetail.displayName = data;
+	}
+
 	$scope.$on('$destroy', function () {
 		$scope.isDestoryState = true;
 	});
@@ -1197,6 +1207,7 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		options.execution = $scope.checkboxModelexecution;
 		profileGroupJson.uuid = $scope.profileGroupDetail.uuid;
 		profileGroupJson.name = $scope.profileGroupDetail.name;
+		profileGroupJson.displayName = $scope.profileGroupDetail.displayName;
 		profileGroupJson.desc = $scope.profileGroupDetail.desc;
 		profileGroupJson.active = $scope.profileGroupDetail.active;
 		profileGroupJson.locked = $scope.profileGroupDetail.locked;

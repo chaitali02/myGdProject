@@ -109,8 +109,16 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.name" required="">
-
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileGroupDetail.name" required="" ng-Change="onChangeName(profileGroupDetail.name)" >
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Display Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}"
+                    ng-model="profileGroupDetail.displayName" placeholder="" required="">
                 </div>
               </div>
               <div class="form-group" ng-show="profileGroupDetail.uuid">

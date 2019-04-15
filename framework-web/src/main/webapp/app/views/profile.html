@@ -128,7 +128,7 @@
                                                 <div class="form-group" ng-show="profileDetail.uuid">
                                                     <label class="control-label col-md-3">UUID</label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" ng-model="profileDetail.uuid" ng-disabled="true">
+                                                        <input type="text" class="form-control" ng-model="profileDetail.uuid" ng-disabled="true" >
                                                     </div>
                                                 </div>
 
@@ -137,11 +137,19 @@
                                                         <span class="required" aria-required="true"> * </span>
                                                     </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileDetail.name" required="">
+                                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="profileDetail.name" required="" ng-Change="onChangeName(profileDetail.name)" >
 
                                                     </div>
                                                 </div>
-
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Display Name
+                                                      <span class="required" aria-required="true"> * </span>
+                                                    </label>
+                                                    <div class="col-md-6">
+                                                      <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                                        ng-model="profileDetail.displayName" placeholder="" required="">
+                                                    </div>
+                                                </div>
                                                 <div class="form-group" ng-show="profileDetail.uuid">
                                                     <label class="col-md-3 control-label">Version</label>
                                                     <div class="col-md-6">
