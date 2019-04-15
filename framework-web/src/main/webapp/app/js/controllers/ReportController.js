@@ -502,7 +502,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			return false;
 		}
 	}
-
+	
+	$scope.onChangeName = function (data) {
+		$scope.report.displayName = data;
+	}
 
 	/*Start showPage*/
 	$scope.showPage = function () {
@@ -1637,6 +1640,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		var reportJson = {}
 		reportJson.uuid = $scope.report.uuid
 		reportJson.name = $scope.report.name;
+		reportJson.displayName = $scope.report.displayName;
 		reportJson.desc = $scope.report.desc
 		reportJson.active = $scope.report.active;
 		reportJson.locked = $scope.report.locked;

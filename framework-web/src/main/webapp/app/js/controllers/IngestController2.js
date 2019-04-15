@@ -100,6 +100,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     };
 
 	$scope.getLovByType();
+
+	$scope.onChangeName = function (data) {
+		$scope.ingestData.displayName=data;	
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -1544,6 +1549,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		var ingestJson = {};
 		ingestJson.uuid = $scope.ingestData.uuid;
 		ingestJson.name = $scope.ingestData.name;
+		ingestJson.displayName = $scope.ingestData.displayName;
 		ingestJson.desc = $scope.ingestData.desc;
 		ingestJson.active = $scope.ingestData.active;
 		ingestJson.locked = $scope.ingestData.locked;

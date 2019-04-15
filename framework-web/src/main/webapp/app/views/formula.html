@@ -111,14 +111,6 @@
               data-placement="top" tooltip ng-click="enableEdit(formuladata.uuid,formuladata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-              data-placement="top" tooltip ng-click="enableEdit(formuladata.uuid,formuladata.version)" ng-hide="isAdd" style="height:16px;">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-click="showView(formuladata.uuid,formuladata.version)" style="height:16px;" ng-hide="isAdd">
-              <i class="fa fa-file" style="color:white;"></i>
-            </a> -->
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showFrom==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(formuladata.uuid,formuladata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -172,7 +164,15 @@
                       required="">
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Display Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}"
+                      ng-model="formuladata.displayName" placeholder="" required="">
+                  </div>
+                </div>
                 <div class="form-group" ng-show="formuladata.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">

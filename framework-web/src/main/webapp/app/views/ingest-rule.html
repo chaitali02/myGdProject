@@ -90,6 +90,15 @@
                                             required="">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Display Name
+                                      <span class="required" aria-required="true"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                        ng-model="ingestData.displayName" placeholder="" required="">
+                                    </div>
+                                </div>
 
                                 <div class="form-group" ng-show="ingestData.uuid">
                                     <label class="col-md-3 control-label">Version</label>

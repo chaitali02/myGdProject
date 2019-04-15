@@ -1199,6 +1199,10 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		});
 	};
 	$scope.getLovByType();
+	$scope.onChangeName = function (data) {
+		$scope.ruleGroupDetail.displayName=data;	
+	}
+
 	$scope.close = function () {
 		if ($stateParams.returnBack == "true" && $rootScope.previousState) {
 			$state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -1386,6 +1390,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		var ruleGroupJson = {}
 		ruleGroupJson.uuid = $scope.ruleGroupDetail.uuid;
 		ruleGroupJson.name = $scope.ruleGroupDetail.name;
+		ruleGroupJson.displayName = $scope.ruleGroupDetail.displayName;
 		ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
 		ruleGroupJson.active = $scope.ruleGroupDetail.active;
 		ruleGroupJson.locked = $scope.ruleGroupDetail.locked;

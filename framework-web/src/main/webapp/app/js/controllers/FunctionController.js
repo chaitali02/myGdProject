@@ -80,6 +80,11 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		});
 	};
 	$scope.getLovByType();
+	
+	$scope.onChangeName = function (data) {
+		$scope.functiondata.displayName=data;
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -357,7 +362,9 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		$scope.myform.$dirty = false;
 		var functionJson = {}
 		functionJson.uuid = $scope.functiondata.uuid
-		functionJson.name = $scope.functiondata.name
+		functionJson.name = $scope.functiondata.name;
+		functionJson.displayName = $scope.functiondata.displayName;
+
 		functionJson.desc = $scope.functiondata.desc
 		functionJson.active = $scope.functiondata.active;
 		functionJson.locked = $scope.functiondata.locked;

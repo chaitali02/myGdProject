@@ -196,6 +196,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 
 	$scope.onChangeName = function (data) {
 		$scope.relationName = data;
+		$scope.relationdata.displayName=data;
 	}
 	
 	$scope.refreshData = function (searchtext) {
@@ -633,6 +634,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		var relationjson = {}
 		relationjson.uuid = $scope.relationdata.uuid;
 		relationjson.name = $scope.relationdata.name;
+		relationjson.displayName = $scope.relationdata.displayName;
 		relationjson.active = $scope.relationdata.active;
 		relationjson.locked = $scope.relationdata.locked;
 		relationjson.desc = $scope.relationdata.desc;

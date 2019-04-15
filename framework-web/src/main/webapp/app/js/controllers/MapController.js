@@ -166,6 +166,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 
 	$scope.onChangeName = function (data) {
 		$scope.mapName = data;
+		$scope.mapdata.displayName=data;
 	}
 
 	$scope.showGraph = function (uuid, version) {
@@ -561,6 +562,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		var mapJson = {};
 		mapJson.uuid = $scope.mapdata.uuid;
 		mapJson.name = $scope.mapdata.name;
+		mapJson.displayName = $scope.mapdata.displayName;
 		var tagArray = [];
 
 		if ($scope.tags != null) {
