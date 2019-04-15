@@ -1178,21 +1178,21 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 		switch (dqColCheck.getCheckType()) {
 		case DOMAIN:
-			dqColCheck.getCheckValue();
-			List<AttributeDomain> domainList = metadataServiceImpl
-					.getDomainByUuid(dqColCheck.getCheckValue().getRef().getUuid());
-			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
-			if (domainCheck == null) {
-				domainCheck = new ArrayList<>();
-			}
-
-			for (AttributeDomain attrDomain : domainList) {
-				MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
-				domainCheckMI.setVersion(null);
-				domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
-			}
-
-			dataQual.setDomainCheck(domainCheck);
+//			dqColCheck.getCheckValue();
+//			List<AttributeDomain> domainList = metadataServiceImpl
+//					.getDomainByUuid(dqColCheck.getCheckValue().getRef().getUuid());
+//			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
+//			if (domainCheck == null) {
+//				domainCheck = new ArrayList<>();
+//			}
+//
+//			for (AttributeDomain attrDomain : domainList) {
+//				MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
+//				domainCheckMI.setVersion(null);
+//				domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
+//			}
+//
+//			dataQual.setDomainCheck(domainCheck);
 			return dataQual;
 		default:
 			return dataQual;
