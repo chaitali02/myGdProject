@@ -136,14 +136,14 @@ public class DQRecOperator {
 			
 			sampleHolder.setTableName(sampleTempTableName);
 			
-//			//***************** check domain for recommendation *****************//
-//			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-//
-//			//***************** check domain for recommendation *****************//
-//			recommendationList.addAll(nullCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-//			
-//			//***************** check domain for recommendation *****************//
-//			recommendationList.addAll(duplicateCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
+			//***************** check domain for recommendation *****************//
+			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
+
+			//***************** check domain for recommendation *****************//
+			recommendationList.addAll(nullCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
+			
+			//***************** check domain for recommendation *****************//
+			recommendationList.addAll(duplicateCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
 
 			//***************** check domain for recommendation *****************//
 			recommendationList.addAll(rangeCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
