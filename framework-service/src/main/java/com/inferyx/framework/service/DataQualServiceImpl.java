@@ -1209,13 +1209,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 			throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> data = new ArrayList<>();
-		Datapod dp=null;
-		String maxVersionReplace=null;
 		Map<String, String> paramValMap = new HashMap<String, String>();
 		StringBuilder outerSqlBulider = new StringBuilder();
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ExecParams execParams=new ExecParams();
-		String replaceChar=null;
+		ExecParams execParams = new ExecParams();
 		String datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
 		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
@@ -1225,56 +1222,28 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 		paramListHolder.setParamId("1");
 		paramListHolder.setParamName("numDays");
-		paramListHolder.setParamType("Integer");
+		paramListHolder.setParamType("integer");
 		paramListHolder
 				.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), period));
 
 		if (period.equalsIgnoreCase("all")) {
 			dataset.setFilterInfo(null);
-		}else {
+		} else {
 			execParams.setParamListHolder(paramListHolder);
 		}
-			
+
 		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
 				paramValMap);
-		
-		
+
 		String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid()
-				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";		
-		
+				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";
+
 		sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
-		
-		
-	
-			if (!period.equalsIgnoreCase("all"))
-			if (dsDatasource.getType().equalsIgnoreCase("File")) {
+
+		if (!period.equalsIgnoreCase("all"))
+				sql = sql.replace("30", period);
 			
 
-			} else if (dsDatasource.getType().equalsIgnoreCase("mysql")) {
-				//period = "INTERVAL "+period+" DAY";
-
-				sql = sql.replace("'$LoockBackDate'",
-						period);
-			}
-			
-			
-			/*if (!period.equalsIgnoreCase("all")) {
-	
-	MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getFilterInfo().get(0).getOperand().get(0).getRef(), null);
-	dp= (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-	 replaceChar=    dp.sql(dataset.getFilterInfo().get(0).getOperand().get(0).getAttributeId());
-	 maxVersionReplace="( "+replaceChar+"=="+"MAX("+replaceChar+") )";
-			}*/
-	/*	if (period.equalsIgnoreCase("all")) {
-			
-			sql = sql.replace("AND (( (dq_result_summary.rule_exec_time >= '$LookBackDate') ))", "");
-		}
-			else
-			{
-			//	sql = sql.replace(replaceChar+" >=", "UNIX_TIMESTAMP(timestamp("+replaceChar+")) >=");
-				//sql = sql.replace("WHERE (1=1)", "WHERE (1=1) " + maxVersionReplace);
-
-			}*/
 		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
 				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)
 				.append(" ds_dq_result_summary");
