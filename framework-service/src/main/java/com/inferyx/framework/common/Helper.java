@@ -1986,11 +1986,7 @@ public class Helper {
 		}
 	}
 	
-	public static String getCurrentDateByFormat() {
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-		return formatter.format(new Date());
-	}
-
+	
 	public static List<String> genaretePrefix(String datapodName, int numCombination, int numChar) {
 		List<String> result = new ArrayList<>();
 		StringBuilder str = null;

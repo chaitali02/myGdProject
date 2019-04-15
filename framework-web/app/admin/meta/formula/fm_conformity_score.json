@@ -39,7 +39,30 @@
     "value": null
   },
   "formulaInfo": [
-    {
+        {
+      "ref": {
+        "type": "function",
+        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "version": null,
+        "name": "avg"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    }, {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+     {
       "ref": {
         "type": "simple",
         "uuid": null,
@@ -168,6 +191,18 @@
       },
       "attributeId": null,
       "value": "4",
+      "attributeName": null,
+      "attributeType": null
+    },
+     {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
       "attributeName": null,
       "attributeType": null
     }

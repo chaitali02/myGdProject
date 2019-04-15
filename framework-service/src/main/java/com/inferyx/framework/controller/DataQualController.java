@@ -301,8 +301,11 @@ public class DataQualController {
 	}
 	
 	@RequestMapping(value="/getDqStats",method=RequestMethod.GET)
-	public List<Map<String, Object>> getDqStats(@RequestParam(value = "period") String period) throws Exception
+	public List<Map<String, Object>> getDqStats(
+			@RequestParam(value = "uuid") String datapodUuid,
+			@RequestParam(value = "version", required = false) String datapodVersion,
+			@RequestParam(value = "period") String period) throws Exception
 	    		{
-			return dataQualServiceImpl.getDqStats(period);
+			return dataQualServiceImpl.getDqStats(datapodUuid, datapodVersion, period);
 	}
 }

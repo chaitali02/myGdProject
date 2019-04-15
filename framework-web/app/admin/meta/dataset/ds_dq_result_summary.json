@@ -1,18 +1,18 @@
 {
 	"uuid": "49aad5dc-1f2d-4e15-8a2b-fdbeae2159eb",
 	"version": "1555074398",
-	"name": "ds_dq_result_summary",
+	"name": "ds_dq_stats",
 	"desc": "",
 	"createdBy": {
 		"ref": {
 			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196",
-			"name": "ypalrecha"
+			"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version": "1548315952",
+			"name": "db_admin"
 		},
 		"value": null
 	},
-	"createdOn": "Fri Apr 12 18:36:38 IST 2019",
+	"createdOn": "Mon Apr 15 13:29:02 IST 2019",
 	"tags": [],
 	"active": "Y",
 	"locked": "N",
@@ -21,8 +21,11 @@
 		{
 			"ref": {
 				"type": "application",
-				"uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81"
-			}
+				"uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version": null,
+				"name": "Deutsche Admin"
+			},
+			"value": null
 		}
 	],
 	"publicFlag": "Y",
@@ -35,151 +38,43 @@
 		},
 		"value": null
 	},
-	"filterInfo": null,
+	"filterInfo": [
+		{
+			"display_seq": "0",
+			"logicalOperator": "",
+			"operator": ">=",
+			"operand": [
+				{
+					"ref": {
+						"type": "datapod",
+						"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+						"version": null,
+						"name": "dq_result_summary"
+					},
+					"attributeId": 2,
+					"value": null,
+					"attributeName": "rule_exec_time",
+					"attributeType": null
+				},
+				{
+					"ref": {
+						"type": "formula",
+						"uuid": "ebaf51cd-0052-41c7-974d-0e2cbf7c5084",
+						"version": null,
+						"name": "fm_dq_stats"
+					},
+					"attributeId": null,
+					"value": null,
+					"attributeName": null,
+					"attributeType": null
+				}
+			]
+		}
+	],
 	"attributeInfo": [
 		{
-			"attrSourceId": "0",
-			"attrDisplaySeq": "0",
-			"attrSourceName": "rule_exec_uuid",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "0",
-				"attrName": "rule_exec_uuid",
-				"attrType": "varchar",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "1",
-			"attrDisplaySeq": "1",
-			"attrSourceName": "rule_exec_version",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "1",
-				"attrName": "rule_exec_version",
-				"attrType": "integer",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "2",
-			"attrDisplaySeq": "2",
-			"attrSourceName": "rule_exec_time",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "2",
-				"attrName": "rule_exec_time",
-				"attrType": "varchar",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "7",
-			"attrDisplaySeq": "3",
-			"attrSourceName": "datapod_uuid",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "7",
-				"attrName": "datapod_uuid",
-				"attrType": "varchar",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "8",
-			"attrDisplaySeq": "4",
-			"attrSourceName": "datapod_version",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "8",
-				"attrName": "datapod_version",
-				"attrType": "integer",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "9",
-			"attrDisplaySeq": "5",
-			"attrSourceName": "datapod_name",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "9",
-				"attrName": "datapod_name",
-				"attrType": "varchar",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "10",
-			"attrDisplaySeq": "6",
-			"attrSourceName": "datapod_desc",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "10",
-				"attrName": "datapod_desc",
-				"attrType": "varchar",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
 			"attrSourceId": "63",
-			"attrDisplaySeq": "7",
+			"attrDisplaySeq": "0",
 			"attrSourceName": "completeness_score",
 			"function": null,
 			"sourceAttr": {
@@ -199,7 +94,7 @@
 		},
 		{
 			"attrSourceId": "64",
-			"attrDisplaySeq": "8",
+			"attrDisplaySeq": "1",
 			"attrSourceName": "consistency_score",
 			"function": null,
 			"sourceAttr": {
@@ -219,7 +114,7 @@
 		},
 		{
 			"attrSourceId": "65",
-			"attrDisplaySeq": "9",
+			"attrDisplaySeq": "2",
 			"attrSourceName": "conformity_score",
 			"function": null,
 			"sourceAttr": {
@@ -239,7 +134,7 @@
 		},
 		{
 			"attrSourceId": "66",
-			"attrDisplaySeq": "10",
+			"attrDisplaySeq": "3",
 			"attrSourceName": "integrity_score",
 			"function": null,
 			"sourceAttr": {
@@ -259,7 +154,7 @@
 		},
 		{
 			"attrSourceId": "67",
-			"attrDisplaySeq": "11",
+			"attrDisplaySeq": "4",
 			"attrSourceName": "custom_score",
 			"function": null,
 			"sourceAttr": {
@@ -279,7 +174,7 @@
 		},
 		{
 			"attrSourceId": "68",
-			"attrDisplaySeq": "12",
+			"attrDisplaySeq": "5",
 			"attrSourceName": "accuracy_score",
 			"function": null,
 			"sourceAttr": {
@@ -299,7 +194,7 @@
 		},
 		{
 			"attrSourceId": "69",
-			"attrDisplaySeq": "13",
+			"attrDisplaySeq": "6",
 			"attrSourceName": "timeliness_score",
 			"function": null,
 			"sourceAttr": {
@@ -312,26 +207,6 @@
 				"value": null,
 				"attrId": "51",
 				"attrName": "expression_score",
-				"attrType": "decimal",
-				"attrUnitType": null,
-				"function": null
-			}
-		},
-		{
-			"attrSourceId": "62",
-			"attrDisplaySeq": "14",
-			"attrSourceName": "total_score",
-			"function": null,
-			"sourceAttr": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-					"version": null,
-					"name": "dq_result_summary"
-				},
-				"value": null,
-				"attrId": "62",
-				"attrName": "score",
 				"attrType": "decimal",
 				"attrUnitType": null,
 				"function": null

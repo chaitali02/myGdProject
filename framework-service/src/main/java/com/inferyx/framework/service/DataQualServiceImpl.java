@@ -60,6 +60,7 @@ import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
@@ -71,6 +72,9 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.operator.FilterOperator2;
+import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
 
@@ -95,6 +99,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	private DownloadServiceImpl downloadServiceImpl;
 	@Autowired
 	private DatasetOperator datasetOperator; 
+	@Autowired
+	private FilterOperator2 filterOperator2 ;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1191,45 +1197,81 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public List<Map<String, Object>> getDqStats(String period) throws Exception {
+	public List<Map<String, Object>> getDqStats(String datapodUuid, String datapodVersion, String period)
+			throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> data = new ArrayList<>();
+		Datapod dp=null;
+		String maxVersionReplace=null;
 		Map<String, String> paramValMap = new HashMap<String, String>();
 		StringBuilder outerSqlBulider = new StringBuilder();
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-
+		ExecParams execParams=new ExecParams();
+		String replaceChar=null;
 		String datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
 		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString(), "N");
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
+		ParamListHolder paramListHolder = new ParamListHolder();
 
-		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), new ExecParams(), RunMode.ONLINE,
-				paramValMap);
+		paramListHolder.setParamId("1");
+		paramListHolder.setParamName("numDays");
+		paramListHolder.setParamType("Integer");
+		paramListHolder
+				.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), period));
 
-		if(datasource.getType().equalsIgnoreCase("File")) {
-		period = "unix_timestamp(date_format(cast(date_sub(current_date, " + period
-				+ ") as String) , \"EEE MMM dd HH:mm:ss z yyyy\"),\"EEE MMM dd HH:mm:ss z yyyy\")";
-		
-		sql = sql.replace("(dq_result_summary.rule_exec_time",
-				"(unix_timestamp(dq_result_summary.rule_exec_time,\"EEE MMM dd HH:mm:ss z yyyy\")");
-		
+		if (period.equalsIgnoreCase("all")) {
+			dataset.setFilterInfo(null);
+		}else {
+			execParams.setParamListHolder(paramListHolder);
 		}
-		else if(datasource.getType().equalsIgnoreCase("mysql")) 
-		{
-			period = "unix_timestamp(date_format(cast(date_sub(current_date, " + period
-					+ ") as String) , \"EEE MMM dd HH:mm:ss z yyyy\"),\"EEE MMM dd HH:mm:ss z yyyy\")";
 			
-			sql = sql.replace("(dq_result_summary.rule_exec_time",
-					"(unix_timestamp(dq_result_summary.rule_exec_time,\"EEE MMM dd HH:mm:ss z yyyy\")");
-		}
+		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
+				paramValMap);
+		
+		
+		String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid()
+				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";		
+		
+		sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
+		
+		
 	
-		
-		sql = sql.replace("'$LookBackDate'", period);
-		
+			if (!period.equalsIgnoreCase("all"))
+			if (dsDatasource.getType().equalsIgnoreCase("File")) {
+			
+
+			} else if (dsDatasource.getType().equalsIgnoreCase("mysql")) {
+				//period = "INTERVAL "+period+" DAY";
+
+				sql = sql.replace("'$LoockBackDate'",
+						period);
+			}
+			
+			
+			/*if (!period.equalsIgnoreCase("all")) {
+	
+	MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getFilterInfo().get(0).getOperand().get(0).getRef(), null);
+	dp= (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+	 replaceChar=    dp.sql(dataset.getFilterInfo().get(0).getOperand().get(0).getAttributeId());
+	 maxVersionReplace="( "+replaceChar+"=="+"MAX("+replaceChar+") )";
+			}*/
+	/*	if (period.equalsIgnoreCase("all")) {
+			
+			sql = sql.replace("AND (( (dq_result_summary.rule_exec_time >= '$LookBackDate') ))", "");
+		}
+			else
+			{
+			//	sql = sql.replace(replaceChar+" >=", "UNIX_TIMESTAMP(timestamp("+replaceChar+")) >=");
+				//sql = sql.replace("WHERE (1=1)", "WHERE (1=1) " + maxVersionReplace);
+
+			}*/
 		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
 				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)
 				.append(" ds_dq_result_summary");
 
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
 
 		data = exec.executeAndFetchByDatasource(outerSqlBulider.toString(), dsDatasource,
 				commonServiceImpl.getApp().getUuid());
