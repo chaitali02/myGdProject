@@ -189,7 +189,9 @@ public class DatapodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception{
 		try{
-			return datapodServiceImpl.getPrefix(datapodName);
+			int numCombination=5;
+			int numChar=3;
+			return datapodServiceImpl.getPrefix(datapodName, numCombination, numChar);
 
 		}catch (Exception e) {
 			e.printStackTrace();

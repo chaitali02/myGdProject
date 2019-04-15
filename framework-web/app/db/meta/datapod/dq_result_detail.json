@@ -529,5 +529,6 @@
             "cdeFlag" : "N",
             "Precision" : 0
         }
-    ]
+    ],
+  "prefix":"eut"
 }

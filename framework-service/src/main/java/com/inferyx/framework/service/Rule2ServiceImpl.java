@@ -77,13 +77,14 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	static final Logger logger = Logger.getLogger(Rule2ServiceImpl.class);
 
 
-	public BusinessRule resolveName(BusinessRule rule2) throws JsonProcessingException {
+	/********************************Unused******************************/
+	/*public BusinessRule resolveName(BusinessRule rule2) throws JsonProcessingException {
 		String createdByRefUuid = rule2.getCreatedBy().getRef().getUuid();
 		// User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
 		User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
 		rule2.getCreatedBy().getRef().setName(user.getName());
 		return rule2;
-	}
+	}*/
 
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
 			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws Exception {
