@@ -69,7 +69,12 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
 		}
-    }
+	}
+
+	$scope.onChangeName = function (data) {
+		$scope.graphpodData.displayName=data;	
+	}
+
 	$scope.showPage = function () {
 		if($scope.checkIsInrogess () ==false){
 			return false;
@@ -556,7 +561,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		$scope.myform.$dirty = true;
 		var graphpodJson = {}
 		graphpodJson.uuid = $scope.graphpodData.uuid
-		graphpodJson.name = $scope.graphpodData.name
+		graphpodJson.name = $scope.graphpodData.name;
+		graphpodJson.displayName = $scope.graphpodData.displayName;
 		graphpodJson.desc = $scope.graphpodData.desc
 		graphpodJson.active = $scope.graphpodData.active;
 		graphpodJson.locked = $scope.graphpodData.locked;
