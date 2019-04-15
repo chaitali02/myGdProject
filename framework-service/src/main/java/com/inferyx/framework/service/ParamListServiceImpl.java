@@ -82,8 +82,6 @@ public class ParamListServiceImpl {
 			/*if (!paramListHolder.getRef().getUuid().equals(ref.getUuid())) {
 				paramListHolder = null;
 			}*/
-			
-		//	return paramListHolder.getParamValue().getValue();
 		}
 		
 		// Get param from ref
@@ -100,6 +98,7 @@ public class ParamListServiceImpl {
 		
 		logger.info("Param name : " + paramName);
 		logger.info("Param value : " + refParamValue);
+		
 		for(Param param : appParamList.getParams()) {
 			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {
@@ -112,7 +111,7 @@ public class ParamListServiceImpl {
 //		ParamList paramList = (ParamList) daoRegister.getRefObject(paramListHolder.getRef());
 		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), paramListHolder.getRef().getType().toString(), "N");
 		
-		for(Param param : paramList.getParams() ) {
+		for(Param param : paramList.getParams()) {
 			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {
 				logger.info("Param name from execParams : " + param.getParamName());
