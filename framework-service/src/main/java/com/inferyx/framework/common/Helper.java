@@ -1575,6 +1575,8 @@ public class Helper {
 				return IngestionType.STREAMTOTABLE;
 			case "stream-file":
 				return IngestionType.STREAMTOFILE;
+			case "ws-table":
+				return IngestionType.WSTOTABLE;
 			}
 		}
 		return null;
@@ -2076,36 +2078,8 @@ public class Helper {
 		
 		return result;
 	}
-	public static StringBuilder getPermute(int postion,String name, int increment){
-		StringBuilder str=new StringBuilder();
-		if (postion  <= (name.length())) {
-			str.append(name.charAt(postion));
-		} else {
-			str.append(name.charAt((postion % name.length())));
-		}
-		return str;
-	}
-	
-	private static void permute(String str, int l, int r, List<String> result) {
-		if (l == r) {
-			result.add(str);
-		} else {
-			for (int i = l; i <= r; i++) {
-				str = swap(str, l, i);
-				permute(str, l + 1, r, result);
-				str = swap(str, l, i);
-			}
-		}
-	}
 
-	private static String swap(String a, int i, int j) {
-		char temp;
-		char[] charArray = a.toCharArray();
-		temp = charArray[i];
-		charArray[i] = charArray[j];
-		charArray[j] = temp;
-		return String.valueOf(charArray);
-	}
+	
 	
 	public static CheckType getCheckType(String checkType) {
 		switch (checkType.toLowerCase()) {

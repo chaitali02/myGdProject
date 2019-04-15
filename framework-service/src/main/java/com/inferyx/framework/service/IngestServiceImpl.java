@@ -86,6 +86,7 @@ import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.executor.WSSourceExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
@@ -132,6 +133,8 @@ public class IngestServiceImpl extends RuleTemplate {
 	private DatasetOperator datasetOperator;
 	@Autowired
 	private ConnectionFactory connectionFactory;
+	@Autowired
+	private WSSourceExecutor wsSourceExecutor;
 	
 	static final Logger logger = Logger.getLogger(IngestServiceImpl.class);
 	
@@ -188,7 +191,7 @@ public class IngestServiceImpl extends RuleTemplate {
 
 	public IngestExec execute(String ingestUuid, String ingestVersion, IngestExec ingestExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
 		try {
-			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString());
+			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString(), "N");
 			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.RUNNING);
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			MetaIdentifier sourceDSMI = ingest.getSourceDatasource().getRef();
@@ -305,6 +308,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				runIngestServiceImpl2.setSourceDataSet(sourceDataSet);
 				runIngestServiceImpl2.setIngestOperator(ingestOperator);
 				runIngestServiceImpl2.setDatasetOperator(datasetOperator);
+				runIngestServiceImpl2.setWsSourceExecutor(wsSourceExecutor);
 				
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 					//check whether target file alReady exist (when save mode is null)

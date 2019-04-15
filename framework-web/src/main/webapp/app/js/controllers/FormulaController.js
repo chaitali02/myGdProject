@@ -243,6 +243,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	$scope.onChangeName = function (data) {
 		$scope.statename
 		$scope.formulaName = data;
+		$scope.formuladata.displayName=data;
 	}
 
 	$scope.formulainfoarray = [];
@@ -677,6 +678,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		formulaJson.formulaType = "simple"
 		formulaJson.uuid = $scope.formuladata.uuid;
 		formulaJson.name = $scope.formuladata.name;
+		formulaJson.displayName = $scope.formuladata.displayName;
 		formulaJson.publicFlag = $scope.formuladata.publicFlag;
 
 		var tagArray = [];

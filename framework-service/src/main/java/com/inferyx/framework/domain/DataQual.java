@@ -34,7 +34,7 @@ public class DataQual extends BaseRule{
 	//private String stdDevCheck;
 	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
-	private Threshold thresholdInfo;
+	private Threshold thresholdInfo = new Threshold();
 	private List<MetaIdentifierHolder> domainCheck;
 	private String blankSpaceCheck;
 	private MetaIdentifierHolder expressionCheck;

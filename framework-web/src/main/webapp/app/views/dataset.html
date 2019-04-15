@@ -60,15 +60,7 @@
               data-ng-click="enableEdit(dataset.uuid,dataset.version)">
               <i class="fa fa-edit icon-circle"></i>
             </a>
-            <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-disabled="isPrivlage" title="Edit" data-toggle="tooltip"
-              data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-              data-ng-click="enableEdit(dataset.uuid,dataset.version)">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a> -->
-            <!-- <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataset.uuid,dataset.version)">
-              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a> -->
+          
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
               tooltip data-ng-click="(isShowSimpleData ==false ||isEditInprogess ==true || isEditVeiwError ==true)?showSampleTable(dataset):''" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-table icon-circle"></i>
@@ -218,10 +210,18 @@
                         </label>
                         <div class="col-md-6">
                           <input type="text" class="form-control" name="name" ng-class="" ng-disabled="{{mode}}" ng-model="dataset.name" placeholder=""
-                            disabled="disabled" required="">
+                            disabled="disabled" required="" ng-Change="onChangeName(dataset.name)">
                         </div>
                       </div>
-
+                      <div class="form-group">
+                        <label class="col-md-3 control-label">Display Name
+                          <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" ng-disabled="{{mode}}"
+                            ng-model="dataset.displayName" placeholder="" required="">
+                        </div>
+                      </div>
                       <div class="form-group" ng-show="dataset.uuid">
                         <label class="col-md-3 control-label">Version</label>
                         <div class="col-md-6">

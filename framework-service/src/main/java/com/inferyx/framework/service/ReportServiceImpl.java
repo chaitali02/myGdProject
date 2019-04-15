@@ -232,9 +232,10 @@ public class ReportServiceImpl extends RuleTemplate {
 		return reportExec;
 	}
 	
-	protected String getFileName(Report report, ReportExec reportExec) {
+	/*****************************Uused**************************************/
+	/*protected String getFileName(Report report, ReportExec reportExec) {
 		return String.format("/%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
-	}
+	}*/
 
 	
 	protected void persistDatastore(ReportExec reportExec, String tableName, String filePath, MetaIdentifierHolder resultRef, MetaIdentifier metaId, long countRows, RunMode runMode) throws Exception {
@@ -272,7 +273,9 @@ public class ReportServiceImpl extends RuleTemplate {
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null,runMode);
 	}
 	
-	public boolean createPDF() {
+
+	/******************************Unused**************************/
+	/*public boolean createPDF() {
 		try {
 			
 			return true;
@@ -281,9 +284,11 @@ public class ReportServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 	
-	public boolean createXLS() {
+	
+	/**********************Unused***************************/
+	/*public boolean createXLS() {
 		try {
 			
 			return true;
@@ -292,7 +297,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, String sortBy, String order, String requestId,

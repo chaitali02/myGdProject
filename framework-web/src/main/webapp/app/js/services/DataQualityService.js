@@ -771,10 +771,12 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 			if(response){
 				var dqJson = {};
 				dqJson.dqdata = response
-				dqJson.upperBound = response.rangeCheck.upperBound;
-				dqJson.lowerBound = response.rangeCheck.lowerBound
-				dqJson.maxLength = response.lengthCheck.maxLength
-				dqJson.minLength = response.lengthCheck.minLength
+				if(response.rangeCheck !=null){
+					dqJson.upperBound = response.rangeCheck.upperBound;
+					dqJson.lowerBound = response.rangeCheck.lowerBound
+					dqJson.maxLength = response.lengthCheck.maxLength
+					dqJson.minLength = response.lengthCheck.minLength
+			    }
 				var filterInfoArray = [];
 				if (response.filterInfo != null) {
 					for (i = 0; i < response.filterInfo.length; i++) {

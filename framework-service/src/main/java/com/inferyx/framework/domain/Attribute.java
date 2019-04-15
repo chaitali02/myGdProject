@@ -28,7 +28,7 @@ public class Attribute {
     private String piiFlag = "N";
     private String cdeFlag = "N";
     private Integer Precision;
-    private String nullFlag = "N";
+    private String nullFlag = "Y";
 
 	
 	public String getNullFlag() {
@@ -248,8 +248,17 @@ public class Attribute {
 	public void setPrecision(Integer precision) {
 		Precision = precision;
 	}
-    
-   
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Attribute [attributeId=" + attributeId + ", displaySeq=" + displaySeq + ", name=" + name + ", type="
+				+ type + ", desc=" + desc + ", expression=" + expression + ", key=" + key + ", partition=" + partition
+				+ ", dispName=" + dispName + ", active=" + active + ", length=" + length + ", attrUnitType="
+				+ attrUnitType + ", domain=" + domain + ", piiFlag=" + piiFlag + ", cdeFlag=" + cdeFlag + ", Precision="
+				+ Precision + ", nullFlag=" + nullFlag + "]";
+	}
     
 }

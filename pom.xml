@@ -711,8 +711,8 @@
 		<module>framework-batch</module>
 		<!-- <module>framework-udfs</module> -->
 		<module>framework-predict</module>
-		<module>framework-ws-client</module>
-	</modules>
+<!-- 		<module>framework-ws-client</module>
+ -->	</modules>
 
 	<build>
 		<plugins>

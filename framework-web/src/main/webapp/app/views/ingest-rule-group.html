@@ -42,15 +42,7 @@
             data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-            data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a> -->
+      
           <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
             data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
             data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
@@ -102,10 +94,18 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="ruleGroupDetail.name" required="">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="ruleGroupDetail.name" ng-change="onChangeName(ruleGroupDetail.name)" required="">
                 </div>
               </div>
-              
+              <div class="form-group">
+                <label class="col-md-3 control-label">Display Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" ng-disabled="{{mode}}"
+                    ng-model="ruleGroupDetail.displayName" placeholder="" required="">
+                </div>
+              </div>
               <div class="form-group" ng-show="ruleGroupDetail.uuid">
                 <label class="col-md-3 control-label">Version</label>
                 <div class="col-md-6">

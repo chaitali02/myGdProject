@@ -15,5 +15,5 @@ package com.inferyx.framework.enums;
  *
  */
 public enum CheckType {
-	DOMAIN, NULL, VALUE, PASS
+	DOMAIN, NULL, VALUE, PASS, DUPLICATE, RANGE
 }

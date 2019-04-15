@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import com.inferyx.framework.enums.CheckType;
 
 /**
@@ -19,7 +21,7 @@ import com.inferyx.framework.enums.CheckType;
 public class DQIntelligence {
 	private AttributeRefHolder attributeName;
 	private CheckType checkType;
-	private MetaIdentifierHolder checkValue;
+	private List<MetaIdentifierHolder> checkValue;
 	private boolean isCreated;
 	private double sampleScore;
 
@@ -64,7 +66,7 @@ public class DQIntelligence {
 	 *
 	 * @return the checkValue
 	 */
-	public MetaIdentifierHolder getCheckValue() {
+	public List<MetaIdentifierHolder> getCheckValue() {
 		return checkValue;
 	}
 
@@ -73,7 +75,7 @@ public class DQIntelligence {
 	 *
 	 * @param checkValue the checkValue to set
 	 */
-	public void setCheckValue(MetaIdentifierHolder checkValue) {
+	public void setCheckValue(List<MetaIdentifierHolder> checkValue) {
 		this.checkValue = checkValue;
 	}
 

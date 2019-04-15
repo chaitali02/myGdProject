@@ -34,6 +34,7 @@ public class BaseEntity {
 	private String uuid;
 	private String version;
 	private String name;
+	private String displayName;
 	private String desc;
 	private MetaIdentifierHolder createdBy;
 	private Date createdOn;
@@ -224,7 +225,15 @@ public class BaseEntity {
 	 * @param type
 	 * @return
 	 */
+	
 	public MetaIdentifierHolder getMetaIdentifierHolder(MetaType type) {
 		return new MetaIdentifierHolder(getRef(type));
 	}	
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
 }

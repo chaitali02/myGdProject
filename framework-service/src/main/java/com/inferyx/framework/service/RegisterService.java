@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -52,7 +50,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
-import com.inferyx.framework.connector.S3Connector;
 import com.inferyx.framework.dao.IFunctionDao;
 import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Algorithm;
@@ -1656,8 +1653,8 @@ public class RegisterService {
 		return registryList;
 	}
 	
-	
-	public String getdataTypeBydbType(String dbtype, String datatype)
+	/*************Unused*******************/
+	/*public String getdataTypeBydbType(String dbtype, String datatype)
 			throws Exception {
 	    if (dbtype.equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 			return mysqlRegister.getconvertedDataType(datatype);
@@ -1670,16 +1667,17 @@ public class RegisterService {
 		}
 
 	}
-
+*/
 	public List<Function> getFunctionByFunctionInfo(String functionInfo) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<Function> functionList = iFunctionDao.findFunctionByFunctionInfo(functionInfo);
 		List<Function> resolvedList = functionServiceImpl.resolveName(functionList);
 		return resolvedList;
 	}
 
-	public String getFormulaByType2(String uuid,String[] formulaType) throws JsonProcessingException {
+	/*************************Unused********************/
+	/*public String getFormulaByType2(String uuid,String[] formulaType) throws JsonProcessingException {
 		return getFormulaByType2(uuid,formulaType, "Y");
-	}
+	}*/
 	public String getFormulaByType2(String uuid,String[] formulaType, String resolveFlag) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

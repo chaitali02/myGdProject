@@ -4,10 +4,10 @@ import com.inferyx.framework.enums.ThresholdType;
 
 public class Threshold {
 	
-	private String low;
-	private String medium;
-	private String high;
-	private ThresholdType type;
+	private String low = "25";
+	private String medium = "50";
+	private String high = "75";
+	private ThresholdType type = ThresholdType.NUMERIC;
 	
 	public String getLow() {
 		return low;

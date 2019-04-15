@@ -43,7 +43,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
@@ -267,6 +266,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	 * @return
 	 * @throws Exception
 	 */
+	
+	/***************Unused********************/
 	public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.reconExec);
