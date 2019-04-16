@@ -201,14 +201,14 @@ public class DQRecOperator {
 		//***************** applying regex for each domain vs each column of sample *****************//
 		if(attrDomainList != null && !attrDomainList.isEmpty()) {
 			StringBuilder regextQuery = new StringBuilder();
-			for(AttributeDomain domain : attrDomainList) { 
+			for(AttributeDomain domain : attrDomainList) { //domain loop
 				regextQuery.append("SELECT ");
 				regextQuery.append("'").append(domain.getName()).append("'").append(" AS ").append("domain_name").append(", ");
 				regextQuery.append("'").append(domain.getUuid()).append("'").append(" AS ").append("domain_uuid").append(", ");
 				regextQuery.append("'").append(datapod.getUuid()).append("'").append(" AS ").append("datapod_uuid").append(", ");
 				
 				int i = 0;
-				for(String colName : dfColumns) {
+				for(String colName : dfColumns) { //column loop
 					String colCheck = colName.concat(" RLIKE (").concat("'").concat(domain.getRegEx()).concat("') ");
 					regextQuery.append(caseWrapper(colCheck, colName));
 					if(i < dfColumns.length - 1) {
@@ -222,7 +222,7 @@ public class DQRecOperator {
 			
 			String sql = regextQuery.substring(0, regextQuery.lastIndexOf(" UNION ALL "));
 			String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
-			sparkExecutor.executeAndRegisterByTempTable(sql, domainTempTableName, true, appUuid).getDataFrame();
+			sparkExecutor.executeAndRegisterByTempTable(sql, domainTempTableName, true, appUuid);
 			
 			tempTableList.add(domainTempTableName);
 			
@@ -230,33 +230,48 @@ public class DQRecOperator {
 			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
 			tempTableList.add(colScoreTempTable);
 			
-			StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-			StringBuilder scoreCountBuilder = new StringBuilder();
+			List<DQIntelligence> domainRecommendation = new ArrayList<>();
+			
 			long sampleTotalRows = rsHolder.getCountRows();
 			for(AttributeDomain domain : attrDomainList) {
 				if(sampleTotalRows > 0) {
-					for(String colName : dfColumns) {					
-						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, "
-								+ "(COUNT(" + colName + ")/" + sampleTotalRows + ") * 100 AS score_count, '"
-								+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
-								+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column, domain_uuid, datapod_uuid");
+					for(String colName : dfColumns) {	
+						StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
+						StringBuilder scoreCountBuilder = new StringBuilder();
+						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, ");
+						scoreCountBuilder.append("(COUNT(").append(colName).append(") / ").append(sampleTotalRows).append(") * 100 AS score_count").append(", ");
+						scoreCountBuilder.append("'").append(colName).append("'").append(" AS score_column");
 						
-						scoreCountBuilder.append(" UNION ALL ");
-					}
+//						if(i < dfColumns.length - 1) {
+//							scoreCountBuilder.append(", ");	
+//						}
+						
+
+						scoreCountBuilder.append(" FROM ").append(domainTempTableName);
+						scoreCountBuilder.append(" WHERE ").append(" domain_name = '").append(domain.getName()).append("' AND ").append(colName).append(" = 'Y' ");
+						scoreCountBuilder.append(" GROUP BY ").append("domain_name, domain_uuid, datapod_uuid");
+												
+						outerSqlBuilder.append(scoreCountBuilder).append(") WHERE score_count >= "+minThreshold);
+						
+						ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), colScoreTempTable, false, appUuid);
+//						scoreCountHolder.getDataFrame().show(false);
+						
+						domainRecommendation.addAll(getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList));
+					}					
 				}
 			}
 			
-			String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
-			outerSqlBuilder.append(scoreSql).append(") WHERE score_count >= "+minThreshold);
-			
-			ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), colScoreTempTable, true, appUuid);
+//			String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
+////			outerSqlBuilder.append(scoreSql).append(") WHERE score_count >= "+minThreshold);
+//			
+//			ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(scoreSql, colScoreTempTable, true, appUuid);
 //			scoreCountHolder.getDataFrame().show(false);
-			
-			//***************** saving score *****************//
-			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
-			save(scoreCountHolder, scoreFilePathUrl, null, false);
-			
-			List<DQIntelligence> domainRecommendation = getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList);
+//			
+//			//***************** saving score *****************//
+//			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
+//			save(scoreCountHolder, scoreFilePathUrl, null, false);
+//			
+//			List<DQIntelligence> domainRecommendation = getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList);
 			
 			//***************** finding max score of a columns *****************//
 //			String maxScoreCountSql = "SELECT domain_name, domain_uuid, datapod_uuid, score_count, score_column FROM "
