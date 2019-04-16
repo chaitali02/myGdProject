@@ -106,6 +106,10 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
   $scope.getLovByType();
 
+  $scope.onChangeName = function (data) {
+		$scope.dataqualitydata.displayName = data;
+  }
+  
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
@@ -1055,6 +1059,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
     dataqualityjosn.uuid = $scope.dataqualitydata.uuid;
     dataqualityjosn.name = $scope.dataqualitydata.name;
+    dataqualityjosn.displayName = $scope.dataqualitydata.displayName;
     dataqualityjosn.desc = $scope.dataqualitydata.desc;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1478,6 +1483,11 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     });
   };
   $scope.getLovByType();
+  
+  $scope.onChangeName = function (data) {
+		$scope.dqruleGroupDetail.displayName = data;
+  }
+  
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
@@ -1697,6 +1707,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     options.execution = $scope.checkboxModelexecution;
     dqruleGroupJson.uuid = $scope.dqruleGroupDetail.uuid;
     dqruleGroupJson.name = $scope.dqruleGroupDetail.name;
+    dqruleGroupJson.displayName = $scope.dqruleGroupDetail.displayName;
     dqruleGroupJson.desc = $scope.dqruleGroupDetail.desc;
     dqruleGroupJson.active = $scope.dqruleGroupDetail.active;
     dqruleGroupJson.locked = $scope.dqruleGroupDetail.locked;

@@ -76,7 +76,11 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		});
 	};
 	$scope.getLovByType();
-	
+
+	$scope.onChangeName = function (data) {
+		$scope.paramsetdata.displayName=data;
+	}
+
     $scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -314,9 +318,10 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
 		var paramsetJson = {}
-		paramsetJson.uuid = $scope.paramsetdata.uuid
-		paramsetJson.name = $scope.paramsetdata.name
-		paramsetJson.desc = $scope.paramsetdata.desc
+		paramsetJson.uuid = $scope.paramsetdata.uuid;
+		paramsetJson.name = $scope.paramsetdata.name;
+		paramsetJson.displayName = $scope.paramsetdata.displayName;
+		paramsetJson.desc = $scope.paramsetdata.desc;
 		paramsetJson.active = $scope.paramsetdata.active;
 		paramsetJson.locked = $scope.paramsetdata.locked;
 		paramsetJson.published = $scope.paramsetdata.published;

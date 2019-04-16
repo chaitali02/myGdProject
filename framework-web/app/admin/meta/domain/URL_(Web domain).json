@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("5caefe95d02c773b6d2a7306"),
     "regEx" : "https?\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,}",
     "uuid" : "bd1f4805-d2d8-4102-b9db-419ea7144475",
     "version" : "1554972309",

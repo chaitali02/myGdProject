@@ -103,6 +103,10 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 		}
 	}
 
+	$scope.onChangeName = function (data) {
+		$scope.rule.displayName=data; 
+	}
+
 	/*Start showPage*/
 	$scope.showPage = function () {
 		if ($scope.checkIsInrogess() == false) {
@@ -1131,6 +1135,7 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 		var ruleJson = {}
 		ruleJson.uuid = $scope.rule.uuid
 		ruleJson.name = $scope.rule.name;
+		ruleJson.displayName = $scope.rule.displayName;
 		ruleJson.desc = $scope.rule.desc
 		ruleJson.active = $scope.rule.active;
 		ruleJson.locked = $scope.rule.locked;

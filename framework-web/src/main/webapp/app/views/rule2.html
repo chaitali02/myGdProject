@@ -153,10 +153,19 @@
                                                 <div class="col-md-6">
                                                     <input type="text" class="form-control" name="name" ng-class=""
                                                         ng-disabled="{{mode}}" ng-model="rule.name" placeholder=""
-                                                        disabled="disabled" required="">
+                                                        disabled="disabled" required="" ng-Change="onChangeName(rule.name)" >
                                                 </div>
                                             </div>
-
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Display Name
+                                                  <span class="required" aria-required="true"> * </span>
+                                                </label>
+                                                <div class="col-md-6">
+                                                  <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                                    ng-model="rule.displayName" placeholder="" required="">
+                                                </div>
+                                            </div>
+            
                                             <div class="form-group" ng-show="rule.uuid">
                                                 <label class="col-md-3 control-label">Version</label>
                                                 <div class="col-md-6">

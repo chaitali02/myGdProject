@@ -66,6 +66,11 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		$scope.privileges = privilegeSvc.privileges['role'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.onChangeName = function (data) {
+		$scope.roledata.displayName=data;
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -294,6 +299,7 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		$scope.myform.$dirty = false;
 		roleJson.uuid = $scope.roledata.uuid;
 		roleJson.name = $scope.roledata.name;
+		roleJson.displayName = $scope.roledata.displayName;
 		roleJson.desc = $scope.roledata.desc;
 		roleJson.active = $scope.roledata.active;
 		roleJson.locked = $scope.roledata.locked;

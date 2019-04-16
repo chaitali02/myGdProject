@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1142,17 +1143,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 			try {
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
-				dataQual.setName("dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName().getAttrName());
-				// dataQual.setCreatedOn(new SimpleDateFormat("EEE MMM dd HH:mm:ss z
-				// yyyy").format(new Date()));
-				// dataQual.setCreatedBy(securityServiceImpl.getuserInfo());
-				// dataQual.setActive("Y");
+				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
+				dataQual.setName(name);
+				dataQual.setDisplayName(name);
 				dataQual.setLocked("N");
 				dataQual.setPublished("N");
 				dataQual.setPublicFlag("N");
-				// List<MetaIdentifierHolder> appInfo = new ArrayList<>();
-				// appInfo.add(securityServiceImpl.getAppInfo());
-				// dataQual.setAppInfo(appInfo);
 				dataQual.setBaseEntity();
 
 				// ******************* setting dq specific properties *******************//
@@ -1161,9 +1157,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 				dataQual.setDependsOn(new MetaIdentifierHolder(ref));
 				AttributeRefHolder attrRefHolder = new AttributeRefHolder();
 				attrRefHolder.setRef(ref);
-				attrRefHolder.setAttrName(checkType.getAttributeName().getAttrName());
-				attrRefHolder.setAttrId("" + datapod.getAttributeId(checkType.getAttributeName().getAttrName()));
-				dataQual.setAttribute(attrRefHolder);
+				if(!checkType.getCheckType().equals(CheckType.DUPLICATE)) {
+					attrRefHolder.setAttrName(checkType.getAttributeName().getAttrName());
+					attrRefHolder.setAttrId("" + datapod.getAttributeId(checkType.getAttributeName().getAttrName()));
+					dataQual.setAttribute(attrRefHolder);
+				}
 				dataQual = getCheckType(dataQual, checkType, datapod);
 
 				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
@@ -1184,22 +1182,52 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 		switch (dqColCheck.getCheckType()) {
 		case DOMAIN:
-//			dqColCheck.getCheckValue();
-//			List<AttributeDomain> domainList = metadataServiceImpl
-//					.getDomainByUuid(dqColCheck.getCheckValue().getRef().getUuid());
-//			List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
-//			if (domainCheck == null) {
-//				domainCheck = new ArrayList<>();
-//			}
-//
-//			for (AttributeDomain attrDomain : domainList) {
-//				MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
-//				domainCheckMI.setVersion(null);
-//				domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
-//			}
-//
-//			dataQual.setDomainCheck(domainCheck);
+			for(MetaIdentifierHolder checkValueHolder : dqColCheck.getCheckValue()) {
+				List<AttributeDomain> domainList = metadataServiceImpl
+						.getDomainByUuid(checkValueHolder.getRef().getUuid());
+				List<MetaIdentifierHolder> domainCheck = dataQual.getDomainCheck();
+				if (domainCheck == null) {
+					domainCheck = new ArrayList<>();
+				}
+
+				for (AttributeDomain attrDomain : domainList) {
+					MetaIdentifier domainCheckMI = attrDomain.getRef(MetaType.domain);
+					domainCheckMI.setVersion(null);
+					domainCheck.add(new MetaIdentifierHolder(domainCheckMI));
+				}
+
+				dataQual.setDomainCheck(domainCheck);
+			}
 			return dataQual;
+		
+		case NULL: 	
+				dataQual.setNullCheck("Y");
+			return dataQual;
+			
+		case DUPLICATE:
+			dataQual.setDuplicateKeyCheck("Y");
+			return dataQual;
+			
+		case RANGE:
+			Map<String, String> range = new LinkedHashMap<>();
+			for(MetaIdentifierHolder checkValueHolder : dqColCheck.getCheckValue()) {
+				if(checkValueHolder.getRef().getName().equalsIgnoreCase("Lower Bound")) {
+					range.put("Lower Bound", checkValueHolder.getValue());
+				} else if(checkValueHolder.getRef().getName().equalsIgnoreCase("Upper Bound")) {
+					range.put("Upper Bound", checkValueHolder.getValue());
+				}
+			}
+			dataQual.setRangeCheck(range);
+			return dataQual;
+			
+		case VALUE: 
+			List<String> values = new ArrayList<>();
+			for(MetaIdentifierHolder checkValueHolder : dqColCheck.getCheckValue()) {
+				values.add(checkValueHolder.getValue());
+			}
+			dataQual.setValueCheck(values);
+			return dataQual;
+			
 		default:
 			return dataQual;
 		}

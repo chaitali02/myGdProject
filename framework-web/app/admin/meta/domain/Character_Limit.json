@@ -1,6 +1,5 @@
 {
-    "_id" : ObjectId("5caef217d02c773b6d2a7249"),
-    "regEx" : "[\\w]{1,140}",
+    "regEx" : "[\\\\w]{1,140}",
     "uuid" : "edea8268-bf8b-4d1b-a216-8c72c05bd50d",
     "version" : "1554969111",
     "name" : "Character_Limit",

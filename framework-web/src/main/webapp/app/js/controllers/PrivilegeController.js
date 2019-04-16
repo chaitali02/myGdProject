@@ -66,7 +66,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	$scope.onChangeName = function (data) {
+		$scope.privilegedata.displayName=data;
+	}
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['privilege'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -271,6 +274,7 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		$scope.myform.$dirty = false;
 		privilegeJson.uuid = $scope.privilegedata.uuid;
 		privilegeJson.name = $scope.privilegedata.name;
+		privilegeJson.displayName = $scope.privilegedata.displayName;
 		privilegeJson.desc = $scope.privilegedata.desc;
 		privilegeJson.active = $scope.privilegedata.active;
 		privilegeJson.locked = $scope.privilegedata.locked;

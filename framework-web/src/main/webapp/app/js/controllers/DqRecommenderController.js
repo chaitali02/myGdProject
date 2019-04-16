@@ -388,7 +388,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			cellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:2px;padding-left:4px;"><input type="checkbox" style="width:20px;height:16px;" ng-model="row.entity.selected" ng-change="grid.appScope.onSelectQualityRow()"/></div>'
 		},
 		{
-			name: 'attributeName.attrName',
+			name: 'attributeNameValue',
 			width: '20%',
 			enableCellEdit: false,
 			visible: true,
@@ -468,9 +468,10 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			if(response && response.intelligenceResult && response.intelligenceResult.length){
 				for(var i=0;i<response.intelligenceResult.length;i++){
 					var intelligenceResult={};
-					intelligenceResult.attributeName="-NA-";
+					intelligenceResult.attributeName=response.intelligenceResult[i].attributeName;
+					intelligenceResult.attributeNameValue="-NA-";
 					if(response.intelligenceResult[i].attributeName !=null){
-						intelligenceResult.attributeName=response.intelligenceResult[i].attributeName;
+						intelligenceResult.attributeNameValue=response.intelligenceResult[i].attributeName.attrName;
 					}
 					intelligenceResult.checkType=response.intelligenceResult[i].checkType;
 					intelligenceResult.checkValue=response.intelligenceResult[i].checkValue;

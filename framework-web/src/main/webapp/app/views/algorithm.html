@@ -104,10 +104,18 @@
                   </label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.name"
-                      required="">
+                      required="" ng-Change="onChangeName(algorithmData.name)">
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Display Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}"
+                      ng-model="algorithmData.displayName" placeholder="" required="">
+                  </div>
+                </div>
                 <div class="form-group" ng-show="algorithmData.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">

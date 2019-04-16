@@ -1,6 +1,5 @@
 {
-    "_id" : ObjectId("5cadaabcd02c77413d2a237e"),
-    "regEx" : "^(?:2131|1800|35\\d{3})\\d{11}$",
+    "regEx" : "^(?:2131|1800|35\\\\d{3})\\\\d{11}$",
     "uuid" : "bc82ca45-0115-4ed1-92ba-13ed7edf92ab",
     "version" : "1554885308",
     "name" : "JCB_CC",

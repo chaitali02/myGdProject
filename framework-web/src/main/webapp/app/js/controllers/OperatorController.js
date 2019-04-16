@@ -68,7 +68,12 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	
+	$scope.onChangeName = function (data) {
+		$scope.OperatorData.displayName=data;
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		  return false;
@@ -247,9 +252,10 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		$scope.isSubmitEnable = false;
 		$scope.myform.$dirty = true;
 		var OperatorJson = {}
-		OperatorJson.uuid = $scope.OperatorData.uuid
-		OperatorJson.name = $scope.OperatorData.name
-		OperatorJson.desc = $scope.OperatorData.desc
+		OperatorJson.uuid = $scope.OperatorData.uuid;
+		OperatorJson.name = $scope.OperatorData.name;
+		OperatorJson.displayName = $scope.OperatorData.displayName;
+		OperatorJson.desc = $scope.OperatorData.desc;
 		OperatorJson.active = $scope.OperatorData.active;
 		OperatorJson.locked = $scope.OperatorData.locked;
 		OperatorJson.published = $scope.OperatorData.published;

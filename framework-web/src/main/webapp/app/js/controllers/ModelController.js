@@ -54,7 +54,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.model.versions = [];
   $scope.isshowmodel = false;
   $scope.isAlgorithmPCA=false;
-  //$scope.SourceTypes = ["datapod", "dataset"];
+  //$scope.SourceTypes = ["datapod", "modeldata"];
   $scope.imputeTypes=["custom","function"];
   $scope.dependsOnType= ["algorithm", "formula"];
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
@@ -88,7 +88,13 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
+  
+	$scope.onChangeName = function (data) {
+		$scope.modeldata.displayName=data;
+	}
+
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -720,7 +726,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.iSSubmitEnable = true;
     var modelJson = {}
     modelJson.uuid = $scope.modeldata.uuid
-    modelJson.name = $scope.modeldata.name
+    modelJson.name = $scope.modeldata.name;
+    modelJson.displayName = $scope.modeldata.displayName;
     modelJson.desc = $scope.modeldata.desc
     modelJson.active = $scope.modeldata.active;
     modelJson.locked = $scope.modeldata.locked;

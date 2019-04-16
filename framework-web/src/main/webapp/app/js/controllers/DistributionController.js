@@ -69,8 +69,11 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		});
 	};
 	$scope.getLovByType();
-	
 	 
+	$scope.onChangeName = function (data) {
+		$scope.distributionData.displayName=data;
+	}
+	
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		  return false;
@@ -254,6 +257,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		var distributionJson = {}
 		distributionJson.uuid = $scope.distributionData.uuid;
 		distributionJson.name = $scope.distributionData.name;
+		distributionJson.displayName = $scope.distributionData.displayName;
 		distributionJson.desc = $scope.distributionData.desc;
 		distributionJson.active = $scope.distributionData.active;
 		distributionJson.locked = $scope.distributionData.locked;

@@ -66,6 +66,7 @@ import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
+import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
@@ -2470,5 +2471,17 @@ public class MetadataServiceImpl {
 		query.addCriteria(new Criteria("dependsOn.ref.uuid").is(datapodUuid));
 		
 		return mongoTemplate.find(query, DataQual.class, MetaType.dq.toString().toLowerCase());
+	}
+	
+	public List<Attribute> getKeyAttributeList(Datapod datapod){
+		List<Attribute> keyAttributeList = new ArrayList<>();
+		
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(!StringUtils.isBlank(attribute.getKey())) {
+				keyAttributeList.add(attribute);
+			}
+		}
+		
+		return keyAttributeList;
 	}
 }
