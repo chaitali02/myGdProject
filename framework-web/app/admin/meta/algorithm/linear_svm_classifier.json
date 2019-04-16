@@ -1,60 +1,60 @@
 {
-  "uuid": "7db4e820-3e15-4ef9-b326-a32f6f63823b",
-  "version": "1520009749",
-  "name": "Linear SVM Classifier",
-  "desc": "Linear Support Vector Machine Classifier Algorithm",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"uuid" : "7db4e820-3e15-4ef9-b326-a32f6f63823b",
+	"version" : "1520009749",
+	"name" : "Linear SVM Classifier",
+	"desc" : "Linear Support Vector Machine Classifier Algorithm",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.330Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-  "type": "CLASSIFICATION",
-  "libraryType": "SPARKML",
-  "trainClass": "org.apache.spark.ml.classification.LinearSVC",
-  "modelClass": "org.apache.spark.ml.classification.LinearSVCModel",
-  "labelRequired": "Y",
-  "returnType": null,
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-      "version": null,
-      "name": "paramlist_linearsvm_classifier"
-    },
-    "value": null
-  },
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "ed97e128-962f-4030-bdf5-6c1c35a53107"
-        }
-    },
-  "savePmml" : "N",
-	"summaryMethods" : [  
+	"type" : "CLASSIFICATION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.classification.LinearSVC",
+	"modelClass" : "org.apache.spark.ml.classification.LinearSVCModel",
+	"labelRequired" : "Y",
+	"returnType" : null,
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
+			"version" : null,
+			"name" : "paramlist_linearsvm_classifier"
+		},
+		"value" : null
+	},
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "ed97e128-962f-4030-bdf5-6c1c35a53107"
+		}
+	},
+	"savePmml" : "N",
+	"summaryMethods" : [
 		"coefficients",
 		"getAggregationDepth",
 		"getMaxIter",
@@ -64,5 +64,6 @@
 		"intercept",
 		"numClasses",
 		"numFeatures"
-	    ]
+	],
+	"displyName" : "Random Forest Classifier"
 }

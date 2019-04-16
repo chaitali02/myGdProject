@@ -1,538 +1,539 @@
 {
-  "uuid": "c4b908e1-8a41-463e-b09f-dd17f8c9e571",
-  "version": "1552674062",
-  "name": "ds_fact_transaction_journal_check",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Mar 15 14:21:02 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": null,
-      "name": "fact_transaction_journal"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "display_seq": "0",
-      "logicalOperator": "",
-      "operator": "=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 4,
-          "value": null,
-          "attributeName": "transaction_type_code",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "simple",
-            "uuid": null,
-            "version": null,
-            "name": null
-          },
-          "attributeId": null,
-          "value": "CHECK",
-          "attributeName": null,
-          "attributeType": "string"
-        }
-      ]
-    }
-  ],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq": "0",
-      "attrSourceName": "transaction_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "transaction_id",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq": "1",
-      "attrSourceName": "direction",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "direction",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq": "2",
-      "attrSourceName": "account_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "account_id",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq": "3",
-      "attrSourceName": "customer_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "customer_id",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq": "4",
-      "attrSourceName": "transaction_type_code",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "transaction_type_code",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq": "5",
-      "attrSourceName": "transaction_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "transaction_date",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq": "6",
-      "attrSourceName": "transaction_country",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "transaction_country",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq": "7",
-      "attrSourceName": "sender_country",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "sender_country",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "8",
-      "attrDisplaySeq": "8",
-      "attrSourceName": "reciever_country",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "reciever_country",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "9",
-      "attrDisplaySeq": "9",
-      "attrSourceName": "amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "amount_usd",
-        "attrType": "decimal",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "10",
-      "attrDisplaySeq": "10",
-      "attrSourceName": "prev_check_num",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "225cd4b3-5d0b-455b-86ae-739713197ec7",
-          "version": null,
-          "name": "fm_prev_check_num"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "11",
-      "attrDisplaySeq": "11",
-      "attrSourceName": "check_num",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "check_num",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "12",
-      "attrDisplaySeq": "12",
-      "attrSourceName": "next_check_num",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "45559d5e-b3cb-4024-9d06-a0908d88c40c",
-          "version": null,
-          "name": "fm_next_check_num"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "13",
-      "attrDisplaySeq": "13",
-      "attrSourceName": "channel",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "channel",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "14",
-      "attrDisplaySeq": "14",
-      "attrSourceName": "device_type",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "device_type",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "15",
-      "attrDisplaySeq": "15",
-      "attrSourceName": "sender_name",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "sender_name",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "16",
-      "attrDisplaySeq": "16",
-      "attrSourceName": "sender_login",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "sender_login",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "17",
-      "attrDisplaySeq": "17",
-      "attrSourceName": "sender_ip",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "sender_ip",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "18",
-      "attrDisplaySeq": "18",
-      "attrSourceName": "sender_ip_country",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "sender_ip_country",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "19",
-      "attrDisplaySeq": "19",
-      "attrSourceName": "sender_ip_lat",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "sender_ip_lat",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "20",
-      "attrDisplaySeq": "20",
-      "attrSourceName": "sender_ip_long",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "sender_ip_long",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "21",
-      "attrDisplaySeq": "21",
-      "attrSourceName": "load_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "load_date",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "22",
-      "attrDisplaySeq": "22",
-      "attrSourceName": "load_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "load_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": -1
+	"uuid" : "c4b908e1-8a41-463e-b09f-dd17f8c9e571",
+	"version" : "1552674062",
+	"name" : "ds_fact_transaction_journal_check",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+			"version" : null,
+			"name" : "fact_transaction_journal"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"display_seq" : "0",
+			"logicalOperator" : "",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+						"version" : null,
+						"name" : "fact_transaction_journal"
+					},
+					"attributeId" : 4,
+					"value" : null,
+					"attributeName" : "transaction_type_code",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "simple",
+						"uuid" : null,
+						"version" : null,
+						"name" : null
+					},
+					"attributeId" : null,
+					"value" : "CHECK",
+					"attributeName" : null,
+					"attributeType" : "string"
+				}
+			]
+		}
+	],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "transaction_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "transaction_id",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "direction",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "direction",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "account_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "account_id",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "customer_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "customer_id",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "transaction_type_code",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "transaction_type_code",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "transaction_date",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "transaction_date",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "transaction_country",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "transaction_country",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "sender_country",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "sender_country",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "reciever_country",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "reciever_country",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "9",
+			"attrDisplaySeq" : "9",
+			"attrSourceName" : "amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "amount_usd",
+				"attrType" : "decimal",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "10",
+			"attrDisplaySeq" : "10",
+			"attrSourceName" : "prev_check_num",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "225cd4b3-5d0b-455b-86ae-739713197ec7",
+					"version" : null,
+					"name" : "fm_prev_check_num"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "11",
+			"attrDisplaySeq" : "11",
+			"attrSourceName" : "check_num",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "check_num",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "12",
+			"attrDisplaySeq" : "12",
+			"attrSourceName" : "next_check_num",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "45559d5e-b3cb-4024-9d06-a0908d88c40c",
+					"version" : null,
+					"name" : "fm_next_check_num"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "13",
+			"attrDisplaySeq" : "13",
+			"attrSourceName" : "channel",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "channel",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "14",
+			"attrDisplaySeq" : "14",
+			"attrSourceName" : "device_type",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "device_type",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "15",
+			"attrDisplaySeq" : "15",
+			"attrSourceName" : "sender_name",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "sender_name",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "16",
+			"attrDisplaySeq" : "16",
+			"attrSourceName" : "sender_login",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "sender_login",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "17",
+			"attrDisplaySeq" : "17",
+			"attrSourceName" : "sender_ip",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "sender_ip",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "18",
+			"attrDisplaySeq" : "18",
+			"attrSourceName" : "sender_ip_country",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "sender_ip_country",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "19",
+			"attrDisplaySeq" : "19",
+			"attrSourceName" : "sender_ip_lat",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "sender_ip_lat",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "20",
+			"attrDisplaySeq" : "20",
+			"attrSourceName" : "sender_ip_long",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "sender_ip_long",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "21",
+			"attrDisplaySeq" : "21",
+			"attrSourceName" : "load_date",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "load_date",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "22",
+			"attrDisplaySeq" : "22",
+			"attrSourceName" : "load_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "load_id",
+				"attrType" : "integer",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : -1,
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

@@ -1,187 +1,188 @@
 {
-  "uuid": "f8c26abc-dbec-4263-b026-fb82c9d93257",
-  "version": "1547760792",
-  "name": "fm_date_month",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Jan 17 16:33:12 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-      "version": null,
-      "name": "device_data_fillna"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002698",
-        "version": null,
-        "name": "month(string date)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3dff24-02fb-11e7-93ae-92361f002pop",
-        "version": null,
-        "name": "from_unixtime(bigint unixtime)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3dff24-02fb-11e7-93ae-92361f002tot",
-        "version": null,
-        "name": "unix_timestamp(string date)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-        "version": null,
-        "name": "device_data_fillna"
-      },
-      "attributeId": 1,
-      "value": null,
-      "attributeName": "date",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ",",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'MM/dd/yyyy'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "simple"
+	"uuid" : "f8c26abc-dbec-4263-b026-fb82c9d93257",
+	"version" : "1547760792",
+	"name" : "fm_date_month",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+			"version" : null,
+			"name" : "device_data_fillna"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002698",
+				"version" : null,
+				"name" : "month(string date)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002pop",
+				"version" : null,
+				"name" : "from_unixtime(bigint unixtime)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002tot",
+				"version" : null,
+				"name" : "unix_timestamp(string date)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+				"version" : null,
+				"name" : "device_data_fillna"
+			},
+			"attributeId" : 1,
+			"value" : null,
+			"attributeName" : "date",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ",",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'MM/dd/yyyy'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "simple",
+	"displyName" : "fm_total_pass_pct"
 }

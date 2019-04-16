@@ -1,0 +1,56 @@
+{
+	"uuid" : "9a2bfde1-e2ec-46c4-a62f-2431d6aab182",
+	"version" : "1550238959",
+	"name" : "4b6689af_aeaf_4287_8833_c029cce587e8_1550238723_1550238950",
+	"desc" : "Creating datastore for 4b6689af_aeaf_4287_8833_c029cce587e8_1550238723_1550238950",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.127Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "4b6689af-aeaf-4287-8833-c029cce587e8",
+			"version" : "1550238723",
+			"name" : "device_data_categorical_features"
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "mapExec",
+			"uuid" : "f01beaaa-603e-4f2c-97d6-3e0b35e17ef8",
+			"version" : "1550238950",
+			"name" : "map_device_data_categorical_features"
+		},
+		"value" : null
+	},
+	"location" : "/4b6689af-aeaf-4287-8833-c029cce587e8/1550238723/1550238950",
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 4392,
+	"runMode" : "BATCH",
+	"displyName" : "security"
+}

@@ -1,52 +1,52 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678",
-	"version": "1464977196",
-	"name": "Decision Tree Classifier",
-	"desc": "Decision Tree Classifier",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678",
+	"version" : "1464977196",
+	"name" : "Decision Tree Classifier",
+	"desc" : "Decision Tree Classifier",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:37.330Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-		"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-	"type": "REGRESSION",
-	"libraryType": "SPARKML",
-	"trainClass": "org.apache.spark.ml.classification.DecisionTreeClassifier",
-	"modelClass": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
-	"labelRequired": "Y",
-	"paramList": {
-		"ref": {
-			"type": "paramlist",
-			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84"
+	"type" : "REGRESSION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.classification.DecisionTreeClassifier",
+	"modelClass" : "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
+	"labelRequired" : "Y",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84"
 		}
 	},
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "60a4e9d8-1f96-431e-9560-d78c5963db07"
-        }
-    },
-  	"savePmml" : "Y",
-	"summaryMethods" : [  
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "60a4e9d8-1f96-431e-9560-d78c5963db07"
+		}
+	},
+	"savePmml" : "Y",
+	"summaryMethods" : [
 		"depth",
 		"featureImportances",
 		"getCheckpointInterval",
@@ -60,5 +60,6 @@
 		"numClasses",
 		"numFeatures",
 		"numNodes"
-	    ]
+	],
+	"displyName" : "Random Forest Classifier"
 }

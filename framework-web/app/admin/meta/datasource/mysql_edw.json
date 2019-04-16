@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
+	"createdOn" : ISODate("2019-04-15T09:14:42.979Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -37,5 +37,6 @@
 	"path" : "",
 	"subType" : null,
 	"sessionParameters" : "",
-	"sid" : null
+	"sid" : null,
+	"displyName" : "mysql_edw"
 }

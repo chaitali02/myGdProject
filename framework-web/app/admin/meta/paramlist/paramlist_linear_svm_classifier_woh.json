@@ -1,59 +1,60 @@
 {
-  "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-  "version": "1520009572",
-  "name": "paramlist_linear_svm_classifier_woh",
-  "desc": "LinearSupportVectorMachine Param List",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "paramListType" : "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null,
- 	"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "maxIter",
-      "paramType": "integer",
-  	  "paramDispName" : "Max Iter",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "10"
-    }
-    },
-    {
-      "paramId": "1",
-      "paramName": "regParam",
-      "paramType": "double",
-  	  "paramDispName" : "Reg Param",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "1.0"
-    }
-    }
-  ]
+	"uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
+	"version" : "1520009572",
+	"name" : "paramlist_linear_svm_classifier_woh",
+	"desc" : "LinearSupportVectorMachine Param List",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "maxIter",
+			"paramType" : "integer",
+			"paramDispName" : "Max Iter",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "10"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "regParam",
+			"paramType" : "double",
+			"paramDispName" : "Reg Param",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1.0"
+			}
+		}
+	],
+	"displyName" : "paramlist_dq_rule"
 }

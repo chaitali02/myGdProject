@@ -1,82 +1,83 @@
 {
-    "datasource" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-        }
-    },
-    "cache" : "Y",
-    "attributes" : [ 
-        {
-            "attributeId" : 0,
-            "name" : "label",
-            "type" : "double",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "label",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 1,
-            "name" : "features",
-            "type" : "string",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "features",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 2,
-            "name" : "rawPrediction",
-            "type" : "string",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "rawPrediction",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 3,
-            "name" : "probability",
-            "type" : "string",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "probability",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 4,
-            "name" : "prediction",
-            "type" : "double",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "prediction",
-            "active" : "Y"
-        }
-    ],
-    "uuid" : "c78b8538-af6b-4a7f-94e7-c483780a335c",
-    "version" : "1528056309",
-    "name" : "cc_transactions_predictions",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-                "version" : "1521430822"
-            }
-        }
-    ],
-  "prefix":"crn"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "label",
+			"type" : "double",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "label",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 1,
+			"name" : "features",
+			"type" : "string",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "features",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 2,
+			"name" : "rawPrediction",
+			"type" : "string",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "rawPrediction",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 3,
+			"name" : "probability",
+			"type" : "string",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "probability",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 4,
+			"name" : "prediction",
+			"type" : "double",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "prediction",
+			"active" : "Y"
+		}
+	],
+	"uuid" : "c78b8538-af6b-4a7f-94e7-c483780a335c",
+	"version" : "1528056309",
+	"name" : "cc_transactions_predictions",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"prefix" : "crn",
+	"displyName" : "security"
 }

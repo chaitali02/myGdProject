@@ -1,92 +1,92 @@
 {
-  "uuid": "0260173b-b626-4778-8327-d27b0c6bc7a9",
-  "version": "1551904754",
-  "name": "fm_week_num",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Mar 07 02:09:14 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-      "version": null,
-      "name": "paramlist_aml_app"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "weekofyear",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "paramlist",
-        "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-        "version": null,
-        "name": "paramlist_aml_app"
-      },
-      "attributeId": 0,
-      "value": null,
-      "attributeName": "business_date",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "custom"
+	"uuid" : "0260173b-b626-4778-8327-d27b0c6bc7a9",
+	"version" : "1551904754",
+	"name" : "fm_week_num",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+			"version" : null,
+			"name" : "paramlist_aml_app"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "weekofyear",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "paramlist",
+				"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+				"version" : null,
+				"name" : "paramlist_aml_app"
+			},
+			"attributeId" : 0,
+			"value" : null,
+			"attributeName" : "business_date",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "custom"
 }

@@ -1,73 +1,74 @@
 {
-	"params": [
+	"params" : [
 		{
-			"paramId": 0,
-			"paramName": "maxBins",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max Bins",
-            "paramDesc" : "",			
-			"paramValue": {
+			"paramId" : 0,
+			"paramName" : "maxBins",
+			"paramType" : "integer",
+			"paramDispName" : "Max Bins",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "10"
-			    }
+			}
 		},
 		{
-			"paramId": 1,
-			"paramName": "maxDepth",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max Depth",
-            "paramDesc" : "",		
-			"paramValue": {
+			"paramId" : 1,
+			"paramName" : "maxDepth",
+			"paramType" : "integer",
+			"paramDispName" : "Max Depth",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "10"
-			    }
+			}
 		},
 		{
-			"paramId": 4,
-			"paramName": "maxMemoryInMB",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max MemoryInMB",
-            "paramDesc" : "",		
-			"paramValue": {
+			"paramId" : 4,
+			"paramName" : "maxMemoryInMB",
+			"paramType" : "integer",
+			"paramDispName" : "Max MemoryInMB",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "100"
-			    }
+			}
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
-	"version": "1495146809",
-	"name": "paramlist_decision_tree_classifier_woh",
-	"desc": "DecisionTreeClassifier Param List",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84",
+	"version" : "1495146809",
+	"name" : "paramlist_decision_tree_classifier_woh",
+	"desc" : "DecisionTreeClassifier Param List",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-    "paramListType" : "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null,
-		"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ]
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displyName" : "paramlist_dq_rule"
 }

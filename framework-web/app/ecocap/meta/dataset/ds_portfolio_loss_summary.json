@@ -1,198 +1,199 @@
 {
-  "uuid": "78530d73-5c11-4a32-b90d-ea88822768b9",
-  "version": "1533489978",
-  "name": "ds_portfolio_loss_summary",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Aug 05 13:26:18 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "relation",
-      "uuid": "3f3422fe-bdd3-4f9f-819e-a09cdc00410a",
-      "version": null,
-      "name": "rel_portfolio_loss_summary"
-    },
-    "value": null
-  },
-  "filterInfo": [],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "avg_pd",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-          "version": null,
-          "name": "ds_portfolio_summary"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "avg_pd",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "avg_lgd",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-          "version": null,
-          "name": "ds_portfolio_summary"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "avg_lgd",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "total_ead",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-          "version": null,
-          "name": "ds_portfolio_summary"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "total_ead",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "expected_loss",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-          "version": null,
-          "name": "ds_portfolio_loss_aggr_es"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "expected_loss",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq" : "4",
-      "attrSourceName": "value_at_risk",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-          "version": null,
-          "name": "ds_portfolio_loss_aggr_es"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "value_at_risk",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq" : "5",
-      "attrSourceName": "economic_capital",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-          "version": null,
-          "name": "ds_portfolio_loss_aggr_es"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "economic_capital",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq" : "6",
-      "attrSourceName": "expected_sum",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-          "version": null,
-          "name": "ds_portfolio_loss_aggr_es"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "expected_sum",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq" : "7",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-          "version": null,
-          "name": "ds_portfolio_summary"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "reporting_date",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "8",
-      "attrDisplaySeq" : "8",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-          "version": null,
-          "name": "ds_portfolio_summary"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "version",
-        "attrType": "Integer"
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "78530d73-5c11-4a32-b90d-ea88822768b9",
+	"version" : "1533489978",
+	"name" : "ds_portfolio_loss_summary",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "3f3422fe-bdd3-4f9f-819e-a09cdc00410a",
+			"version" : null,
+			"name" : "rel_portfolio_loss_summary"
+		},
+		"value" : null
+	},
+	"filterInfo" : [ ],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "avg_pd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+					"version" : null,
+					"name" : "ds_portfolio_summary"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "avg_pd",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "avg_lgd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+					"version" : null,
+					"name" : "ds_portfolio_summary"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "avg_lgd",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "total_ead",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+					"version" : null,
+					"name" : "ds_portfolio_summary"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "total_ead",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "expected_loss",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+					"version" : null,
+					"name" : "ds_portfolio_loss_aggr_es"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "expected_loss",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "value_at_risk",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+					"version" : null,
+					"name" : "ds_portfolio_loss_aggr_es"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "value_at_risk",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "economic_capital",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+					"version" : null,
+					"name" : "ds_portfolio_loss_aggr_es"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "economic_capital",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "expected_sum",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+					"version" : null,
+					"name" : "ds_portfolio_loss_aggr_es"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "expected_sum",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+					"version" : null,
+					"name" : "ds_portfolio_summary"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "reporting_date",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+					"version" : null,
+					"name" : "ds_portfolio_summary"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "version",
+				"attrType" : "Integer"
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

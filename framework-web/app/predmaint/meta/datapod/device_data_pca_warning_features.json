@@ -1,67 +1,68 @@
 {
-    "datasource" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-        }
-    },
-    "cache" : "Y",
-    "attributes" : [ 
-        {
-            "attributeId" : 0,
-            "displaySeq" : 0,
-            "name" : "deviceid",
-            "type" : "string",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "deviceid",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 1,
-            "displaySeq" : 1,
-            "name" : "date",
-            "type" : "string",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "date",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 2,
-            "displaySeq" : 2,
-            "name" : "features",
-            "type" : "vector",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "features",
-            "active" : "Y"
-        }
-    ],
-    "uuid" : "97c96749-3c7a-4e21-9269-9a3cefe8ef90",
-    "version" : "1549013575",
-    "name" : "device_data_pca_warning_features",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-02-01T09:32:55.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153"
-            }
-        }
-    ],
-      "prefix" : "eaac"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"displaySeq" : 0,
+			"name" : "deviceid",
+			"type" : "string",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "deviceid",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 1,
+			"displaySeq" : 1,
+			"name" : "date",
+			"type" : "string",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "date",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 2,
+			"displaySeq" : 2,
+			"name" : "features",
+			"type" : "vector",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "features",
+			"active" : "Y"
+		}
+	],
+	"uuid" : "97c96749-3c7a-4e21-9269-9a3cefe8ef90",
+	"version" : "1549013575",
+	"name" : "device_data_pca_warning_features",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153"
+			}
+		}
+	],
+	"prefix" : "eaac",
+	"displyName" : "security"
 }

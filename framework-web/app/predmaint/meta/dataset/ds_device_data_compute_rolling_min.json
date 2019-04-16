@@ -1,2494 +1,2495 @@
 {
-  "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
-  "version": "1550163324",
-  "name": "ds_device_data_compute_rolling_min",
-  "desc": "compute rolling min  for lag 3,7,14,30,90",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Feb 14 11:55:24 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-      "version": null,
-      "name": "ds_device_data_base_features"
-    },
-    "value": null
-  },
-  "filterInfo": null,
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq": "0",
-      "attrSourceName": "deviceid",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "deviceid",
-        "attrType": "string",
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq": "1",
-      "attrSourceName": "date",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "date",
-        "attrType": "string",
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq": "2",
-      "attrSourceName": "warn_type1_total_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d1afa-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq": "3",
-      "attrSourceName": "warn_type2_total_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d1d84-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type2_total_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq": "4",
-      "attrSourceName": "problem_type_1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d5042-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq": "5",
-      "attrSourceName": "problem_type_2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d516e-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq": "6",
-      "attrSourceName": "problem_type_3_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d529a-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq": "7",
-      "attrSourceName": "problem_type_4_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d53c6-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "8",
-      "attrDisplaySeq": "8",
-      "attrSourceName": "problem_type_1_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d54f2-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "9",
-      "attrDisplaySeq": "9",
-      "attrSourceName": "problem_type_2_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d5fba-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "10",
-      "attrDisplaySeq": "10",
-      "attrSourceName": "problem_type_3_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d61c2-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "11",
-      "attrDisplaySeq": "11",
-      "attrSourceName": "problem_type_4_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d6302-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "12",
-      "attrDisplaySeq": "12",
-      "attrSourceName": "problem_type_1_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d6424-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "13",
-      "attrDisplaySeq": "13",
-      "attrSourceName": "problem_type_2_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d6546-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "14",
-      "attrDisplaySeq": "14",
-      "attrSourceName": "problem_type_3_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d6672-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "15",
-      "attrDisplaySeq": "15",
-      "attrSourceName": "problem_type_4_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d6794-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "16",
-      "attrDisplaySeq": "16",
-      "attrSourceName": "fault_code_type_1_count_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d719e-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "17",
-      "attrDisplaySeq": "17",
-      "attrSourceName": "fault_code_type_2_count_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d72fc-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "18",
-      "attrDisplaySeq": "18",
-      "attrSourceName": "fault_code_type_3_count_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d743c-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "19",
-      "attrDisplaySeq": "19",
-      "attrSourceName": "fault_code_type_4_count_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d7568-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "20",
-      "attrDisplaySeq": "20",
-      "attrSourceName": "fault_code_type_1_count_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d7694-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "21",
-      "attrDisplaySeq": "21",
-      "attrSourceName": "fault_code_type_2_count_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d77ca-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "22",
-      "attrDisplaySeq": "22",
-      "attrSourceName": "fault_code_type_3_count_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d790a-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "23",
-      "attrDisplaySeq": "23",
-      "attrSourceName": "fault_code_type_4_count_per_usage1_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d826a-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage1_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "24",
-      "attrDisplaySeq": "24",
-      "attrSourceName": "fault_code_type_1_count_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d83dc-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "25",
-      "attrDisplaySeq": "25",
-      "attrSourceName": "fault_code_type_2_count_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d8562-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "26",
-      "attrDisplaySeq": "26",
-      "attrSourceName": "fault_code_type_3_count_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d8684-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "27",
-      "attrDisplaySeq": "27",
-      "attrSourceName": "fault_code_type_4_count_per_usage2_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e56d87b0-1e1b-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage2_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "28",
-      "attrDisplaySeq": "28",
-      "attrSourceName": "warn_type1_total_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd00486-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "29",
-      "attrDisplaySeq": "29",
-      "attrSourceName": "warn_type2_total_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd00738-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type2_total_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "30",
-      "attrDisplaySeq": "30",
-      "attrSourceName": "problem_type_1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd02a10-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "31",
-      "attrDisplaySeq": "31",
-      "attrSourceName": "problem_type_2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd02b64-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "32",
-      "attrDisplaySeq": "32",
-      "attrSourceName": "problem_type_3_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd02c90-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "33",
-      "attrDisplaySeq": "33",
-      "attrSourceName": "problem_type_4_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd02db2-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "34",
-      "attrDisplaySeq": "34",
-      "attrSourceName": "problem_type_1_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd02ed4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "35",
-      "attrDisplaySeq": "35",
-      "attrSourceName": "problem_type_2_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03000-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "36",
-      "attrDisplaySeq": "36",
-      "attrSourceName": "problem_type_3_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0330c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "37",
-      "attrDisplaySeq": "37",
-      "attrSourceName": "problem_type_4_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0344c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "38",
-      "attrDisplaySeq": "38",
-      "attrSourceName": "problem_type_1_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03582-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "39",
-      "attrDisplaySeq": "39",
-      "attrSourceName": "problem_type_2_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd036ae-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "40",
-      "attrDisplaySeq": "40",
-      "attrSourceName": "problem_type_3_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd037d0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "41",
-      "attrDisplaySeq": "41",
-      "attrSourceName": "problem_type_4_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd038fc-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "42",
-      "attrDisplaySeq": "42",
-      "attrSourceName": "fault_code_type_1_count_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03a1e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "43",
-      "attrDisplaySeq": "43",
-      "attrSourceName": "fault_code_type_2_count_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03c4e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "44",
-      "attrDisplaySeq": "44",
-      "attrSourceName": "fault_code_type_3_count_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03d70-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "45",
-      "attrDisplaySeq": "45",
-      "attrSourceName": "fault_code_type_4_count_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03e9c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "46",
-      "attrDisplaySeq": "46",
-      "attrSourceName": "fault_code_type_1_count_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd03fc8-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "47",
-      "attrDisplaySeq": "47",
-      "attrSourceName": "fault_code_type_2_count_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd040e0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "48",
-      "attrDisplaySeq": "48",
-      "attrSourceName": "fault_code_type_3_count_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd04202-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "49",
-      "attrDisplaySeq": "49",
-      "attrSourceName": "fault_code_type_4_count_per_usage1_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0441e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage1_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "50",
-      "attrDisplaySeq": "50",
-      "attrSourceName": "fault_code_type_1_count_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd04554-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "51",
-      "attrDisplaySeq": "51",
-      "attrSourceName": "fault_code_type_2_count_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd04680-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "52",
-      "attrDisplaySeq": "52",
-      "attrSourceName": "fault_code_type_3_count_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd047a2-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "53",
-      "attrDisplaySeq": "53",
-      "attrSourceName": "fault_code_type_4_count_per_usage2_rollingmin_7",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd048ba-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage2_rollingmin_7"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "54",
-      "attrDisplaySeq": "54",
-      "attrSourceName": "warn_type1_total_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd04afe-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "55",
-      "attrDisplaySeq": "55",
-      "attrSourceName": "warn_type2_total_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd04d06-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type2_total_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "56",
-      "attrDisplaySeq": "56",
-      "attrSourceName": "problem_type_1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd06b6a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "57",
-      "attrDisplaySeq": "57",
-      "attrSourceName": "problem_type_2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd06ca0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "58",
-      "attrDisplaySeq": "58",
-      "attrSourceName": "problem_type_3_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd06dea-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "59",
-      "attrDisplaySeq": "59",
-      "attrSourceName": "problem_type_4_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07010-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "60",
-      "attrDisplaySeq": "60",
-      "attrSourceName": "problem_type_1_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07164-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "61",
-      "attrDisplaySeq": "61",
-      "attrSourceName": "problem_type_2_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0729a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "62",
-      "attrDisplaySeq": "62",
-      "attrSourceName": "problem_type_3_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd073da-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "63",
-      "attrDisplaySeq": "63",
-      "attrSourceName": "problem_type_4_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0751a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "64",
-      "attrDisplaySeq": "64",
-      "attrSourceName": "problem_type_1_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd076aa-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "65",
-      "attrDisplaySeq": "65",
-      "attrSourceName": "problem_type_2_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd078ee-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "66",
-      "attrDisplaySeq": "66",
-      "attrSourceName": "problem_type_3_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07a38-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "67",
-      "attrDisplaySeq": "67",
-      "attrSourceName": "problem_type_4_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07b6e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "68",
-      "attrDisplaySeq": "68",
-      "attrSourceName": "fault_code_type_1_count_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07ca4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "69",
-      "attrDisplaySeq": "69",
-      "attrSourceName": "fault_code_type_2_count_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07de4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "70",
-      "attrDisplaySeq": "70",
-      "attrSourceName": "fault_code_type_3_count_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd07f24-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "71",
-      "attrDisplaySeq": "71",
-      "attrSourceName": "fault_code_type_4_count_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0826c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "72",
-      "attrDisplaySeq": "72",
-      "attrSourceName": "fault_code_type_1_count_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd083ac-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "73",
-      "attrDisplaySeq": "73",
-      "attrSourceName": "fault_code_type_2_count_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd08762-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "74",
-      "attrDisplaySeq": "74",
-      "attrSourceName": "fault_code_type_3_count_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd089c4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "75",
-      "attrDisplaySeq": "75",
-      "attrSourceName": "fault_code_type_4_count_per_usage1_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd08bf4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage1_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "76",
-      "attrDisplaySeq": "76",
-      "attrSourceName": "fault_code_type_1_count_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd08d52-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "77",
-      "attrDisplaySeq": "77",
-      "attrSourceName": "fault_code_type_2_count_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd090c2-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "78",
-      "attrDisplaySeq": "78",
-      "attrSourceName": "fault_code_type_3_count_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd09234-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "79",
-      "attrDisplaySeq": "79",
-      "attrSourceName": "fault_code_type_4_count_per_usage2_rollingmin_14",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd09356-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage2_rollingmin_14"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "80",
-      "attrDisplaySeq": "80",
-      "attrSourceName": "warn_type1_total_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd095a4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "81",
-      "attrDisplaySeq": "81",
-      "attrSourceName": "warn_type2_total_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd096d0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type2_total_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "82",
-      "attrDisplaySeq": "82",
-      "attrSourceName": "problem_type_1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0baac-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "83",
-      "attrDisplaySeq": "83",
-      "attrSourceName": "problem_type_2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0bdea-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "84",
-      "attrDisplaySeq": "84",
-      "attrSourceName": "problem_type_3_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0bf3e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "85",
-      "attrDisplaySeq": "85",
-      "attrSourceName": "problem_type_4_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c06a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "86",
-      "attrDisplaySeq": "86",
-      "attrSourceName": "problem_type_1_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c196-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "87",
-      "attrDisplaySeq": "87",
-      "attrSourceName": "problem_type_2_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c2c2-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "88",
-      "attrDisplaySeq": "88",
-      "attrSourceName": "problem_type_3_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c448-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "89",
-      "attrDisplaySeq": "89",
-      "attrSourceName": "problem_type_4_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c588-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "90",
-      "attrDisplaySeq": "90",
-      "attrSourceName": "problem_type_1_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0c8c6-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "91",
-      "attrDisplaySeq": "91",
-      "attrSourceName": "problem_type_2_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0ca10-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "92",
-      "attrDisplaySeq": "92",
-      "attrSourceName": "problem_type_3_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0cb3c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "93",
-      "attrDisplaySeq": "93",
-      "attrSourceName": "problem_type_4_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0cc5e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "94",
-      "attrDisplaySeq": "94",
-      "attrSourceName": "fault_code_type_1_count_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0cd8a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "95",
-      "attrDisplaySeq": "95",
-      "attrSourceName": "fault_code_type_2_count_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0d10e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "96",
-      "attrDisplaySeq": "96",
-      "attrSourceName": "fault_code_type_3_count_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0d2da-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "97",
-      "attrDisplaySeq": "97",
-      "attrSourceName": "fault_code_type_4_count_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0d67c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "98",
-      "attrDisplaySeq": "98",
-      "attrSourceName": "fault_code_type_1_count_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0d938-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "99",
-      "attrDisplaySeq": "99",
-      "attrSourceName": "fault_code_type_2_count_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0da96-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "100",
-      "attrDisplaySeq": "100",
-      "attrSourceName": "fault_code_type_3_count_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0dbd6-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "101",
-      "attrDisplaySeq": "101",
-      "attrSourceName": "fault_code_type_4_count_per_usage1_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0dd16-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage1_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "102",
-      "attrDisplaySeq": "102",
-      "attrSourceName": "fault_code_type_1_count_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0de42-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "103",
-      "attrDisplaySeq": "103",
-      "attrSourceName": "fault_code_type_2_count_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0e0a4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "104",
-      "attrDisplaySeq": "104",
-      "attrSourceName": "fault_code_type_3_count_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0e1e4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "105",
-      "attrDisplaySeq": "105",
-      "attrSourceName": "fault_code_type_4_count_per_usage2_rollingmin_30",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0e310-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage2_rollingmin_30"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "106",
-      "attrDisplaySeq": "106",
-      "attrSourceName": "warn_type1_total_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0e55e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "107",
-      "attrDisplaySeq": "107",
-      "attrSourceName": "warn_type2_total_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd0e68a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_warn_type2_total_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "108",
-      "attrDisplaySeq": "108",
-      "attrSourceName": "problem_type_1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd10804-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "109",
-      "attrDisplaySeq": "109",
-      "attrSourceName": "problem_type_2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd10b88-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "110",
-      "attrDisplaySeq": "110",
-      "attrSourceName": "problem_type_3_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd10cd2-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "111",
-      "attrDisplaySeq": "111",
-      "attrSourceName": "problem_type_4_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd10dfe-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "112",
-      "attrDisplaySeq": "112",
-      "attrSourceName": "problem_type_1_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd10f20-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "113",
-      "attrDisplaySeq": "113",
-      "attrSourceName": "problem_type_2_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd11060-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "114",
-      "attrDisplaySeq": "114",
-      "attrSourceName": "problem_type_3_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd11182-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "115",
-      "attrDisplaySeq": "115",
-      "attrSourceName": "problem_type_4_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd112f4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "116",
-      "attrDisplaySeq": "116",
-      "attrSourceName": "problem_type_1_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd116a0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_1_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "117",
-      "attrDisplaySeq": "117",
-      "attrSourceName": "problem_type_2_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd117ea-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_2_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "118",
-      "attrDisplaySeq": "118",
-      "attrSourceName": "problem_type_3_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd1192a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_3_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "119",
-      "attrDisplaySeq": "119",
-      "attrSourceName": "problem_type_4_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd11a6a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_problem_type_4_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "120",
-      "attrDisplaySeq": "120",
-      "attrSourceName": "fault_code_type_1_count_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd11bb4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "121",
-      "attrDisplaySeq": "121",
-      "attrSourceName": "fault_code_type_2_count_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd11cf4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "122",
-      "attrDisplaySeq": "122",
-      "attrSourceName": "fault_code_type_3_count_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd1200a-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "123",
-      "attrDisplaySeq": "123",
-      "attrSourceName": "fault_code_type_4_count_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd12154-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "124",
-      "attrDisplaySeq": "124",
-      "attrSourceName": "fault_code_type_1_count_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd12294-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "125",
-      "attrDisplaySeq": "125",
-      "attrSourceName": "fault_code_type_2_count_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd123d4-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "126",
-      "attrDisplaySeq": "126",
-      "attrSourceName": "fault_code_type_3_count_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd1251e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "127",
-      "attrDisplaySeq": "127",
-      "attrSourceName": "fault_code_type_4_count_per_usage1_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd1265e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage1_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "128",
-      "attrDisplaySeq": "128",
-      "attrSourceName": "fault_code_type_1_count_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd1279e-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_1_count_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "129",
-      "attrDisplaySeq": "129",
-      "attrSourceName": "fault_code_type_2_count_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd12aa0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_2_count_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "130",
-      "attrDisplaySeq": "130",
-      "attrSourceName": "fault_code_type_3_count_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd12be0-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_3_count_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "131",
-      "attrDisplaySeq": "131",
-      "attrSourceName": "fault_code_type_4_count_per_usage2_rollingmin_90",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3bd12d0c-1e4c-11e9-ab14-d663bd873d93",
-          "version": null,
-          "name": "fm_fault_code_type_4_count_per_usage2_rollingmin_90"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "132",
-      "attrDisplaySeq": "132",
-      "attrSourceName": "date_month",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "date_month",
-        "attrType": "string",
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "133",
-      "attrDisplaySeq": "133",
-      "attrSourceName": "date_week",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "date_week",
-        "attrType": "string",
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "134",
-      "attrDisplaySeq": "134",
-      "attrSourceName": "date_day",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": "date_day",
-        "attrType": "string",
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "135",
-      "attrDisplaySeq": "135",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": "ds_device_data_base_features"
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": "version",
-        "attrType": "Integer",
-        "attrUnitType": null
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": -1
+	"uuid" : "6d245885-46fa-4af8-a778-821257c5371e",
+	"version" : "1550163324",
+	"name" : "ds_device_data_compute_rolling_min",
+	"desc" : "compute rolling min  for lag 3,7,14,30,90",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+			"version" : null,
+			"name" : "ds_device_data_base_features"
+		},
+		"value" : null
+	},
+	"filterInfo" : null,
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "deviceid",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "deviceid",
+				"attrType" : "string",
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "date",
+				"attrType" : "string",
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "warn_type1_total_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d1afa-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type1_total_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "warn_type2_total_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d1d84-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type2_total_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "problem_type_1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d5042-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "problem_type_2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d516e-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "problem_type_3_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d529a-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "problem_type_4_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d53c6-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "problem_type_1_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d54f2-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "9",
+			"attrDisplaySeq" : "9",
+			"attrSourceName" : "problem_type_2_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d5fba-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "10",
+			"attrDisplaySeq" : "10",
+			"attrSourceName" : "problem_type_3_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d61c2-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "11",
+			"attrDisplaySeq" : "11",
+			"attrSourceName" : "problem_type_4_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d6302-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "12",
+			"attrDisplaySeq" : "12",
+			"attrSourceName" : "problem_type_1_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d6424-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "13",
+			"attrDisplaySeq" : "13",
+			"attrSourceName" : "problem_type_2_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d6546-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "14",
+			"attrDisplaySeq" : "14",
+			"attrSourceName" : "problem_type_3_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d6672-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "15",
+			"attrDisplaySeq" : "15",
+			"attrSourceName" : "problem_type_4_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d6794-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "16",
+			"attrDisplaySeq" : "16",
+			"attrSourceName" : "fault_code_type_1_count_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d719e-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "17",
+			"attrDisplaySeq" : "17",
+			"attrSourceName" : "fault_code_type_2_count_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d72fc-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "18",
+			"attrDisplaySeq" : "18",
+			"attrSourceName" : "fault_code_type_3_count_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d743c-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "19",
+			"attrDisplaySeq" : "19",
+			"attrSourceName" : "fault_code_type_4_count_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d7568-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "20",
+			"attrDisplaySeq" : "20",
+			"attrSourceName" : "fault_code_type_1_count_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d7694-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "21",
+			"attrDisplaySeq" : "21",
+			"attrSourceName" : "fault_code_type_2_count_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d77ca-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "22",
+			"attrDisplaySeq" : "22",
+			"attrSourceName" : "fault_code_type_3_count_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d790a-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "23",
+			"attrDisplaySeq" : "23",
+			"attrSourceName" : "fault_code_type_4_count_per_usage1_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d826a-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage1_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "24",
+			"attrDisplaySeq" : "24",
+			"attrSourceName" : "fault_code_type_1_count_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d83dc-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "25",
+			"attrDisplaySeq" : "25",
+			"attrSourceName" : "fault_code_type_2_count_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d8562-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "26",
+			"attrDisplaySeq" : "26",
+			"attrSourceName" : "fault_code_type_3_count_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d8684-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "27",
+			"attrDisplaySeq" : "27",
+			"attrSourceName" : "fault_code_type_4_count_per_usage2_rollingmin_3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e56d87b0-1e1b-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage2_rollingmin_3"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "28",
+			"attrDisplaySeq" : "28",
+			"attrSourceName" : "warn_type1_total_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd00486-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type1_total_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "29",
+			"attrDisplaySeq" : "29",
+			"attrSourceName" : "warn_type2_total_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd00738-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type2_total_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "30",
+			"attrDisplaySeq" : "30",
+			"attrSourceName" : "problem_type_1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd02a10-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "31",
+			"attrDisplaySeq" : "31",
+			"attrSourceName" : "problem_type_2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd02b64-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "32",
+			"attrDisplaySeq" : "32",
+			"attrSourceName" : "problem_type_3_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd02c90-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "33",
+			"attrDisplaySeq" : "33",
+			"attrSourceName" : "problem_type_4_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd02db2-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "34",
+			"attrDisplaySeq" : "34",
+			"attrSourceName" : "problem_type_1_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd02ed4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "35",
+			"attrDisplaySeq" : "35",
+			"attrSourceName" : "problem_type_2_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03000-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "36",
+			"attrDisplaySeq" : "36",
+			"attrSourceName" : "problem_type_3_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0330c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "37",
+			"attrDisplaySeq" : "37",
+			"attrSourceName" : "problem_type_4_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0344c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "38",
+			"attrDisplaySeq" : "38",
+			"attrSourceName" : "problem_type_1_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03582-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "39",
+			"attrDisplaySeq" : "39",
+			"attrSourceName" : "problem_type_2_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd036ae-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "40",
+			"attrDisplaySeq" : "40",
+			"attrSourceName" : "problem_type_3_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd037d0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "41",
+			"attrDisplaySeq" : "41",
+			"attrSourceName" : "problem_type_4_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd038fc-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "42",
+			"attrDisplaySeq" : "42",
+			"attrSourceName" : "fault_code_type_1_count_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03a1e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "43",
+			"attrDisplaySeq" : "43",
+			"attrSourceName" : "fault_code_type_2_count_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03c4e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "44",
+			"attrDisplaySeq" : "44",
+			"attrSourceName" : "fault_code_type_3_count_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03d70-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "45",
+			"attrDisplaySeq" : "45",
+			"attrSourceName" : "fault_code_type_4_count_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03e9c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "46",
+			"attrDisplaySeq" : "46",
+			"attrSourceName" : "fault_code_type_1_count_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd03fc8-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "47",
+			"attrDisplaySeq" : "47",
+			"attrSourceName" : "fault_code_type_2_count_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd040e0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "48",
+			"attrDisplaySeq" : "48",
+			"attrSourceName" : "fault_code_type_3_count_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd04202-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "49",
+			"attrDisplaySeq" : "49",
+			"attrSourceName" : "fault_code_type_4_count_per_usage1_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0441e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage1_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "50",
+			"attrDisplaySeq" : "50",
+			"attrSourceName" : "fault_code_type_1_count_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd04554-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "51",
+			"attrDisplaySeq" : "51",
+			"attrSourceName" : "fault_code_type_2_count_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd04680-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "52",
+			"attrDisplaySeq" : "52",
+			"attrSourceName" : "fault_code_type_3_count_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd047a2-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "53",
+			"attrDisplaySeq" : "53",
+			"attrSourceName" : "fault_code_type_4_count_per_usage2_rollingmin_7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd048ba-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage2_rollingmin_7"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "54",
+			"attrDisplaySeq" : "54",
+			"attrSourceName" : "warn_type1_total_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd04afe-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type1_total_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "55",
+			"attrDisplaySeq" : "55",
+			"attrSourceName" : "warn_type2_total_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd04d06-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type2_total_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "56",
+			"attrDisplaySeq" : "56",
+			"attrSourceName" : "problem_type_1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd06b6a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "57",
+			"attrDisplaySeq" : "57",
+			"attrSourceName" : "problem_type_2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd06ca0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "58",
+			"attrDisplaySeq" : "58",
+			"attrSourceName" : "problem_type_3_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd06dea-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "59",
+			"attrDisplaySeq" : "59",
+			"attrSourceName" : "problem_type_4_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07010-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "60",
+			"attrDisplaySeq" : "60",
+			"attrSourceName" : "problem_type_1_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07164-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "61",
+			"attrDisplaySeq" : "61",
+			"attrSourceName" : "problem_type_2_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0729a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "62",
+			"attrDisplaySeq" : "62",
+			"attrSourceName" : "problem_type_3_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd073da-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "63",
+			"attrDisplaySeq" : "63",
+			"attrSourceName" : "problem_type_4_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0751a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "64",
+			"attrDisplaySeq" : "64",
+			"attrSourceName" : "problem_type_1_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd076aa-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "65",
+			"attrDisplaySeq" : "65",
+			"attrSourceName" : "problem_type_2_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd078ee-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "66",
+			"attrDisplaySeq" : "66",
+			"attrSourceName" : "problem_type_3_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07a38-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "67",
+			"attrDisplaySeq" : "67",
+			"attrSourceName" : "problem_type_4_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07b6e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "68",
+			"attrDisplaySeq" : "68",
+			"attrSourceName" : "fault_code_type_1_count_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07ca4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "69",
+			"attrDisplaySeq" : "69",
+			"attrSourceName" : "fault_code_type_2_count_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07de4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "70",
+			"attrDisplaySeq" : "70",
+			"attrSourceName" : "fault_code_type_3_count_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd07f24-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "71",
+			"attrDisplaySeq" : "71",
+			"attrSourceName" : "fault_code_type_4_count_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0826c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "72",
+			"attrDisplaySeq" : "72",
+			"attrSourceName" : "fault_code_type_1_count_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd083ac-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "73",
+			"attrDisplaySeq" : "73",
+			"attrSourceName" : "fault_code_type_2_count_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd08762-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "74",
+			"attrDisplaySeq" : "74",
+			"attrSourceName" : "fault_code_type_3_count_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd089c4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "75",
+			"attrDisplaySeq" : "75",
+			"attrSourceName" : "fault_code_type_4_count_per_usage1_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd08bf4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage1_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "76",
+			"attrDisplaySeq" : "76",
+			"attrSourceName" : "fault_code_type_1_count_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd08d52-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "77",
+			"attrDisplaySeq" : "77",
+			"attrSourceName" : "fault_code_type_2_count_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd090c2-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "78",
+			"attrDisplaySeq" : "78",
+			"attrSourceName" : "fault_code_type_3_count_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd09234-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "79",
+			"attrDisplaySeq" : "79",
+			"attrSourceName" : "fault_code_type_4_count_per_usage2_rollingmin_14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd09356-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage2_rollingmin_14"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "80",
+			"attrDisplaySeq" : "80",
+			"attrSourceName" : "warn_type1_total_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd095a4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type1_total_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "81",
+			"attrDisplaySeq" : "81",
+			"attrSourceName" : "warn_type2_total_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd096d0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type2_total_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "82",
+			"attrDisplaySeq" : "82",
+			"attrSourceName" : "problem_type_1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0baac-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "83",
+			"attrDisplaySeq" : "83",
+			"attrSourceName" : "problem_type_2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0bdea-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "84",
+			"attrDisplaySeq" : "84",
+			"attrSourceName" : "problem_type_3_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0bf3e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "85",
+			"attrDisplaySeq" : "85",
+			"attrSourceName" : "problem_type_4_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c06a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "86",
+			"attrDisplaySeq" : "86",
+			"attrSourceName" : "problem_type_1_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c196-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "87",
+			"attrDisplaySeq" : "87",
+			"attrSourceName" : "problem_type_2_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c2c2-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "88",
+			"attrDisplaySeq" : "88",
+			"attrSourceName" : "problem_type_3_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c448-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "89",
+			"attrDisplaySeq" : "89",
+			"attrSourceName" : "problem_type_4_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c588-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "90",
+			"attrDisplaySeq" : "90",
+			"attrSourceName" : "problem_type_1_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0c8c6-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "91",
+			"attrDisplaySeq" : "91",
+			"attrSourceName" : "problem_type_2_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0ca10-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "92",
+			"attrDisplaySeq" : "92",
+			"attrSourceName" : "problem_type_3_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0cb3c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "93",
+			"attrDisplaySeq" : "93",
+			"attrSourceName" : "problem_type_4_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0cc5e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "94",
+			"attrDisplaySeq" : "94",
+			"attrSourceName" : "fault_code_type_1_count_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0cd8a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "95",
+			"attrDisplaySeq" : "95",
+			"attrSourceName" : "fault_code_type_2_count_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0d10e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "96",
+			"attrDisplaySeq" : "96",
+			"attrSourceName" : "fault_code_type_3_count_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0d2da-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "97",
+			"attrDisplaySeq" : "97",
+			"attrSourceName" : "fault_code_type_4_count_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0d67c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "98",
+			"attrDisplaySeq" : "98",
+			"attrSourceName" : "fault_code_type_1_count_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0d938-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "99",
+			"attrDisplaySeq" : "99",
+			"attrSourceName" : "fault_code_type_2_count_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0da96-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "100",
+			"attrDisplaySeq" : "100",
+			"attrSourceName" : "fault_code_type_3_count_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0dbd6-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "101",
+			"attrDisplaySeq" : "101",
+			"attrSourceName" : "fault_code_type_4_count_per_usage1_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0dd16-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage1_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "102",
+			"attrDisplaySeq" : "102",
+			"attrSourceName" : "fault_code_type_1_count_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0de42-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "103",
+			"attrDisplaySeq" : "103",
+			"attrSourceName" : "fault_code_type_2_count_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0e0a4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "104",
+			"attrDisplaySeq" : "104",
+			"attrSourceName" : "fault_code_type_3_count_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0e1e4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "105",
+			"attrDisplaySeq" : "105",
+			"attrSourceName" : "fault_code_type_4_count_per_usage2_rollingmin_30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0e310-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage2_rollingmin_30"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "106",
+			"attrDisplaySeq" : "106",
+			"attrSourceName" : "warn_type1_total_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0e55e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type1_total_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "107",
+			"attrDisplaySeq" : "107",
+			"attrSourceName" : "warn_type2_total_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd0e68a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_warn_type2_total_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "108",
+			"attrDisplaySeq" : "108",
+			"attrSourceName" : "problem_type_1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd10804-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "109",
+			"attrDisplaySeq" : "109",
+			"attrSourceName" : "problem_type_2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd10b88-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "110",
+			"attrDisplaySeq" : "110",
+			"attrSourceName" : "problem_type_3_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd10cd2-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "111",
+			"attrDisplaySeq" : "111",
+			"attrSourceName" : "problem_type_4_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd10dfe-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "112",
+			"attrDisplaySeq" : "112",
+			"attrSourceName" : "problem_type_1_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd10f20-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "113",
+			"attrDisplaySeq" : "113",
+			"attrSourceName" : "problem_type_2_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd11060-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "114",
+			"attrDisplaySeq" : "114",
+			"attrSourceName" : "problem_type_3_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd11182-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "115",
+			"attrDisplaySeq" : "115",
+			"attrSourceName" : "problem_type_4_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd112f4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "116",
+			"attrDisplaySeq" : "116",
+			"attrSourceName" : "problem_type_1_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd116a0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_1_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "117",
+			"attrDisplaySeq" : "117",
+			"attrSourceName" : "problem_type_2_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd117ea-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_2_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "118",
+			"attrDisplaySeq" : "118",
+			"attrSourceName" : "problem_type_3_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd1192a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_3_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "119",
+			"attrDisplaySeq" : "119",
+			"attrSourceName" : "problem_type_4_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd11a6a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_problem_type_4_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "120",
+			"attrDisplaySeq" : "120",
+			"attrSourceName" : "fault_code_type_1_count_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd11bb4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "121",
+			"attrDisplaySeq" : "121",
+			"attrSourceName" : "fault_code_type_2_count_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd11cf4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "122",
+			"attrDisplaySeq" : "122",
+			"attrSourceName" : "fault_code_type_3_count_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd1200a-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "123",
+			"attrDisplaySeq" : "123",
+			"attrSourceName" : "fault_code_type_4_count_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd12154-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "124",
+			"attrDisplaySeq" : "124",
+			"attrSourceName" : "fault_code_type_1_count_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd12294-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "125",
+			"attrDisplaySeq" : "125",
+			"attrSourceName" : "fault_code_type_2_count_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd123d4-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "126",
+			"attrDisplaySeq" : "126",
+			"attrSourceName" : "fault_code_type_3_count_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd1251e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "127",
+			"attrDisplaySeq" : "127",
+			"attrSourceName" : "fault_code_type_4_count_per_usage1_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd1265e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage1_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "128",
+			"attrDisplaySeq" : "128",
+			"attrSourceName" : "fault_code_type_1_count_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd1279e-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_1_count_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "129",
+			"attrDisplaySeq" : "129",
+			"attrSourceName" : "fault_code_type_2_count_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd12aa0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "130",
+			"attrDisplaySeq" : "130",
+			"attrSourceName" : "fault_code_type_3_count_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd12be0-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_3_count_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "131",
+			"attrDisplaySeq" : "131",
+			"attrSourceName" : "fault_code_type_4_count_per_usage2_rollingmin_90",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3bd12d0c-1e4c-11e9-ab14-d663bd873d93",
+					"version" : null,
+					"name" : "fm_fault_code_type_4_count_per_usage2_rollingmin_90"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "132",
+			"attrDisplaySeq" : "132",
+			"attrSourceName" : "date_month",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "date_month",
+				"attrType" : "string",
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "133",
+			"attrDisplaySeq" : "133",
+			"attrSourceName" : "date_week",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "date_week",
+				"attrType" : "string",
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "134",
+			"attrDisplaySeq" : "134",
+			"attrSourceName" : "date_day",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "46",
+				"attrName" : "date_day",
+				"attrType" : "string",
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrSourceId" : "135",
+			"attrDisplaySeq" : "135",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+					"version" : null,
+					"name" : "ds_device_data_base_features"
+				},
+				"value" : null,
+				"attrId" : "47",
+				"attrName" : "version",
+				"attrType" : "Integer",
+				"attrUnitType" : null
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : -1,
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

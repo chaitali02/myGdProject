@@ -1,321 +1,322 @@
 {
-  "uuid": "dd2392c7-f68c-4933-bbc8-e69401f006rr",
-  "version": "1533250125",
-  "name": "ds_customer_loss_simulation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "relation",
-      "uuid": "91290798-b6a9-4883-bc58-664b66a08794",
-      "version": null,
-      "name": "rel_customer_loss_simulation"
-    },
-    "value": null
-  },
-   "filterInfo" : [ 
-        {
-            "logicalOperator" : "",
-            "operator" : "=",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
-                    },
-                    "attributeId" : 0
-                }, 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
-                    },
-                    "attributeId" : 0
-                }
-            ]
-        }
-    ],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "cust_id",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "cust_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "industry",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "industry",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "exposure",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "exposure",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "lgd",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "lgd",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq" : "4",
-      "attrSourceName": "correlation",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "correlation",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq" : "5",
-      "attrSourceName": "sqrt_correlation",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "sqrt_correlation",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq" : "6",
-      "attrSourceName": "iterationid",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "iterationid",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq" : "7",
-      "attrSourceName": "customer",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "customer",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "8",
-      "attrDisplaySeq" : "8",
-      "attrSourceName": "pd",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "pd",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "9",
-      "attrDisplaySeq" : "9",
-      "attrSourceName": "iteration_id",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-          "version": null,
-          "name": "industry_factor_transpose"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "iteration_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "10",
-      "attrDisplaySeq" : "10",
-      "attrSourceName": "factor",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-          "version": null,
-          "name": "industry_factor_transpose"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "factor",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "11",
-      "attrDisplaySeq" : "11",
-      "attrSourceName": "factor_value",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-          "version": null,
-          "name": "industry_factor_transpose"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "factor_value",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "12",
-      "attrDisplaySeq" : "12",
-      "attrSourceName": "def_point",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "def_point",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "13",
-      "attrDisplaySeq" : "13",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "reporting_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "14",
-      "attrDisplaySeq" : "14",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-          "version": null,
-          "name": "customer_portfolio"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "version",
-        "attrType": null
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr",
+	"version" : "1533250125",
+	"name" : "ds_customer_loss_simulation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "91290798-b6a9-4883-bc58-664b66a08794",
+			"version" : null,
+			"name" : "rel_customer_loss_simulation"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"logicalOperator" : "",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
+					},
+					"attributeId" : 0
+				},
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
+					},
+					"attributeId" : 0
+				}
+			]
+		}
+	],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "cust_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "cust_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "industry",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "industry",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "exposure",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "exposure",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "lgd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "lgd",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "correlation",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "correlation",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "sqrt_correlation",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "sqrt_correlation",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "iterationid",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "iterationid",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "customer",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "customer",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "pd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "pd",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "9",
+			"attrDisplaySeq" : "9",
+			"attrSourceName" : "iteration_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+					"version" : null,
+					"name" : "industry_factor_transpose"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "iteration_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "10",
+			"attrDisplaySeq" : "10",
+			"attrSourceName" : "factor",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+					"version" : null,
+					"name" : "industry_factor_transpose"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "factor",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "11",
+			"attrDisplaySeq" : "11",
+			"attrSourceName" : "factor_value",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+					"version" : null,
+					"name" : "industry_factor_transpose"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "factor_value",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "12",
+			"attrDisplaySeq" : "12",
+			"attrSourceName" : "def_point",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "def_point",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "13",
+			"attrDisplaySeq" : "13",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "reporting_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "14",
+			"attrDisplaySeq" : "14",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+					"version" : null,
+					"name" : "customer_portfolio"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "version",
+				"attrType" : null
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

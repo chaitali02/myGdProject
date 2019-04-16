@@ -1,205 +1,206 @@
 {
-  "uuid": "3b6691ec-9389-4515-9c96-fd0fba52934b",
-  "version": "1534012204",
-  "name": "ppl_customer_var_contribution_topn_perc",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 14:30:04 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 30,
-  "yPos": 250,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "6aa87b7e-f3b5-4025-ac23-fddd151f655e",
-          "dependsOn": [],
-          "name": "Transpose",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                    "version": null,
-                    "name": "Transpose"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceDatapod",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "0",
-                          "attrName": "customer_var_contribution_top1_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "customer_var_contribution_top5_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "customer_var_contribution_top10_perc",
-                          "attrType": "string"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "customer_var_contribution_top50_perc",
-                          "attrType": "string"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "key",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "eb352515-fffd-41b2-8106-e3d15f4a219d",
-                            "version": null,
-                            "name": "ds_customer_var_contribution_topn_perc"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "reporting_date",
-                          "attrType": "string"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 330,
-          "yPos": 250,
-          "active" : "Y",
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos": 190,
-      "yPos": 250,
-      "active" : "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "3b6691ec-9389-4515-9c96-fd0fba52934b",
+	"version" : "1534012204",
+	"name" : "ppl_customer_var_contribution_topn_perc",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 30,
+	"yPos" : 250,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "6aa87b7e-f3b5-4025-ac23-fddd151f655e",
+					"dependsOn" : [ ],
+					"name" : "Transpose",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "operator",
+										"uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+										"version" : null,
+										"name" : "Transpose"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "0",
+											"paramName" : "sourceDatapod",
+											"paramType" : "attributes",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+														"version" : null,
+														"name" : "ds_customer_var_contribution_topn_perc"
+													},
+													"value" : null,
+													"attrId" : "0",
+													"attrName" : "customer_var_contribution_top1_perc",
+													"attrType" : "string"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+														"version" : null,
+														"name" : "ds_customer_var_contribution_topn_perc"
+													},
+													"value" : null,
+													"attrId" : "1",
+													"attrName" : "customer_var_contribution_top5_perc",
+													"attrType" : "string"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+														"version" : null,
+														"name" : "ds_customer_var_contribution_topn_perc"
+													},
+													"value" : null,
+													"attrId" : "2",
+													"attrName" : "customer_var_contribution_top10_perc",
+													"attrType" : "string"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+														"version" : null,
+														"name" : "ds_customer_var_contribution_topn_perc"
+													},
+													"value" : null,
+													"attrId" : "3",
+													"attrName" : "customer_var_contribution_top50_perc",
+													"attrType" : "string"
+												}
+											]
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "1",
+											"paramName" : "key",
+											"paramType" : "attributes",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "eb352515-fffd-41b2-8106-e3d15f4a219d",
+														"version" : null,
+														"name" : "ds_customer_var_contribution_topn_perc"
+													},
+													"value" : null,
+													"attrId" : "4",
+													"attrName" : "reporting_date",
+													"attrType" : "string"
+												}
+											]
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "2",
+											"paramName" : "saveLocation",
+											"paramType" : "datapod",
+											"paramValue" : {
+												"ref" : {
+													"type" : "datapod",
+													"uuid" : "9b8485f7-2099-4163-9ca5-a241e952c631",
+													"version" : null,
+													"name" : null
+												},
+												"value" : null
+											},
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 330,
+					"yPos" : 250,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 190,
+			"yPos" : 250,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displyName" : "ppl_e2e_exec"
 }

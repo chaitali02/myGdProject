@@ -1,38 +1,39 @@
 {
-	"header": "Y",
-	"append": "Y",
-	"source": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"header" : "Y",
+	"append" : "Y",
+	"source" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		},
-		"value": "/user/hive/warehouse/framework/upload/account.csv"
+		"value" : "/user/hive/warehouse/framework/upload/account.csv"
 	},
-	"target": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 		}
 	},
-	"uuid": "a3d5a995-3ba0-4c20-b53e-800f690e59a9",
-	"version": "1490415208",
-	"name": "account",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "a3d5a995-3ba0-4c20-b53e-800f690e59a9",
+	"version" : "1490415208",
+	"name" : "account",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:39.405Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displyName" : "device_data_compute_rolling_std"
 }

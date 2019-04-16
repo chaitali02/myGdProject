@@ -1,72 +1,73 @@
 {
-	"uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
-	"version": "1519980881",
-	"name": "paramlist_randomforest_classifier_woh",
-	"desc": "RandomForestClassifier Param LIst",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196"
+	"uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+	"version" : "1519980881",
+	"name" : "paramlist_randomforest_classifier_woh",
+	"desc" : "RandomForestClassifier Param LIst",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [],
-	"active": "Y",
-	"locked": "N",
-	"published": "N",
-	"paramListType": "model",
-	"templateFlg": "Y",
-	"templateInfo": null,
-	"publicFlag": "Y",
-	"appInfo": [
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"publicFlag" : "Y",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		}
 	],
-	"params": [
+	"params" : [
 		{
-			"paramId": "0",
-			"paramName": "maxBins",
-			"paramType": "integer",
-			"paramDispName": "Max Bins",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "0",
+			"paramName" : "maxBins",
+			"paramType" : "integer",
+			"paramDispName" : "Max Bins",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "10"
+				"value" : "10"
 			}
 		},
 		{
-			"paramId": "1",
-			"paramName": "maxDepth",
-			"paramType": "integer",
-			"paramDispName": "Max Depth",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "1",
+			"paramName" : "maxDepth",
+			"paramType" : "integer",
+			"paramDispName" : "Max Depth",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "10"
+				"value" : "10"
 			}
 		},
 		{
-			"paramId": "4",
-			"paramName": "maxMemoryInMB",
-			"paramType": "integer",
-			"paramDispName": "Max MemoryInMB",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "4",
+			"paramName" : "maxMemoryInMB",
+			"paramType" : "integer",
+			"paramDispName" : "Max MemoryInMB",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "100"
+				"value" : "100"
 			}
 		}
-	]
+	],
+	"displyName" : "paramlist_dq_rule"
 }

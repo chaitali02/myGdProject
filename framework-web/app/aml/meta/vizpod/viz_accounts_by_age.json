@@ -1,240 +1,241 @@
 {
-  "uuid": "cc70b683-3f87-44b7-9a94-27805a0bc69b",
-  "version": "1551217820",
-  "name": "viz_accounts_by_age",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Feb 26 16:50:20 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-      "version": null,
-      "name": "dim_account"
-    },
-    "value": null
-  },
-  "type": "bar-chart",
-  "limit": 0,
-  "keys": [
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "9decfa52-ab8c-43e0-8251-5c053773679c",
-        "version": null,
-        "name": "fm_account_by_age_bucket"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [ 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 0
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 1
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 2
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 3
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 4
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 5
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 6
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 7
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 8
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 9
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 10
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 11
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 12
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 13
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 14
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 15
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 16
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 17
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 18
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 19
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 20
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 21
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
-            },
-            "attributeId" : 22
-        }
-    ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 0,
-      "function": "COUNT",
-      "value": null,
-      "attributeName": "account_id"
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null
+	"uuid" : "cc70b683-3f87-44b7-9a94-27805a0bc69b",
+	"version" : "1551217820",
+	"name" : "viz_accounts_by_age",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+			"version" : null,
+			"name" : "dim_account"
+		},
+		"value" : null
+	},
+	"type" : "bar-chart",
+	"limit" : 0,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "9decfa52-ab8c-43e0-8251-5c053773679c",
+				"version" : null,
+				"name" : "fm_account_by_age_bucket"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 0
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 1
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 2
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 3
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 4
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 5
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 6
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 7
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 8
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 9
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 10
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 11
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 12
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 13
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 14
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 15
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 16
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 17
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 18
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 19
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 20
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 21
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			},
+			"attributeId" : 22
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 0,
+			"function" : "COUNT",
+			"value" : null,
+			"attributeName" : "account_id"
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"displyName" : "viz_status_by_dimension"
 }

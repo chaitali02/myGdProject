@@ -1,92 +1,93 @@
 {
-    "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
-    "version" : "1464977196",
-    "name" : "admin",
-    "desc" : "Admin user",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2019-01-25T07:17:28.445Z"),
-    "active" : "Y",
-    "locked" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "firstName" : "Administrator",
-    "middleName" : "",
-    "lastName" : "Administrator",
-    "emailId" : "admin@inferyx.com",
-    "password" : "SeSspsRj48OH1dp7d9ufAw==",
-    "groupInfo" : [ 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "29792fd8-74f1-4940-a0d8-89f039df5138"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "08df4700-feaf-4672-b361-e14687b531bd"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "5c88c2d6-c80e-4196-afc4-f8cf6c6e9470"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "4b0e12ee-0e38-4337-abed-2c596ec56d24"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "ea362f29-06a6-478f-bcaa-08476e3f12c4"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "db133b1e-4fe9-4a40-8880-dcd8a06c8e2f"
-            }
-        }
-    ],
-    "roleInfo" : [ 
-        {
-            "ref" : {
-                "type" : "role",
-                "uuid" : "d04716df-e96a-419f-9118-c81342b47f87"
-            }
-        }
-    ],
-    "defaultGroup" : {
-        "ref" : {
-            "type" : "group",
-            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
-        }
-    },
-    "orgInfo" : {
-        "ref" : {
-            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-            "type" : "organization"
-        }
-    }
+	"uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+	"version" : "1464977196",
+	"name" : "admin",
+	"desc" : "Admin user",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"firstName" : "Administrator",
+	"middleName" : "",
+	"lastName" : "Administrator",
+	"emailId" : "admin@inferyx.com",
+	"password" : "SeSspsRj48OH1dp7d9ufAw==",
+	"groupInfo" : [
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "29792fd8-74f1-4940-a0d8-89f039df5138"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "08df4700-feaf-4672-b361-e14687b531bd"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "5c88c2d6-c80e-4196-afc4-f8cf6c6e9470"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "4b0e12ee-0e38-4337-abed-2c596ec56d24"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "ea362f29-06a6-478f-bcaa-08476e3f12c4"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "db133b1e-4fe9-4a40-8880-dcd8a06c8e2f"
+			}
+		}
+	],
+	"roleInfo" : [
+		{
+			"ref" : {
+				"type" : "role",
+				"uuid" : "d04716df-e96a-419f-9118-c81342b47f87"
+			}
+		}
+	],
+	"defaultGroup" : {
+		"ref" : {
+			"type" : "group",
+			"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+		}
+	},
+	"orgInfo" : {
+		"ref" : {
+			"uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+			"type" : "organization"
+		}
+	},
+	"displyName" : "admin"
 }

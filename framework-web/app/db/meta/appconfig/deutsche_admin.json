@@ -1,0 +1,54 @@
+{
+	"configInfo" : [
+		{
+			"configId" : "0",
+			"configName" : "framework.dataqual.detail.uuid",
+			"configType" : "string",
+			"configVal" : "17741969-5a2f-442a-bf8d-4fa5a0c71126"
+		},
+		{
+			"configId" : "1",
+			"configName" : "framework.dataqual.summary.uuid",
+			"configType" : "string",
+			"configVal" : "17741969-5a2f-442a-bf8d-4fa5a0c71127"
+		},
+		{
+			"configId" : "2",
+			"configName" : "framework.profile.datapod.uuid",
+			"configType" : "string",
+			"configVal" : "77aefb4c-191c-11e7-93ae-92361f002622"
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "application",
+			"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
+		}
+	},
+	"uuid" : "27d87a1b-13bf-4f37-ac3c-88e8c50585bb",
+	"version" : "1553135923",
+	"name" : "Deutsche Admin",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.398Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311"
+			}
+		}
+	],
+	"publicFlag" : "N"
+}

@@ -1,2047 +1,2048 @@
 {
-  "uuid": "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
-  "version": "1551857752",
-  "name": "viz_cust_and_acct_by_country_barline",
-  "desc": "Customers and Accounts By Country",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Mar 06 13:05:52 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "relation",
-      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
-      "version": null,
-      "name": "rel_datawarehouse"
-    },
-    "value": null
-  },
-  "type": "bar-line-chart",
-  "limit": -1,
-  "keys": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "country"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "transaction_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_transaction_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "transaction_type_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "trans_date_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "customer_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "address_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "account_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "from_account"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "to_account"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "amount_base_curr"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "amount_usd"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "currency_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "currency_rate"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 15,
-      "function": null,
-      "value": null,
-      "attributeName": "notes"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 16,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-        "version": null,
-        "name": "fact_transaction"
-      },
-      "attributeId": 17,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "account_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_account_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "account_type_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "account_status_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "product_type_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "pin_number"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "nationality"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "primary_iden_doc"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "primary_iden_doc_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "secondary_iden_doc"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "secondary_iden_doc_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "account_open_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "account_number"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "opening_balance"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "current_balance"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 15,
-      "function": null,
-      "value": null,
-      "attributeName": "overdue_balance"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 16,
-      "function": null,
-      "value": null,
-      "attributeName": "overdue_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 17,
-      "function": null,
-      "value": null,
-      "attributeName": "currency_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 18,
-      "function": null,
-      "value": null,
-      "attributeName": "interest_type"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 19,
-      "function": null,
-      "value": null,
-      "attributeName": "interest_rate"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 20,
-      "function": null,
-      "value": null,
-      "attributeName": "customer_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 21,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "attributeId": 22,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "address_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_address_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "address_line1"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "address_line2"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "address_line3"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "city"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "county"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "state"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "zipcode"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "country"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "latitude"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "longtitude"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-        "version": null,
-        "name": "dim_address"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_bank_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_account_number"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_currency_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "bank_check_digits"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-        "version": null,
-        "name": "dim_bank"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_branch_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_type_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_desc"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_contact_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_contact_phone"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "branch_contact_email"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "customer_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_customer_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "title"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "first_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "middle_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "last_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "address_line1"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "address_line2"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "phone"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "date_first_purchase"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "commute_distance"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "city"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "state"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "postal_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "country"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 15,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-        "version": null,
-        "name": "dim_customer"
-      },
-      "attributeId": 16,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "date_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "date_type"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "date_val"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "day_num_of_week"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "day_num_of_month"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "day_num_of_quarter"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "day_num_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "day_num_absolute"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "day_of_week_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "day_of_week_abbreviation"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "julian_day_num_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "julian_day_num_absolute"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "is_weekday"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "is_usa_civil_holiday"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_week"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 15,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_month"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 16,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_quarter"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 17,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 18,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_fiscal_month"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 19,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_fiscal_quarter"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 20,
-      "function": null,
-      "value": null,
-      "attributeName": "is_last_day_of_fiscal_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 21,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_year_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 22,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_year_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 23,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_year_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 24,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_year_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 25,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_month_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 26,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_month_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 27,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_month_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 28,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_month_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 29,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_quarter_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 30,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_quarter_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 31,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_quarter_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 32,
-      "function": null,
-      "value": null,
-      "attributeName": "week_of_quarter_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 33,
-      "function": null,
-      "value": null,
-      "attributeName": "week_num_of_month"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 34,
-      "function": null,
-      "value": null,
-      "attributeName": "week_num_of_quarter"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 35,
-      "function": null,
-      "value": null,
-      "attributeName": "week_num_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 36,
-      "function": null,
-      "value": null,
-      "attributeName": "month_num_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 37,
-      "function": null,
-      "value": null,
-      "attributeName": "month_num_overall"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 38,
-      "function": null,
-      "value": null,
-      "attributeName": "month_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 39,
-      "function": null,
-      "value": null,
-      "attributeName": "month_name_abbreviation"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 40,
-      "function": null,
-      "value": null,
-      "attributeName": "month_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 41,
-      "function": null,
-      "value": null,
-      "attributeName": "month_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 42,
-      "function": null,
-      "value": null,
-      "attributeName": "month_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 43,
-      "function": null,
-      "value": null,
-      "attributeName": "month_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 44,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_num_of_year"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 45,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_num_overall"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 46,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 47,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 48,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 49,
-      "function": null,
-      "value": null,
-      "attributeName": "quarter_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 50,
-      "function": null,
-      "value": null,
-      "attributeName": "year_num"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 51,
-      "function": null,
-      "value": null,
-      "attributeName": "year_begin_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 52,
-      "function": null,
-      "value": null,
-      "attributeName": "year_begin_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 53,
-      "function": null,
-      "value": null,
-      "attributeName": "year_end_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 54,
-      "function": null,
-      "value": null,
-      "attributeName": "year_end_date_key"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 55,
-      "function": null,
-      "value": null,
-      "attributeName": "yyyy_mm"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 56,
-      "function": null,
-      "value": null,
-      "attributeName": "yyyy_mm_dd"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 57,
-      "function": null,
-      "value": null,
-      "attributeName": "dd_mon_yyyy"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 58,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 59,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-        "version": null,
-        "name": "dim_date"
-      },
-      "attributeId": 60,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "transaction_type_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "src_transaction_type_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "transaction_type_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "transaction_type_desc"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "load_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "load_id"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-        "version": null,
-        "name": "dim_state"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "state_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-        "version": null,
-        "name": "dim_state"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "state_name"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-        "version": null,
-        "name": "dim_state"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "country_code"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-        "version": null,
-        "name": "dim_state"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "state_population"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-        "version": null,
-        "name": "dim_state"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    }
-  ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
-        "version": null,
-        "name": "formula_total_accounts"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
-        "version": null,
-        "name": "formula_total_customers"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null
+	"uuid" : "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
+	"version" : "1551857752",
+	"name" : "viz_cust_and_acct_by_country_barline",
+	"desc" : "Customers and Accounts By Country",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "15beaf47-0a35-486b-9b65-9a57a2e835df",
+			"version" : null,
+			"name" : "rel_datawarehouse"
+		},
+		"value" : null
+	},
+	"type" : "bar-line-chart",
+	"limit" : -1,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "country"
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "transaction_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_transaction_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "transaction_type_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "trans_date_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "customer_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "from_account"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "to_account"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "amount_base_curr"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "amount_usd"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "currency_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "currency_rate"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 15,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "notes"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 16,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+				"version" : null,
+				"name" : "fact_transaction"
+			},
+			"attributeId" : 17,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_account_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_type_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_status_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "product_type_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "pin_number"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "nationality"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "primary_iden_doc"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "primary_iden_doc_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "secondary_iden_doc"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "secondary_iden_doc_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_open_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "account_number"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "opening_balance"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "current_balance"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 15,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "overdue_balance"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 16,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "overdue_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 17,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "currency_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 18,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "interest_type"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 19,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "interest_rate"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 20,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "customer_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 21,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"attributeId" : 22,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_address_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_line1"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_line2"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_line3"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "city"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "county"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "state"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "zipcode"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "country"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "latitude"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "longtitude"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+				"version" : null,
+				"name" : "dim_address"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_bank_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_account_number"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_currency_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bank_check_digits"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+				"version" : null,
+				"name" : "dim_bank"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_branch_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_type_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_desc"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_contact_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_contact_phone"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "branch_contact_email"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "customer_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_customer_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "title"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "first_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "middle_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "last_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_line1"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "address_line2"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "phone"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "date_first_purchase"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "commute_distance"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "city"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "state"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "postal_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "country"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 15,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+				"version" : null,
+				"name" : "dim_customer"
+			},
+			"attributeId" : 16,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "date_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "date_type"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "date_val"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_num_of_week"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_num_of_month"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_num_of_quarter"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_num_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_num_absolute"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_of_week_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "day_of_week_abbreviation"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "julian_day_num_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "julian_day_num_absolute"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_weekday"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_usa_civil_holiday"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_week"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 15,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_month"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 16,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_quarter"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 17,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 18,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_fiscal_month"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 19,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_fiscal_quarter"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 20,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "is_last_day_of_fiscal_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 21,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_year_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 22,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_year_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 23,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_year_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 24,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_year_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 25,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_month_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 26,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_month_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 27,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_month_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 28,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_month_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 29,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_quarter_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 30,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_quarter_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 31,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_quarter_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 32,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_of_quarter_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 33,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_num_of_month"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 34,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_num_of_quarter"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 35,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "week_num_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 36,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_num_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 37,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_num_overall"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 38,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 39,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_name_abbreviation"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 40,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 41,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 42,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 43,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "month_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 44,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_num_of_year"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 45,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_num_overall"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 46,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 47,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 48,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 49,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "quarter_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 50,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "year_num"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 51,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "year_begin_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 52,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "year_begin_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 53,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "year_end_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 54,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "year_end_date_key"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 55,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "yyyy_mm"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 56,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "yyyy_mm_dd"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 57,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "dd_mon_yyyy"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 58,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 59,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+				"version" : null,
+				"name" : "dim_date"
+			},
+			"attributeId" : 60,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "transaction_type_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "src_transaction_type_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "transaction_type_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "transaction_type_desc"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "load_id"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+				"version" : null,
+				"name" : "dim_state"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "state_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+				"version" : null,
+				"name" : "dim_state"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "state_name"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+				"version" : null,
+				"name" : "dim_state"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "country_code"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+				"version" : null,
+				"name" : "dim_state"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "state_population"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+				"version" : null,
+				"name" : "dim_state"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
+				"version" : null,
+				"name" : "formula_total_accounts"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
+				"version" : null,
+				"name" : "formula_total_customers"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"displyName" : "viz_status_by_dimension"
 }

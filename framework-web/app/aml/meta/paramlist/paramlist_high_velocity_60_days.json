@@ -1,11 +1,11 @@
 {
 	"params" : [
-	{
+		{
 			"paramId" : "0",
 			"paramName" : "trans_velocity",
 			"paramType" : "integer",
-            "paramDispName" : "Trans Velocity",
-            "paramDesc" : "",
+			"paramDispName" : "Trans Velocity",
+			"paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple"
@@ -17,8 +17,8 @@
 			"paramId" : "2",
 			"paramName" : "lookback_days",
 			"paramType" : "integer",
-            "paramDispName" : "Lookback Days",
-            "paramDesc" : "",
+			"paramDispName" : "Lookback Days",
+			"paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple"
@@ -46,7 +46,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -60,5 +60,6 @@
 				"name" : "Anti Money Laundering"
 			}
 		}
-	]
+	],
+	"displyName" : "paramlist_dq_rule"
 }

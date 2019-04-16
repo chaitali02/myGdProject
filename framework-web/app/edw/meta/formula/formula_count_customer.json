@@ -1,60 +1,61 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 		}
 	},
-	"formulaInfo": [
+	"formulaInfo" : [
 		{
-			"ref": {
-				"type": "function",
-				"uuid": "9e3e2936-02fb-11e7-93ae-92361f002671"
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002671"
 			}
 		},
 		{
-			"ref": {
-				"type": "simple"
+			"ref" : {
+				"type" : "simple"
 			},
-			"value": "("
+			"value" : "("
 		},
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			},
-			"attributeId": 0
+			"attributeId" : 0
 		},
 		{
-			"ref": {
-				"type": "simple"
+			"ref" : {
+				"type" : "simple"
 			},
-			"value": ")"
+			"value" : ")"
 		}
 	],
-	"formulaType": "aggr",
-	"uuid": "486fe56c-68c5-4005-b98e-824749d73b22",
-	"version": "1494301143",
-	"name": "formula_count_customer",
-	"desc": "Formula to calculate customer counts",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"formulaType" : "aggr",
+	"uuid" : "486fe56c-68c5-4005-b98e-824749d73b22",
+	"version" : "1494301143",
+	"name" : "formula_count_customer",
+	"desc" : "Formula to calculate customer counts",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [],
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displyName" : "fm_total_pass_pct"
 }

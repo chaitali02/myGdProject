@@ -1,116 +1,117 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "729c3c31-b8f1-4fa2-962b-7c77f5b3b11b",
-				"version": "1490112012"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "729c3c31-b8f1-4fa2-962b-7c77f5b3b11b",
+				"version" : "1490112012"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "2a3ec3fc-347d-4eef-9d08-729c756cd450",
-				"version": "1490086612"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "2a3ec3fc-347d-4eef-9d08-729c756cd450",
+				"version" : "1490086612"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "bdb6efdb-7c79-4d98-8dfb-c5eacad824a9",
-				"version": "1490086684"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "bdb6efdb-7c79-4d98-8dfb-c5eacad824a9",
+				"version" : "1490086684"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "8a013108-fd6e-4825-a612-037293c01bf2",
-				"version": "1490086798"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "8a013108-fd6e-4825-a612-037293c01bf2",
+				"version" : "1490086798"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "11d1493e-8ec4-4970-a72e-5165130925b4",
-				"version": "1490086552"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "11d1493e-8ec4-4970-a72e-5165130925b4",
+				"version" : "1490086552"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "cc63a134-f03a-4f39-87f2-bc444c08a40d",
-				"version": "1490086870"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "cc63a134-f03a-4f39-87f2-bc444c08a40d",
+				"version" : "1490086870"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "0fd5a14a-d21d-49c1-853b-7d50bfee985e",
-				"version": "1490086956"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "0fd5a14a-d21d-49c1-853b-7d50bfee985e",
+				"version" : "1490086956"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "951d2e70-8c53-4d80-bf52-e00988804c7c",
-				"version": "1490087041"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "951d2e70-8c53-4d80-bf52-e00988804c7c",
+				"version" : "1490087041"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "08d259be-7377-4545-9647-6e42de482927",
-				"version": "1490087101"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "08d259be-7377-4545-9647-6e42de482927",
+				"version" : "1490087101"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "ff6b1dcf-5a39-404d-9ae3-0bc95ad7883d",
-				"version": "1490087165"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "ff6b1dcf-5a39-404d-9ae3-0bc95ad7883d",
+				"version" : "1490087165"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "a21eefb2-4e59-4b5b-a7b8-c1602eb95a95",
-				"version": "1490087228"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "a21eefb2-4e59-4b5b-a7b8-c1602eb95a95",
+				"version" : "1490087228"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "018348e9-dac9-4d5d-b541-3edd768f146c",
-				"version": "1490087291"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "018348e9-dac9-4d5d-b541-3edd768f146c",
+				"version" : "1490087291"
 			}
 		}
 	],
-	"uuid": "a33f238a-f542-4f40-b2b8-d7c1290b1480",
-	"version": "1490117001",
-	"name": "dqg_dim_address",
-	"desc": "dq rule group for combination of all dq rules for table - dim address",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "a33f238a-f542-4f40-b2b8-d7c1290b1480",
+	"version" : "1490117001",
+	"name" : "dqg_dim_address",
+	"desc" : "dq rule group for combination of all dq rules for table - dim address",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displyName" : "dqg_equity_orders"
 }

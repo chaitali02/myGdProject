@@ -1,91 +1,92 @@
 {
-  "uuid": "55ed3e38-7de7-4c90-b6df-257b4167c647",
-  "version": "1540127809",
-  "name": "rel_dim_address",
-  "desc": "relation for dim address table using raw source table",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Oct 21 18:46:49 IST 2018",
-  "tags": [
-    "DEV",
-    "1.0.1",
-    "DEMO"
-  ],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-      "version": null,
-      "name": "address"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
-          "version": null,
-          "name": "dim_country"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-                "version": null,
-                "name": "address"
-              },
-              "attributeId": 8,
-              "value": null,
-              "attributeName": "country",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
-                "version": null,
-                "name": "dim_country"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "country_name",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "55ed3e38-7de7-4c90-b6df-257b4167c647",
+	"version" : "1540127809",
+	"name" : "rel_dim_address",
+	"desc" : "relation for dim address table using raw source table",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+			"version" : null,
+			"name" : "address"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
+					"version" : null,
+					"name" : "dim_country"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+								"version" : null,
+								"name" : "address"
+							},
+							"attributeId" : 8,
+							"value" : null,
+							"attributeName" : "country",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
+								"version" : null,
+								"name" : "dim_country"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "country_name",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displyName" : "rel_dq_equity_executions_rule7"
 }

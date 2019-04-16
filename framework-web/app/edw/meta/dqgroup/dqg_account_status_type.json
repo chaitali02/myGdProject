@@ -1,53 +1,54 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "1ecf6ab3-d2d7-4fe1-bac7-800ef49ca690",
-				"version": "1490110092"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "1ecf6ab3-d2d7-4fe1-bac7-800ef49ca690",
+				"version" : "1490110092"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "5f043425-0793-4f07-a41f-b543ae6e541a",
-				"version": "1490076337"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "5f043425-0793-4f07-a41f-b543ae6e541a",
+				"version" : "1490076337"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "f0c947da-5fcf-48b5-8823-4fcaad25ce2b",
-				"version": "1490076410"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "f0c947da-5fcf-48b5-8823-4fcaad25ce2b",
+				"version" : "1490076410"
 			}
 		}
 	],
-	"uuid": "80c39cc7-f2a8-40ee-953f-b6586da5783b",
-	"version": "1490113400",
-	"name": "dqg_account_status_type",
-	"desc": "dq rule group of combination of all source table dq rules- account_status_type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "80c39cc7-f2a8-40ee-953f-b6586da5783b",
+	"version" : "1490113400",
+	"name" : "dqg_account_status_type",
+	"desc" : "dq rule group of combination of all source table dq rules- account_status_type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displyName" : "dqg_equity_orders"
 }

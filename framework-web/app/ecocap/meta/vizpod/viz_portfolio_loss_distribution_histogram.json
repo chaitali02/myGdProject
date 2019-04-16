@@ -1,127 +1,128 @@
 {
-  "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
-  "version": "1551857299",
-  "name": "viz_portfolio_loss_distribution_histogram",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Mar 06 12:58:19 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-      "version": null,
-      "name": "portfolio_loss_histogram"
-    },
-    "value": null
-  },
-  "type": "bar-chart",
-  "limit": -1,
-  "keys": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "bucket"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "reporting_date"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "bucket"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "frequency"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    }
-  ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
-        "version": null,
-        "name": "portfolio_loss_histogram"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "frequency"
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null
+	"uuid" : "996ff741-fe09-4197-ba24-d1ac3b8b1312",
+	"version" : "1551857299",
+	"name" : "viz_portfolio_loss_distribution_histogram",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+			"version" : null,
+			"name" : "portfolio_loss_histogram"
+		},
+		"value" : null
+	},
+	"type" : "bar-chart",
+	"limit" : -1,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bucket"
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "reporting_date"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "bucket"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "frequency"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+				"version" : null,
+				"name" : "portfolio_loss_histogram"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "frequency"
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"displyName" : "viz_status_by_dimension"
 }

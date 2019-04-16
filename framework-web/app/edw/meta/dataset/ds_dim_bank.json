@@ -1,153 +1,154 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "relation",
-            "uuid" : "ee2781b3-a252-4207-92d7-5989f0bcc0ad"
-        }
-    },
-    "filterInfo" : [],
-    "attributeInfo" : [ 
-        {
-            "attrSourceId" : "0",
-            "attrDisplaySeq" : "0",
-            "attrSourceName" : "bank_id",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "1",
-            "attrDisplaySeq" : "1",
-            "attrSourceName" : "src_bank_id",
-            "sourceAttr" : {
-                "attrId" : "0",
-                "attrType" : "integer",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "2",
-            "attrDisplaySeq" : "2",
-            "attrSourceName" : "bank_code",
-            "sourceAttr" : {
-                "attrId" : "1",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "3",
-            "attrDisplaySeq" : "3",
-            "attrSourceName" : "bank_name",
-            "sourceAttr" : {
-                "attrId" : "2",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "4",
-            "attrDisplaySeq" : "4",
-            "attrSourceName" : "bank_account_number",
-            "sourceAttr" : {
-                "attrId" : "3",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "5",
-            "attrDisplaySeq" : "5",
-            "attrSourceName" : "bank_currency_code",
-            "sourceAttr" : {
-                "attrId" : "4",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "6",
-            "attrDisplaySeq" : "6",
-            "attrSourceName" : "bank_check_digits",
-            "sourceAttr" : {
-                "attrId" : "5",
-                "attrType" : "integer",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "7",
-            "attrDisplaySeq" : "7",
-            "attrSourceName" : "load_date",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "8",
-            "attrDisplaySeq" : "8",
-            "attrSourceName" : "load_id",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
-                }
-            }
-        }
-    ],
-    "limit" : 0,
-    "uuid" : "73077330-9061-40c9-a787-bcc75862900d",
-    "version" : "1529487184",
-    "name" : "ds_dim_bank",
-    "desc" : "dataset for mapping transformation from source relation to target datapod",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-06-20T09:33:04.000Z"),
-    "tags" : [ 
-        "DEV", 
-        "1.0.1", 
-        "DEMO"
-    ],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "ee2781b3-a252-4207-92d7-5989f0bcc0ad"
+		}
+	},
+	"filterInfo" : [ ],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "bank_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "src_bank_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"attrType" : "integer",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "bank_code",
+			"sourceAttr" : {
+				"attrId" : "1",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "bank_name",
+			"sourceAttr" : {
+				"attrId" : "2",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "bank_account_number",
+			"sourceAttr" : {
+				"attrId" : "3",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "bank_currency_code",
+			"sourceAttr" : {
+				"attrId" : "4",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "bank_check_digits",
+			"sourceAttr" : {
+				"attrId" : "5",
+				"attrType" : "integer",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "load_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "load_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+				}
+			}
+		}
+	],
+	"limit" : 0,
+	"uuid" : "73077330-9061-40c9-a787-bcc75862900d",
+	"version" : "1529487184",
+	"name" : "ds_dim_bank",
+	"desc" : "dataset for mapping transformation from source relation to target datapod",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

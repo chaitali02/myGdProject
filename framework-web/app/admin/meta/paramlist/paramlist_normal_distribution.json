@@ -1,119 +1,119 @@
 {
-    "uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
-    "version" : "1524229596",
-    "name" : "paramlist_normal_distribution",
-    "desc" : null,
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
-        },
-        "value" : null
-    },
-    "createdOn" : ISODate("2018-08-16T17:16:20.888Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "paramListType" : "model",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
-            }
-        }
-    ],
-    "params" : [ 
-        {
-            "paramId" : "0",
-            "paramName" : "min",
-            "paramType" : "integer",
-   	        "paramDispName" : "Min",
-            "paramDesc" : "",	
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "-4"
-            }
-        }, 
-        {
-            "paramId" : "1",
-            "paramName" : "max",
-            "paramType" : "integer",
-   	        "paramDispName" : "Max",
-            "paramDesc" : "",	
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "4"
-            }
-        }, 
-        {
-            "paramId" : "2",
-            "paramName" : "mean",
-            "paramType" : "double",
-   	        "paramDispName" : "Mean",
-            "paramDesc" : "",	
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "0"
-            }
-        }, 
-        {
-            "paramId" : "3",
-            "paramName" : "seed",
-            "paramType" : "double",
-   	        "paramDispName" : "Seed",
-            "paramDesc" : "",	
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "4526"
-            }
-        }
-    ]
+	"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+	"version" : "1524229596",
+	"name" : "paramlist_normal_distribution",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "min",
+			"paramType" : "integer",
+			"paramDispName" : "Min",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "-4"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "max",
+			"paramType" : "integer",
+			"paramDispName" : "Max",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "4"
+			}
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "mean",
+			"paramType" : "double",
+			"paramDispName" : "Mean",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "0"
+			}
+		},
+		{
+			"paramId" : "3",
+			"paramName" : "seed",
+			"paramType" : "double",
+			"paramDispName" : "Seed",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "4526"
+			}
+		}
+	],
+	"displyName" : "paramlist_dq_rule"
 }

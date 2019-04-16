@@ -1,57 +1,58 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "relation",
-			"uuid": "9f0063af-86b4-4610-bf6e-047d74fc196b"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196b"
 		}
 	},
-	"filterInfo": [
+	"filterInfo" : [
 		{
-			"logicalOperator": " ",
-			"operator": "=",
-			"operand": [
+			"logicalOperator" : " ",
+			"operator" : "=",
+			"operand" : [
 				{
-					"ref": {
-						"type": "datapod",
-						"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
 					},
-					"attributeId": 8
+					"attributeId" : 8
 				},
 				{
-					"ref": {
-						"type": "simple"
+					"ref" : {
+						"type" : "simple"
 					},
-                                        "attributeType":"string",
-					"value": "'USA'"
+					"attributeType" : "string",
+					"value" : "'USA'"
 				}
 			]
 		}
 	],
-	"uuid": "c456f883-9699-4abc-9a4a-82896e074c5b",
-	"version": "1495327503",
-	"name": "filter_customer_usa",
-	"desc": "All USA Customers",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "c456f883-9699-4abc-9a4a-82896e074c5b",
+	"version" : "1495327503",
+	"name" : "filter_customer_usa",
+	"desc" : "All USA Customers",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.861Z"),
+	"tags" : [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displyName" : "Outgoing Wire Transfers"
 }

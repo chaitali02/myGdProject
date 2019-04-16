@@ -1,91 +1,92 @@
 {
-  "uuid": "cda08d9f-fd8b-41c3-b30b-3bd4bd03f329",
-  "version": "1536871830",
-  "name": "fm_fraud_ind_count",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-        "version": "1521430822",
-        "name": "Fraud Analytics"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-      "version": null,
-      "name": "cc_transactions"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002671",
-        "version": null,
-        "name": "count(*)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "98ebca17-5b1b-465b-9667-723dc56a73a6",
-        "version": null,
-        "name": "fm_fraud_ind"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "aggr"
+	"uuid" : "cda08d9f-fd8b-41c3-b30b-3bd4bd03f329",
+	"version" : "1536871830",
+	"name" : "fm_fraud_ind_count",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822",
+				"name" : "Fraud Analytics"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+			"version" : null,
+			"name" : "cc_transactions"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002671",
+				"version" : null,
+				"name" : "count(*)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "98ebca17-5b1b-465b-9667-723dc56a73a6",
+				"version" : null,
+				"name" : "fm_fraud_ind"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "aggr",
+	"displyName" : "fm_total_pass_pct"
 }

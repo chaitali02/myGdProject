@@ -1,0 +1,39 @@
+{
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+	"name" : "Administration",
+	"version" : "1464977196",
+	"desc" : "Platform Administration",
+	"applicationType" : "SYSADMIN",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.468Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"dataSource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
+		}
+	},
+	"paramList" : null,
+	"deployPort" : "5001",
+	"orgInfo" : {
+		"ref" : {
+			"uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+			"type" : "organization"
+		}
+	},
+	"displyName" : "Sanctions Screening"
+}

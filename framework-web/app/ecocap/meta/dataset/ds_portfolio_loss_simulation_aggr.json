@@ -1,130 +1,131 @@
 {
-  "uuid": "3a975109-c1b8-448f-bbd9-c7e81bdf565f",
-  "version": "1532915921",
-  "name": "ds_portfolio_loss_simulation_aggr",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 21:58:41 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-      "version": null,
-      "name": "portfolio_loss_simulation"
-    },
-    "value": null
-  },
-  "filterInfo": [],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "fm_expected_loss",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
-          "version": null,
-          "name": "fm_expected_loss"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "fm_value_at_risk",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
-          "version": null,
-          "name": "fm_value_at_risk"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "fm_economic_capital",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
-          "version": null,
-          "name": "fm_economic_capital"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-          "version": null,
-          "name": "portfolio_loss_simulation"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "reporting_date",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq" : "4",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-          "version": null,
-          "name": "portfolio_loss_simulation"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "version",
-        "attrType": "integer"
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "3a975109-c1b8-448f-bbd9-c7e81bdf565f",
+	"version" : "1532915921",
+	"name" : "ds_portfolio_loss_simulation_aggr",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+			"version" : null,
+			"name" : "portfolio_loss_simulation"
+		},
+		"value" : null
+	},
+	"filterInfo" : [ ],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "fm_expected_loss",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
+					"version" : null,
+					"name" : "fm_expected_loss"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "fm_value_at_risk",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
+					"version" : null,
+					"name" : "fm_value_at_risk"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "fm_economic_capital",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
+					"version" : null,
+					"name" : "fm_economic_capital"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+					"version" : null,
+					"name" : "portfolio_loss_simulation"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "reporting_date",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+					"version" : null,
+					"name" : "portfolio_loss_simulation"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "version",
+				"attrType" : "integer"
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displyName" : "ds_rule_dashboard_timeliness"
 }

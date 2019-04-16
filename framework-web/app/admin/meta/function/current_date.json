@@ -1,90 +1,89 @@
 {
-    "uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671",
-    "version" : "1488801521",
-    "name" : "current_date",
-    "desc" : "Returns the current date at the start of query evaluation (as of Hive 1.2.0). All calls of current_date within the same query return the same value.",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "tags" : [ 
-        "DEV", 
-        "1.0.1", 
-        "DEMO"
-    ],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "inputReq" : "N",
-    "appInfo" : [ 
-       {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "functionInfo" : [     	 
-        {
-            "type" : "file",
-            "name" : "current_date()",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "mysql",
-            "name" : "curdate()",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "hive",
-            "name" : "current_date()",
-            "paramInfoHolder" : []
-        }, 					
-        {
-            "type" : "impala",
-            "name" : "to_date",
-            "paramInfoHolder" : [ 
-                {
-                    "paramId" : "0",
-                    "paramName" : "now",
-                    "paramType" : "function",
-                    "paramReq" : "N",
-                    "paramDefVal" : "now"
-                }
-            ]
-        }, 					
-        {
-            "type" : "oracle",
-            "name" : "To_CHAR",
-            "paramInfoHolder" : [ 
-                {
-                    "paramId" : "0",
-                    "paramName" : "sysdate",
-                    "paramType" : "string",
-                    "paramReq" : "N",
-                    "paramDefVal" : "sysdate"
-                },
+	"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671",
+	"version" : "1488801521",
+	"name" : "current_date",
+	"desc" : "Returns the current date at the start of query evaluation (as of Hive 1.2.0). All calls of current_date within the same query return the same value.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"inputReq" : "N",
+	"appInfo" : [
 		{
-                    "paramId" : "1",
-                    "paramName" : "'yyyy/mm/dd'",
-                    "paramType" : "string",
-                    "paramReq" : "N",
-                    "paramDefVal" : "'yyyy/mm/dd'"
-                }
-            ]
-        }, 
-        {
-            "type" : "postgres",
-            "name" : "currentdate()",
-            "paramInfoHolder" : []
-        }
-    ],
-
-    "returnType":"DATE",
-  "category" : "DATE",
-    "publicFlag" : "Y"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"functionInfo" : [
+		{
+			"type" : "file",
+			"name" : "current_date()",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "mysql",
+			"name" : "curdate()",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "hive",
+			"name" : "current_date()",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "impala",
+			"name" : "to_date",
+			"paramInfoHolder" : [
+				{
+					"paramId" : "0",
+					"paramName" : "now",
+					"paramType" : "function",
+					"paramReq" : "N",
+					"paramDefVal" : "now"
+				}
+			]
+		},
+		{
+			"type" : "oracle",
+			"name" : "To_CHAR",
+			"paramInfoHolder" : [
+				{
+					"paramId" : "0",
+					"paramName" : "sysdate",
+					"paramType" : "string",
+					"paramReq" : "N",
+					"paramDefVal" : "sysdate"
+				},
+				{
+					"paramId" : "1",
+					"paramName" : "'yyyy/mm/dd'",
+					"paramType" : "string",
+					"paramReq" : "N",
+					"paramDefVal" : "'yyyy/mm/dd'"
+				}
+			]
+		},
+		{
+			"type" : "postgres",
+			"name" : "currentdate()",
+			"paramInfoHolder" : [ ]
+		}
+	],
+	"returnType" : "DATE",
+	"category" : "DATE",
+	"publicFlag" : "Y",
+	"displyName" : "year"
 }
-

@@ -1,141 +1,141 @@
 {
-	"_id": ObjectId("5c4fa6d5c7a80e188712e52c"),
-	"uuid": "dae183bc-0f49-455a-8e25-ce6f01577f29",
-	"version": "1525519035",
-	"name": "paramlist_pca",
-	"desc": "PCA Operator Paramlist",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196"
+	"uuid" : "dae183bc-0f49-455a-8e25-ce6f01577f29",
+	"version" : "1525519035",
+	"name" : "paramlist_pca",
+	"desc" : "PCA Operator Paramlist",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": ISODate("2019-01-29T00:42:29.818Z"),
-	"tags": [],
-	"active": "Y",
-	"locked": "N",
-	"published": "N",
-	"paramListType": "model",
-	"appInfo": [
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
 			}
 		}
 	],
-	"params": [
+	"params" : [
 		{
-			"paramId": "0",
-			"paramName": "sourceDatapod",
-			"paramType": "datapod",
-			"paramDispName": "Source Datapod",
-			"paramDesc": "",
-			"paramValue": null,
-			"paramRef": null
+			"paramId" : "0",
+			"paramName" : "sourceDatapod",
+			"paramType" : "datapod",
+			"paramDispName" : "Source Datapod",
+			"paramDesc" : "",
+			"paramValue" : null,
+			"paramRef" : null
 		},
 		{
-			"paramId": "1",
-			"paramName": "K",
-			"paramType": "integer",
-			"paramDispName": "Target Num Parameters",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "1",
+			"paramName" : "K",
+			"paramType" : "integer",
+			"paramDispName" : "Target Num Parameters",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "4"
+				"value" : "4"
 			},
-			"paramRef": null
+			"paramRef" : null
 		},
 		{
-			"paramId": "2",
-			"paramName": "inputColList",
-			"paramType": "string",
-			"paramDispName": "Input Column List",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "2",
+			"paramName" : "inputColList",
+			"paramType" : "string",
+			"paramDispName" : "Input Column List",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "cat1"
+				"value" : "cat1"
 			},
-			"paramRef": null
+			"paramRef" : null
 		},
 		{
-			"paramId": "3",
-			"paramName": "outputFeatureName",
-			"paramType": "string",
-			"paramDispName": "Name of PCA feature",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "3",
+			"paramName" : "outputFeatureName",
+			"paramType" : "string",
+			"paramDispName" : "Name of PCA feature",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "pcafeature"
+				"value" : "pcafeature"
 			},
-			"paramRef": null
+			"paramRef" : null
 		},
 		{
-			"paramId": "3",
-			"paramName": "inputKeyNames",
-			"paramType": "string",
-			"paramDispName": "Key columns",
-			"paramDesc": "",
-			"paramValue": {
-				"ref": {
-					"type": "simple"
+			"paramId" : "3",
+			"paramName" : "inputKeyNames",
+			"paramType" : "string",
+			"paramDispName" : "Key columns",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
 				},
-				"value": "key1"
+				"value" : "key1"
 			},
-			"paramRef": null
+			"paramRef" : null
 		},
 		{
-			"paramId": "3",
-			"paramName": "saveLocation",
-			"paramType": "datapod",
-			"paramDispName": "Save location",
-			"paramDesc": "",
-			"paramValue": null,
-			"paramRef": null
+			"paramId" : "3",
+			"paramName" : "saveLocation",
+			"paramType" : "datapod",
+			"paramDispName" : "Save location",
+			"paramDesc" : "",
+			"paramValue" : null,
+			"paramRef" : null
 		}
-	]
+	],
+	"displyName" : "paramlist_dq_rule"
 }

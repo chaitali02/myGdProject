@@ -1,94 +1,94 @@
 {
-
-  "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
-  "version": "1542053683",
-  "name": "model_ann_classifier",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-        "version": null,
-        "name": "Administration"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": null,
-        "name": "Data Warehouse"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-        "version": null,
-        "name": "Fraud Analytics"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": null,
-        "name": "Risk Analytics"
-      },
-      "value": null
-    }
-  ],
-  "type": "PYTHON",
-  "dependsOn": {
-    "ref": {
-      "type": "algorithm",
-      "uuid": "1f91c98a-faf6-42c0-ac16-d7309d041bd9",
-      "version": null,
-      "name": "Artificial Neural Net - Classfication"
-    },
-    "value": null
-  },
-  "label": "fraud",
-  "features": [
-    {
-      "featureId": "0",
-      "featureDisplaySeq": null,
-      "name": "f1",
-      "type": "integer",
-      "desc": "Feature1",
-      "minVal": 0,
-      "maxVal": 1,
-      "paramListInfo": null
-    },
-    {
-      "featureId": "1",
-      "featureDisplaySeq": null,
-      "name": "f2",
-      "type": "integer",
-      "desc": "Feature2",
-      "minVal": 0,
-      "maxVal": 1,
-      "paramListInfo": null
-    }
-  ],
-  "scriptName": null,
-  "customFlag": "N"
+	"uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
+	"version" : "1542053683",
+	"name" : "model_ann_classifier",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:39.916Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version" : null,
+				"name" : "Administration"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : null,
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : null,
+				"name" : "Fraud Analytics"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : null,
+				"name" : "Risk Analytics"
+			},
+			"value" : null
+		}
+	],
+	"type" : "PYTHON",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "algorithm",
+			"uuid" : "1f91c98a-faf6-42c0-ac16-d7309d041bd9",
+			"version" : null,
+			"name" : "Artificial Neural Net - Classfication"
+		},
+		"value" : null
+	},
+	"label" : "fraud",
+	"features" : [
+		{
+			"featureId" : "0",
+			"featureDisplaySeq" : null,
+			"name" : "f1",
+			"type" : "integer",
+			"desc" : "Feature1",
+			"minVal" : 0,
+			"maxVal" : 1,
+			"paramListInfo" : null
+		},
+		{
+			"featureId" : "1",
+			"featureDisplaySeq" : null,
+			"name" : "f2",
+			"type" : "integer",
+			"desc" : "Feature2",
+			"minVal" : 0,
+			"maxVal" : 1,
+			"paramListInfo" : null
+		}
+	],
+	"scriptName" : null,
+	"customFlag" : "N",
+	"displyName" : "RLU Prediction - LR"
 }

@@ -1,0 +1,202 @@
+{
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : "1464977196"
+		}
+	},
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "id",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "id",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 1,
+			"name" : "code",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "code",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 2,
+			"name" : "name",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "name",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 3,
+			"name" : "desciption",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "desciption",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 4,
+			"name" : "comment",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "comment",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 5,
+			"name" : "percentage",
+			"type" : "DECIMAL",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "percentage",
+			"active" : "Y",
+			"length" : 10
+		},
+		{
+			"attributeId" : 6,
+			"name" : "currency",
+			"type" : "DECIMAL",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "currency",
+			"active" : "Y",
+			"length" : 10
+		},
+		{
+			"attributeId" : 7,
+			"name" : "flag",
+			"type" : "BOOLEAN",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "flag",
+			"active" : "Y",
+			"length" : 0
+		},
+		{
+			"attributeId" : 8,
+			"name" : "date",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "date",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 9,
+			"name" : "address_line",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "address_line",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 10,
+			"name" : "phone",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "phone",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 11,
+			"name" : "ssn",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "ssn",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 12,
+			"name" : "xyz",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "xyz",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 13,
+			"name" : "load_date",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "load_date",
+			"active" : "Y",
+			"length" : 2147483647
+		},
+		{
+			"attributeId" : 14,
+			"name" : "load_id",
+			"type" : "STRING",
+			"desc" : "",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "load_id",
+			"active" : "Y",
+			"length" : 2147483647
+		}
+	],
+	"uuid" : "50f1e2e2-dac2-4b0b-9d5b-bc48e77be6ae",
+	"version" : "1538656534",
+	"name" : "hive_datatype_sample_test",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"prefix" : "hvd",
+	"displyName" : "security"
+}

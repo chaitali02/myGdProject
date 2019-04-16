@@ -1,199 +1,200 @@
 {
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"cache": "Y",
-	"published": "N",
-	"attributes": [
+	"cache" : "Y",
+	"published" : "N",
+	"attributes" : [
 		{
-			"attributeId": 0,
-			"name": "customer_id",
-			"type": "string",
-			"desc": "customer_id",
-			"dispName": "customer_id",
-			"key": 0,
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 0,
+			"name" : "customer_id",
+			"type" : "string",
+			"desc" : "customer_id",
+			"dispName" : "customer_id",
+			"key" : 0,
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 1,
-			"name": "src_customer_id",
-			"type": "string",
-			"desc": "src_customer_id",
-			"dispName": "src_customer_id",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 1,
+			"name" : "src_customer_id",
+			"type" : "string",
+			"desc" : "src_customer_id",
+			"dispName" : "src_customer_id",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 2,
-			"name": "title",
-			"type": "string",
-			"desc": "title",
-			"dispName": "title",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 2,
+			"name" : "title",
+			"type" : "string",
+			"desc" : "title",
+			"dispName" : "title",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 3,
-			"name": "first_name",
-			"type": "string",
-			"desc": "first_name",
-			"dispName": "first_name",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 3,
+			"name" : "first_name",
+			"type" : "string",
+			"desc" : "first_name",
+			"dispName" : "first_name",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 4,
-			"name": "middle_name",
-			"type": "string",
-			"desc": "middle_name",
-			"dispName": "middle_name",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 4,
+			"name" : "middle_name",
+			"type" : "string",
+			"desc" : "middle_name",
+			"dispName" : "middle_name",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 5,
-			"name": "last_name",
-			"type": "string",
-			"desc": "last_name",
-			"dispName": "last_name",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 5,
+			"name" : "last_name",
+			"type" : "string",
+			"desc" : "last_name",
+			"dispName" : "last_name",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 6,
-			"name": "address_line1",
-			"type": "string",
-			"desc": "address_line1",
-			"dispName": "address_line1",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 6,
+			"name" : "address_line1",
+			"type" : "string",
+			"desc" : "address_line1",
+			"dispName" : "address_line1",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 7,
-			"name": "address_line2",
-			"type": "string",
-			"desc": "address_line2",
-			"dispName": "address_line2",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 7,
+			"name" : "address_line2",
+			"type" : "string",
+			"desc" : "address_line2",
+			"dispName" : "address_line2",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 8,
-			"name": "phone",
-			"type": "string",
-			"desc": "phone",
-			"dispName": "phone",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 8,
+			"name" : "phone",
+			"type" : "string",
+			"desc" : "phone",
+			"dispName" : "phone",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 9,
-			"name": "date_first_purchase",
-			"type": "string",
-			"desc": "date_first_purchase",
-			"dispName": "date_first_purchase",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 9,
+			"name" : "date_first_purchase",
+			"type" : "string",
+			"desc" : "date_first_purchase",
+			"dispName" : "date_first_purchase",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 10,
-			"name": "commute_distance",
-			"type": "string",
-			"desc": "commute_distance",
-			"dispName": "commute_distance",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 10,
+			"name" : "commute_distance",
+			"type" : "string",
+			"desc" : "commute_distance",
+			"dispName" : "commute_distance",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 11,
-			"name": "city",
-			"type": "string",
-			"desc": "city",
-			"dispName": "city",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 11,
+			"name" : "city",
+			"type" : "string",
+			"desc" : "city",
+			"dispName" : "city",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 12,
-			"name": "state",
-			"type": "string",
-			"desc": "state",
-			"dispName": "state",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 12,
+			"name" : "state",
+			"type" : "string",
+			"desc" : "state",
+			"dispName" : "state",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 13,
-			"name": "postal_code",
-			"type": "string",
-			"desc": "postal_code",
-			"dispName": "postal_code",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 13,
+			"name" : "postal_code",
+			"type" : "string",
+			"desc" : "postal_code",
+			"dispName" : "postal_code",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 14,
-			"name": "country",
-			"type": "string",
-			"desc": "country",
-			"dispName": "country",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 14,
+			"name" : "country",
+			"type" : "string",
+			"desc" : "country",
+			"dispName" : "country",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 15,
-			"name": "load_date",
-			"type": "string",
-			"desc": "load_date",
-			"dispName": "load_date",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 15,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"dispName" : "load_date",
+			"partition" : "Y",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 16,
-			"name": "load_id",
-			"type": "Integer",
-			"desc": "load_id",
-			"dispName": "load_id",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 16,
+			"name" : "load_id",
+			"type" : "Integer",
+			"desc" : "load_id",
+			"dispName" : "load_id",
+			"partition" : "Y",
+			"active" : "Y"
 		}
 	],
-	"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-	"version": "1488623492",
-	"name": "dim_customer",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+	"version" : "1488623492",
+	"name" : "dim_customer",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"appInfo": [
+	"locked" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
-		}		
+		}
 	],
-      "prefix" : "dmu"
+	"prefix" : "dmu",
+	"displyName" : "security"
 }

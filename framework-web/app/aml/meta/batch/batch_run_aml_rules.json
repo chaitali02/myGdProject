@@ -1,49 +1,50 @@
 {
-  "uuid": "0648e3d0-e25b-4417-a01a-107c17809609",
-  "version": "1542378623",
-  "name": "batch_run_aml_rules",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Nov 16 09:30:23 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "pipelineInfo": [
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "0baff233-54f8-4313-923b-c1c0e4542450",
-        "version": null,
-        "name": "ppl_customer_focus_rules"
-      },
-      "value": null
-    },
-    {
-            "ref" : {
-                "type" : "dag",
-                "uuid" : "36474a78-9118-4fc1-bb3d-037144ed4279"
-            }
-        }
-  ],
-  "inParallel": null
+	"uuid" : "0648e3d0-e25b-4417-a01a-107c17809609",
+	"version" : "1542378623",
+	"name" : "batch_run_aml_rules",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:42.478Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"pipelineInfo" : [
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "0baff233-54f8-4313-923b-c1c0e4542450",
+				"version" : null,
+				"name" : "ppl_customer_focus_rules"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "36474a78-9118-4fc1-bb3d-037144ed4279"
+			}
+		}
+	],
+	"inParallel" : null,
+	"displyName" : "batch_run_aml_rules"
 }

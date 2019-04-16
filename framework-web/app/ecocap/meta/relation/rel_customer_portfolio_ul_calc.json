@@ -1,222 +1,223 @@
 {
-  "uuid": "5b3cf600-7c43-44d2-8583-41da248a74ac",
-  "version": "1533485534",
-  "name": "rel_customer_portfolio_ul_calc",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Aug 05 00:12:14 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
-      "version": null,
-      "name": "ds_customer_portfolio_ul_x"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
-          "version": null,
-          "name": "ds_customer_portfolio_ul_y"
-        },
-        "value": null
-      },
-      "joinType": "CROSS",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_x"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_y"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-          "version": null,
-          "name": "industry_factor_correlation_transpose"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_x"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "industry",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-                "version": null,
-                "name": "industry_factor_correlation_transpose"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "factor_x",
-              "attributeType": "string"
-            }
-          ]
-        },
-        {
-          "logicalOperator": "AND",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "097deb91-5687-4b5f-84c3-36ec0c636a07",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_x"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-                "version": null,
-                "name": "industry_factor_correlation_transpose"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        },
-        {
-          "logicalOperator": "AND",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_y"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "industry",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-                "version": null,
-                "name": "industry_factor_correlation_transpose"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "factor_y",
-              "attributeType": "string"
-            }
-          ]
-        },
-        {
-          "logicalOperator": "AND",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "4976bcf0-5e63-40fd-becd-455164d19d3c",
-                "version": null,
-                "name": "ds_customer_portfolio_ul_y"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "51c5418b-d49b-44bc-b077-cc057e77f4b0",
-                "version": null,
-                "name": "industry_factor_correlation_transpose"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "5b3cf600-7c43-44d2-8583-41da248a74ac",
+	"version" : "1533485534",
+	"name" : "rel_customer_portfolio_ul_calc",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "097deb91-5687-4b5f-84c3-36ec0c636a07",
+			"version" : null,
+			"name" : "ds_customer_portfolio_ul_x"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "4976bcf0-5e63-40fd-becd-455164d19d3c",
+					"version" : null,
+					"name" : "ds_customer_portfolio_ul_y"
+				},
+				"value" : null
+			},
+			"joinType" : "CROSS",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "097deb91-5687-4b5f-84c3-36ec0c636a07",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_x"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "4976bcf0-5e63-40fd-becd-455164d19d3c",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_y"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+					"version" : null,
+					"name" : "industry_factor_correlation_transpose"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "097deb91-5687-4b5f-84c3-36ec0c636a07",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_x"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "industry",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+								"version" : null,
+								"name" : "industry_factor_correlation_transpose"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "factor_x",
+							"attributeType" : "string"
+						}
+					]
+				},
+				{
+					"logicalOperator" : "AND",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "097deb91-5687-4b5f-84c3-36ec0c636a07",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_x"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+								"version" : null,
+								"name" : "industry_factor_correlation_transpose"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				},
+				{
+					"logicalOperator" : "AND",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "4976bcf0-5e63-40fd-becd-455164d19d3c",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_y"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "industry",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+								"version" : null,
+								"name" : "industry_factor_correlation_transpose"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "factor_y",
+							"attributeType" : "string"
+						}
+					]
+				},
+				{
+					"logicalOperator" : "AND",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "4976bcf0-5e63-40fd-becd-455164d19d3c",
+								"version" : null,
+								"name" : "ds_customer_portfolio_ul_y"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "51c5418b-d49b-44bc-b077-cc057e77f4b0",
+								"version" : null,
+								"name" : "industry_factor_correlation_transpose"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displyName" : "rel_dq_equity_executions_rule7"
 }

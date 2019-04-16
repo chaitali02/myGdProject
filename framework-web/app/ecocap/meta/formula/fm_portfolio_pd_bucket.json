@@ -1,511 +1,512 @@
 {
-  "uuid": "20a9e372-8541-4288-9e86-ff6a0ed19287",
-  "version": "1534045232",
-  "name": "fm_portfolio_pd_bucket",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 23:40:32 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "relation",
-      "uuid": "a4f167b0-6b90-40cb-9ba6-4a5a1f594363",
-      "version": null,
-      "name": "rel_sector_var_contribution"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "CASE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0 AND 0.01",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'0-1%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.01 AND 0.02",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'1-2%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.02 AND 0.04",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'2-4%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.04 AND 0.08",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'4-8%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.08 AND 0.16",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'8-16%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.16 AND 0.32",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'16-32%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-        "version": null,
-        "name": "customer_portfolio"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "pd",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "BETWEEN 0.32 AND 0.64",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'32-64%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "ELSE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "'64-100%'",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "END",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "simple"
+	"uuid" : "20a9e372-8541-4288-9e86-ff6a0ed19287",
+	"version" : "1534045232",
+	"name" : "fm_portfolio_pd_bucket",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "a4f167b0-6b90-40cb-9ba6-4a5a1f594363",
+			"version" : null,
+			"name" : "rel_sector_var_contribution"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "CASE",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0 AND 0.01",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'0-1%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.01 AND 0.02",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'1-2%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.02 AND 0.04",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'2-4%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.04 AND 0.08",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'4-8%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.08 AND 0.16",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'8-16%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.16 AND 0.32",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'16-32%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+				"version" : null,
+				"name" : "customer_portfolio"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "pd",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "BETWEEN 0.32 AND 0.64",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'32-64%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "ELSE",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "'64-100%'",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "END",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "simple",
+	"displyName" : "fm_total_pass_pct"
 }

@@ -1,0 +1,83 @@
+{
+	"name" : "paramlist_matrix_mult",
+	"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29f24",
+	"version" : "1525530897",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "1",
+			"paramName" : "lhsKeyAttr",
+			"paramType" : "attributes",
+			"paramDispName" : "Lhs Key Attr",
+			"paramDesc" : "",
+			"paramRef" : null
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "rhsKeyAttr",
+			"paramType" : "attributes",
+			"paramDispName" : "Rhs Key Attr",
+			"paramDesc" : "",
+			"paramRef" : null
+		},
+		{
+			"paramId" : "3",
+			"paramName" : "lhsAttrs",
+			"paramType" : "attributes",
+			"paramDispName" : "Lhs Attrs",
+			"paramDesc" : "",
+			"paramRef" : null
+		},
+		{
+			"paramId" : "4",
+			"paramName" : "rhsAttrs",
+			"paramType" : "attributes",
+			"paramDispName" : "Rhs Attrs",
+			"paramDesc" : "",
+			"paramRef" : null
+		},
+		{
+			"paramId" : "5",
+			"paramName" : "saveLocation",
+			"paramType" : "datapod",
+			"paramDispName" : "Save Location",
+			"paramDesc" : "",
+			"paramRef" : null
+		},
+		{
+			"paramId" : "6",
+			"paramName" : "operatorType",
+			"paramType" : "string",
+			"paramDispName" : "Operator Type",
+			"paramDesc" : "",
+			"paramRef" : null,
+			"paramValue" : {
+				"value" : "MUL"
+			}
+		}
+	],
+	"displyName" : "paramlist_dq_rule"
+}

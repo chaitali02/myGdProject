@@ -1,110 +1,111 @@
 {
-  "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
-  "version": "1532916160",
-  "name": "portfolio_loss_aggr_es",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 22:02:40 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "expected_loss",
-      "type": "decimal",
-      "desc": "expected_loss",
-      "key": "",
-      "partition": "N",
-      "dispName": "expected_loss",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 1,
-      "name": "value_at_risk",
-      "type": "decimal",
-      "desc": "value_at_risk",
-      "key": "",
-      "partition": "N",
-      "dispName": "value_at_risk",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
-      "name": "economic_capital",
-      "type": "decimal",
-      "desc": "economic_capital",
-      "key": "",
-      "partition": "N",
-      "dispName": "economic_capital",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 3,
-      "name": "expected_sum",
-      "type": "decimal",
-      "desc": "expected_sum",
-      "key": "",
-      "partition": "N",
-      "dispName": "expected_sum",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 4,
-      "name": "reporting_date",
-      "type": "string",
-      "desc": "reporting_date",
-      "key": "",
-      "partition": "N",
-      "dispName": "reporting_date",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 5,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active" : "Y",
-      "expr": null
-    }
-  ],
-	"prefix":"oto"
+	"uuid" : "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+	"version" : "1532916160",
+	"name" : "portfolio_loss_aggr_es",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "File"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "expected_loss",
+			"type" : "decimal",
+			"desc" : "expected_loss",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "expected_loss",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "value_at_risk",
+			"type" : "decimal",
+			"desc" : "value_at_risk",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "value_at_risk",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "economic_capital",
+			"type" : "decimal",
+			"desc" : "economic_capital",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "economic_capital",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "expected_sum",
+			"type" : "decimal",
+			"desc" : "expected_sum",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "expected_sum",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "reporting_date",
+			"type" : "string",
+			"desc" : "reporting_date",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "reporting_date",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 5,
+			"name" : "version",
+			"type" : "integer",
+			"desc" : "version",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"expr" : null
+		}
+	],
+	"prefix" : "oto",
+	"displyName" : "security"
 }

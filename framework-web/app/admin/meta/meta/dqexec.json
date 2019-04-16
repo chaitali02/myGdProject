@@ -1,0 +1,25 @@
+{
+	"uuid" : "f109f091-bab9-4424-86c8-d179d66901dd",
+	"name" : "dqexec",
+	"version" : "1464977196",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"desc" : "Meta for dataqualexec",
+	"menu" : "DataQuality",
+	"displyName" : "dqexec"
+}

@@ -1,43 +1,43 @@
 {
-
-    "header" : "Y",
-    "append" : "Y",
-    "source" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-        },
-        "value" : "file:///user/hive/warehouse/framework/upload/account.csv"
-    },
-    "target" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "f634fadb-b22a-4925-a69c-6bfb05affacd",
-            "version" : "1538854245"
-        }
-    },
-    "uuid" : "b8dfab52-ef30-11e8-8eb2-f2801f1b9fd1",
-    "version" : "1542978956",
-    "name" : "account_mysql",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-11-23T13:15:56.000Z"),
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"header" : "Y",
+	"append" : "Y",
+	"source" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		},
+		"value" : "file:///user/hive/warehouse/framework/upload/account.csv"
+	},
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "f634fadb-b22a-4925-a69c-6bfb05affacd",
+			"version" : "1538854245"
+		}
+	},
+	"uuid" : "b8dfab52-ef30-11e8-8eb2-f2801f1b9fd1",
+	"version" : "1542978956",
+	"name" : "account_mysql",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:39.405Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displyName" : "device_data_compute_rolling_std"
 }

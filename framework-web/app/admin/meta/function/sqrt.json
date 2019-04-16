@@ -1,68 +1,35 @@
 {
-    
-    "uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671",
-    "version" : "1488801521",
-    "name" : "sqrt",
-    "desc" : "Returns the square root of a. Decimal version added in Hive 0.13.0.",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "tags" : [ 
-        "DEV", 
-        "1.0.1", 
-        "DEMO"
-    ],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "inputReq" : "Y",
-    "publicFlag" : "Y",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "functionInfo" : "sqrt",
-
-    "returnType":"DOUBLE",
-  "category" : "MATH",
-    "functionInfo" : [ 
-        {
-            "type" : "file",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "hive",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "impala",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "oracle",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "mysql",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        },
-        {
-            "type" : "postgres",
-            "name" : "sqrt",
-            "paramInfoHolder" : []
-        }
-    ]
+	"uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671",
+	"version" : "1488801521",
+	"name" : "sqrt",
+	"desc" : "Returns the square root of a. Decimal version added in Hive 0.13.0.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"inputReq" : "Y",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"functionInfo" : "sqrt",
+	"returnType" : "DOUBLE",
+	"category" : "MATH",
+	"displyName" : "year"
 }

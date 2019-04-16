@@ -1,92 +1,93 @@
 {
-  "uuid": "d4e2a3b5-cb92-464b-9808-cfbc21eda043",
-  "version": "1550347130",
-  "name": "fm_faulty_code_type_1_count",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Feb 16 14:58:50 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-      "version": null,
-      "name": "device_data_final_features"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
-        "version": null,
-        "name": "sum(col)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "attributeId": 4,
-      "value": null,
-      "attributeName": "fault_code_type_1_count",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "aggr"
+	"uuid" : "d4e2a3b5-cb92-464b-9808-cfbc21eda043",
+	"version" : "1550347130",
+	"name" : "fm_faulty_code_type_1_count",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+			"version" : null,
+			"name" : "device_data_final_features"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671",
+				"version" : null,
+				"name" : "sum(col)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+				"version" : null,
+				"name" : "device_data_final_features"
+			},
+			"attributeId" : 4,
+			"value" : null,
+			"attributeName" : "fault_code_type_1_count",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "aggr",
+	"displyName" : "fm_total_pass_pct"
 }

@@ -1,176 +1,177 @@
 {
-  "uuid": "e44b33be-8cef-468e-8faa-1d5e61c0173a",
-  "version": "1534380946",
-  "name": "Economic Capital Dashboard",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Aug 15 20:55:46 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "sectionInfo": [
-    {
-      "sectionId": null,
-      "name": "Portfolio Summary",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
-          "version": null,
-          "name": "viz_portfolio_summary"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Portfolio Loss Statistics",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "7fc08ee5-c6d0-47dd-8d52-e26b3ba0e114",
-          "version": null,
-          "name": "viz_portfolio_loss_statistics"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Portfolio Loss Distribution Histogram",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
-          "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "viz_portfolio_var_lgd_heatmap",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
-          "version": null,
-          "name": "viz_portfolio_loss_distribution_histogram_perc"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Customer-Wise VaR Contribution",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "d6863f63-bb9d-42ac-997e-4094abdc8fcf",
-          "version": null,
-          "name": "viz_customer_var_contribution"
-        },
-        "value": null
-      },
-      "rowNo": 3,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Sector-Wise VaR Contribution",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
-          "version": null,
-          "name": "viz_sector_var_contribution"
-        },
-        "value": null
-      },
-      "rowNo": 3,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Portfolio VaR Heatmap",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "95f1c6c7-118f-4cae-8eab-873a828def14",
-          "version": null,
-          "name": "viz_portfolio_var_heatmap"
-        },
-        "value": null
-      },
-      "rowNo": 4,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Portfolio Total VaR",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "d08bce3c-2c73-481c-8809-4e2c24b9596c",
-          "version": null,
-          "name": "viz_portfolio_total_var"
-        },
-        "value": null
-      },
-      "rowNo": 4,
-      "colNo": 2
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "057f383b-6ff0-4268-b05c-aebe62cf1285",
-      "version": null,
-      "name": "lkp_reporting_date"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "057f383b-6ff0-4268-b05c-aebe62cf1285",
-        "version": null,
-        "name": "lkp_reporting_date"
-      },
-      "value": null,
-      "attrId": "0",
-      "attrName": "reporting_date",
-      "attrType": null
-    }
-  ]
+	"uuid" : "e44b33be-8cef-468e-8faa-1d5e61c0173a",
+	"version" : "1534380946",
+	"name" : "Economic Capital Dashboard",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.823Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"sectionInfo" : [
+		{
+			"sectionId" : null,
+			"name" : "Portfolio Summary",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "d9d5f031-9f02-4b98-88bd-3962dba4e5dd",
+					"version" : null,
+					"name" : "viz_portfolio_summary"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Portfolio Loss Statistics",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "7fc08ee5-c6d0-47dd-8d52-e26b3ba0e114",
+					"version" : null,
+					"name" : "viz_portfolio_loss_statistics"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Portfolio Loss Distribution Histogram",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "996ff741-fe09-4197-ba24-d1ac3b8b1312",
+					"version" : null,
+					"name" : "viz_portfolio_loss_distribution_histogram"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "viz_portfolio_var_lgd_heatmap",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
+					"version" : null,
+					"name" : "viz_portfolio_loss_distribution_histogram_perc"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customer-Wise VaR Contribution",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "d6863f63-bb9d-42ac-997e-4094abdc8fcf",
+					"version" : null,
+					"name" : "viz_customer_var_contribution"
+				},
+				"value" : null
+			},
+			"rowNo" : 3,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Sector-Wise VaR Contribution",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
+					"version" : null,
+					"name" : "viz_sector_var_contribution"
+				},
+				"value" : null
+			},
+			"rowNo" : 3,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Portfolio VaR Heatmap",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "95f1c6c7-118f-4cae-8eab-873a828def14",
+					"version" : null,
+					"name" : "viz_portfolio_var_heatmap"
+				},
+				"value" : null
+			},
+			"rowNo" : 4,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Portfolio Total VaR",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "d08bce3c-2c73-481c-8809-4e2c24b9596c",
+					"version" : null,
+					"name" : "viz_portfolio_total_var"
+				},
+				"value" : null
+			},
+			"rowNo" : 4,
+			"colNo" : 2
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "057f383b-6ff0-4268-b05c-aebe62cf1285",
+			"version" : null,
+			"name" : "lkp_reporting_date"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "057f383b-6ff0-4268-b05c-aebe62cf1285",
+				"version" : null,
+				"name" : "lkp_reporting_date"
+			},
+			"value" : null,
+			"attrId" : "0",
+			"attrName" : "reporting_date",
+			"attrType" : null
+		}
+	],
+	"displyName" : "Data Quality Summary"
 }

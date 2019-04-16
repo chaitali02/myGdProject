@@ -1,18 +1,25 @@
 {
-    "uuid": "378817fe-7e4d-4e44-b587-116fe2ffc7ad",
-    "name": "relation",
-    "version": "1462885696",
-"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "378817fe-7e4d-4e44-b587-116fe2ffc7ad",
+	"name" : "relation",
+	"version" : "1462885696",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
-    			],
-    "desc": "Meta for relation",
-    "menu":"DataPreparation"
+	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"desc" : "Meta for relation",
+	"menu" : "DataPreparation",
+	"displyName" : "relation"
 }

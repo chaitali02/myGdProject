@@ -1,176 +1,177 @@
 {
-  "uuid": "3d826148-756f-4214-ba53-df4c0f3752cf",
-  "version": "1532642943",
-  "name": "customer_portfolio_ul",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "cust_id",
-      "type": "string",
-      "desc": "cust_id",
-      "key": "",
-      "partition": "N",
-      "dispName": "cust_id",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 1,
-      "name": "industry",
-      "type": "string",
-      "desc": "industry",
-      "key": "",
-      "partition": "N",
-      "dispName": "industry",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
-      "name": "pd",
-      "type": "double",
-      "desc": "pd",
-      "key": "",
-      "partition": "N",
-      "dispName": "pd",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 3,
-      "name": "exposure",
-      "type": "integer",
-      "desc": "exposure",
-      "key": "",
-      "partition": "N",
-      "dispName": "exposure",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 4,
-      "name": "lgd",
-      "type": "double",
-      "desc": "lgd",
-      "key": "",
-      "partition": "N",
-      "dispName": "lgd",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 5,
-      "name": "lgd_var",
-      "type": "integer",
-      "desc": "lgd_var",
-      "key": "",
-      "partition": "N",
-      "dispName": "lgd_var",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 6,
-      "name": "correlation",
-      "type": "double",
-      "desc": "correlation",
-      "key": "",
-      "partition": "N",
-      "dispName": "correlation",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 7,
-      "name": "sqrt_correlation",
-      "type": "double",
-      "desc": "sqrt_correlation",
-      "key": "",
-      "partition": "N",
-      "dispName": "sqrt_correlation",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 8,
-      "name": "def_point",
-      "type": "double",
-      "desc": "def_point",
-      "key": "",
-      "partition": "N",
-      "dispName": "def_point",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 9,
-      "name": "unexpected_loss",
-      "type": "double",
-      "desc": "unexpected_loss",
-      "key": "",
-      "partition": "N",
-      "dispName": "unexpected_loss",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 10,
-      "name": "reporting_date",
-      "type": "string",
-      "desc": "reporting_date",
-      "key": "",
-      "partition": "N",
-      "dispName": "reporting_date",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 11,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active" : "Y",
-      "expr": null
-    }
-  ],
-	"prefix":"tmro"
+	"uuid" : "3d826148-756f-4214-ba53-df4c0f3752cf",
+	"version" : "1532642943",
+	"name" : "customer_portfolio_ul",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "File"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "cust_id",
+			"type" : "string",
+			"desc" : "cust_id",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "cust_id",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "industry",
+			"type" : "string",
+			"desc" : "industry",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "industry",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "pd",
+			"type" : "double",
+			"desc" : "pd",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "pd",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "exposure",
+			"type" : "integer",
+			"desc" : "exposure",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "exposure",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "lgd",
+			"type" : "double",
+			"desc" : "lgd",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "lgd",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 5,
+			"name" : "lgd_var",
+			"type" : "integer",
+			"desc" : "lgd_var",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "lgd_var",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 6,
+			"name" : "correlation",
+			"type" : "double",
+			"desc" : "correlation",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "correlation",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 7,
+			"name" : "sqrt_correlation",
+			"type" : "double",
+			"desc" : "sqrt_correlation",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "sqrt_correlation",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 8,
+			"name" : "def_point",
+			"type" : "double",
+			"desc" : "def_point",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "def_point",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 9,
+			"name" : "unexpected_loss",
+			"type" : "double",
+			"desc" : "unexpected_loss",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "unexpected_loss",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 10,
+			"name" : "reporting_date",
+			"type" : "string",
+			"desc" : "reporting_date",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "reporting_date",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 11,
+			"name" : "version",
+			"type" : "integer",
+			"desc" : "version",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"expr" : null
+		}
+	],
+	"prefix" : "tmro",
+	"displyName" : "security"
 }

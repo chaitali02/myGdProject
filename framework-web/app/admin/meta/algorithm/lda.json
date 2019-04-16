@@ -1,52 +1,52 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
-	"version": "1464977196",
-	"name": "LDA",
-	"desc": "LDA",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
+	"version" : "1464977196",
+	"name" : "LDA",
+	"desc" : "LDA",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:37.330Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-		"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-	"type": "REGRESSION",
-	"libraryType": "SPARKML",
-	"trainClass": "org.apache.spark.ml.clustering.LDA",
-	"modelClass": "org.apache.spark.ml.clustering.LDAModel",
-	"labelRequired": "Y",
-	"paramList": {
-		"ref": {
-			"type": "paramlist",
-			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85"
+	"type" : "REGRESSION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.clustering.LDA",
+	"modelClass" : "org.apache.spark.ml.clustering.LDAModel",
+	"labelRequired" : "Y",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a85"
 		}
 	},
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a85"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "53b44d5b-6571-4c46-af08-549b1445d056"
-        }
-    },
-  	"savePmml" : "N",
-	"summaryMethods" : [  
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a85"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "53b44d5b-6571-4c46-af08-549b1445d056"
+		}
+	},
+	"savePmml" : "N",
+	"summaryMethods" : [
 		"estimatedDocConcentration",
 		"getK",
 		"getLearningDecay",
@@ -58,5 +58,6 @@
 		"getTopicDistributionCol",
 		"supportedOptimizers",
 		"vocabSize"
-	    ]
+	],
+	"displyName" : "Random Forest Classifier"
 }

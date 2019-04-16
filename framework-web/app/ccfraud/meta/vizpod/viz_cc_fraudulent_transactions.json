@@ -1,115 +1,116 @@
 {
-  "uuid": "d3deb564-5051-4e57-a9cd-d88ac79834fb",
-  "version": "1551858080",
-  "name": "viz_cc_fraudulent_transactions",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Mar 06 13:11:20 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-        "version": "1521430822",
-        "name": "Fraud Analytics"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-      "version": null,
-      "name": "ds_cc_fraudulent_transactions"
-    },
-    "value": null
-  },
-  "type": "donut-chart",
-  "limit": -1,
-  "keys": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-        "version": null,
-        "name": "ds_cc_fraudulent_transactions"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "fraud_class"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-        "version": null,
-        "name": "ds_cc_fraudulent_transactions"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "fraud_class"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-        "version": null,
-        "name": "ds_cc_fraudulent_transactions"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "fraud_ind"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-        "version": null,
-        "name": "ds_cc_fraudulent_transactions"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "fraud_count"
-    }
-  ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "752e981f-17ba-42ef-b733-573a4425e090",
-        "version": null,
-        "name": "ds_cc_fraudulent_transactions"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "fraud_count"
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null
+	"uuid" : "d3deb564-5051-4e57-a9cd-d88ac79834fb",
+	"version" : "1551858080",
+	"name" : "viz_cc_fraudulent_transactions",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822",
+				"name" : "Fraud Analytics"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+			"version" : null,
+			"name" : "ds_cc_fraudulent_transactions"
+		},
+		"value" : null
+	},
+	"type" : "donut-chart",
+	"limit" : -1,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+				"version" : null,
+				"name" : "ds_cc_fraudulent_transactions"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "fraud_class"
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+				"version" : null,
+				"name" : "ds_cc_fraudulent_transactions"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "fraud_class"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+				"version" : null,
+				"name" : "ds_cc_fraudulent_transactions"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "fraud_ind"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+				"version" : null,
+				"name" : "ds_cc_fraudulent_transactions"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "fraud_count"
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "752e981f-17ba-42ef-b733-573a4425e090",
+				"version" : null,
+				"name" : "ds_cc_fraudulent_transactions"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "fraud_count"
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"displyName" : "viz_status_by_dimension"
 }

@@ -1,357 +1,358 @@
 {
-  "uuid": "437f94ab-5daa-4155-aec8-d74badf25052",
-  "version": "1540028132",
-  "name": "rel_fact_transaction_incoming",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-      "version": null,
-      "name": "fact_transaction"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                "version": null,
-                "name": "dim_account"
-              },
-              "attributeId": 12,
-              "value": null,
-              "attributeName": "account_number",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 10,
-              "value": null,
-              "attributeName": "to_account",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-          "version": null,
-          "name": "dim_address"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 7,
-              "value": null,
-              "attributeName": "address_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-                "version": null,
-                "name": "dim_address"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "address_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-          "version": null,
-          "name": "dim_customer"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 6,
-              "value": null,
-              "attributeName": "customer_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-                "version": null,
-                "name": "dim_customer"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "customer_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-          "version": null,
-          "name": "dim_date"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 3,
-              "value": null,
-              "attributeName": "trans_date_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-                "version": null,
-                "name": "dim_date"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "date_id",
-              "attributeType": "integer"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-          "version": null,
-          "name": "dim_transaction_type"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "transaction_type_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-                "version": null,
-                "name": "dim_transaction_type"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_type_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "34705241-333c-43cd-8dc5-dda7bc8d9235",
-          "version": null,
-          "name": "ds_fact_transaction_reciever_details"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "34705241-333c-43cd-8dc5-dda7bc8d9235",
-                "version": null,
-                "name": "ds_fact_transaction_reciever_details"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "53992b0f-f790-4025-a136-0187d23c8b26",
-          "version": null,
-          "name": "ds_fact_transaction_sender_details"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "53992b0f-f790-4025-a136-0187d23c8b26",
-                "version": null,
-                "name": "ds_fact_transaction_sender_details"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "437f94ab-5daa-4155-aec8-d74badf25052",
+	"version" : "1540028132",
+	"name" : "rel_fact_transaction_incoming",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+			"version" : null,
+			"name" : "fact_transaction"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+								"version" : null,
+								"name" : "dim_account"
+							},
+							"attributeId" : 12,
+							"value" : null,
+							"attributeName" : "account_number",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 10,
+							"value" : null,
+							"attributeName" : "to_account",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+					"version" : null,
+					"name" : "dim_address"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 7,
+							"value" : null,
+							"attributeName" : "address_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+								"version" : null,
+								"name" : "dim_address"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "address_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+					"version" : null,
+					"name" : "dim_customer"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 6,
+							"value" : null,
+							"attributeName" : "customer_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+								"version" : null,
+								"name" : "dim_customer"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "customer_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+					"version" : null,
+					"name" : "dim_date"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 3,
+							"value" : null,
+							"attributeName" : "trans_date_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+								"version" : null,
+								"name" : "dim_date"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "date_id",
+							"attributeType" : "integer"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+					"version" : null,
+					"name" : "dim_transaction_type"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "transaction_type_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+								"version" : null,
+								"name" : "dim_transaction_type"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_type_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "34705241-333c-43cd-8dc5-dda7bc8d9235",
+					"version" : null,
+					"name" : "ds_fact_transaction_reciever_details"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "34705241-333c-43cd-8dc5-dda7bc8d9235",
+								"version" : null,
+								"name" : "ds_fact_transaction_reciever_details"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "53992b0f-f790-4025-a136-0187d23c8b26",
+					"version" : null,
+					"name" : "ds_fact_transaction_sender_details"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "53992b0f-f790-4025-a136-0187d23c8b26",
+								"version" : null,
+								"name" : "ds_fact_transaction_sender_details"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displyName" : "rel_dq_equity_executions_rule7"
 }

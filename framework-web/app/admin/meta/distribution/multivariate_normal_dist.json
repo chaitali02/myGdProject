@@ -1,0 +1,60 @@
+{
+	"library" : "MATH3",
+	"className" : "org.apache.commons.math3.distribution.MultivariateNormalDistribution",
+	"methodName" : "sample",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4"
+		}
+	},
+	"uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
+	"version" : "1523604730",
+	"name" : "Multivariate Normal Dist",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.266Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			}
+		}
+	],
+	"displyName" : "Uniform Real Dist"
+}

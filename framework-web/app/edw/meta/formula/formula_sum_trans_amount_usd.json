@@ -1,63 +1,64 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "relation",
-			"uuid": "cfb6d8b8-8240-40da-8c9c-b52b49da8460"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "cfb6d8b8-8240-40da-8c9c-b52b49da8460"
 		}
 	},
-	"formulaInfo": [
+	"formulaInfo" : [
 		{
-			"ref": {
-				"type": "function",
-				"uuid": "9e3e314c-02fb-11e7-93ae-92361f002671"
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
 			}
 		},
 		{
-			"ref": {
-				"type": "simple"
+			"ref" : {
+				"type" : "simple"
 			},
-			"value": "("
+			"value" : "("
 		},
 		{
-			"ref": {
-				"type": "datapod",
-				"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
 			},
-			"attributeId": 12
+			"attributeId" : 12
 		},
 		{
-			"ref": {
-				"type": "simple"
+			"ref" : {
+				"type" : "simple"
 			},
-			"value": ")"
+			"value" : ")"
 		}
 	],
-	"formulaType": "aggr",
-	"uuid": "fbb3e147-92a3-4159-bde9-1ef3b1f84559",
-	"version": "1491482950",
-	"name": "formula_sum_trans_amount_usd",
-	"desc": "formula to calculate sum of all transactions taking place per account id",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"formulaType" : "aggr",
+	"uuid" : "fbb3e147-92a3-4159-bde9-1ef3b1f84559",
+	"version" : "1491482950",
+	"name" : "formula_sum_trans_amount_usd",
+	"desc" : "formula to calculate sum of all transactions taking place per account id",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displyName" : "fm_total_pass_pct"
 }

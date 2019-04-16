@@ -1,62 +1,63 @@
 {
-  "uuid": "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
-  "version": "1550078640",
-  "name": "paramlist_pca_warning_features",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Feb 13 12:24:00 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "k",
-      "paramType": "integer",
-      "paramDispName": "k",
-      "paramDesc": null,
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "20"
-      },
-      "paramRef": null
-    }
-  ],
-  "paramListType": "model",
-  "templateFlg": "N",
-  "templateInfo": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "d3c52f77-92b7-480a-af3a-46764a02d6f0",
-      "version": null,
-      "name": "paramlist_pca_algorithm"
-    },
-    "value": null
-  }
+	"uuid" : "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
+	"version" : "1550078640",
+	"name" : "paramlist_pca_warning_features",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "k",
+			"paramType" : "integer",
+			"paramDispName" : "k",
+			"paramDesc" : null,
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "20"
+			},
+			"paramRef" : null
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "N",
+	"templateInfo" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "d3c52f77-92b7-480a-af3a-46764a02d6f0",
+			"version" : null,
+			"name" : "paramlist_pca_algorithm"
+		},
+		"value" : null
+	},
+	"displyName" : "paramlist_dq_rule"
 }

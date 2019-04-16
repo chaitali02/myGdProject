@@ -1,103 +1,104 @@
 {
-  "uuid": "cf11a6f5-0894-4d14-912c-90bab1622ae7",
-  "version": "1553032206",
-  "name": "expr_dq_equity_executions_rule4",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:50:06 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-      "version": null,
-      "name": "equity_executions"
-    },
-    "value": null
-  },
-  "condition": null,
-  "match": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "'TRUE'",
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "noMatch": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "'FALSE'",
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "expressionInfo": [
-    {
-      "display_seq": null,
-      "logicalOperator": " ",
-      "operator": "<=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-            "version": null,
-            "name": "equity_executions"
-          },
-          "attributeId": 4,
-          "value": null,
-          "attributeName": "trade_execution_time",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-            "version": null,
-            "name": "equity_executions"
-          },
-          "attributeId": 6,
-          "value": null,
-          "attributeName": "trade_execution_event_time",
-          "attributeType": null
-        }
-      ]
-    }
-  ]
+	"uuid" : "cf11a6f5-0894-4d14-912c-90bab1622ae7",
+	"version" : "1553032206",
+	"name" : "expr_dq_equity_executions_rule4",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.791Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+			"version" : null,
+			"name" : "equity_executions"
+		},
+		"value" : null
+	},
+	"condition" : null,
+	"match" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "'TRUE'",
+		"attrId" : null,
+		"attrName" : null,
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"noMatch" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "'FALSE'",
+		"attrId" : null,
+		"attrName" : null,
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"expressionInfo" : [
+		{
+			"display_seq" : null,
+			"logicalOperator" : " ",
+			"operator" : "<=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+						"version" : null,
+						"name" : "equity_executions"
+					},
+					"attributeId" : 4,
+					"value" : null,
+					"attributeName" : "trade_execution_time",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+						"version" : null,
+						"name" : "equity_executions"
+					},
+					"attributeId" : 6,
+					"value" : null,
+					"attributeName" : "trade_execution_event_time",
+					"attributeType" : null
+				}
+			]
+		}
+	],
+	"displyName" : "expr_dq_equity_orders_rule4"
 }

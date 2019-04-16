@@ -1,0 +1,780 @@
+{
+	"nodeInfo" : [
+		{
+			"nodeId" : {
+				"attrId" : "0",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeType" : "Rule",
+			"nodeIcon" : "bank",
+			"nodeName" : {
+				"attrId" : "2",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSize" : {
+				"attrId" : "1",
+				"attrType" : "integer",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSource" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeProperties" : [
+				{
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "1",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "2",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "3",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "4",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "5",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "6",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "8",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "9",
+					"attrType" : "double",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "10",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				}
+			],
+			"nodeBackgroundInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			},
+			"highlightInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			}
+		},
+		{
+			"nodeId" : {
+				"attrId" : "5",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeType" : "Criteria",
+			"nodeIcon" : "office",
+			"nodeName" : {
+				"attrId" : "5",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSize" : {
+				"attrId" : "1",
+				"attrType" : "integer",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSource" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeProperties" : [
+				{
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "1",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "2",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "3",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "4",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "5",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "6",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "8",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "9",
+					"attrType" : "double",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "10",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				}
+			],
+			"nodeBackgroundInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "Y",
+						"propertyValue" : "#B39DDB"
+					},
+					{
+						"propertyName" : "N",
+						"propertyValue" : "#80DEEA"
+					}
+				]
+			},
+			"highlightInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			}
+		},
+		{
+			"nodeId" : {
+				"attrId" : "4",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeType" : "Customer",
+			"nodeIcon" : "user",
+			"nodeName" : {
+				"attrId" : "4",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSize" : {
+				"attrId" : "1",
+				"attrType" : "integer",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeSource" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"nodeProperties" : [
+				{
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "1",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "2",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "3",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "4",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "5",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "6",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "8",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "9",
+					"attrType" : "double",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "10",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				}
+			],
+			"nodeBackgroundInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			},
+			"highlightInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			}
+		}
+	],
+	"edgeInfo" : [
+		{
+			"edgeId" : "0",
+			"edgeType" : "RuleCriteria",
+			"edgeName" : "RuleCriteria",
+			"edgeSource" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"edgeProperties" : [
+				{
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "1",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "2",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "3",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "4",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "5",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "6",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "8",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "9",
+					"attrType" : "double",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "10",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				}
+			],
+			"sourceNodeId" : {
+				"attrId" : "0",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"targetNodeId" : {
+				"attrId" : "5",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"highlightInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			}
+		},
+		{
+			"edgeId" : "1",
+			"edgeType" : "RuleEntity",
+			"edgeName" : "RuleEntity",
+			"edgeSource" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"edgeProperties" : [
+				{
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "1",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "2",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "3",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "4",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "5",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "6",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "7",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "8",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "9",
+					"attrType" : "double",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				{
+					"attrId" : "10",
+					"attrType" : "integer",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				}
+			],
+			"sourceNodeId" : {
+				"attrId" : "0",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"targetNodeId" : {
+				"attrId" : "4",
+				"attrType" : "string",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+				}
+			},
+			"highlightInfo" : {
+				"type" : "category",
+				"propertyId" : {
+					"attrId" : "0",
+					"attrType" : "string",
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c7117a"
+					}
+				},
+				"propertyInfo" : [
+					{
+						"propertyName" : "1",
+						"propertyValue" : "#61595e"
+					}
+				]
+			}
+		}
+	],
+	"uuid" : "b8d1f01d-9ead-49b9-91a7-4b15fb3fd156",
+	"version" : "1552513906",
+	"name" : "rule_analysis",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:39.120Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	],
+	"publicFlag" : "N",
+	"displyName" : "rule_analysis"
+}

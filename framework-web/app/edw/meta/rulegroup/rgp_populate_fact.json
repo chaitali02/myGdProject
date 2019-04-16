@@ -1,52 +1,53 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "12a2a192-1884-495b-9c80-d3543dbe4a56",
-				"version": "1490409822"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "12a2a192-1884-495b-9c80-d3543dbe4a56",
+				"version" : "1490409822"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "424decc0-f29d-4dbd-ae74-476335ca6f8f",
-				"version": "1491485346"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "424decc0-f29d-4dbd-ae74-476335ca6f8f",
+				"version" : "1491485346"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "c81d3517-4501-49e7-a385-d948526f5d30",
-				"version": "1491486176"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "c81d3517-4501-49e7-a385-d948526f5d30",
+				"version" : "1491486176"
 			}
 		}
 	],
-	"uuid": "129edb18-5138-4133-8241-373ac153d8c2",
-	"version": "1491630755",
-	"name": "rgp_populate_fact",
-	"desc": "business rule group to load and populate target fact table",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "129edb18-5138-4133-8241-373ac153d8c2",
+	"version" : "1491630755",
+	"name" : "rgp_populate_fact",
+	"desc" : "business rule group to load and populate target fact table",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:41.370Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displyName" : "Customer Focus - Transaction Velocity"
 }

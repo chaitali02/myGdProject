@@ -1,563 +1,564 @@
 {
-  "uuid": "166d4657-b78d-40c9-a873-393dde041b57",
-  "version": "1536002534",
-  "name": "ppl_train_all_models",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Sep 03 15:22:14 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 210,
-  "yPos": 320,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "cf0ab807-0c87-44ed-aaf9-b9aa18ef186f",
-          "dependsOn": [],
-          "name": "Train AFT Survival Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "09a3ff8d-4905-4d7e-b3e3-3e9151fab69b",
-                    "version": null,
-                    "name": "Train AFT Survival Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 640,
-          "yPos": 30,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "e05add02-845e-4779-bdbf-39bc5dca0d8d",
-          "dependsOn": [],
-          "name": "Train Decision Tree Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "572d86d5-5106-40c9-b4c0-ede6b676476c",
-                    "version": null,
-                    "name": "Train Decision Tree Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 810,
-          "yPos": 70,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "e97475b6-2982-4172-8b81-392ac212ad6d",
-          "dependsOn": [],
-          "name": "Train K-Means",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "d762b4ea-5adc-4d05-ab93-d78d00a48609",
-                    "version": null,
-                    "name": "Train K-Means"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 970,
-          "yPos": 130,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "feedb4e6-bddc-4799-b560-15bcfacac2b3",
-          "dependsOn": [],
-          "name": "Train LDA Clustering",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "ca4d4bf0-3294-4f13-a7d7-f9da26f5b8e5",
-                    "version": null,
-                    "name": "Train LDA Clustering"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1090,
-          "yPos": 200,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "08d67c73-8d47-42ad-a8e9-5fa119fc44bd",
-          "dependsOn": [],
-          "name": "Train Linear Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "ef4d437d-8eba-415f-aa46-bf8563bbde05",
-                    "version": null,
-                    "name": "Train Linear Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1090,
-          "yPos": 310,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "c0835536-e98a-4569-a530-ccbc3a3951a0",
-          "dependsOn": [],
-          "name": "Train Linear SVM Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "f5581561-ac59-463d-845a-b1b5f8fafbd9",
-                    "version": null,
-                    "name": "Train Linear SVM Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1090,
-          "yPos": 440,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "a9bc7765-774d-4bb7-89e2-d1143489ab8c",
-          "dependsOn": [],
-          "name": "Train Logistic Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "7bf207ca-aafe-4da8-bdc2-ff99d4b6110c",
-                    "version": null,
-                    "name": "Train Logistic Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 970,
-          "yPos": 530,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "de321727-0200-4660-a8ad-05b1bd198b79",
-          "dependsOn": [],
-          "name": "Train Naive Bayes Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "46bcd068-eca9-4b80-a25d-913e8fd463ec",
-                    "version": null,
-                    "name": "Train Naive Bayes Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 800,
-          "yPos": 600,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "cc615551-21eb-4228-b091-b47a0bf8bb2b",
-          "dependsOn": [],
-          "name": "Train Random Forest Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "c969e192-b285-4a15-9fcc-3c31de061489",
-                    "version": null,
-                    "name": "Train Random Forest Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 620,
-          "yPos": 620,
-          "active" : "Y",
-          "statusList": []
-        }
-      ],
-      "name": "stage",
-      "xPos": 420,
-      "yPos": 320,
-      "active" : "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "166d4657-b78d-40c9-a873-393dde041b57",
+	"version" : "1536002534",
+	"name" : "ppl_train_all_models",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 210,
+	"yPos" : 320,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "cf0ab807-0c87-44ed-aaf9-b9aa18ef186f",
+					"dependsOn" : [ ],
+					"name" : "Train AFT Survival Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "09a3ff8d-4905-4d7e-b3e3-3e9151fab69b",
+										"version" : null,
+										"name" : "Train AFT Survival Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a83",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 640,
+					"yPos" : 30,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "e05add02-845e-4779-bdbf-39bc5dca0d8d",
+					"dependsOn" : [ ],
+					"name" : "Train Decision Tree Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "572d86d5-5106-40c9-b4c0-ede6b676476c",
+										"version" : null,
+										"name" : "Train Decision Tree Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 810,
+					"yPos" : 70,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "e97475b6-2982-4172-8b81-392ac212ad6d",
+					"dependsOn" : [ ],
+					"name" : "Train K-Means",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "d762b4ea-5adc-4d05-ab93-d78d00a48609",
+										"version" : null,
+										"name" : "Train K-Means"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a79",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 970,
+					"yPos" : 130,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "feedb4e6-bddc-4799-b560-15bcfacac2b3",
+					"dependsOn" : [ ],
+					"name" : "Train LDA Clustering",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "ca4d4bf0-3294-4f13-a7d7-f9da26f5b8e5",
+										"version" : null,
+										"name" : "Train LDA Clustering"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a85",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 200,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "08d67c73-8d47-42ad-a8e9-5fa119fc44bd",
+					"dependsOn" : [ ],
+					"name" : "Train Linear Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "ef4d437d-8eba-415f-aa46-bf8563bbde05",
+										"version" : null,
+										"name" : "Train Linear Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 310,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "c0835536-e98a-4569-a530-ccbc3a3951a0",
+					"dependsOn" : [ ],
+					"name" : "Train Linear SVM Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "f5581561-ac59-463d-845a-b1b5f8fafbd9",
+										"version" : null,
+										"name" : "Train Linear SVM Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 440,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "a9bc7765-774d-4bb7-89e2-d1143489ab8c",
+					"dependsOn" : [ ],
+					"name" : "Train Logistic Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "7bf207ca-aafe-4da8-bdc2-ff99d4b6110c",
+										"version" : null,
+										"name" : "Train Logistic Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a80",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 970,
+					"yPos" : 530,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "de321727-0200-4660-a8ad-05b1bd198b79",
+					"dependsOn" : [ ],
+					"name" : "Train Naive Bayes Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "46bcd068-eca9-4b80-a25d-913e8fd463ec",
+										"version" : null,
+										"name" : "Train Naive Bayes Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 800,
+					"yPos" : 600,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "cc615551-21eb-4228-b091-b47a0bf8bb2b",
+					"dependsOn" : [ ],
+					"name" : "Train Random Forest Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "c969e192-b285-4a15-9fcc-3c31de061489",
+										"version" : null,
+										"name" : "Train Random Forest Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 620,
+					"yPos" : 620,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "stage",
+			"xPos" : 420,
+			"yPos" : 320,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displyName" : "ppl_e2e_exec"
 }

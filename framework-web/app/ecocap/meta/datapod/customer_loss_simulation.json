@@ -1,99 +1,100 @@
 {
-  "uuid": "b79e443b-536b-4bea-9497-2ff27b61e6b6",
-  "version": "1532915594",
-  "name": "customer_loss_simulation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 21:53:14 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "cust_id",
-      "type": "string",
-      "desc": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "cust_id",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 1,
-      "name": "iterationid",
-      "type": "integer",
-      "desc": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "iterationid",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
-      "name": "customer_loss",
-      "type": "decimal",
-      "desc": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "customer_loss",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 3,
-      "name": "reporting_date",
-      "type": "string",
-      "desc": "reporting_date",
-      "key": "",
-      "partition": "N",
-      "dispName": "reporting_date",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 4,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active" : "Y",
-      "expr": null
-    }
-  ],
-	"prefix":"oel"
+	"uuid" : "b79e443b-536b-4bea-9497-2ff27b61e6b6",
+	"version" : "1532915594",
+	"name" : "customer_loss_simulation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "File"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "cust_id",
+			"type" : "string",
+			"desc" : null,
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "cust_id",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "iterationid",
+			"type" : "integer",
+			"desc" : null,
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "iterationid",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "customer_loss",
+			"type" : "decimal",
+			"desc" : null,
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "customer_loss",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "reporting_date",
+			"type" : "string",
+			"desc" : "reporting_date",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "reporting_date",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "version",
+			"type" : "integer",
+			"desc" : "version",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"expr" : null
+		}
+	],
+	"prefix" : "oel",
+	"displyName" : "security"
 }

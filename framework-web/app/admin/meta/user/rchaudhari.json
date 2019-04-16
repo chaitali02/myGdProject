@@ -1,63 +1,63 @@
 {
-	"_id": ObjectId("59bb7f45e1f1822c12f84e59"),
-	"firstName": "Rohini",
-	"lastName": "Chaudhari",
-	"emailId": "rchaudhari129@gmail.com",
-	"password": "rchaudhari",
-	"groupInfo": [
+	"firstName" : "Rohini",
+	"lastName" : "Chaudhari",
+	"emailId" : "rchaudhari129@gmail.com",
+	"password" : "rchaudhari",
+	"groupInfo" : [
 		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
 			}
 		}
 	],
-	"roleInfo": [
+	"roleInfo" : [
 		{
-			"ref": {
-				"type": "role",
-				"uuid": "d04716df-e96a-419f-9118-c81342b47f88"
+			"ref" : {
+				"type" : "role",
+				"uuid" : "d04716df-e96a-419f-9118-c81342b47f88"
 			}
 		}
 	],
-	"uuid": "4c4b645a-47eb-475a-b6ea-ef8e6eb86deb",
-	"version": "1505460037",
-	"name": "rchaudhari",
-	"desc": "User info for rchaudhari ",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196",
-			"name": "ypalrecha"
+	"uuid" : "4c4b645a-47eb-475a-b6ea-ef8e6eb86deb",
+	"version" : "1505460037",
+	"name" : "rchaudhari",
+	"desc" : "User info for rchaudhari ",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
+	"tags" : [
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
 	],
-    "defaultGroup" : {
-        "ref" : {
-            "type" : "group",
-            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
-        }
-    },
-    "orgInfo" : {
-        "ref" : {
-            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-            "type" : "organization"
-        }
-    }
+	"defaultGroup" : {
+		"ref" : {
+			"type" : "group",
+			"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+		}
+	},
+	"orgInfo" : {
+		"ref" : {
+			"uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+			"type" : "organization"
+		}
+	},
+	"displyName" : "rchaudhari"
 }

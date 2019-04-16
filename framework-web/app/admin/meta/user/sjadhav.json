@@ -1,64 +1,63 @@
 {
-	"_id": ObjectId("59bb7f11e1f1822c12f84e55"),
-	"firstName": "Sonali",
-	"lastName": "Jadhav",
-	"emailId": "sonalijadhav387@gmail.com",
-	"password": "sjadhav",
-	"groupInfo": [
+	"firstName" : "Sonali",
+	"lastName" : "Jadhav",
+	"emailId" : "sonalijadhav387@gmail.com",
+	"password" : "sjadhav",
+	"groupInfo" : [
 		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
 			}
 		}
 	],
-	"roleInfo": [
+	"roleInfo" : [
 		{
-			"ref": {
-				"type": "role",
-				"uuid": "d04716df-e96a-419f-9118-c81342b47f88"
+			"ref" : {
+				"type" : "role",
+				"uuid" : "d04716df-e96a-419f-9118-c81342b47f88"
 			}
 		}
 	],
-	"uuid": "bbdbc635-79e2-497f-8b9f-4b2ec1af972a",
-	"version": "1505459985",
-	"version": "1505459904",
-	"name": "sjadhav",
-	"desc": "User info for sjadhav ",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196",
-			"name": "ypalrecha"
+	"uuid" : "bbdbc635-79e2-497f-8b9f-4b2ec1af972a",
+	"version" : "1505459985",
+	"name" : "sjadhav",
+	"desc" : "User info for sjadhav ",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
+	"tags" : [
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
 	],
-    "defaultGroup" : {
-        "ref" : {
-            "type" : "group",
-            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
-        }
-    },
-    "orgInfo" : {
-        "ref" : {
-            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-            "type" : "organization"
-        }
-    }
+	"defaultGroup" : {
+		"ref" : {
+			"type" : "group",
+			"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+		}
+	},
+	"orgInfo" : {
+		"ref" : {
+			"uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+			"type" : "organization"
+		}
+	},
+	"displyName" : "sjadhav"
 }

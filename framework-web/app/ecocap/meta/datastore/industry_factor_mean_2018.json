@@ -1,0 +1,46 @@
+{
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ec1958cf-98ec-4269-b821-9fbb81a85835",
+			"version" : "1526227033"
+		}
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "a2828d80-c671-4f8f-95fc-085f9e7c0702",
+			"version" : "1533069560"
+		}
+	},
+	"location" : "/ec1958cf-98ec-4269-b821-9fbb81a85835/1526227033/1533069560",
+	"persistMode" : "DISK_ONLY",
+	"numRows" : NumberLong(16),
+	"runMode" : "BATCH",
+	"uuid" : "54433765-1249-490a-81ce-d20f9a2aff38",
+	"version" : "1533069560",
+	"name" : "industry_factor_mean_2018",
+	"desc" : "Creating datastore for industry_factor_mean_2018",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.127Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displyName" : "security"
+}

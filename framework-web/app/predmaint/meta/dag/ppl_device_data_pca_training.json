@@ -1,169 +1,170 @@
 {
-  "uuid": "108be6a9-c483-4cdc-baf3-dbbb9ec7f7a6",
-  "version": "1550078688",
-  "name": "ppl_device_data_pca_training",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": ISODate("2019-02-09T10:15:38.000Z"),
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "xPos": 30,
-  "yPos": 250,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "8ac8ad6e-2592-48e6-8358-aecdf291229d",
-          "dependsOn": [],
-          "name": "Device Data Summary Features - PCA",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "70f7f016-2d9e-4dad-9347-b8c3add8a109",
-                    "version": null,
-                    "name": "Device Data Summary Features - PCA"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 440,
-          "yPos": 120,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "b6a760d8-fa1e-420e-b7d6-943cfa4bdf13",
-          "dependsOn": [],
-          "name": "Device Data Warning Features - PCA",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "0f511905-befb-4513-be48-c8897b6d02be",
-                    "version": null,
-                    "name": "Device Data Warning Features - PCA"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 440,
-          "yPos": 370,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos": 200,
-      "yPos": 250,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "108be6a9-c483-4cdc-baf3-dbbb9ec7f7a6",
+	"version" : "1550078688",
+	"name" : "ppl_device_data_pca_training",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"xPos" : 30,
+	"yPos" : 250,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "8ac8ad6e-2592-48e6-8358-aecdf291229d",
+					"dependsOn" : [ ],
+					"name" : "Device Data Summary Features - PCA",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "70f7f016-2d9e-4dad-9347-b8c3add8a109",
+										"version" : null,
+										"name" : "Device Data Summary Features - PCA"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 440,
+					"yPos" : 120,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "b6a760d8-fa1e-420e-b7d6-943cfa4bdf13",
+					"dependsOn" : [ ],
+					"name" : "Device Data Warning Features - PCA",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "0f511905-befb-4513-be48-c8897b6d02be",
+										"version" : null,
+										"name" : "Device Data Warning Features - PCA"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 440,
+					"yPos" : 370,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 200,
+			"yPos" : 250,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displyName" : "ppl_e2e_exec"
 }

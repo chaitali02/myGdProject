@@ -1,130 +1,131 @@
 {
-  "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
-  "version": "1552343827",
-  "name": "security",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:30:43 EDT 2019",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "4f65d730-866c-417d-9305-472cd82599db",
-      "version": "1553031028",
-      "name": "mysql_framework_db"
-    },
-    "value": null
-  },
-  "cache": null,
-  "attributes": [
-    {
-      "attributeId": 0,
-      "displaySeq": null,
-      "name": "security_id",
-      "type": "INTEGER",
-      "desc": "security_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "security_id",
-      "active": "Y",
-      "length": 10,
-      "attrUnitType": null,
-      "domain": null,
-      "piiFlag": "N",
-      "cdeFlag": "N"
-    },
-    {
-      "attributeId": 1,
-      "displaySeq": null,
-      "name": "security_symbol",
-      "type": "VARCHAR",
-      "desc": "security_symbol",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "security_symbol",
-      "active": "Y",
-      "length": 50,
-      "attrUnitType": null,
-      "domain": null,
-      "piiFlag": "N",
-      "cdeFlag": "N"
-    },
-    {
-      "attributeId": 2,
-      "displaySeq": null,
-      "name": "ric_code",
-      "type": "VARCHAR",
-      "desc": "ric_code",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "ric_code",
-      "active": "Y",
-      "length": 50,
-      "attrUnitType": null,
-      "domain": null,
-      "piiFlag": "N",
-      "cdeFlag": "N"
-    },
-    {
-      "attributeId": 3,
-      "displaySeq": null,
-      "name": "security_description",
-      "type": "VARCHAR",
-      "desc": "security_description",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "security_description",
-      "active": "Y",
-      "length": 100,
-      "attrUnitType": null,
-      "domain": null,
-      "piiFlag": "N",
-      "cdeFlag": "N"
-    },
-    {
-      "attributeId": 4,
-      "displaySeq": null,
-      "name": "version",
-      "type": "INTEGER",
-      "desc": "version",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "version",
-      "active": "Y",
-      "length": 10,
-      "attrUnitType": null,
-      "domain": null,
-      "piiFlag": "N",
-      "cdeFlag": "N"
-    }
-  ],
-  "prefix":"scr"
+	"uuid" : "1d83dac9-4733-4503-b14d-afd91675d69b",
+	"version" : "1552343827",
+	"name" : "security",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "4f65d730-866c-417d-9305-472cd82599db",
+			"version" : "1553031028",
+			"name" : "mysql_framework_db"
+		},
+		"value" : null
+	},
+	"cache" : null,
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"displaySeq" : null,
+			"name" : "security_id",
+			"type" : "INTEGER",
+			"desc" : "security_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "security_id",
+			"active" : "Y",
+			"length" : 10,
+			"attrUnitType" : null,
+			"domain" : null,
+			"piiFlag" : "N",
+			"cdeFlag" : "N"
+		},
+		{
+			"attributeId" : 1,
+			"displaySeq" : null,
+			"name" : "security_symbol",
+			"type" : "VARCHAR",
+			"desc" : "security_symbol",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "security_symbol",
+			"active" : "Y",
+			"length" : 50,
+			"attrUnitType" : null,
+			"domain" : null,
+			"piiFlag" : "N",
+			"cdeFlag" : "N"
+		},
+		{
+			"attributeId" : 2,
+			"displaySeq" : null,
+			"name" : "ric_code",
+			"type" : "VARCHAR",
+			"desc" : "ric_code",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "ric_code",
+			"active" : "Y",
+			"length" : 50,
+			"attrUnitType" : null,
+			"domain" : null,
+			"piiFlag" : "N",
+			"cdeFlag" : "N"
+		},
+		{
+			"attributeId" : 3,
+			"displaySeq" : null,
+			"name" : "security_description",
+			"type" : "VARCHAR",
+			"desc" : "security_description",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "security_description",
+			"active" : "Y",
+			"length" : 100,
+			"attrUnitType" : null,
+			"domain" : null,
+			"piiFlag" : "N",
+			"cdeFlag" : "N"
+		},
+		{
+			"attributeId" : 4,
+			"displaySeq" : null,
+			"name" : "version",
+			"type" : "INTEGER",
+			"desc" : "version",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"length" : 10,
+			"attrUnitType" : null,
+			"domain" : null,
+			"piiFlag" : "N",
+			"cdeFlag" : "N"
+		}
+	],
+	"prefix" : "scr",
+	"displyName" : "security"
 }

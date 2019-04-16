@@ -25,7 +25,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2018-11-19T05:13:53Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:41.370Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -39,5 +39,6 @@
 				"name" : "Anti Money Laundering"
 			}
 		}
-	]
+	],
+	"displyName" : "Customer Focus - Transaction Velocity"
 }

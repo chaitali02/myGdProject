@@ -1,54 +1,55 @@
 {
-	"firstName": "analyst",
-	"middleName": "",
-	"lastName": "analyst",
-	"emailId": "analyst@dot.com",
-	"password": "danalyst",
-	"groupInfo": [
+	"firstName" : "analyst",
+	"middleName" : "",
+	"lastName" : "analyst",
+	"emailId" : "analyst@dot.com",
+	"password" : "danalyst",
+	"groupInfo" : [
 		{
-			"ref": {
-				"type": "group",
-				"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
+			"ref" : {
+				"type" : "group",
+				"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
 			}
 		}
 	],
-	"defaultGroup": {
-		"ref": {
-			"type": "group",
-			"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
+	"defaultGroup" : {
+		"ref" : {
+			"type" : "group",
+			"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
 		}
 	},
-	"orgInfo": {
-		"ref": {
-			"type": "organization",
-			"uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
+	"orgInfo" : {
+		"ref" : {
+			"type" : "organization",
+			"uuid" : "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
 		}
 	},
-	"uuid": "b90933f2-cabb-4b5a-8b74-eec30fcc3264",
-	"version": "1548315952",
-	"name": "danalyst",
-	"desc": "analyst user",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
-			"version": "1464977196",
-			"name": "admin"
+	"uuid" : "b90933f2-cabb-4b5a-8b74-eec30fcc3264",
+	"version" : "1548315952",
+	"name" : "danalyst",
+	"desc" : "analyst user",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+			"version" : "1464977196",
+			"name" : "admin"
 		}
 	},
-	"createdOn": ISODate("2019-01-24T13:05:54.507Z"),
-	"tags": [],
-	"active": "Y",
-	"locked": "N",
-	"published": "N",
-	"appInfo": [
+	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-				"version": "1464977196",
-				"name": "Administration"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version" : "1464977196",
+				"name" : "Administration"
 			}
 		}
-	]
+	],
+	"displyName" : "danalyst"
 }

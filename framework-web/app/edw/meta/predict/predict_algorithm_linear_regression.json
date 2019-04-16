@@ -1,0 +1,144 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+		}
+	},
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+		}
+	},
+	"target" : {
+		"ref" : {
+			"type" : "file"
+		}
+	},
+	"trainInfo" : {
+		"ref" : {
+			"type" : "train",
+			"uuid" : "adba4446-ff6b-4b81-b83c-acc0beb4f6ce"
+		}
+	},
+	"featureAttrMap" : [
+		{
+			"featureMapId" : "0",
+			"featureDisplaySeq" : "0",
+			"feature" : {
+				"featureId" : "0",
+				"featureName" : "interest_rate",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+				}
+			},
+			"attribute" : {
+				"attrId" : "19",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "0",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "1",
+			"featureDisplaySeq" : "1",
+			"feature" : {
+				"featureId" : "1",
+				"featureName" : "account_type_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+				}
+			},
+			"attribute" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "2",
+			"featureDisplaySeq" : "2",
+			"feature" : {
+				"featureId" : "2",
+				"featureName" : "account_status_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456"
+				}
+			},
+			"attribute" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		}
+	],
+	"rowIdentifier" : [
+		{
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+			}
+		}
+	],
+	"includeFeatures" : "Y",
+	"uuid" : "8ff9342d-a48c-437b-b381-cddbbe2b90a9",
+	"version" : "1521704987",
+	"name" : "predict_algorithm_linear_regression",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.359Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displyName" : "RLU Prediction - LR"
+}

@@ -1,0 +1,25 @@
+{
+	"uuid" : "7c97f5b6-1c4e-4f2b-9d84-1d6babcf8c42",
+	"name" : "deployExec",
+	"version" : "1536737626",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"desc" : "Meta for deploy Exec",
+	"menu" : "",
+	"displyName" : "deployExec"
+}

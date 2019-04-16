@@ -1,89 +1,90 @@
 {
-	"id": "5920dd08096b64f63e501d2d",
-	"uuid": "9f0063af-86b4-4610-bf6e-047d74fc196b",
-	"version": "1495325960",
-	"name": "rel_cust_addr",
-	"desc": "Relation for Customer and Address datapods.",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": null,
-			"name": "ypalrecha"
+	"id" : "5920dd08096b64f63e501d2d",
+	"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196b",
+	"version" : "1495325960",
+	"name" : "rel_cust_addr",
+	"desc" : "Relation for Customer and Address datapods.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : null,
+			"name" : "ypalrecha"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
+	"tags" : [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196",
-				"name": "Data Warehouse"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
 			},
-			"value": null
+			"value" : null
 		}
 	],
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-			"version": null,
-			"name": "customer"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
+			"version" : null,
+			"name" : "customer"
 		},
-		"value": null
+		"value" : null
 	},
-	"relationInfo": [
+	"relationInfo" : [
 		{
-			"join": {
-				"ref": {
-					"type": "datapod",
-					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version": null,
-					"name": "address"
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version" : null,
+					"name" : "address"
 				},
-				"value": null
+				"value" : null
 			},
-			"joinType": "",
-			"joinKey": [
+			"joinType" : "",
+			"joinKey" : [
 				{
-					"logicalOperator": "",
-					"operator": "=",
-					"operand": [
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
 						{
-							"ref": {
-								"type": "datapod",
-								"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-								"version": null,
-								"name": "customer"
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
+								"version" : null,
+								"name" : "customer"
 							},
-							"attributeId": 1,
-							"value": null,
-							"attributeName": "address_id"
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "address_id"
 						},
 						{
-							"ref": {
-								"type": "datapod",
-								"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-								"version": null,
-								"name": "address"
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+								"version" : null,
+								"name" : "address"
 							},
-							"attributeId": 0,
-							"value": null,
-							"attributeName": "address_id"
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "address_id"
 						}
 					]
 				}
 			],
-			"logicaloperand": null
+			"logicaloperand" : null
 		}
-	]
+	],
+	"displyName" : "rel_dq_equity_executions_rule7"
 }

@@ -1,137 +1,138 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "0714c4df-9621-4355-b7ad-6e09e88e30ac",
-				"version": "1490112255"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "0714c4df-9621-4355-b7ad-6e09e88e30ac",
+				"version" : "1490112255"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "607e67ae-2d94-4bf4-8b78-9f58648ccc26",
-				"version": "1490088809"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "607e67ae-2d94-4bf4-8b78-9f58648ccc26",
+				"version" : "1490088809"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "aeaffa17-65bf-4efb-bb13-b296b5a42439",
-				"version": "1490088886"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "aeaffa17-65bf-4efb-bb13-b296b5a42439",
+				"version" : "1490088886"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "f562182a-a2e2-42fd-8082-3d10b1fef077",
-				"version": "1490088974"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "f562182a-a2e2-42fd-8082-3d10b1fef077",
+				"version" : "1490088974"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "1dfc76e6-eb44-4590-a0b6-2a61e3e92343",
-				"version": "1490089131"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "1dfc76e6-eb44-4590-a0b6-2a61e3e92343",
+				"version" : "1490089131"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "2fdd8a57-820b-47f2-86a6-84c321516111",
-				"version": "1490089203"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "2fdd8a57-820b-47f2-86a6-84c321516111",
+				"version" : "1490089203"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "32edf36b-bea2-4667-b7e6-c4126b0948f3",
-				"version": "1490089279"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "32edf36b-bea2-4667-b7e6-c4126b0948f3",
+				"version" : "1490089279"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "78fe2353-c8f2-4168-922a-ec4f8a2c92b8",
-				"version": "1490089343"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "78fe2353-c8f2-4168-922a-ec4f8a2c92b8",
+				"version" : "1490089343"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "0a92902d-20ec-4fb3-92af-1eb3b2d21cc0",
-				"version": "1490089408"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "0a92902d-20ec-4fb3-92af-1eb3b2d21cc0",
+				"version" : "1490089408"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "290e4ccd-4d45-4c18-b680-334f1b8ae265",
-				"version": "1490089557"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "290e4ccd-4d45-4c18-b680-334f1b8ae265",
+				"version" : "1490089557"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "8816ba7a-761c-4d49-a0ad-b7fdb2dbb7bf",
-				"version": "1490089682"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "8816ba7a-761c-4d49-a0ad-b7fdb2dbb7bf",
+				"version" : "1490089682"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "43f4a984-d356-4b7b-8e66-8b8767243eda",
-				"version": "1490089747"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "43f4a984-d356-4b7b-8e66-8b8767243eda",
+				"version" : "1490089747"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "25543d19-dbe8-4fd2-aab5-519cfba2fb77",
-				"version": "1490089811"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "25543d19-dbe8-4fd2-aab5-519cfba2fb77",
+				"version" : "1490089811"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "1c06838d-b040-470f-a70e-e1a8998a8f10",
-				"version": "1490118831"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "1c06838d-b040-470f-a70e-e1a8998a8f10",
+				"version" : "1490118831"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "cadc5b17-59db-4717-8449-419e784c2541",
-				"version": "1490118903"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "cadc5b17-59db-4717-8449-419e784c2541",
+				"version" : "1490118903"
 			}
 		}
 	],
-	"uuid": "38b50dc4-3f2b-48d3-b5ba-e1ea6718a692",
-	"version": "1490118940",
-	"name": "dqg_dim_customer",
-	"desc": "dq rule group for combination of all dq rules for table - dim_customer",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "38b50dc4-3f2b-48d3-b5ba-e1ea6718a692",
+	"version" : "1490118940",
+	"name" : "dqg_dim_customer",
+	"desc" : "dq rule group for combination of all dq rules for table - dim_customer",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displyName" : "dqg_equity_orders"
 }

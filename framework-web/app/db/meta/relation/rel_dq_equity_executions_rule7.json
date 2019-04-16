@@ -1,89 +1,90 @@
 {
-  "uuid": "3c772fa7-758d-4371-8e80-65056573c545",
-  "version": "1553032438",
-  "name": "rel_dq_equity_executions_rule7",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:53:58 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-      "version": null,
-      "name": "equity_executions"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
-          "version": null,
-          "name": "security"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "display_seq": null,
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
-                "version": null,
-                "name": "security"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "ric_code",
-              "attributeType": "VARCHAR"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-                "version": null,
-                "name": "equity_executions"
-              },
-              "attributeId": 32,
-              "value": null,
-              "attributeName": "security_identifier",
-              "attributeType": "VARCHAR"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "3c772fa7-758d-4371-8e80-65056573c545",
+	"version" : "1553032438",
+	"name" : "rel_dq_equity_executions_rule7",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:45.819Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+			"version" : null,
+			"name" : "equity_executions"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "1d83dac9-4733-4503-b14d-afd91675d69b",
+					"version" : null,
+					"name" : "security"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"display_seq" : null,
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "1d83dac9-4733-4503-b14d-afd91675d69b",
+								"version" : null,
+								"name" : "security"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "ric_code",
+							"attributeType" : "VARCHAR"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+								"version" : null,
+								"name" : "equity_executions"
+							},
+							"attributeId" : 32,
+							"value" : null,
+							"attributeName" : "security_identifier",
+							"attributeType" : "VARCHAR"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displyName" : "rel_dq_equity_executions_rule7"
 }

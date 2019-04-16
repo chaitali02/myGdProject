@@ -1,211 +1,212 @@
 {
-  "uuid": "d3d2cec5-8f75-498e-9f40-349f8143324d",
-  "version": "1553796289",
-  "name": "viz_dq_status_completeness",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Mar 28 14:04:49 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-      "version": null,
-      "name": "ds_rule_dashboard_completeness"
-    },
-    "value": null
-  },
-  "type": "score-card",
-  "limit": 0,
-  "keys": [],
-  "dimension": [],
-  "detailAttr": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "rule_uuid"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "rule_version"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "rule_name"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "datapod_uuid"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "datapod_version"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "datapod_name"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "check_type"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "check_pass_count"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "check_fail_count"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "score"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "dimension"
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    }
-  ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
-        "version": null,
-        "name": "ds_rule_dashboard_completeness"
-      },
-      "attributeId": 9,
-      "function": "AVG",
-      "value": null,
-      "attributeName": "score"
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null,
-  "colorPalette": null
+	"uuid" : "d3d2cec5-8f75-498e-9f40-349f8143324d",
+	"version" : "1553796289",
+	"name" : "viz_dq_status_completeness",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:46.940Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+			"version" : null,
+			"name" : "ds_rule_dashboard_completeness"
+		},
+		"value" : null
+	},
+	"type" : "score-card",
+	"limit" : 0,
+	"keys" : [ ],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "rule_uuid"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "rule_version"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "rule_name"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "datapod_uuid"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "datapod_version"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "datapod_name"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "check_type"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "check_pass_count"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "check_fail_count"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "score"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "dimension"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "7c5701a8-a0dd-484d-9401-20b77c5ebf7c",
+				"version" : null,
+				"name" : "ds_rule_dashboard_completeness"
+			},
+			"attributeId" : 9,
+			"function" : "AVG",
+			"value" : null,
+			"attributeName" : "score"
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"colorPalette" : null,
+	"displyName" : "viz_dq_status_completeness"
 }

@@ -1,73 +1,74 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "b7ea1bde-72fe-44b1-8a2b-2341e9158e62",
-				"version": "1490410179"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "b7ea1bde-72fe-44b1-8a2b-2341e9158e62",
+				"version" : "1490410179"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "76d1032e-c5ba-4ade-bb42-f782f9e14a5e",
-				"version": "1490410443"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "76d1032e-c5ba-4ade-bb42-f782f9e14a5e",
+				"version" : "1490410443"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "c174177a-249b-4175-9c73-a26f3b12e489",
-				"version": "1490410106"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "c174177a-249b-4175-9c73-a26f3b12e489",
+				"version" : "1490410106"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc",
-				"version": "1490410384"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "ff2e7c87-b92b-4dfa-afaa-bd50b703f5cc",
+				"version" : "1490410384"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "8f151e7e-dd77-4f51-8d0d-aa8ed11c0006",
-				"version": "1490410330"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "8f151e7e-dd77-4f51-8d0d-aa8ed11c0006",
+				"version" : "1490410330"
 			}
 		},
 		{
-			"ref": {
-				"type": "rule",
-				"uuid": "42c2a260-5f2d-47c2-a184-2ace0ae82312",
-				"version": "1490410260"
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "42c2a260-5f2d-47c2-a184-2ace0ae82312",
+				"version" : "1490410260"
 			}
 		}
 	],
-	"uuid": "c6952be9-3367-4773-b9a0-d17b8cc8af4e",
-	"version": "1488868541",
-	"name": "rgp_populate_dimensions",
-	"desc": "business rule group to load and populate all target dimensions",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "c6952be9-3367-4773-b9a0-d17b8cc8af4e",
+	"version" : "1488868541",
+	"name" : "rgp_populate_dimensions",
+	"desc" : "business rule group to load and populate all target dimensions",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:41.370Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displyName" : "Customer Focus - Transaction Velocity"
 }

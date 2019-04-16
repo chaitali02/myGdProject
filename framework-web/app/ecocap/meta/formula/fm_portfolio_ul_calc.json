@@ -1,319 +1,320 @@
 {
-  "uuid": "317195b7-5bb2-438a-9362-76203a3a1335",
-  "version": "1533485413",
-  "name": "fm_portfolio_ul_calc",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Aug 05 00:10:13 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "193566da-efc1-4727-9505-14d14085334d",
-      "version": null,
-      "name": "ds_customer_portfolio_ul_calc_staging2"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "CASE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "WHEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 0,
-      "value": null,
-      "attributeName": "cust_id1",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "=",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 4,
-      "value": null,
-      "attributeName": "cust_id2",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "THEN",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 3,
-      "value": null,
-      "attributeName": "unexpected_loss1",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 7,
-      "value": null,
-      "attributeName": "unexpected_loss2",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "ELSE",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 3,
-      "value": null,
-      "attributeName": "unexpected_loss1",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 7,
-      "value": null,
-      "attributeName": "unexpected_loss2",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 8,
-      "value": null,
-      "attributeName": "factor_value",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "function",
-        "uuid": "9e3e25b2-02fb-11e7-93ae-92361f002671",
-        "version": null,
-        "name": "sqrt(DOUBLE a)"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "correlation1",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "*",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "193566da-efc1-4727-9505-14d14085334d",
-        "version": null,
-        "name": "ds_customer_portfolio_ul_calc_staging2"
-      },
-      "attributeId": 6,
-      "value": null,
-      "attributeName": "correlation2",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "END",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "simple"
+	"uuid" : "317195b7-5bb2-438a-9362-76203a3a1335",
+	"version" : "1533485413",
+	"name" : "fm_portfolio_ul_calc",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+			"version" : null,
+			"name" : "ds_customer_portfolio_ul_calc_staging2"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "CASE",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "WHEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 0,
+			"value" : null,
+			"attributeName" : "cust_id1",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "=",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 4,
+			"value" : null,
+			"attributeName" : "cust_id2",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "THEN",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 3,
+			"value" : null,
+			"attributeName" : "unexpected_loss1",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "*",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 7,
+			"value" : null,
+			"attributeName" : "unexpected_loss2",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "ELSE",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 3,
+			"value" : null,
+			"attributeName" : "unexpected_loss1",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "*",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 7,
+			"value" : null,
+			"attributeName" : "unexpected_loss2",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "*",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 8,
+			"value" : null,
+			"attributeName" : "factor_value",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "*",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671",
+				"version" : null,
+				"name" : "sqrt(DOUBLE a)"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "(",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "correlation1",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "*",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "193566da-efc1-4727-9505-14d14085334d",
+				"version" : null,
+				"name" : "ds_customer_portfolio_ul_calc_staging2"
+			},
+			"attributeId" : 6,
+			"value" : null,
+			"attributeName" : "correlation2",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "END",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "simple",
+	"displyName" : "fm_total_pass_pct"
 }

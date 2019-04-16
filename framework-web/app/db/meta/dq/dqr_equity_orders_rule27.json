@@ -1,80 +1,86 @@
 {
-
-  "uuid" : "08b7b6c3-1b67-4032-a0de-0320ef886c11",
-  "version" : "1553184046",
-  "name" : "dqr_equity_orders_rule27",
-  "desc" : null,
-  "createdBy" : {
-    "ref" : {
-      "type" : "user",
-      "uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version" : "1548315952",
-      "name" : "db_admin"
-    },
-    "value" : null
-  },
-  "createdOn" : "Thu Mar 21 21:30:46 IST 2019",
-  "tags" : null,
-  "active" : "Y",
-  "locked" : "N",
-  "published" : "N",
-  "appInfo" : [ {
-    "ref" : {
-      "type" : "application",
-      "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-      "version" : "1552267311",
-      "name" : null
-    },
-    "value" : null
-  } ],
-  "publicFlag" : "N",
-  "abortCondition" : null,
-  "target" : null,
-  "attribute" : {
-    "ref" : {
-      "type" : "datapod",
-      "uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version" : "1552238970",
-      "name" : null
-    },
-    "value" : null,
-    "attrId" : "26",
-    "attrName" : "buyer_or_seller_identifier",
-    "attrType" : null,
-    "attrUnitType" : null,
-    "function" : null
-  },
-  "dependsOn" : {
-    "ref" : {
-      "type" : "datapod",
-      "uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version" : "1552238970",
-      "name" : null
-    },
-    "value" : null
-  },
-  "duplicateKeyCheck" : "N",
-  "nullCheck" : "Y",
-  "valueCheck" : [ ],
-  "rangeCheck" : { },
-  "dataTypeCheck" : "",
-  "dateFormatCheck" : null,
-  "customFormatCheck" : null,
-  "lengthCheck" : { },
-  "refIntegrityCheck" : {
-    "dependsOn" : null,
-    "targetAttr" : null
-  },
-  "filterInfo" : null,
-  "userInfo" : null,
-  "thresholdInfo" : {
-    "low" : "25",
-    "medium" : "50",
-    "high" : "75",
-    "type" : "NUMERIC"
-  },
-  "domainCheck" : null,
-  "blankSpaceCheck" : null,
-  "expressionCheck" : null,
-  "caseCheck" : null
+	"uuid" : "08b7b6c3-1b67-4032-a0de-0320ef886c11",
+	"version" : "1553184046",
+	"name" : "dqr_equity_orders_rule27",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : null
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"abortCondition" : null,
+	"target" : null,
+	"attribute" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : "1552238970",
+			"name" : null
+		},
+		"value" : null,
+		"attrId" : "26",
+		"attrName" : "buyer_or_seller_identifier",
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : "1552238970",
+			"name" : null
+		},
+		"value" : null
+	},
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
+		
+	},
+	"dataTypeCheck" : "",
+	"dateFormatCheck" : null,
+	"customFormatCheck" : null,
+	"lengthCheck" : {
+		
+	},
+	"refIntegrityCheck" : {
+		"dependsOn" : null,
+		"targetAttr" : null
+	},
+	"filterInfo" : null,
+	"userInfo" : null,
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "NUMERIC"
+	},
+	"domainCheck" : null,
+	"blankSpaceCheck" : null,
+	"expressionCheck" : null,
+	"caseCheck" : null,
+	"displyName" : "dqr_security_rule5"
 }

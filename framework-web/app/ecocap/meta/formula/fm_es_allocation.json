@@ -1,70 +1,71 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "dataset",
-            "uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
-        }
-    },
-    "formulaInfo" : [ 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
-            },
-            "attributeId" : 1
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "/"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
-            },
-            "attributeId" : 2
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "*"
-        }, 
-        {
-            "ref" : {
-                "type" : "dataset",
-                "uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
-            },
-            "attributeId" : 3
-        }
-    ],
-    "formulaType" : "simple",
-    "uuid" : "fa4a9f86-9e85-46af-86c7-fe67f4ac53be",
-    "version" : "1532474863",
-    "name" : "fm_es_allocation",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-07-24T23:27:43.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822",
-                "name" : "Economic Capital"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
+			},
+			"attributeId" : 1
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "/"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
+			},
+			"attributeId" : 2
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "*"
+		},
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce"
+			},
+			"attributeId" : 3
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "fa4a9f86-9e85-46af-86c7-fe67f4ac53be",
+	"version" : "1532474863",
+	"name" : "fm_es_allocation",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			}
+		}
+	],
+	"displyName" : "fm_total_pass_pct"
 }

@@ -1,52 +1,53 @@
 {
-  "uuid": "177de17d-0823-4522-9cb1-7dbb6c72d0c3",
-  "version": "1535427141",
-  "name": "batch_e2e_economic_capital_wo_calc",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Aug 27 23:32:21 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "pipelineInfo": [
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "c058381b-5d83-48aa-8f3c-b5d209ffbd38",
-        "version": null,
-        "name": "ppl_e2e_economic_capital_wo_simulation"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "828d88ad-095f-4249-8cfd-3f809b9c0faa",
-        "version": null,
-        "name": "ppl_e2e_economic_capital_dashboard"
-      },
-      "value": null
-    }
-  ],
-  "inParallel": null
+	"uuid" : "177de17d-0823-4522-9cb1-7dbb6c72d0c3",
+	"version" : "1535427141",
+	"name" : "batch_e2e_economic_capital_wo_calc",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:42.478Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"pipelineInfo" : [
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "c058381b-5d83-48aa-8f3c-b5d209ffbd38",
+				"version" : null,
+				"name" : "ppl_e2e_economic_capital_wo_simulation"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "828d88ad-095f-4249-8cfd-3f809b9c0faa",
+				"version" : null,
+				"name" : "ppl_e2e_economic_capital_dashboard"
+			},
+			"value" : null
+		}
+	],
+	"inParallel" : null,
+	"displyName" : "batch_e2e_economic_capital_wo_calc"
 }

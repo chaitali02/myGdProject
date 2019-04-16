@@ -1,52 +1,52 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
-	"version": "1464977196",
-	"name": "AFT Survival Regression",
-	"desc": "AFT Survival Regression classification",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b74567",
+	"version" : "1464977196",
+	"name" : "AFT Survival Regression",
+	"desc" : "AFT Survival Regression classification",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T12:49:37.330Z"),
 	"active" : "Y",
-    "locked" : "N",
-	"published": "N",
+	"locked" : "N",
+	"published" : "N",
 	"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-	"type": "REGRESSION",
-	"libraryType": "SPARKML",
-	"trainClass": "org.apache.spark.ml.regression.AFTSurvivalRegression",
-	"modelClass": "org.apache.spark.ml.regression.AFTSurvivalRegressionModel",
-	"labelRequired": "Y",
-	"paramList": {
-		"ref": {
-			"type": "paramlist",
-			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83"
+	"type" : "REGRESSION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.regression.AFTSurvivalRegression",
+	"modelClass" : "org.apache.spark.ml.regression.AFTSurvivalRegressionModel",
+	"labelRequired" : "Y",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a83"
 		}
 	},
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a83"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7b894ae4-e9c4-46f1-ad8e-431beee90032"
-        }
-    },
-  	"savePmml" : "N",
-	"summaryMethods" : [  
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a83"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7b894ae4-e9c4-46f1-ad8e-431beee90032"
+		}
+	},
+	"savePmml" : "N",
+	"summaryMethods" : [
 		"coefficients",
 		"getAggregationDepth",
 		"getMaxIter",
@@ -54,5 +54,6 @@
 		"getTol",
 		"intercept",
 		"scale"
-	    ]
+	],
+	"displyName" : "Random Forest Classifier"
 }

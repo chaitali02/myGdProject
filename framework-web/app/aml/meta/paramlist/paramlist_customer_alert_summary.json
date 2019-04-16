@@ -1,54 +1,55 @@
 {
-  "uuid": "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
-  "version": "1551468569",
-  "name": "paramlist_customer_alert_summary",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Mar 01 14:29:29 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "rpt_business_date",
-      "paramType": "date",
-      "paramDispName": "rpt_business_date",
-      "paramDesc": "rpt_business_date",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "07/01/2018"
-      },
-      "paramRef": null
-    }
-  ],
-  "paramListType": "report",
-  "templateFlg": "Y",
-  "templateInfo": null
+	"uuid" : "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
+	"version" : "1551468569",
+	"name" : "paramlist_customer_alert_summary",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "rpt_business_date",
+			"paramType" : "date",
+			"paramDispName" : "rpt_business_date",
+			"paramDesc" : "rpt_business_date",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "07/01/2018"
+			},
+			"paramRef" : null
+		}
+	],
+	"paramListType" : "report",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"displyName" : "paramlist_dq_rule"
 }

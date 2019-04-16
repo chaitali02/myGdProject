@@ -1,53 +1,54 @@
 {
-  "uuid": "3f466d4a-b6c0-46f7-a9a5-503aa9778b74",
-  "version": "1536002776",
-  "name": "batch_e2e_model_execution",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Sep 03 15:26:16 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "scheduleInfo": null,
-  "pipelineInfo": [
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "166d4657-b78d-40c9-a873-393dde041b57",
-        "version": null,
-        "name": "ppl_train_all_models"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "b7519a16-912b-4e7f-9e77-c5a553102ac1",
-        "version": null,
-        "name": "ppl_predict_all_models"
-      },
-      "value": null
-    }
-  ],
-  "inParallel": null
+	"uuid" : "3f466d4a-b6c0-46f7-a9a5-503aa9778b74",
+	"version" : "1536002776",
+	"name" : "batch_e2e_model_execution",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:42.478Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"scheduleInfo" : null,
+	"pipelineInfo" : [
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "166d4657-b78d-40c9-a873-393dde041b57",
+				"version" : null,
+				"name" : "ppl_train_all_models"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "b7519a16-912b-4e7f-9e77-c5a553102ac1",
+				"version" : null,
+				"name" : "ppl_predict_all_models"
+			},
+			"value" : null
+		}
+	],
+	"inParallel" : null,
+	"displyName" : "batch_e2e_model_execution"
 }

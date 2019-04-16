@@ -1,68 +1,69 @@
 {
-  "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-  "version": "1525519035",
-  "name": "paramlist_generate_data",
-  "desc": "Generate Data Paramlist",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "paramListType" : "model",
-  "publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "distribution",
-      "paramType": "distribution",
-   	  "paramDispName" : "Distribution",
-      "paramDesc" : "",		
-      "paramValue": {
-        "ref" : {
-            "type" : "distribution",
-	    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
-        }
-    },
-      "paramRef": null
-    },
-    {
-      "paramId": "1",
-      "paramName": "numIterations",
-      "paramType": "integer",
-   	  "paramDispName" : "Num Iterations",
-      "paramDesc" : "",		
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "1000"
-    },
-      "paramRef": null
-    },
-    {
-      "paramId": "2",
-      "paramName": "saveLocation",
-      "paramType": "datapod",
-   	  "paramDispName" : "Save Location",
-      "paramDesc" : "",		
-      "paramValue": null,
-      "paramRef": null
-    }
-  ]
+	"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
+	"version" : "1525519035",
+	"name" : "paramlist_generate_data",
+	"desc" : "Generate Data Paramlist",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "distribution",
+			"paramType" : "distribution",
+			"paramDispName" : "Distribution",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "distribution",
+					"uuid" : "c5bfcdab-6435-4848-9214-6a878a865319"
+				}
+			},
+			"paramRef" : null
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "numIterations",
+			"paramType" : "integer",
+			"paramDispName" : "Num Iterations",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1000"
+			},
+			"paramRef" : null
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "saveLocation",
+			"paramType" : "datapod",
+			"paramDispName" : "Save Location",
+			"paramDesc" : "",
+			"paramValue" : null,
+			"paramRef" : null
+		}
+	],
+	"displyName" : "paramlist_dq_rule"
 }

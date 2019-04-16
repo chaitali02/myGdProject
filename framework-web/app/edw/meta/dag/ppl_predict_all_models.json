@@ -1,246 +1,261 @@
 {
-  "uuid": "b7519a16-912b-4e7f-9e77-c5a553102ac1",
-  "version": "1536002518",
-  "name": "ppl_predict_all_models",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Sep 03 15:21:58 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 210,
-  "yPos": 320,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "f66cfe2f-23eb-4d19-b8e5-1262db9de8c9",
-          "dependsOn": [],
-          "name": "Predict AFT Survival Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "8050c9a2-eef5-4846-9b0e-49a979f63ff8",
-                    "version": null,
-                    "name": "Predict AFT Survival Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 600,
-          "yPos": 50,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "4abeb2d6-2bc8-40ac-a688-c81c83f1a4fd",
-          "dependsOn": [],
-          "name": "Predict Decision Tree Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "b4c4349d-a2dc-46d0-8edd-393c7c188173",
-                    "version": null,
-                    "name": "Predict Decision Tree Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 820,
-          "yPos": 70,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "fbfa9477-644e-4fac-828e-69f37f4d893b",
-          "dependsOn": [],
-          "name": "Predict K-Means",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "5de51a33-79ad-417d-98d5-11877c68c744",
-                    "version": null,
-                    "name": "Predict K-Means"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 980,
-          "yPos": 130,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "0a046a56-33f6-4ded-bac4-deeb809837ab",
-          "dependsOn": [],
-          "name": "Predict Linear Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "50451c93-059e-43b0-8819-e027bea180e3",
-                    "version": null,
-                    "name": "Predict Linear Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1090,
-          "yPos": 310,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "7fed049c-2350-4eb2-a320-b690b12a25c4",
-          "dependsOn": [],
-          "name": "Predict Linear SVM Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "eab24f5c-b2d9-437f-b507-c5e5eb432793",
-                    "version": null,
-                    "name": "Predict Linear SVM Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1090,
-          "yPos": 430,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "2ebae873-7578-4917-bac2-abd683523e2d",
-          "dependsOn": [],
-          "name": "Predict Logistic Regression",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "52dd0298-bac0-45fb-8907-abb50a1e9ca3",
-                    "version": null,
-                    "name": "Predict Logistic Regression"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 970,
-          "yPos": 530,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "56a0d679-0a56-4193-a1e2-ab550caffb86",
-          "dependsOn": [],
-          "name": "Predict Random Forest Classifier",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "predict",
-                    "uuid": "2349eb21-b19b-4fba-8522-930ba2849eec",
-                    "version": null,
-                    "name": "Predict Random Forest Classifier"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 610,
-          "yPos": 620,
-          "active" : "Y",
-          "statusList": []
-        }
-      ],
-      "name": "stage",
-      "xPos": 420,
-      "yPos": 320,
-      "active" : "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "b7519a16-912b-4e7f-9e77-c5a553102ac1",
+	"version" : "1536002518",
+	"name" : "ppl_predict_all_models",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 210,
+	"yPos" : 320,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "f66cfe2f-23eb-4d19-b8e5-1262db9de8c9",
+					"dependsOn" : [ ],
+					"name" : "Predict AFT Survival Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "8050c9a2-eef5-4846-9b0e-49a979f63ff8",
+										"version" : null,
+										"name" : "Predict AFT Survival Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 600,
+					"yPos" : 50,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "4abeb2d6-2bc8-40ac-a688-c81c83f1a4fd",
+					"dependsOn" : [ ],
+					"name" : "Predict Decision Tree Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "b4c4349d-a2dc-46d0-8edd-393c7c188173",
+										"version" : null,
+										"name" : "Predict Decision Tree Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 820,
+					"yPos" : 70,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "fbfa9477-644e-4fac-828e-69f37f4d893b",
+					"dependsOn" : [ ],
+					"name" : "Predict K-Means",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "5de51a33-79ad-417d-98d5-11877c68c744",
+										"version" : null,
+										"name" : "Predict K-Means"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 980,
+					"yPos" : 130,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "0a046a56-33f6-4ded-bac4-deeb809837ab",
+					"dependsOn" : [ ],
+					"name" : "Predict Linear Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "50451c93-059e-43b0-8819-e027bea180e3",
+										"version" : null,
+										"name" : "Predict Linear Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 310,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "7fed049c-2350-4eb2-a320-b690b12a25c4",
+					"dependsOn" : [ ],
+					"name" : "Predict Linear SVM Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "eab24f5c-b2d9-437f-b507-c5e5eb432793",
+										"version" : null,
+										"name" : "Predict Linear SVM Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 430,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "2ebae873-7578-4917-bac2-abd683523e2d",
+					"dependsOn" : [ ],
+					"name" : "Predict Logistic Regression",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "52dd0298-bac0-45fb-8907-abb50a1e9ca3",
+										"version" : null,
+										"name" : "Predict Logistic Regression"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 970,
+					"yPos" : 530,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "56a0d679-0a56-4193-a1e2-ab550caffb86",
+					"dependsOn" : [ ],
+					"name" : "Predict Random Forest Classifier",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "2349eb21-b19b-4fba-8522-930ba2849eec",
+										"version" : null,
+										"name" : "Predict Random Forest Classifier"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 610,
+					"yPos" : 620,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "stage",
+			"xPos" : 420,
+			"yPos" : 320,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displyName" : "ppl_e2e_exec"
 }

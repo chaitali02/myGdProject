@@ -1,197 +1,198 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "model",
-            "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-        }
-    },
-    "source" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-        }
-    },
-    "target" : {
-        "ref" : {
-            "type" : "file"
-        }
-    },
-    "featureAttrMap" : [ 
-        {
-            "featureMapId" : "0",
-            "featureDisplaySeq" : "0",
-            "feature" : {
-                "featureId" : "0",
-                "featureName" : "customer_id",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-                }
-            },
-            "attribute" : {
-                "attrId" : "0",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            },
-            "imputeMethod" : {
-                "featureId" : "0",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "1",
-            "featureDisplaySeq" : "1",
-            "feature" : {
-                "featureId" : "1",
-                "featureName" : "address_id",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-                }
-            },
-            "attribute" : {
-                "attrId" : "1",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            },
-            "imputeMethod" : {
-                "featureId" : "1",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "2",
-            "featureDisplaySeq" : "2",
-            "feature" : {
-                "featureId" : "2",
-                "featureName" : "branch_id",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-                }
-            },
-            "attribute" : {
-                "attrId" : "2",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            },
-            "imputeMethod" : {
-                "featureId" : "2",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "3",
-            "featureDisplaySeq" : "3",
-            "feature" : {
-                "featureId" : "3",
-                "featureName" : "commute_distance_miles",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-                }
-            },
-            "attribute" : {
-                "attrId" : "3",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            },
-            "imputeMethod" : {
-                "featureId" : "3",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "4",
-            "featureDisplaySeq" : "4",
-            "feature" : {
-                "featureId" : "5",
-                "featureName" : "censor",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
-                }
-            },
-            "attribute" : {
-                "attrId" : "5",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-                }
-            },
-            "imputeMethod" : {
-                "featureId" : "5",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model"
-                }
-            }
-        }
-    ],
-    "trainInfo" : {
-        "ref" : {
-            "type" : "train",
-            "uuid" : "c969e192-b285-4a15-9fcc-3c31de061489"
-        }
-    },
-     "rowIdentifier" : [ 
-        {
-            "attrId" : "0",
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-            }
-        }
-    ],
-    "includeFeatures" : "Y",
-    "uuid" : "2349eb21-b19b-4fba-8522-930ba2849eec",
-    "version" : "1535970104",
-    "name" : "predict_random_forest_classifier",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-09-03T10:21:44.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+		}
+	},
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+		}
+	},
+	"target" : {
+		"ref" : {
+			"type" : "file"
+		}
+	},
+	"featureAttrMap" : [
+		{
+			"featureMapId" : "0",
+			"featureDisplaySeq" : "0",
+			"feature" : {
+				"featureId" : "0",
+				"featureName" : "customer_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+				}
+			},
+			"attribute" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "0",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "1",
+			"featureDisplaySeq" : "1",
+			"feature" : {
+				"featureId" : "1",
+				"featureName" : "address_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+				}
+			},
+			"attribute" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "2",
+			"featureDisplaySeq" : "2",
+			"feature" : {
+				"featureId" : "2",
+				"featureName" : "branch_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+				}
+			},
+			"attribute" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "3",
+			"featureDisplaySeq" : "3",
+			"feature" : {
+				"featureId" : "3",
+				"featureName" : "commute_distance_miles",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+				}
+			},
+			"attribute" : {
+				"attrId" : "3",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "3",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "4",
+			"featureDisplaySeq" : "4",
+			"feature" : {
+				"featureId" : "5",
+				"featureName" : "censor",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8"
+				}
+			},
+			"attribute" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "5",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		}
+	],
+	"trainInfo" : {
+		"ref" : {
+			"type" : "train",
+			"uuid" : "c969e192-b285-4a15-9fcc-3c31de061489"
+		}
+	},
+	"rowIdentifier" : [
+		{
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+			}
+		}
+	],
+	"includeFeatures" : "Y",
+	"uuid" : "2349eb21-b19b-4fba-8522-930ba2849eec",
+	"version" : "1535970104",
+	"name" : "predict_random_forest_classifier",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.359Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displyName" : "RLU Prediction - LR"
 }

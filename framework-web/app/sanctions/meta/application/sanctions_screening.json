@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5cb47ddbda75e91b2c51ec0b"),
     "dataSource" : {
         "ref" : {
             "type" : "datasource",
@@ -31,17 +32,18 @@
             "name" : "admin"
         }
     },
-    "createdOn" : ISODate("2019-01-24T07:43:01.000Z"),
+    "createdOn" : ISODate("2019-04-15T12:49:37.468Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
-          {
+        {
             "ref" : {
                 "type" : "application",
                 "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
             }
         }
-    ]
+    ],
+    "displyName" : "Sanctions Screening"
 }

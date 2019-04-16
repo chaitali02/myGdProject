@@ -1,53 +1,54 @@
 {
-  "uuid": "84765e14-f759-4f29-bd71-388a529e9d75",
-  "version": "1552424702",
-  "name": "dpg_equity",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 12 17:05:02 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "ruleInfo": [
-    {
-      "ref": {
-        "type": "profile",
-        "uuid": "89df0157-e6bd-45ef-9495-bb305091b0cb",
-        "version": null,
-        "name": "dp_equity_executions"
-      },
-      "value": null
-    },
-    {
-      "ref": {
-        "type": "profile",
-        "uuid": "26a095f0-41d7-4d35-95b7-f8f6627f9a9c",
-        "version": null,
-        "name": "dp_equity_orders"
-      },
-      "value": null
-    }
-  ],
-  "inParallel": "true"
+	"uuid" : "84765e14-f759-4f29-bd71-388a529e9d75",
+	"version" : "1552424702",
+	"name" : "dpg_equity",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:40.658Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "89df0157-e6bd-45ef-9495-bb305091b0cb",
+				"version" : null,
+				"name" : "dp_equity_executions"
+			},
+			"value" : null
+		},
+		{
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "26a095f0-41d7-4d35-95b7-f8f6627f9a9c",
+				"version" : null,
+				"name" : "dp_equity_orders"
+			},
+			"value" : null
+		}
+	],
+	"inParallel" : "true",
+	"displyName" : "dpg_equity"
 }

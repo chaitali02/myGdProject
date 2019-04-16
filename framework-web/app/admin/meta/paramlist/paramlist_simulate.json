@@ -1,76 +1,77 @@
 {
-	"id": "5afbcfe72750524ccbe5bea3",
-	"uuid": "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
-	"version": "1526452199",
-	"name": "paramlist_simulate",
-	"desc": null,
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": "1464977196"
+	"id" : "5afbcfe72750524ccbe5bea3",
+	"uuid" : "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
+	"version" : "1526452199",
+	"name" : "paramlist_simulate",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": "Wed May 16 11:59:59 IST 2018",
-	"tags": [],
-	"active": "Y",
-	"locked": "N",
-	"published": "N",
-	"paramListType": "model",
-	"appInfo": [
+	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
 			}
 		}
 	],
-	"params": [
+	"params" : [
 		{
-			"paramId": "0",
-			"paramName": "saveLocation",
-			"paramType": "datapod",
-			"paramDispName": "Save Location",
-			"paramDesc": "",
-			"paramValue": null,
-			"paramRef": null
+			"paramId" : "0",
+			"paramName" : "saveLocation",
+			"paramType" : "datapod",
+			"paramDispName" : "Save Location",
+			"paramDesc" : "",
+			"paramValue" : null,
+			"paramRef" : null
 		}
-	]
+	],
+	"displyName" : "paramlist_dq_rule"
 }

@@ -1,151 +1,152 @@
 {
-  "uuid": "a292b557-952f-4522-b8eb-281a33824a3d",
-  "version": "1534010764",
-  "name": "fm_customer_var_contribution_top1",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 14:06:04 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-      "version": null,
-      "name": "customer_es_allocation"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "SUM (",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-        "version": null,
-        "name": "customer_es_allocation"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "es_allocation",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "OVER (PARTITION BY",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-        "version": null,
-        "name": "customer_es_allocation"
-      },
-      "attributeId": 3,
-      "value": null,
-      "attributeName": "reporting_date",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "ORDER BY",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-        "version": null,
-        "name": "customer_es_allocation"
-      },
-      "attributeId": 2,
-      "value": null,
-      "attributeName": "es_allocation",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "DESC ROWS BETWEEN CURRENT ROW and CURRENT ROW",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ")",
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "simple"
+	"uuid" : "a292b557-952f-4522-b8eb-281a33824a3d",
+	"version" : "1534010764",
+	"name" : "fm_customer_var_contribution_top1",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+			"version" : null,
+			"name" : "customer_es_allocation"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "SUM (",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+				"version" : null,
+				"name" : "customer_es_allocation"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "es_allocation",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "OVER (PARTITION BY",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+				"version" : null,
+				"name" : "customer_es_allocation"
+			},
+			"attributeId" : 3,
+			"value" : null,
+			"attributeName" : "reporting_date",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "ORDER BY",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+				"version" : null,
+				"name" : "customer_es_allocation"
+			},
+			"attributeId" : 2,
+			"value" : null,
+			"attributeName" : "es_allocation",
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "DESC ROWS BETWEEN CURRENT ROW and CURRENT ROW",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : ")",
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "simple",
+	"displyName" : "fm_total_pass_pct"
 }

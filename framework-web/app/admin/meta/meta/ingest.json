@@ -1,25 +1,25 @@
 {
-	"uuid": "39c902d9-e1e6-4c79-9e3f-9369bd91f015",
-	"name": "ingest",
-	"version": "1536737626",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "39c902d9-e1e6-4c79-9e3f-9369bd91f015",
+	"name" : "ingest",
+	"version" : "1536737626",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
 	"active" : "Y",
-  "locked" : "N",
+	"locked" : "N",
 	"appInfo" : [
 		{
-			"ref" : 
-				{
-					"type" : "application",
-					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-				}
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
 		}
-    ],
-    "desc" : "Meta for ingest",
-    "menu":""
+	],
+	"desc" : "Meta for ingest",
+	"menu" : "",
+	"displyName" : "ingest"
 }

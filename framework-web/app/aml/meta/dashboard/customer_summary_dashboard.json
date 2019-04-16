@@ -1,105 +1,106 @@
 {
-  "uuid": "1b2d07fb-5ce7-44da-877e-1883bac59a97",
-  "version": "1550868516",
-  "name": "Customer Summary Dashboard",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Feb 22 15:48:36 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "sectionInfo": [
-    {
-      "sectionId": null,
-      "name": "Customers By Month",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "2ee77a92-296d-45d4-8179-aaa98e05f37d",
-          "version": null,
-          "name": "viz_customers_by_month"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Customers By Age",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "35730cf3-1234-4d18-afd5-e58a8d96b4ce",
-          "version": null,
-          "name": "viz_customers_by_age"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Customers By Trans Type",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "40405e96-3a88-4b89-b6d1-965e1b15dec1",
-          "version": null,
-          "name": "viz_customers_by_trans_type"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Customers By Country",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "26a8ca94-a4de-42b0-b8b0-20d2633c8d47",
-          "version": null,
-          "name": "viz_customers_by_country"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 2
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-      "version": null,
-      "name": "dim_account"
-    },
-    "value": null
-  },
-  "filterInfo": [],
-  "saveOnRefresh": "N"
+	"uuid" : "1b2d07fb-5ce7-44da-877e-1883bac59a97",
+	"version" : "1550868516",
+	"name" : "Customer Summary Dashboard",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.823Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"sectionInfo" : [
+		{
+			"sectionId" : null,
+			"name" : "Customers By Month",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "2ee77a92-296d-45d4-8179-aaa98e05f37d",
+					"version" : null,
+					"name" : "viz_customers_by_month"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customers By Age",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "35730cf3-1234-4d18-afd5-e58a8d96b4ce",
+					"version" : null,
+					"name" : "viz_customers_by_age"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customers By Trans Type",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "40405e96-3a88-4b89-b6d1-965e1b15dec1",
+					"version" : null,
+					"name" : "viz_customers_by_trans_type"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customers By Country",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "26a8ca94-a4de-42b0-b8b0-20d2633c8d47",
+					"version" : null,
+					"name" : "viz_customers_by_country"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 2
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+			"version" : null,
+			"name" : "dim_account"
+		},
+		"value" : null
+	},
+	"filterInfo" : [ ],
+	"saveOnRefresh" : "N",
+	"displyName" : "Data Quality Summary"
 }

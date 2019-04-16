@@ -1,125 +1,126 @@
 {
-	"id": "5920e361096b64f63e501d3f",
-	"uuid": "ffdfdb82-ba9e-4ca3-9c1f-a6fd4e797558",
-	"version": "1495327585",
-	"name": "expression_state_risk_band",
-	"desc": "Expression to derive state risk bands for customers.",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": null,
-			"name": "ypalrecha"
+	"id" : "5920e361096b64f63e501d3f",
+	"uuid" : "ffdfdb82-ba9e-4ca3-9c1f-a6fd4e797558",
+	"version" : "1495327585",
+	"name" : "expression_state_risk_band",
+	"desc" : "Expression to derive state risk bands for customers.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : null,
+			"name" : "ypalrecha"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-15T12:49:38.791Z"),
+	"tags" : [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196",
-				"name": "Data Warehouse"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
 			},
-			"value": null
+			"value" : null
 		}
 	],
-	"dependsOn": {
-		"ref": {
-			"type": "relation",
-			"uuid": "9f0063af-86b4-4610-bf6e-047d74fc196b",
-			"version": null,
-			"name": "relation_cust_addr"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196b",
+			"version" : null,
+			"name" : "relation_cust_addr"
 		},
-		"value": null
+		"value" : null
 	},
-	"condition": null,
-	"match": {
-		"ref": {
-			"type": "simple",
-			"uuid": null,
-			"version": null,
-			"name": null
+	"condition" : null,
+	"match" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
 		},
-		"value": "'A++'",
-		"attrId": null,
-		"attrName": null
+		"value" : "'A++'",
+		"attrId" : null,
+		"attrName" : null
 	},
-	"noMatch": {
-		"ref": {
-			"type": "simple",
-			"uuid": null,
-			"version": null,
-			"name": null
+	"noMatch" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
 		},
-		"value": "'A--'",
-		"attrId": null,
-		"attrName": null
+		"value" : "'A--'",
+		"attrId" : null,
+		"attrName" : null
 	},
-	"expressionInfo": [
+	"expressionInfo" : [
 		{
-			"logicalOperator": " ",
-			"operator": "=",
-			"operand": [
+			"logicalOperator" : " ",
+			"operator" : "=",
+			"operand" : [
 				{
-					"ref": {
-						"type": "datapod",
-						"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-						"version": null,
-						"name": "address"
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+						"version" : null,
+						"name" : "address"
 					},
-					"attributeId": 6,
-					"value": null,
-					"attributeName": "state"
+					"attributeId" : 6,
+					"value" : null,
+					"attributeName" : "state"
 				},
 				{
-					"ref": {
-						"type": "simple",
-						"uuid": null,
-						"version": null,
-						"name": null
+					"ref" : {
+						"type" : "simple",
+						"uuid" : null,
+						"version" : null,
+						"name" : null
 					},
-					"attributeId": null,
-					"value": "'AL'",
-					"attributeName": null
+					"attributeId" : null,
+					"value" : "'AL'",
+					"attributeName" : null
 				}
 			]
 		},
 		{
-			"logicalOperator": "OR",
-			"operator": "=",
-			"operand": [
+			"logicalOperator" : "OR",
+			"operator" : "=",
+			"operand" : [
 				{
-					"ref": {
-						"type": "datapod",
-						"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-						"version": null,
-						"name": "address"
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+						"version" : null,
+						"name" : "address"
 					},
-					"attributeId": 6,
-					"value": null,
-					"attributeName": "state"
+					"attributeId" : 6,
+					"value" : null,
+					"attributeName" : "state"
 				},
 				{
-					"ref": {
-						"type": "simple",
-						"uuid": null,
-						"version": null,
-						"name": null
+					"ref" : {
+						"type" : "simple",
+						"uuid" : null,
+						"version" : null,
+						"name" : null
 					},
-					"attributeId": null,
-					"value": "'NH'",
-					"attributeName": null
+					"attributeId" : null,
+					"value" : "'NH'",
+					"attributeName" : null
 				}
 			]
 		}
-	]
+	],
+	"displyName" : "expr_dq_equity_orders_rule4"
 }

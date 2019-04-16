@@ -1,0 +1,31 @@
+{
+	"regEx" : "\\$?\\d{1,3}(,?\\d{3})*(\\.\\d{1,2})?",
+	"uuid" : "c36eec04-5dcc-4114-b25d-3aa01bde79c6",
+	"version" : "1554969638",
+	"name" : "Price",
+	"desc" : "Price (with decimal)",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T09:14:43.264Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1548315769"
+			}
+		}
+	],
+	"publicFlag" : "Y",
+	"displyName" : "Price"
+}

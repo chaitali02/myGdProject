@@ -1,64 +1,64 @@
 {
-   
-    "type" : "REGRESSION",
-    "libraryType" : "SPARKML",
-    "trainClass" : "org.apache.spark.ml.regression.LinearRegression",
-    "modelClass" : "org.apache.spark.ml.regression.LinearRegressionModel",
-    "summaryMethods" : [ 
-        "summary", 
-        "coefficients", 
-        "getAggregationDepth", 
-        "getElasticNetParam", 
-        "getMaxIter", 
-        "getRegParam", 
-        "getSolver", 
-        "getTol", 
-        "intercept", 
-        "numFeatures"
-    ],
-    "labelRequired" : "Y",
-    "paramList" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82"
-        }
-    },
-    "savePmml" : "Y",
-    "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "b8d2e676-bff6-4978-94be-1019e376a3c4"
-        }
-    },
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-    "version" : "1531897870",
-    "name" : "Linear Regression",
-    "desc" : "Linear Regression classification",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-07-17T19:11:10.000Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    	"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-	]
+	"type" : "REGRESSION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.regression.LinearRegression",
+	"modelClass" : "org.apache.spark.ml.regression.LinearRegressionModel",
+	"summaryMethods" : [
+		"summary",
+		"coefficients",
+		"getAggregationDepth",
+		"getElasticNetParam",
+		"getMaxIter",
+		"getRegParam",
+		"getSolver",
+		"getTol",
+		"intercept",
+		"numFeatures"
+	],
+	"labelRequired" : "Y",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82"
+		}
+	},
+	"savePmml" : "Y",
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "b8d2e676-bff6-4978-94be-1019e376a3c4"
+		}
+	},
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+	"version" : "1531897870",
+	"name" : "Linear Regression",
+	"desc" : "Linear Regression classification",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.330Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displyName" : "Random Forest Classifier"
 }

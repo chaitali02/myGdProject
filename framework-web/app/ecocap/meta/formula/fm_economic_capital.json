@@ -1,79 +1,80 @@
 {
-  "uuid": "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
-  "version": "1532887956",
-  "name": "fm_economic_capital",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 14:12:36 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-      "version": null,
-      "name": "portfolio_loss_simulation"
-    },
-    "value": null
-  },
-  "formulaInfo": [
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
-        "version": null,
-        "name": "fm_value_at_risk"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "-",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
-        "version": null,
-        "name": "fm_expected_loss"
-      },
-      "attributeId": null,
-      "value": null,
-      "attributeName": null,
-      "attributeType": null
-    }
-  ],
-  "formulaType": "aggr"
+	"uuid" : "a7e1c282-3b11-4988-bbeb-80effc84d0f6",
+	"version" : "1532887956",
+	"name" : "fm_economic_capital",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+			"version" : null,
+			"name" : "portfolio_loss_simulation"
+		},
+		"value" : null
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "7edcb6d6-2d0d-4c36-8ed5-6fef22f8442a",
+				"version" : null,
+				"name" : "fm_value_at_risk"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "simple",
+				"uuid" : null,
+				"version" : null,
+				"name" : null
+			},
+			"attributeId" : null,
+			"value" : "-",
+			"attributeName" : null,
+			"attributeType" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "4508958d-15e2-4dd2-b9c1-82fbbaaee699",
+				"version" : null,
+				"name" : "fm_expected_loss"
+			},
+			"attributeId" : null,
+			"value" : null,
+			"attributeName" : null,
+			"attributeType" : null
+		}
+	],
+	"formulaType" : "aggr",
+	"displyName" : "fm_total_pass_pct"
 }

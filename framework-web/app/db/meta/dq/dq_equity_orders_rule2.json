@@ -1,74 +1,77 @@
 {
-  "uuid": "fd5f3f02-c648-467e-9e7b-8fcfc6392a40",
-  "version": "1552334132",
-  "name": "dq_equity_orders_rule2",
-  "desc": "Order ID, Version ID, Order Event Type combination must be unique for each record",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Mar 11 15:55:32 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": null,
-  "attribute": null,
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null
-  },
-  "duplicateKeyCheck": "Y",
-  "nullCheck": "N",
-  "valueCheck": [],
-  "rangeCheck": {},
-  "dataTypeCheck": "",
-  "dateFormatCheck": "",
-  "customFormatCheck": null,
-  "lengthCheck": {
-    "minLength": null,
-    "maxLength": null
-  },
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "filterInfo": null,
-  "userInfo": null,
-  "thresholdInfo": {
-    "low": "25",
-    "medium": "50",
-    "high": "75",
-    "type": "PERCENTAGE"
-  },
-  "domainCheck": null,
-  "blankSpaceCheck": null,
-  "expressionCheck": null
+	"uuid" : "fd5f3f02-c648-467e-9e7b-8fcfc6392a40",
+	"version" : "1552334132",
+	"name" : "dq_equity_orders_rule2",
+	"desc" : "Order ID, Version ID, Order Event Type combination must be unique for each record",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : null,
+	"attribute" : null,
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : null,
+			"name" : "equity_orders"
+		},
+		"value" : null
+	},
+	"duplicateKeyCheck" : "Y",
+	"nullCheck" : "N",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
+		
+	},
+	"dataTypeCheck" : "",
+	"dateFormatCheck" : "",
+	"customFormatCheck" : null,
+	"lengthCheck" : {
+		"minLength" : null,
+		"maxLength" : null
+	},
+	"refIntegrityCheck" : {
+		"ref" : null,
+		"value" : null,
+		"attrId" : null,
+		"attrName" : null,
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"filterInfo" : null,
+	"userInfo" : null,
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	},
+	"domainCheck" : null,
+	"blankSpaceCheck" : null,
+	"expressionCheck" : null,
+	"displyName" : "dqr_security_rule5"
 }

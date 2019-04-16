@@ -1,155 +1,156 @@
 {
-  "uuid": "5cea15da-5aa8-48c0-911f-2b004fdfd074",
-  "version": "1542671799",
-  "name": "AML Monitoring Rule Summary",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 18:56:39 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "sectionInfo": [
-    {
-      "sectionId": null,
-      "name": "Customer Transactions By Country",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "b0523997-338a-4631-8ca1-3b39df0833b2",
-          "version": null,
-          "name": "viz_customer_trans_by_country"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Customer Transactions By Product Type",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "f71a15c1-3da0-4418-8be5-603299401054",
-          "version": null,
-          "name": "viz_customer_trans_by_type"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Alerts By Rule",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "952ba825-6ef3-44fc-bb3b-5d34ddddc836",
-          "version": null,
-          "name": "viz_alerts_by_rule"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Alerts By Customer",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "4dfdab37-bc56-4103-b0bc-9a522860526d",
-          "version": null,
-          "name": "viz_alerts_by_customer"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Alerts By Country",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "8496cb17-3a02-48f2-ab78-64bc13fa5215",
-          "version": null,
-          "name": "viz_alerts_by_country"
-        },
-        "value": null
-      },
-      "rowNo": 3,
-      "colNo": 1
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": null,
-      "name": "fact_transaction_journal"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-        "version": null,
-        "name": "fact_transaction_journal"
-      },
-      "value": null,
-      "attrId": "6",
-      "attrName": "transaction_country",
-      "attrType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-        "version": null,
-        "name": "fact_transaction_journal"
-      },
-      "value": null,
-      "attrId": "4",
-      "attrName": "transaction_type_code",
-      "attrType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-        "version": null,
-        "name": "fact_transaction_journal"
-      },
-      "value": null,
-      "attrId": "5",
-      "attrName": "transaction_date",
-      "attrType": null
-    }
-  ]
+	"uuid" : "5cea15da-5aa8-48c0-911f-2b004fdfd074",
+	"version" : "1542671799",
+	"name" : "AML Monitoring Rule Summary",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.823Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"sectionInfo" : [
+		{
+			"sectionId" : null,
+			"name" : "Customer Transactions By Country",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "b0523997-338a-4631-8ca1-3b39df0833b2",
+					"version" : null,
+					"name" : "viz_customer_trans_by_country"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customer Transactions By Product Type",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "f71a15c1-3da0-4418-8be5-603299401054",
+					"version" : null,
+					"name" : "viz_customer_trans_by_type"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Alerts By Rule",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "952ba825-6ef3-44fc-bb3b-5d34ddddc836",
+					"version" : null,
+					"name" : "viz_alerts_by_rule"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Alerts By Customer",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "4dfdab37-bc56-4103-b0bc-9a522860526d",
+					"version" : null,
+					"name" : "viz_alerts_by_customer"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Alerts By Country",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "8496cb17-3a02-48f2-ab78-64bc13fa5215",
+					"version" : null,
+					"name" : "viz_alerts_by_country"
+				},
+				"value" : null
+			},
+			"rowNo" : 3,
+			"colNo" : 1
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+			"version" : null,
+			"name" : "fact_transaction_journal"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+				"version" : null,
+				"name" : "fact_transaction_journal"
+			},
+			"value" : null,
+			"attrId" : "6",
+			"attrName" : "transaction_country",
+			"attrType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+				"version" : null,
+				"name" : "fact_transaction_journal"
+			},
+			"value" : null,
+			"attrId" : "4",
+			"attrName" : "transaction_type_code",
+			"attrType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+				"version" : null,
+				"name" : "fact_transaction_journal"
+			},
+			"value" : null,
+			"attrId" : "5",
+			"attrName" : "transaction_date",
+			"attrType" : null
+		}
+	],
+	"displyName" : "Data Quality Summary"
 }

@@ -1,81 +1,86 @@
 {
-  "uuid": "7e75ef14-4888-41ef-b419-8b8eeb35c29d",
-  "version": "1553032751",
-  "name": "dq_equity_orders_rule6",
-  "desc": "Order Type cannot be blank and must be one of the following - Market, Limit, Stop, Stop Limit",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:59:11 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": null,
-  "attribute": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null,
-    "attrId": "41",
-    "attrName": "order_type_code",
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null
-  },
-  "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
-  "valueCheck": [
-    "1",
-    "2"
-  ],
-  "rangeCheck": {},
-  "dataTypeCheck": "",
-  "dateFormatCheck": null,
-  "customFormatCheck": null,
-  "lengthCheck": {},
-  "refIntegrityCheck": null,
-  "filterInfo": null,
-  "userInfo": null,
-  "thresholdInfo": {
-    "low": "25",
-    "medium": "50",
-    "high": "75",
-    "type": "PERCENTAGE"
-  },
-  "domainCheck": null,
-  "blankSpaceCheck": null,
-  "expressionCheck": null,
-  "caseCheck": null,
-  "abortCondition": null
+	"uuid" : "7e75ef14-4888-41ef-b419-8b8eeb35c29d",
+	"version" : "1553032751",
+	"name" : "dq_equity_orders_rule6",
+	"desc" : "Order Type cannot be blank and must be one of the following - Market, Limit, Stop, Stop Limit",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : null,
+	"attribute" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : null,
+			"name" : "equity_orders"
+		},
+		"value" : null,
+		"attrId" : "41",
+		"attrName" : "order_type_code",
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : null,
+			"name" : "equity_orders"
+		},
+		"value" : null
+	},
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [
+		"1",
+		"2"
+	],
+	"rangeCheck" : {
+		
+	},
+	"dataTypeCheck" : "",
+	"dateFormatCheck" : null,
+	"customFormatCheck" : null,
+	"lengthCheck" : {
+		
+	},
+	"refIntegrityCheck" : null,
+	"filterInfo" : null,
+	"userInfo" : null,
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	},
+	"domainCheck" : null,
+	"blankSpaceCheck" : null,
+	"expressionCheck" : null,
+	"caseCheck" : null,
+	"abortCondition" : null,
+	"displyName" : "dqr_security_rule5"
 }

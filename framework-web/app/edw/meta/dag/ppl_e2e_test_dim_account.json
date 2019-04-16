@@ -1,212 +1,231 @@
 {
-  "uuid": "cc2eba63-9205-4da3-afa7-fa1657bddd74",
-  "version": "1522501621",
-  "name": "ppl_e2e_test_dim_account",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
-      },
-      "value": null
-    }
-  ],
-  "xPos" : 10.0,
-  "yPos" : 250.0,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "a8c8ecc1-fd82-4ae7-98ea-7fb2b622596e",
-          "dependsOn": [],
-          "name": "dqr_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [{
-                "ref": {
-                  "type": "dq",
-                  "uuid": "15d9baaf-a35f-4c95-b7e4-e5070175428c",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 550.0,
-          "yPos" : 140.0,
-          "active" : "Y",
-
-          "statusList": []
-        },
-        {
-          "taskId": "b4ba906f-d6bd-4fbd-b4b0-36422c6c8a1f",
-          "dependsOn": [],
-          "name": "profile_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo":[ {
-                "ref": {
-                  "type": "profile",
-                  "uuid": "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 550.0,
-          "yPos" : 340.0,
-          "active" : "Y",
-
-          "statusList": []
-        },
-        {
-          "taskId": "29df9572-d71f-4d7a-8f08-15b53b103508",
-          "dependsOn": [
-            "a8c8ecc1-fd82-4ae7-98ea-7fb2b622596e",
-            "b4ba906f-d6bd-4fbd-b4b0-36422c6c8a1f"
-          ],
-          "name": "map_dim_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [{
-                "ref": {
-                  "type": "map",
-                  "uuid": "ec398401-8495-419f-bde7-76db137f3088",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 780.0,
-          "yPos" : 240.0,
-          "active" : "Y",
-
-          "statusList": []
-        },
-        {
-          "taskId": "5c4020f8-3130-496e-9bdc-304df922ccbd",
-          "dependsOn": [
-            "29df9572-d71f-4d7a-8f08-15b53b103508"
-          ],
-          "name": "dqr_dim_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo":[ {
-                "ref": {
-                  "type": "dq",
-                  "uuid": "5280a21c-bf60-4ef7-a32e-474fdc7ea991",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 1100.0,
-          "yPos" : 90.0,
-          "active" : "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "a6407c43-b52d-4faa-aeba-5359d8856fb0",
-          "dependsOn": [
-            "29df9572-d71f-4d7a-8f08-15b53b103508"
-          ],
-          "name": "profile_dim_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [{
-                "ref": {
-                  "type": "profile",
-                  "uuid": "cc61a658-528f-4ebe-9c34-826c41ef72aa",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 1160.0,
-          "yPos" : 240.0,
-          "active" : "Y",
-
-          "statusList": []
-        },
-        {
-          "taskId": "3d662324-9beb-435e-b004-c8e316ed9014",
-          "dependsOn": [
-            "29df9572-d71f-4d7a-8f08-15b53b103508"
-          ],
-          "name": "recon_dim_account",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [{
-                "ref": {
-                  "type": "recon",
-                  "uuid": "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
-                  "version": null
-                },
-                "value": null
-              }],
-              "operatorParams": {}
-            }
-          ],
-          "xPos" : 1090.0,
-          "yPos" : 390.0,
-          "active" : "Y",
-
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos" : 310.0,
-      "yPos" : 250.0,
-      "active" : "Y",
-
-      "statusList": []
-    }
-  ],
-  "statusList": []
+	"uuid" : "cc2eba63-9205-4da3-afa7-fa1657bddd74",
+	"version" : "1522501621",
+	"name" : "ppl_e2e_test_dim_account",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 10,
+	"yPos" : 250,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "a8c8ecc1-fd82-4ae7-98ea-7fb2b622596e",
+					"dependsOn" : [ ],
+					"name" : "dqr_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dq",
+										"uuid" : "15d9baaf-a35f-4c95-b7e4-e5070175428c",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 550,
+					"yPos" : 140,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "b4ba906f-d6bd-4fbd-b4b0-36422c6c8a1f",
+					"dependsOn" : [ ],
+					"name" : "profile_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "profile",
+										"uuid" : "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 550,
+					"yPos" : 340,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "29df9572-d71f-4d7a-8f08-15b53b103508",
+					"dependsOn" : [
+						"a8c8ecc1-fd82-4ae7-98ea-7fb2b622596e",
+						"b4ba906f-d6bd-4fbd-b4b0-36422c6c8a1f"
+					],
+					"name" : "map_dim_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "ec398401-8495-419f-bde7-76db137f3088",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 780,
+					"yPos" : 240,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "5c4020f8-3130-496e-9bdc-304df922ccbd",
+					"dependsOn" : [
+						"29df9572-d71f-4d7a-8f08-15b53b103508"
+					],
+					"name" : "dqr_dim_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dq",
+										"uuid" : "5280a21c-bf60-4ef7-a32e-474fdc7ea991",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1100,
+					"yPos" : 90,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "a6407c43-b52d-4faa-aeba-5359d8856fb0",
+					"dependsOn" : [
+						"29df9572-d71f-4d7a-8f08-15b53b103508"
+					],
+					"name" : "profile_dim_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "profile",
+										"uuid" : "cc61a658-528f-4ebe-9c34-826c41ef72aa",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1160,
+					"yPos" : 240,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "3d662324-9beb-435e-b004-c8e316ed9014",
+					"dependsOn" : [
+						"29df9572-d71f-4d7a-8f08-15b53b103508"
+					],
+					"name" : "recon_dim_account",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "recon",
+										"uuid" : "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
+										"version" : null
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1090,
+					"yPos" : 390,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 310,
+			"yPos" : 250,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"displyName" : "ppl_e2e_exec"
 }

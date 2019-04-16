@@ -1,460 +1,459 @@
 {
-  "uuid": "ca17a407-d34e-46ff-b285-7885ae4e989b",
-  "version": "1534034667",
-  "name": "ppl_industry_factor_simulation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 20:44:27 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 30,
-  "yPos": 330,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "8a8808ae-3c54-4faa-bb87-375c43bcea40",
-          "dependsOn": [],
-          "name": "Industry Factor SImulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197d",
-                    "version": null,
-                    "name": "Generate Data"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "distribution",
-                      "paramType": "distribution",
-                      "paramValue": {
-                        "ref": {
-                          "type": "distribution",
-                          "uuid": "aea101dd-fb99-45c8-a4af-c753e457f050",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "numIterations",
-                      "paramType": "integer",
-                      "paramValue": {
-                        "ref": {
-                          "type": "simple",
-                          "uuid": null,
-                          "version": null,
-                          "name": null
-                        },
-                        "value": "1000"
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f7",
-                        "version": "1525519035",
-                        "name": "paramlist_generate_data"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "factorMeans",
-                      "paramType": "attribute",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "feb19724-f34b-4819-a4da-fa5c66cdb39c",
-                            "version": null,
-                            "name": "ds_industry_factor_mean"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "mean",
-                          "attrType": null
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
-                        "version": "1523604347",
-                        "name": "paramlist_multivariate_normal_distribution"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "factorCovariance",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "dataset",
-                            "uuid": "4f900588-15ef-4b3f-a295-b12160712594",
-                            "version": null,
-                            "name": "ds_industry_factor_correlation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
-                        }
-                      ]
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 330,
-          "yPos": 330,
-          "active" : "Y",
-  
-          "statusList": []
-        },
-        {
-          "taskId": "af6342de-5ac8-4a39-a6de-127116404c9b",
-          "dependsOn": [
-            "8a8808ae-3c54-4faa-bb87-375c43bcea40"
-          ],
-          "name": "map_industry_factor_simulation",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "29799c2b-f7bf-4a6f-b97c-9d1842d8fa73",
-                    "version": null,
-                    "name": "map_industry_factor_simulation"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 530,
-          "yPos": 330,
-          "active" : "Y",
-  
-          "statusList": []
-        },
-        {
-          "taskId": "de9b32cd-1815-46c7-b332-a1746d011383",
-          "dependsOn": [
-            "af6342de-5ac8-4a39-a6de-127116404c9b"
-          ],
-          "name": "Transpose Industry Factors",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "operator",
-                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
-                    "version": null,
-                    "name": "Transpose"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "0",
-                      "paramName": "sourceDatapod",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "1",
-                          "attrName": "factor1",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "2",
-                          "attrName": "factor2",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "3",
-                          "attrName": "factor3",
-                          "attrType": "double"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "4",
-                          "attrName": "factor4",
-                          "attrType": "double"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "1",
-                      "paramName": "key",
-                      "paramType": "attributes",
-                      "paramValue": null,
-                      "attributeInfo": [
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "0",
-                          "attrName": "iteration_id",
-                          "attrType": "integer"
-                        },
-                        {
-                          "ref": {
-                            "type": "datapod",
-                            "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-                            "version": null,
-                            "name": "industry_factor_simulation"
-                          },
-                          "value": null,
-                          "attrId": "5",
-                          "attrName": "reporting_date",
-                          "attrType": "string"
-                        }
-                      ]
-                    },
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "1f21db3e-7009-45af-bca0-5559f8b29e21",
-                        "version": "1525530897",
-                        "name": "paramlist_transpose"
-                      },
-                      "value": null,
-                      "paramId": "2",
-                      "paramName": "saveLocation",
-                      "paramType": "datapod",
-                      "paramValue": {
-                        "ref": {
-                          "type": "datapod",
-                          "uuid": "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
-                          "version": null,
-                          "name": null
-                        },
-                        "value": null
-                      },
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 730,
-          "yPos": 330,
-          "active" : "Y",
-  
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos": 170,
-      "yPos": 330,
-      "active" : "Y",
-  
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
-      "version": null,
-      "name": "paramlist_ecocap_pipelines"
-    },
-    "value": null
-  }
+	"uuid" : "ca17a407-d34e-46ff-b285-7885ae4e989b",
+	"version" : "1534034667",
+	"name" : "ppl_industry_factor_simulation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 30,
+	"yPos" : 330,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "8a8808ae-3c54-4faa-bb87-375c43bcea40",
+					"dependsOn" : [ ],
+					"name" : "Industry Factor SImulation",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "operator",
+										"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197d",
+										"version" : null,
+										"name" : "Generate Data"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
+												"version" : "1525519035",
+												"name" : "paramlist_generate_data"
+											},
+											"value" : null,
+											"paramId" : "0",
+											"paramName" : "distribution",
+											"paramType" : "distribution",
+											"paramValue" : {
+												"ref" : {
+													"type" : "distribution",
+													"uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
+													"version" : null,
+													"name" : null
+												},
+												"value" : null
+											},
+											"attributeInfo" : null
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
+												"version" : "1525519035",
+												"name" : "paramlist_generate_data"
+											},
+											"value" : null,
+											"paramId" : "1",
+											"paramName" : "numIterations",
+											"paramType" : "integer",
+											"paramValue" : {
+												"ref" : {
+													"type" : "simple",
+													"uuid" : null,
+													"version" : null,
+													"name" : null
+												},
+												"value" : "1000"
+											},
+											"attributeInfo" : null
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f7",
+												"version" : "1525519035",
+												"name" : "paramlist_generate_data"
+											},
+											"value" : null,
+											"paramId" : "2",
+											"paramName" : "saveLocation",
+											"paramType" : "datapod",
+											"paramValue" : {
+												"ref" : {
+													"type" : "datapod",
+													"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfce",
+													"version" : null,
+													"name" : null
+												},
+												"value" : null
+											},
+											"attributeInfo" : null
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+												"version" : "1523604347",
+												"name" : "paramlist_multivariate_normal_distribution"
+											},
+											"value" : null,
+											"paramId" : "1",
+											"paramName" : "factorMeans",
+											"paramType" : "attribute",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "feb19724-f34b-4819-a4da-fa5c66cdb39c",
+														"version" : null,
+														"name" : "ds_industry_factor_mean"
+													},
+													"value" : null,
+													"attrId" : "1",
+													"attrName" : "mean",
+													"attrType" : null
+												}
+											]
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "a465d835-cbd7-4780-acb2-eabb46c6c9a4",
+												"version" : "1523604347",
+												"name" : "paramlist_multivariate_normal_distribution"
+											},
+											"value" : null,
+											"paramId" : "2",
+											"paramName" : "factorCovariance",
+											"paramType" : "attributes",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "4f900588-15ef-4b3f-a295-b12160712594",
+														"version" : null,
+														"name" : "ds_industry_factor_correlation"
+													},
+													"value" : null,
+													"attrId" : "1",
+													"attrName" : "factor1",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "4f900588-15ef-4b3f-a295-b12160712594",
+														"version" : null,
+														"name" : "ds_industry_factor_correlation"
+													},
+													"value" : null,
+													"attrId" : "2",
+													"attrName" : "factor2",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "4f900588-15ef-4b3f-a295-b12160712594",
+														"version" : null,
+														"name" : "ds_industry_factor_correlation"
+													},
+													"value" : null,
+													"attrId" : "3",
+													"attrName" : "factor3",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "dataset",
+														"uuid" : "4f900588-15ef-4b3f-a295-b12160712594",
+														"version" : null,
+														"name" : "ds_industry_factor_correlation"
+													},
+													"value" : null,
+													"attrId" : "4",
+													"attrName" : "factor4",
+													"attrType" : "double"
+												}
+											]
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 330,
+					"yPos" : 330,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "af6342de-5ac8-4a39-a6de-127116404c9b",
+					"dependsOn" : [
+						"8a8808ae-3c54-4faa-bb87-375c43bcea40"
+					],
+					"name" : "map_industry_factor_simulation",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "29799c2b-f7bf-4a6f-b97c-9d1842d8fa73",
+										"version" : null,
+										"name" : "map_industry_factor_simulation"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 530,
+					"yPos" : 330,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "de9b32cd-1815-46c7-b332-a1746d011383",
+					"dependsOn" : [
+						"af6342de-5ac8-4a39-a6de-127116404c9b"
+					],
+					"name" : "Transpose Industry Factors",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "operator",
+										"uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f8a",
+										"version" : null,
+										"name" : "Transpose"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "0",
+											"paramName" : "sourceDatapod",
+											"paramType" : "attributes",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "1",
+													"attrName" : "factor1",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "2",
+													"attrName" : "factor2",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "3",
+													"attrName" : "factor3",
+													"attrType" : "double"
+												},
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "4",
+													"attrName" : "factor4",
+													"attrType" : "double"
+												}
+											]
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "1",
+											"paramName" : "key",
+											"paramType" : "attributes",
+											"paramValue" : null,
+											"attributeInfo" : [
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "0",
+													"attrName" : "iteration_id",
+													"attrType" : "integer"
+												},
+												{
+													"ref" : {
+														"type" : "datapod",
+														"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+														"version" : null,
+														"name" : "industry_factor_simulation"
+													},
+													"value" : null,
+													"attrId" : "5",
+													"attrName" : "reporting_date",
+													"attrType" : "string"
+												}
+											]
+										},
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e21",
+												"version" : "1525530897",
+												"name" : "paramlist_transpose"
+											},
+											"value" : null,
+											"paramId" : "2",
+											"paramName" : "saveLocation",
+											"paramType" : "datapod",
+											"paramValue" : {
+												"ref" : {
+													"type" : "datapod",
+													"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee",
+													"version" : null,
+													"name" : null
+												},
+												"value" : null
+											},
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 730,
+					"yPos" : 330,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 170,
+			"yPos" : 330,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
+			"version" : null,
+			"name" : "paramlist_ecocap_pipelines"
+		},
+		"value" : null
+	},
+	"displyName" : "ppl_e2e_exec"
 }
