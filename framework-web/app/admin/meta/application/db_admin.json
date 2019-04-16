@@ -38,15 +38,8 @@
     },
     "value": null
   },
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "bcac2921-ee7b-4d1f-a1da-f7eeb9424d51",
-      "version": null,
-      "name": "paramlist_Deutsche Admin"
-    },
-    "value": null
-  },
+       "paramList" : null,
+
   "deployPort": "5001",
   "orgInfo": {
     "ref": {

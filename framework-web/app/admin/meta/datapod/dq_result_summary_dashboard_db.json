@@ -214,26 +214,24 @@
     "name" : "dq_result_summary_dashboard",
     "createdBy" : {
         "ref" : {
-            "type" : "user",
-            "uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-            "version" : "1548315952",
-            "name" : "db_admin"
+          "type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
         }
     },
     "createdOn" : ISODate("2019-04-03T20:14:53.844Z"),
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-                "version" : "1552267311",
-                "name" : "Deutsche Admin"
-            }
-        }
-    ],
-    "publicFlag" : "N",
+   "appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+    "publicFlag" : "Y",
   "prefix":"drs"
 }

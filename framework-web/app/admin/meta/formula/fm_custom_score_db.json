@@ -1,18 +1,19 @@
 {
-  "uuid": "ebaf51cd-0052-41c7-974d-0e2cbf7c5084",
-  "version": "1555320060",
-  "name": "fm_dq_stats",
+  "uuid": "16a26371-b685-44c6-b7b0-1ef93a4b3951",
+  "version": "1555401353",
+  "name": "fm_custom_score_db",
+  "displayName": null,
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": "1464977196",
+      "name": "admin"
     },
     "value": null
   },
-  "createdOn": "Mon Apr 15 14:51:00 IST 2019",
+  "createdOn": "Tue Apr 16 13:25:53 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -21,14 +22,14 @@
     {
       "ref": {
         "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1554235031",
-        "name": "Deutsche Admin"
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
       },
       "value": null
     }
   ],
-  "publicFlag": "Y",
+  "publicFlag": "N",
   "dependsOn": {
     "ref": {
       "type": "datapod",
@@ -42,9 +43,9 @@
     {
       "ref": {
         "type": "function",
-        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002695",
+        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
         "version": null,
-        "name": "date_sub"
+        "name": "avg"
       },
       "attributeId": null,
       "value": null,
@@ -65,38 +66,14 @@
     },
     {
       "ref": {
-        "type": "function",
-        "uuid": "6982226d-fa00-4b21-90e4-6b0af83b707d",
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
         "version": null,
-        "name": "now"
+        "name": "dq_result_summary"
       },
-      "attributeId": null,
+      "attributeId": 42,
       "value": null,
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": ",",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "paramlist",
-        "uuid": "bcac2921-ee7b-4d1f-a1da-f7eeb9424d51",
-        "version": null,
-        "name": "paramlist_Deutsche Admin"
-      },
-      "attributeId": 0,
-      "value": null,
-      "attributeName": "numdays",
+      "attributeName": "custom_score",
       "attributeType": null
     },
     {
@@ -112,5 +89,5 @@
       "attributeType": null
     }
   ],
-  "formulaType": "custom"
+  "formulaType": "aggr"
 }

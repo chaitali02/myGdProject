@@ -1209,15 +1209,26 @@ public class DataQualServiceImpl extends RuleTemplate {
 			throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> data = new ArrayList<>();
+		List<ParamListHolder> holders = new ArrayList<>();
+		String datasetUuid = null;
 		Map<String, String> paramValMap = new HashMap<String, String>();
 		StringBuilder outerSqlBulider = new StringBuilder();
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ExecParams execParams = new ExecParams();
-		String datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
-		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
+		StringBuilder groupByBulider = new StringBuilder();
+		groupByBulider.append("group by  custom_score, accuracy_score , timeliness_score");
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
 				MetaType.datapod.toString(), "N");
+		Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ExecParams execParams = new ExecParams();
+		if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
+			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
+		else
+			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
+
+		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
+
 		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
+		paramValMap.put("numDays", period);
 		ParamListHolder paramListHolder = new ParamListHolder();
 
 		paramListHolder.setParamId("1");
@@ -1229,20 +1240,24 @@ public class DataQualServiceImpl extends RuleTemplate {
 		if (period.equalsIgnoreCase("all")) {
 			dataset.setFilterInfo(null);
 		} else {
-			execParams.setParamListHolder(paramListHolder);
+			// execParams.setParamListHolder(paramListHolder);
+			holders.add(paramListHolder);
+			execParams.setParamListInfo(holders);
 		}
 
 		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
 				paramValMap);
 
+		//String tableName = commonServiceImpl.getTableNameBySource(dataset, RunMode.ONLINE);
+
 		String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid()
 				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";
 
 		sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
-
-		if (!period.equalsIgnoreCase("all"))
-				sql = sql.replace("30", period);
-			
+	//	sql = sql.replace(" LIMIT 1", groupByBulider + " LIMIT 1");
+		/*
+		 * if (!period.equalsIgnoreCase("all")) sql = sql.replace("30", period);
+		 */
 
 		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
 				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)

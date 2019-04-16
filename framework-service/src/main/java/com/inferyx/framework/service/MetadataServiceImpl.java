@@ -1585,7 +1585,9 @@ public class MetadataServiceImpl {
 				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				Application application = commonServiceImpl.getApp(); 
 //				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
-				ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
+				ParamList appParamList =null;
+				if(application.getParamList()!=null)
+				 appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
 				
 				String paramName = null;
 				com.inferyx.framework.domain.Param param = null;
@@ -1596,6 +1598,17 @@ public class MetadataServiceImpl {
 						break;
 					}
 				}
+				
+				//added by vaibhav
+				if( execParams.getParamListInfo()!=null)
+				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+					if (paramListHolder.getParamName().equals(paramName)) {
+						paramValMap.put(paramName, paramListHolder.getParamValue().getValue());
+						return paramListHolder.getParamValue().getValue();
+					}
+				}
+				
+				
 				if(appParamList!=null)
 				for(Param param2 : appParamList.getParams()) {
 					if((StringUtils.isBlank(paramName) && param2.getParamId().equalsIgnoreCase(attributeId.toString())) 
@@ -1606,12 +1619,12 @@ public class MetadataServiceImpl {
 					}
 				}
 				
-				for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
+				/*for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 					if (paramListHolder.getParamName().equals(paramName)) {
 						paramValMap.put(paramName, paramListHolder.getParamValue().getValue());
 						return paramListHolder.getParamValue().getValue();
 					}
-				}
+				}*/
 				
 				if (param != null && param.getParamValue() != null) {
 					paramValMap.put(param.getParamName(), param.getParamValue().getValue());

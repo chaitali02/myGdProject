@@ -1,5 +1,5 @@
 {
-    "params" : [ 
+   "params" : [ 
         {
             "paramId" : "0",
             "paramName" : "numDays",
@@ -16,9 +16,9 @@
     ],
     "paramListType" : "application",
     "templateFlg" : "Y",
-    "uuid" : "bcac2921-ee7b-4d1f-a1da-f7eeb9424d51",
-    "version" : "1555327645",
-    "name" : "paramlist_Deutsche Admin",
+    "uuid" : "dc3e0cc9-8954-4285-bcea-9bc140592c67",
+    "version" : "1555404278",
+    "name" : "paramlist_Administration",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -27,7 +27,7 @@
             "name" : "admin"
         }
     },
-    "createdOn" : ISODate("2019-04-15T11:27:25.000Z"),
+    "createdOn" : ISODate("2019-04-16T08:44:38.000Z"),
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
@@ -40,5 +40,5 @@
             }
         }
     ],
-    "publicFlag" : "N"
+    "publicFlag" : "Y"
 }

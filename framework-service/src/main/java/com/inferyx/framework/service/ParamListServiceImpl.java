@@ -12,6 +12,8 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -84,6 +86,17 @@ public class ParamListServiceImpl {
 			}*/
 		}
 		
+		
+		List<ParamListHolder> paramListHolders=execParams.getParamListInfo();
+		
+		
+	for(ParamListHolder holder:paramListHolders) {
+		if(ref.getUuid().equalsIgnoreCase(holder.getRef().getUuid()))
+		if(holder.getParamId().equalsIgnoreCase(attributeId.toString())) {
+			return holder.getParamValue().getValue();
+		}
+	}
+		
 		// Get param from ref
 		for (com.inferyx.framework.domain.Param param : paramListRef.getParams()) {
 			if (param.getParamId().equalsIgnoreCase(attributeId.toString())) {
@@ -94,7 +107,12 @@ public class ParamListServiceImpl {
 					refParamValue = param.getParamValue().getValue();
 				}
 			}
-		}	
+		}
+		
+			
+		
+		
+		
 		
 		logger.info("Param name : " + paramName);
 		logger.info("Param value : " + refParamValue);

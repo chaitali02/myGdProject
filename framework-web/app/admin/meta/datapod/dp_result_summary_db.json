@@ -374,22 +374,24 @@
 	"desc": "Profile Results",
 	"createdBy": {
 		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+		"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
 			"version": "1464977196",
-			"name": "ypalrecha"
+			"name": "admin"
 		}
 	},
 	"createdOn": ISODate("2018-12-11T19:40:15.000Z"),
 	"tags": [],
 	"active": "Y",
 	"locked": "N",
-	"published": "N",
-	"appInfo": [
+	"published": "N",   
+	"publicFlag" : "Y",
+	
+  "appInfo": [
 		{
 			"ref": {
 				"type": "application",
-				"uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81"
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		}
 	],

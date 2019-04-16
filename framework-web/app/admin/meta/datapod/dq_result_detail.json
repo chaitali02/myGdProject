@@ -469,10 +469,10 @@
     "name" : "dq_result_detail",
     "createdBy" : {
         "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
+          "type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
         }
     },
     "createdOn" : ISODate("2019-03-31T20:48:03.000Z"),
