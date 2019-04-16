@@ -4058,6 +4058,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @throws IOException 
 	 */
 	public ResultSetHolder executeAndRegisterByTempTable(String sql, String tempTableName, boolean registerTempTable, String appUuid) throws IOException {
+		logger.info("executing sql: "+sql);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
