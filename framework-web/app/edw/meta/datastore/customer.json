@@ -1,0 +1,46 @@
+{
+	"metaId": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+			"version": "1488620888"
+		}
+	},
+	"execId": {
+		"ref": {
+			"type": "loadExec",
+			"uuid": "f83e0f50-cdfe-45bf-b9b0-9bb230570e54",
+			"version": "1490392505"
+		}
+	},
+	"location": "/1b905436-3237-4dac-8093-8ceab5403752/1488620888/1538740101",
+	"numRows": {
+		"$numberLong": "50"
+	},
+        "runMode" : "BATCH",
+	"uuid": "01fc160f-8879-43b4-adcd-782b1d79601f",
+	"version": "1490392505",
+	"name": "1b905436_3237_4dac_8093_8ceab5403752_1488620888_1490392504",
+	"desc": "Creating datastore for 1b905436_3237_4dac_8093_8ceab5403752_1488620888_1490392504",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+    
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active" : "Y",
+    "locked" : "N",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	],
+	"displyName" : "1b905436_3237_4dac_8093_8ceab5403752_1488620888_1490392504"
+}
