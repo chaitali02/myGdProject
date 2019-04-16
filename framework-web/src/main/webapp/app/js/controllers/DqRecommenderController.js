@@ -468,9 +468,10 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			if(response && response.intelligenceResult && response.intelligenceResult.length){
 				for(var i=0;i<response.intelligenceResult.length;i++){
 					var intelligenceResult={};
+					intelligenceResult.attributeName=response.intelligenceResult[i].attributeName;
 					intelligenceResult.attributeNameValue="-NA-";
 					if(response.intelligenceResult[i].attributeName !=null){
-						intelligenceResult.attributeNameValue=response.intelligenceResult[i].attributeName;
+						intelligenceResult.attributeNameValue=response.intelligenceResult[i].attributeName.attrName;
 					}
 					intelligenceResult.checkType=response.intelligenceResult[i].checkType;
 					intelligenceResult.checkValue=response.intelligenceResult[i].checkValue;
