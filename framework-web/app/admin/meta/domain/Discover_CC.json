@@ -2,7 +2,7 @@
     "regEx" : "^6(?:011|5[0-9]{2})[0-9]{12}$",
     "uuid" : "a182885b-11e6-4293-9e7f-17dd12fed028",
     "version" : "1554885274",
-    "name" : "Discover_CC",
+    "name" : "DISCOVER_CC",
     "desc" : "Discover Credit Card",
     "createdBy" : {
         "ref" : {

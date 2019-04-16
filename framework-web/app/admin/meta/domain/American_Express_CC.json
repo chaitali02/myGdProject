@@ -2,7 +2,7 @@
     "regEx" : "^3[47][0-9]{13}$",
     "uuid" : "8637a4f5-3df0-4c7b-ac22-29585801fc1b",
     "version" : "1554885180",
-    "name" : "American_Express_CC",
+    "name" : "AMERICAN_EXPRESS_CC",
     "desc" : "American_Express Credit Card",
     "createdBy" : {
         "ref" : {

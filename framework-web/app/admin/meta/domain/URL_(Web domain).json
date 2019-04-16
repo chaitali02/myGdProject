@@ -2,8 +2,8 @@
     "regEx" : "https?\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,}",
     "uuid" : "bd1f4805-d2d8-4102-b9db-419ea7144475",
     "version" : "1554972309",
-    "name" : "URL_(Web domain)",
-    "desc" : "URL (Web domain)",
+    "name" : "URL_(WEB DOMAIN)",
+    "desc" : "URL (Web Domain)",
     "createdBy" : {
         "ref" : {
             "type" : "user",

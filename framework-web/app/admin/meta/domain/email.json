@@ -2,7 +2,7 @@
 	    "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d754",
 	    "version" : "1552160296",
 	    "name" : "EMAIL",
-	    "desc" : "Email Address like joe@aol.com | ssmith@aspalliance.com | a@b.cc",
+	    "desc" : "Email Address Like joe@aol.com | ssmith@aspalliance.com | a@b.cc",
 	    "active" : "Y",
 	    "appInfo" : [ 
 	       {

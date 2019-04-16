@@ -2,7 +2,7 @@
     "regEx" : "^3(?:0[0-5]|[68][0-9])[0-9]{11}$",
     "uuid" : "875834ac-c9b1-4cb3-8cb0-d5272602d478",
     "version" : "1554885230",
-    "name" : "Diners_Club_CC",
+    "name" : "DINERS_CLUB_CC",
     "desc" : "Diners_Club Credit Card",
     "createdBy" : {
         "ref" : {
