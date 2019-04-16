@@ -12,6 +12,8 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -83,18 +85,34 @@ public class ParamListServiceImpl {
 				paramListHolder = null;
 			}*/
 		}
+	
 		
+		
+		// code added by vaibhav
+		if (execParams!=null && execParams.getParamListInfo() != null && execParams.getParamListInfo().size() >= 0)
+			for (ParamListHolder holder : execParams.getParamListInfo()) {
+				if (ref.getUuid().equalsIgnoreCase(holder.getRef().getUuid()))
+					if (holder.getParamId().equalsIgnoreCase(attributeId.toString())) {
+						return holder.getParamValue().getValue();
+					}
+			}
+
 		// Get param from ref
 		for (com.inferyx.framework.domain.Param param : paramListRef.getParams()) {
 			if (param.getParamId().equalsIgnoreCase(attributeId.toString())) {
-				if (paramListHolder == null && appParamList == null) {
+				 if (paramListHolder == null && appParamList == null) {
 					return param.getParamValue().getValue();	// Nothing in execParams. Send from ref
 				} else {	// ExecParams has data. Wait and watch
 					paramName = param.getParamName();
 					refParamValue = param.getParamValue().getValue();
 				}
 			}
-		}	
+		}
+		
+			
+		
+		
+		
 		
 		logger.info("Param name : " + paramName);
 		logger.info("Param value : " + refParamValue);

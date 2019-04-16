@@ -1,18 +1,18 @@
 {
   "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-  "version": "1554235031",
+  "version": "1555328759",
   "name": "Deutsche Admin",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
-      "version": "1464977196",
-      "name": "admin"
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
     },
     "value": null
   },
-  "createdOn": "Tue Apr 02 15:57:11 EDT 2019",
+  "createdOn": "Mon Apr 15 17:15:59 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -21,9 +21,9 @@
     {
       "ref": {
         "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-        "version": "1464977196",
-        "name": "Administration"
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1554235031",
+        "name": "Deutsche Admin"
       },
       "value": null
     }
@@ -38,15 +38,8 @@
     },
     "value": null
   },
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "4bc0c430-a49d-4ef1-be85-ad3c0e2457ec",
-      "version": null,
-      "name": "paramlist_Deutsche Admin"
-    },
-    "value": null
-  },
+       "paramList" : null,
+
   "deployPort": "5001",
   "orgInfo": {
     "ref": {

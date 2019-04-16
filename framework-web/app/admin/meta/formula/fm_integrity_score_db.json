@@ -1,7 +1,7 @@
 {
-	"uuid": "4bd81d9c-1871-4359-a17b-5c7a53de30b3",
-	"version": "1555073263",
-	"name": "fm_consistency_score_file",
+	"uuid": "7dc17f5d-b5c7-4f10-bf70-b1292e052c71",
+	"version": "1555073618",
+	"name": "fm_integrity_score_db",
 	"desc": null,
 	"createdBy": {
 		"ref": {
@@ -12,7 +12,7 @@
 		},
 		"value": null
 	},
-	"createdOn": "Fri Apr 12 18:17:43 IST 2019",
+	"createdOn": "Fri Apr 12 18:23:38 IST 2019",
 	"tags": [],
 	"active": "Y",
 	"locked": "N",
@@ -32,7 +32,7 @@
 	"dependsOn": {
 		"ref": {
 			"type": "datapod",
-			"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+			"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
 			"version": null,
 			"name": "dq_result_summary"
 		},
@@ -65,14 +65,26 @@
 		},
 		{
 			"ref": {
+				"type": "simple",
+				"uuid": null,
+				"version": null,
+				"name": null
+			},
+			"attributeId": null,
+			"value": "(",
+			"attributeName": null,
+			"attributeType": null
+		},
+		{
+			"ref": {
 				"type": "datapod",
-				"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+				"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
 				"version": null,
 				"name": "dq_result_summary"
 			},
-			"attributeId": 21,
+			"attributeId": 36,
 			"value": null,
-			"attributeName": "value_score",
+			"attributeName": "refint_score",
 			"attributeType": null
 		},
 		{
@@ -90,13 +102,25 @@
 		{
 			"ref": {
 				"type": "datapod",
-				"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+				"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
 				"version": null,
 				"name": "dq_result_summary"
 			},
-			"attributeId": 54,
+			"attributeId": 39,
 			"value": null,
-			"attributeName": "case_score",
+			"attributeName": "dup_score",
+			"attributeType": null
+		},
+		{
+			"ref": {
+				"type": "simple",
+				"uuid": null,
+				"version": null,
+				"name": null
+			},
+			"attributeId": null,
+			"value": ")",
+			"attributeName": null,
 			"attributeType": null
 		},
 		{

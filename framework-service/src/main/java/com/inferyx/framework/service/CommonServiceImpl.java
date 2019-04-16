@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -5430,5 +5431,11 @@ public class CommonServiceImpl<T> {
 		}
 		return objectKeyList;
 	}
+	
+	public  String getCurrentTimeStampByFormat() {
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		return formatter.format(new Date());
+	}
+
 
 }

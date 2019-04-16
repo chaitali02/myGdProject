@@ -1,0 +1,47 @@
+{
+  "uuid": "6982226d-fa00-4b21-90e4-6b0af83b707d",
+  "version": "1555328256",
+  "name": "now",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Apr 15 17:07:36 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1554235031",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "inputReq": "N",
+  "functionInfo": [
+    {
+      "name": "now()",
+      "type": "mysql",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "from_unixtime(unix_timestamp())",
+      "type": "file",
+      "paramInfoHolder": []
+    }
+  ],
+  "category": "DATE",
+  "returnType": "DATE"
+}

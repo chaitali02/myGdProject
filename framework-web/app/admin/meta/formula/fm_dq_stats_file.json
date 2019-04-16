@@ -1,29 +1,31 @@
 {
-  "uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec09c",
-  "version": "1555072596",
-  "name": "fm_completeness_score_file",
+  "uuid": "ebaf51cd-0052-41c7-974d-0e2cbf7c5084",
+  "version": "1555320060",
+  "name": "fm_dq_stats_file",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
     },
     "value": null
   },
-  "createdOn": "Fri Apr 12 18:06:36 IST 2019",
+  "createdOn": "Mon Apr 15 14:51:00 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
   "published": "N",
+   "publicFlag" : "Y",
+  
   "appInfo": [
     {
       "ref": {
         "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1548315769",
-        "name": "Enterprise Data Warehouse"
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1554235031",
+        "name": "Deutsche Admin"
       },
       "value": null
     }
@@ -32,26 +34,25 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
       "version": null,
       "name": "dq_result_summary"
     },
     "value": null
   },
   "formulaInfo": [
-        {
+    {
       "ref": {
         "type": "function",
-        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002695",
         "version": null,
-        "name": "avg"
+        "name": "date_sub"
       },
       "attributeId": null,
       "value": null,
       "attributeName": null,
       "attributeType": null
     },
-     
     {
       "ref": {
         "type": "simple",
@@ -66,14 +67,14 @@
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "type": "function",
+        "uuid": "6982226d-fa00-4b21-90e4-6b0af83b707d",
         "version": null,
-        "name": "dq_result_summary"
+        "name": "now"
       },
-      "attributeId": 18,
+      "attributeId": null,
       "value": null,
-      "attributeName": "null_score",
+      "attributeName": null,
       "attributeType": null
     },
     {
@@ -84,47 +85,23 @@
         "name": null
       },
       "attributeId": null,
-      "value": "+",
+      "value": ",",
       "attributeName": null,
       "attributeType": null
     },
     {
       "ref": {
-        "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "type": "paramlist",
+        "uuid": "dc3e0cc9-8954-4285-bcea-9bc140592c67",
         "version": null,
-        "name": "dq_result_summary"
+        "name": "paramlist_Administration"
       },
-      "attributeId": 48,
+      "attributeId": 0,
       "value": null,
-      "attributeName": "blankspace_score",
+      "attributeName": "numdays",
       "attributeType": null
     },
     {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "/",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "2",
-      "attributeName": null,
-      "attributeType": null
-    },
-     {
       "ref": {
         "type": "simple",
         "uuid": null,
@@ -137,5 +114,5 @@
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "custom"
 }

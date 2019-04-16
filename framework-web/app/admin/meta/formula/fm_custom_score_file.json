@@ -1,0 +1,93 @@
+{
+  "uuid": "16a26371-b685-44c6-b7b0-1ef93a4b3953",
+  "version": "1555401353",
+  "name": "fm_custom_score_file",
+  "displayName": null,
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": "1464977196",
+      "name": "admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Apr 16 13:25:53 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": null,
+      "name": "dq_result_summary"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+        "version": null,
+        "name": "avg"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_result_summary"
+      },
+      "attributeId": 42,
+      "value": null,
+      "attributeName": "custom_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
+}

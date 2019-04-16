@@ -230,7 +230,13 @@ public class BaseEntity {
 		return new MetaIdentifierHolder(getRef(type));
 	}	
 	public String getDisplayName() {
-		return displayName;
+		String temp=null;
+		if(displayName ==null) {
+			temp=name;
+		}else {
+			temp=displayName;
+		}
+		return temp;
 	}
 
 	public void setDisplayName(String displayName) {

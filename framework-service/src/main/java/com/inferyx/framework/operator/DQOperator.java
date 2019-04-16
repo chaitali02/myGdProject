@@ -241,7 +241,7 @@ public class DQOperator implements IParsable {
 	private String ORDER_BY = " ORDER BY ";
 	private final String WHERE = " WHERE ";
 	private final String LIMIT = " LIMIT ";
-	private final String CURRENT_DATE = Helper.getCurrentDateByFormat();
+	
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -253,7 +253,7 @@ public class DQOperator implements IParsable {
 	ExpressionOperator expressionOperator;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	
+	//private String CURRENT_DATE = commonServiceImpl.getCurrentTimeStampByFormat();
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 	
 
@@ -316,7 +316,7 @@ public class DQOperator implements IParsable {
 		String select = SELECT
 				.concat(SINGLE_QUOTE).concat(dataQualExec.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULE_EXEC_UUID).concat(COMMA)
 				.concat(dataQualExec.getVersion()).concat(AS).concat(RULE_EXEC_VERSION).concat(COMMA)
-				.concat(SINGLE_QUOTE).concat(CURRENT_DATE + "").concat(SINGLE_QUOTE).concat(AS).concat(RULE_EXEC_TIME).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat(commonServiceImpl.getCurrentTimeStampByFormat() + "").concat(SINGLE_QUOTE).concat(AS).concat(RULE_EXEC_TIME).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULEUUID).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(RULEVERSION).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getName()).concat(SINGLE_QUOTE).concat(AS).concat(RULENAME).concat(COMMA)
@@ -804,7 +804,7 @@ public class DQOperator implements IParsable {
 		StringBuilder sql = new StringBuilder(SELECT)
 											.append(SINGLE_QUOTE).append(dataQualExec.getUuid()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_UUID).append(COMMA)
 											.append(dataQualExec.getVersion()).append(AS).append(RULE_EXEC_VERSION).append(COMMA)
-											.append(SINGLE_QUOTE).append(CURRENT_DATE + "").append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
+											.append(SINGLE_QUOTE).append(commonServiceImpl.getCurrentTimeStampByFormat() + "").append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
 											.append(RULEUUID).append(COMMA)
 											.append(RULEVERSION).append(COMMA)
 											.append(RULENAME).append(COMMA)
@@ -969,7 +969,7 @@ public class DQOperator implements IParsable {
 		StringBuilder select = new StringBuilder(SELECT)
 				  .append(SINGLE_QUOTE).append(dataQualExec.getUuid()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_UUID).append(COMMA)
 				  .append(dataQualExec.getVersion()).append(AS).append(RULE_EXEC_VERSION).append(COMMA)
-				  .append(SINGLE_QUOTE).append(CURRENT_DATE).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
+				  .append(SINGLE_QUOTE).append(commonServiceImpl.getCurrentTimeStampByFormat()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
 				  .append(RULEUUID).append(COMMA)
 				  .append(RULEVERSION).append(COMMA)
 				  .append(RULENAME).append(COMMA)
