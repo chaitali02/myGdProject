@@ -138,10 +138,18 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="predictData.name" required>
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="predictData.name" required ng-Change="onChangeName(predictData.name)">
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Display Name
+                                              <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                              <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                                ng-model="predictData.displayName" placeholder="" required="">
+                                            </div>
+                                        </div>
                                         <div class="form-group" ng-show="predictData.uuid">
                                             <label class="col-md-3 control-label">Version</label>
                                             <div class="col-md-6">

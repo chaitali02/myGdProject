@@ -88,7 +88,11 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		});
 	};
     $scope.getLovByType();
-     
+	
+	$scope.onChangeName = function (data) {
+		$scope.algorithmData.displayName=data;
+	}
+	
     $scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -291,7 +295,8 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		$scope.myform.$dirty = false;
 		var algorithmJson = {}
 		algorithmJson.uuid = $scope.algorithmData.uuid
-		algorithmJson.name = $scope.algorithmData.name
+		algorithmJson.name = $scope.algorithmData.name;
+		algorithmJson.displayName = $scope.algorithmData.displayName;
 		algorithmJson.desc = $scope.algorithmData.desc
 		algorithmJson.active = $scope.algorithmData.active;
 		algorithmJson.locked = $scope.algorithmData.locked;

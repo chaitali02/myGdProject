@@ -82,7 +82,13 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
+
+  $scope.onChangeName = function (data) {
+		$scope.simulateData.displayName=data;
+  }
+  
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -496,8 +502,9 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var SimulateJson = {}
-    SimulateJson.uuid = $scope.simulateData.uuid
-    SimulateJson.name = $scope.simulateData.name
+    SimulateJson.uuid = $scope.simulateData.uuid;
+    SimulateJson.name = $scope.simulateData.name;
+    SimulateJson.displayName = $scope.simulateData.displayName;
     SimulateJson.desc = $scope.simulateData.desc
     SimulateJson.active = $scope.simulateData.active;
     SimulateJson.locked = $scope.simulateData.locked;

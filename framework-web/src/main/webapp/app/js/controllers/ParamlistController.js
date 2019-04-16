@@ -135,7 +135,11 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	};
 
 	$scope.getLovByType();
-	
+
+	$scope.onChangeName = function (data) {
+		$scope.paramlistData.displayName=data;
+	}
+
 	$scope.ValidationKeyPress=function(e){
 		if((e.which <47)|| (e.which > 57)) {
 			 e.preventDefault();
@@ -477,9 +481,10 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
 		var paramlistJson = {}
-		paramlistJson.uuid = $scope.paramlistData.uuid
-		paramlistJson.name = $scope.paramlistData.name
-		paramlistJson.desc = $scope.paramlistData.desc
+		paramlistJson.uuid = $scope.paramlistData.uuid;
+		paramlistJson.name = $scope.paramlistData.name;
+		paramlistJson.displayName = $scope.paramlistData.displayName;
+		paramlistJson.desc = $scope.paramlistData.desc;
 		paramlistJson.active = $scope.paramlistData.active;
 		paramlistJson.locked = $scope.paramlistData.locked;
 		paramlistJson.published = $scope.paramlistData.published;
