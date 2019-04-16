@@ -74,6 +74,12 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.privileges = privilegeSvc.privileges['datasource'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.onChangeName = function (data) {
+		$scope.datasourcedata.displayName=data;
+	}
+
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -275,9 +281,10 @@ AdminModule.controller('MetadataDatasourceController', function (privilegeSvc, C
 		$scope.datasourceHasChanged = true;
 		$scope.myform.$dirty = false;
 		var datasourceJson = {};
-		datasourceJson.uuid = $scope.datasourcedata.uuid
-		datasourceJson.name = $scope.datasourcedata.name
-		datasourceJson.desc = $scope.datasourcedata.desc
+		datasourceJson.uuid = $scope.datasourcedata.uuid;
+		datasourceJson.name = $scope.datasourcedata.name;
+		datasourceJson.displayName = $scope.datasourcedata.displayName;
+		datasourceJson.desc = $scope.datasourcedata.desc;
 		datasourceJson.createdOn = $scope.datasourcedata.createdOn
 		datasourceJson.type = $scope.datasourcetype
 		datasourceJson.port = $scope.datasourcedata.port

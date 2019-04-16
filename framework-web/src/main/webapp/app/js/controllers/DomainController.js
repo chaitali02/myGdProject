@@ -89,6 +89,10 @@ AdminModule.controller('DomainDetailController', function ($state, $scope, $stat
 
 	$scope.getLovByType();
 
+	$scope.onChangeName = function (data) {
+		$scope.domainData.displayName=data;
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -244,9 +248,10 @@ AdminModule.controller('DomainDetailController', function ($state, $scope, $stat
 		$scope.iSSubmitEnable = false;
 		$scope.myform.$dirty = false;
 
-		domainJson.uuid = $scope.domainData.uuid
-		domainJson.name = $scope.domainData.name
-		domainJson.desc = $scope.domainData.desc
+		domainJson.uuid = $scope.domainData.uuid;
+		domainJson.name = $scope.domainData.name;
+		domainJson.displayName = $scope.domainData.displayName;
+		domainJson.desc = $scope.domainData.desc;
 		domainJson.active = $scope.domainData.active;
 		domainJson.locked = $scope.domainData.locked;
 		domainJson.published = $scope.domainData.published;

@@ -111,10 +111,19 @@
                   </label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="applicationdata.name"
-                      required="">
+                      required="" ng-Change="onChangeName(applicationdata.name)">
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Display Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}"
+                      ng-model="applicationdata.displayName" placeholder="" required="">
+                  </div>
+                </div>
                 <div class="form-group" ng-show="applicationdata.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">

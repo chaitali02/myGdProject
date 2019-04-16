@@ -84,6 +84,10 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 
 	$scope.getLovByType();
 
+	$scope.onChangeName = function (data) {
+		$scope.organizationData.displayName=data;
+	}
+
 	$scope.loadTag = function (query) {
 		return $timeout(function () {
 			return $filter('filter')($scope.lobTag, query);
@@ -400,7 +404,8 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		$scope.iSSubmitEnable = true;
 		var orgJson = {};
 		orgJson.uuid = $scope.organizationData.uuid || ""
-		orgJson.name = $scope.organizationData.name
+		orgJson.name = $scope.organizationData.name;
+		orgJson.displayName = $scope.organizationData.displayName;
 		orgJson.desc = $scope.organizationData.desc
 		orgJson.active = $scope.organizationData.active;
 		orgJson.locked = $scope.organizationData.locked;

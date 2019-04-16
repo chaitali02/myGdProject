@@ -107,10 +107,18 @@
                   </label>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="domainData.name" required="">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="domainData.name" required="" ng-Change="onChangeName(domainData.name)">
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Display Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}"
+                      ng-model="domainData.displayName" placeholder="" required="">
+                  </div>
+                </div>
                 <div class="form-group" ng-show="domainData.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">

@@ -58,6 +58,7 @@ public class ApplicationViewServiceImpl {
 		applicationView.setUuid(application.getUuid());
 		applicationView.setVersion(application.getVersion());
 		applicationView.setName(application.getName());
+		applicationView.setDisplayName(application.getDisplayName());
 		applicationView.setActive(application.getActive());
 		applicationView.setLocked(application.getLocked());
 		applicationView.setAppInfo(application.getAppInfo());
@@ -90,6 +91,7 @@ public class ApplicationViewServiceImpl {
 			application = new Application();
 			//setting application baseEntity
 			application.setName(applicationView.getName());
+			application.setDisplayName(applicationView.getDisplayName());
 			application.setTags(applicationView.getTags());
 			application.setLocked(applicationView.getLocked());
 			application.setDeployPort(applicationView.getDeployPort());
@@ -128,6 +130,7 @@ public class ApplicationViewServiceImpl {
 		application.setCreatedBy(applicationView.getCreatedBy());
 		application.setDesc(applicationView.getDesc());
 		application.setName(applicationView.getName());
+		application.setDisplayName(applicationView.getDisplayName());
 		application.setPublished(applicationView.getPublished());
 		application.setTags(applicationView.getTags());
 		application.setUuid(applicationView.getUuid());

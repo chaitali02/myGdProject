@@ -62,7 +62,11 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	
+	$scope.onChangeName = function (data) {
+		$scope.userdata.displayName=data;
+	}
 
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['user'] || [];
@@ -410,6 +414,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		$scope.myform.$dirty = false;
 		userJson.uuid = $scope.userdata.uuid;
 		userJson.name = $scope.userdata.name;
+		userJson.displayName = $scope.userdata.displayName;
 		userJson.desc = $scope.userdata.desc;
 		userJson.active = $scope.userdata.active;
 		userJson.locked = $scope.userdata.locked;

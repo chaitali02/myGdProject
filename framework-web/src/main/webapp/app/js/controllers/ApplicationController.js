@@ -112,6 +112,11 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	};
 	$scope.getLovByType();
+
+	$scope.onChangeName = function (data) {
+		$scope.applicationdata.displayName=data;
+	}
+
 	$scope.ValidationKeyPress = function (e) {
 		if ((e.which < 47) || (e.which > 57)) {
 			e.preventDefault();
@@ -538,9 +543,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			applicationJson.applicationChg = $scope.applicationCompare.applicationChg;
 		}
 		$scope.myform.$dirty = false;
-		applicationJson.uuid = $scope.applicationdata.uuid
-		applicationJson.name = $scope.applicationdata.name
-		applicationJson.desc = $scope.applicationdata.desc
+		applicationJson.uuid = $scope.applicationdata.uuid;
+		applicationJson.name = $scope.applicationdata.name;
+		applicationJson.displayName = $scope.applicationdata.displayName;
+		applicationJson.desc = $scope.applicationdata.desc;
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
