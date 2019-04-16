@@ -779,11 +779,15 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		logger.info("Inside isAbort ");
 		BaseRule baseRule = (BaseRule) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.dq.toString(), "N");
-		Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
+		String datapodUuid=commonServiceImpl.getConfigValue("framework.dataqual.summary.uuid");
+		
+		Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, null,
+				MetaType.datapod.toString(), "N");
+		Datasource dataSource = commonServiceImpl.getDatasourceByObject(targetDp);
 
 		ResultSetHolder rsHolder = execFactory.getExecutor(ExecContext.spark.toString()).executeAndRegisterByDatasource(
 				baseruleExec.getAbortExec(), baseruleExec.getUuid().replaceAll("-", "_") + "_" + baseruleExec.getVersion(),
-				ruleDatasource, commonServiceImpl.getApp().getUuid());
+				dataSource, commonServiceImpl.getApp().getUuid());
 		List<Row> resultList = (rsHolder.getDataFrame() == null) ? null : rsHolder.getDataFrame().collectAsList();
 		String abortThreshold = (resultList == null || resultList.isEmpty()) ? null : resultList.get(0).getString(0);
 
