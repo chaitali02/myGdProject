@@ -1137,7 +1137,9 @@ public class DataQualServiceImpl extends RuleTemplate {
 			try {
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
-				dataQual.setName("dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName().getAttrName());
+				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
+				dataQual.setName(name);
+				dataQual.setDisplayName(name);
 				dataQual.setLocked("N");
 				dataQual.setPublished("N");
 				dataQual.setPublicFlag("N");

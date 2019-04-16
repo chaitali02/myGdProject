@@ -1,0 +1,30 @@
+{
+    "regEx" : "https?\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,}",
+    "uuid" : "bd1f4805-d2d8-4102-b9db-419ea7144475",
+    "version" : "1554972309",
+    "name" : "URL_(Web domain)",
+    "desc" : "URL (Web domain)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-04-11T08:45:09.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1548315769"
+            }
+        }
+    ],
+    "publicFlag" : "Y"
+}

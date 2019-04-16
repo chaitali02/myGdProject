@@ -1,0 +1,31 @@
+{
+    "regEx" : "^(?:2131|1800|35\\\\d{3})\\\\d{11}$",
+    "uuid" : "bc82ca45-0115-4ed1-92ba-13ed7edf92ab",
+    "version" : "1554885308",
+    "name" : "JCB_CC",
+    "desc" : "JCB Credit Card",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-04-10T08:35:08.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1548315769"
+            }
+        }
+    ],
+    "publicFlag" : "Y",
+	"displyName" : "JCB_CC"
+}

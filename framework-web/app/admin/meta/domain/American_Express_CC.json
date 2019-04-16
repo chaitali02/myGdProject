@@ -1,0 +1,31 @@
+{
+    "regEx" : "^3[47][0-9]{13}$",
+    "uuid" : "8637a4f5-3df0-4c7b-ac22-29585801fc1b",
+    "version" : "1554885180",
+    "name" : "American_Express_CC",
+    "desc" : "American_Express Credit Card",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-04-10T08:33:00.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1548315769"
+            }
+        }
+    ],
+    "publicFlag" : "Y",
+	"displyName" : "American_Express_CC"
+}
