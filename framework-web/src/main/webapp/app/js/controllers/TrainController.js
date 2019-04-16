@@ -102,6 +102,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
   $scope.getLovByType();
   
+	$scope.onChangeName = function (data) {
+		$scope.trainData.displayName=data;
+  }
+  
   $scope.checkIsInrogess=function(){
     if($scope.isEditInprogess || $scope.isEditVeiwError){
       return false;
@@ -721,9 +725,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var TrainJson = {}
-    TrainJson.uuid = $scope.trainData.uuid
-    TrainJson.name = $scope.trainData.name
-    TrainJson.desc = $scope.trainData.desc
+    TrainJson.uuid = $scope.trainData.uuid;
+    TrainJson.name = $scope.trainData.name;
+    TrainJson.displayName = $scope.trainData.displayName;
+    TrainJson.desc = $scope.trainData.desc;
     TrainJson.active = $scope.trainData.active;
     TrainJson.locked = $scope.trainData.locked;
     TrainJson.published = $scope.trainData.published;

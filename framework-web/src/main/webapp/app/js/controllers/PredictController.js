@@ -96,6 +96,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
 	};
   
   $scope.getLovByType();
+
+  $scope.onChangeName = function (data) {
+		$scope.predictData.displayName=data;
+  }
   
   $scope.close = function() {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -652,9 +656,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     $scope.dataLoading = true;
     $scope.iSSubmitEnable = true;
     var predictJson = {}
-    predictJson.uuid = $scope.predictData.uuid
-    predictJson.name = $scope.predictData.name
-    predictJson.desc = $scope.predictData.desc
+    predictJson.uuid = $scope.predictData.uuid;
+    predictJson.name = $scope.predictData.name;
+    predictJson.displayName = $scope.predictData.displayName;
+    predictJson.desc = $scope.predictData.desc;
     predictJson.active = $scope.predictData.active;
     predictJson.locked = $scope.predictData.locked;
     predictJson.published=$scope.predictData.published;

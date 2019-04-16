@@ -61,6 +61,10 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		});
 	};
     $scope.getLovByType();
+	
+	$scope.onChangeName = function (data) {
+		$scope.groupdata.displayName=data;
+	}
 
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['group'] || [];
@@ -292,6 +296,7 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		$scope.myform.$dirty = false;
 		groupJson.uuid = $scope.groupdata.uuid;
 		groupJson.name = $scope.groupdata.name;
+		groupJson.displayName = $scope.groupdata.displayName;
 		groupJson.desc = $scope.groupdata.desc;
 		groupJson.active = $scope.groupdata.active;
 		groupJson.locked = $scope.groupdata.locked;

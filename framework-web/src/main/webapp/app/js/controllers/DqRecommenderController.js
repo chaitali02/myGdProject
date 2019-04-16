@@ -388,7 +388,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			cellTemplate:'<div class="ui-grid-cell-contents" style="padding-top:2px;padding-left:4px;"><input type="checkbox" style="width:20px;height:16px;" ng-model="row.entity.selected" ng-change="grid.appScope.onSelectQualityRow()"/></div>'
 		},
 		{
-			name: 'attributeName.attrName',
+			name: 'attributeNameValue',
 			width: '20%',
 			enableCellEdit: false,
 			visible: true,
@@ -468,14 +468,39 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 			if(response && response.intelligenceResult && response.intelligenceResult.length){
 				for(var i=0;i<response.intelligenceResult.length;i++){
 					var intelligenceResult={};
-					intelligenceResult.attributeName=response.intelligenceResult[i].attributeName;
+					intelligenceResult.attributeNameValue="-NA-";
+					if(response.intelligenceResult[i].attributeName !=null){
+						intelligenceResult.attributeNameValue=response.intelligenceResult[i].attributeName;
+					}
 					intelligenceResult.checkType=response.intelligenceResult[i].checkType;
 					intelligenceResult.checkValue=response.intelligenceResult[i].checkValue;
-					if(response.intelligenceResult[i].checkValue.ref.type=="simple"){
-						intelligenceResult.checkValueName=response.intelligenceResult[i].checkValue.value;
-					}else{
-						intelligenceResult.checkValueName=response.intelligenceResult[i].checkValue.ref.name;
+					if (response.intelligenceResult[i].checkValue
+							&& response.intelligenceResult[i].checkValue.length > 0) {
+						if (response.intelligenceResult[i].checkValue.length == 1) {
+							if (response.intelligenceResult[i].checkValue[0].ref.type == "simple") {
+								intelligenceResult.checkValueName = response.intelligenceResult[i].checkValue[0].value;
+							} else {
+								intelligenceResult.checkValueName = response.intelligenceResult[i].checkValue[0].ref.name;
+							}
+						} else {
+							intelligenceResult.checkValueName = "["
+							for (var j = 0; j < response.intelligenceResult[i].checkValue.length; j++) {
+								if (response.intelligenceResult[i].checkValue[j].ref.type == "simple") {
+									intelligenceResult.checkValueName += response.intelligenceResult[i].checkValue[j].value
+									if(j<response.intelligenceResult[i].checkValue.length-1)
+										intelligenceResult.checkValueName +=" , "
+
+								} else {
+									intelligenceResult.checkValueName = response.intelligenceResult[i].checkValue[j].ref.name;
+									if(j<response.intelligenceResult[i].checkValue.length-1)
+										intelligenceResult.checkValueName +=" , "
+								}
+							}
+							intelligenceResult.checkValueName += "]";
+
+						}
 					}
+					
 					intelligenceResult.checkValue=response.intelligenceResult[i].checkValue;
 					intelligenceResult.sampleScore=response.intelligenceResult[i].sampleScore;
                     intelligenceResultArray[i]=intelligenceResult;

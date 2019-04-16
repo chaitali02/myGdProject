@@ -66,6 +66,11 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		});
 	};
 	$scope.getLovByType();
+	
+	$scope.onChangeName = function (data) {
+		$scope.datastoredata.displayName=data;
+	}
+
 
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges['datastore'] || [];
@@ -310,8 +315,9 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 
 		var datastroreJson = {}
 		datastroreJson.uuid = $scope.datastoredata.uuid;
-		datastroreJson.name = $scope.datastoredata.name
-		datastroreJson.desc = $scope.datastoredata.desc
+		datastroreJson.name = $scope.datastoredata.name;
+		datastroreJson.displayName = $scope.datastoredata.displayName;
+		datastroreJson.desc = $scope.datastoredata.desc;
 		datastroreJson.active = $scope.datastoredata.active;
 		datastroreJson.locked = $scope.datastoredata.locked;
 		datastroreJson.published = $scope.datastoredata.published;

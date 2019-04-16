@@ -104,6 +104,10 @@ angular.module('InferyxApp')
       };
 
       $scope.getLovByType();
+        
+      $scope.onChangeName = function (data) {
+        $scope.dagdata.displayName=data;
+      }
 
       $scope.$on('$destroy', function () {
         $scope.isDestoryState = true;
@@ -352,6 +356,8 @@ angular.module('InferyxApp')
         var dagJson = {};
         dagJson.uuid = $scope.dagdata.uuid;
         dagJson.name = $scope.pipelineName;
+        dagJson.displayName = $scope.dagdata.displayName;
+
         var tagArray = [];
         if ($scope.tags != null) {
           for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

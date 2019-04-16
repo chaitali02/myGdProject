@@ -51,14 +51,7 @@
                             data-ng-click="enableEdit(dagdata.uuid,dagdata.version)" ng-class="(isEdit==true || isPrivlage || dagdata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <!-- <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                           ng-hide="isAdd" data-ng-click="enableEdit(dagdata.uuid,dagdata.version)">
-                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                        </a>
-                        <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdag==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-                            ng-hide="isAdd" data-ng-click="showview(dagdata.uuid,dagdata.version)">
-                            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                        </a> -->
+                      
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
                             tooltip ng-show="isDependencyShow" ng-class="(showdag==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showDagGraph(dagdata.uuid,dagdata.version)">
                             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
@@ -145,7 +138,16 @@
                                                     <span class="required" aria-required="true"> * </span>
                                                 </label>
                                                 <div class="col-md-5">
-                                                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="pipelineName" required>
+                                                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="pipelineName" required ng-Change="onChangeName(pipelineName)">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Display Name
+                                                  <span class="required" aria-required="true"> * </span>
+                                                </label>
+                                                <div class="col-md-5">
+                                                  <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                                    ng-model="dagdata.displayName" placeholder="" required="">
                                                 </div>
                                             </div>
                                             <div class="form-group" ng-show="dagdata.uuid">

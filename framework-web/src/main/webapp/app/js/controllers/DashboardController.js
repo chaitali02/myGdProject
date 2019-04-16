@@ -52,7 +52,10 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 	};
 	$scope.getLovByType();
-	
+
+	$scope.onChangeName = function (data) {
+		$scope.dashboarddata.displayName = data;
+	}
 	$scope.onChangeVizpod=function(vizpodInfo,parentIndex,index){
 		if(parentIndex ==-1){
 			parentIndex=0;
@@ -64,7 +67,6 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}
 	
 	$scope.addSectionRow = function (i) {
-		debugger
 		$scope.sectionRows.splice(i + 1, 0, {
 			columns: [{"edit":true,rowNo:$scope.sectionRows.length+1,colNo:1}]
 		});
@@ -549,9 +551,10 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.iSSubmitEnable = false;
 		var dashboardjson = {}
 	
-		dashboardjson.uuid = $scope.dashboarddata.uuid
-		dashboardjson.name = $scope.dashboarddata.name
-		dashboardjson.desc = $scope.dashboarddata.desc
+		dashboardjson.uuid = $scope.dashboarddata.uuid;
+		dashboardjson.name = $scope.dashboarddata.name;
+		dashboardjson.displayName = $scope.dashboarddata.displayName;
+		dashboardjson.desc = $scope.dashboarddata.desc;
 		dashboardjson.active = $scope.dashboarddata.active;
 		dashboardjson.locked = $scope.dashboarddata.locked;
 		dashboardjson.published = $scope.dashboarddata.published;

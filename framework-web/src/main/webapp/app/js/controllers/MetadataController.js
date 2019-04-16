@@ -297,6 +297,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	$scope.onChangeName = function (data) {
 		$scope.datapodName = data;
+		$scope.datapoddata.displayName=data;
 	}
 
 
@@ -467,6 +468,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.myform.$dirty = false;
 		datapodJson.uuid = $scope.datapoddata.uuid;
 		datapodJson.name = $scope.datapoddata.name;
+		datapodJson.displayName = $scope.datapoddata.displayName;
 		datapodJson.desc = $scope.datapoddata.desc;
 		datapodJson.prefix = $scope.datapoddata.prefix
 		var tagArray = [];

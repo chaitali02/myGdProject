@@ -142,6 +142,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   
   $scope.getLovByType();
 
+  $scope.onChangeName = function (data) {
+    $scope.ruleData.displayName=data; 
+  }
+  
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
@@ -1592,6 +1596,7 @@ var confirmDialog = function(newVal, yes, no) {
       ruleJson.uuid = $scope.ruleData.uuid
     }
     ruleJson.name = $scope.ruleData.name;
+    ruleJson.displayName = $scope.ruleData.displayName;    
     ruleJson.desc = $scope.ruleData.desc;
     ruleJson.active = $scope.ruleData.active;
     ruleJson.locked = $scope.ruleData.locked;
@@ -1993,6 +1998,10 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 	};
   $scope.getLovByType();
 
+  $scope.onChangeName = function (data) {
+    $scope.ruleGroupDetail.displayName=data; 
+  }
+
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
@@ -2191,6 +2200,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     var ruleGroupJson = {}
     ruleGroupJson.uuid = $scope.ruleGroupDetail.uuid;
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
+    ruleGroupJson.displayName = $scope.ruleGroupDetail.displayName;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
     ruleGroupJson.locked = $scope.ruleGroupDetail.locked;

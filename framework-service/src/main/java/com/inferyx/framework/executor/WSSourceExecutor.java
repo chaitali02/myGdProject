@@ -25,7 +25,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.FrameworkThreadServiceImpl;
-import com.inferyx.framework.ws.client.disource.IngestServiceService;
+//import com.inferyx.framework.ws.client.disource.IngestServiceService;
 
 /**
  * @author joy
@@ -81,21 +81,21 @@ public class WSSourceExecutor<T> {
 			List<String[]> readList = new ArrayList<>();
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			ConnectionHolder conHolder = connector.getConnection();
-			IngestServiceService ingestService = new IngestServiceService();
-			List<T> streams = (List<T>) ingestService.getIngestServicePort().stream();
+//			IngestServiceService ingestService = new IngestServiceService();
+//			List<T> streams = (List<T>) ingestService.getIngestServicePort().stream();
 			logger.info("Before dumping stream >>>>>>>>>> ");
-			for (T stream : streams) {
-				logger.info(stream);
-				readMap = mapper.readValue((String)stream, readMap.getClass());
-				logger.info(" Map >>> " + readMap);
-				arr = new String[readMap.size()];
-				count = 0;
-				for (Entry<String, String> val : readMap.entrySet()) {
-					arr[count] = val.getValue();
-					count++;
-				}
-				readList.add(arr);
-			}
+//			for (T stream : streams) {
+//				logger.info(stream);
+//				readMap = mapper.readValue((String)stream, readMap.getClass());
+//				logger.info(" Map >>> " + readMap);
+//				arr = new String[readMap.size()];
+//				count = 0;
+//				for (Entry<String, String> val : readMap.entrySet()) {
+//					arr[count] = val.getValue();
+//					count++;
+//				}
+//				readList.add(arr);
+//			}
 			return sparkExecutor.createAndRegisterDataset(readList, attributes, tableName);
 		} catch(Exception e) {
 			e.printStackTrace();

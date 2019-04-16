@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +33,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DQIntelligence;
 import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -136,14 +136,20 @@ public class DQRecOperator {
 			
 			sampleHolder.setTableName(sampleTempTableName);
 			
-			//***************** check domain for recommendation *****************//
+			//***************** domain check for recommendation *****************//
 			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
 
-			//***************** check domain for recommendation *****************//
+			//***************** null check for recommendation *****************//
 			recommendationList.addAll(nullCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
 			
-			//***************** check domain for recommendation *****************//
+			//***************** duplication (primary key) check for recommendation *****************//
 			recommendationList.addAll(duplicateCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
+
+			//***************** range check for recommendation *****************//
+			recommendationList.addAll(rangeCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
+			
+			//***************** value check for recommendation *****************//
+			recommendationList.addAll(valueCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
 			
 			dqRecExec.setIntelligenceResult(recommendationList);
 			
@@ -269,7 +275,7 @@ public class DQRecOperator {
 		return df.withColumn("rowNum", functions.row_number().over(Window.orderBy(df.columns()[df.columns().length-1])));
 	}
 	
-	private String caseWrapper(String check, String colName) {
+	public String caseWrapper(String check, String colName) {
 		StringBuilder caseBuilder = new StringBuilder(" CASE WHEN ").append(check).append(" THEN 'Y' ELSE 'N' END AS ").append(colName)
 				.append(" ");
 		return caseBuilder.toString();
@@ -296,18 +302,19 @@ public class DQRecOperator {
 					dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(4)));
 					
 					//********* setting check value  *********//
+					List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
 					for(AttributeDomain attributeDomain : attrDomainList) {
 						if(attributeDomain.getUuid().equals(row.get(1).toString())) {
-							MetaIdentifier ref = attributeDomain.getRef(MetaType.domain);
-							ref.setName(attributeDomain.getName());
-							dqIntelligence.setCheckValue(new MetaIdentifierHolder(ref));
+							checkValueList.add(new MetaIdentifierHolder(attributeDomain.getRef(MetaType.domain), attributeDomain.getName()));
 							
 							break;
 						}
 					}
+					dqIntelligence.setCheckValue(checkValueList);
+					
 					
 					//********* setting dq creation check  *********//
-					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, row.getString(2)));
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.DOMAIN, row.getString(2), row.getString(4)));
 				
 					checkTypeList.add(dqIntelligence);
 				}
@@ -334,11 +341,66 @@ public class DQRecOperator {
 		return null;
 	}
 	
-	public boolean getDQCreationCheck(List<DataQual> latestDQList, String datapodUuid) {
+	public boolean getDQCreationCheck(List<DataQual> latestDQList, CheckType checkType, String datapodUuid, String columnName) throws JsonProcessingException {
 		if(latestDQList != null && !latestDQList.isEmpty()) {
 			for(DataQual dq : latestDQList) {
 				if(dq.getDependsOn().getRef().getUuid().equals(datapodUuid)) {
-					return true;
+					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, null, MetaType.datapod.toString(), "N");
+					Object checkValue = checkCheckType(dq, checkType);
+					if(checkValue == null) {
+						return false;
+					} else {
+						switch(checkType) {
+						case DOMAIN: 
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getDomainCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case NULL:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getNullCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case RANGE:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getRangeCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case VALUE:
+							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+								if(dq.getValueCheck() == null) {
+									return false;
+								} else {
+									return true;
+								}
+							} else {
+								return false;
+							}
+							
+						case DUPLICATE:
+							return false;
+							
+						default: return false;
+						}
+					}
 				} else {
 					return false;
 				}
@@ -348,6 +410,18 @@ public class DQRecOperator {
 		}
 
 		return false;
+	}
+	
+	public Object checkCheckType(DataQual dq, CheckType checkType) {
+		switch(checkType) {
+		case DOMAIN: return dq.getDomainCheck();
+		case NULL: return dq.getNullCheck();
+		case DUPLICATE: return dq.getDuplicateKeyCheck();
+		case RANGE: return dq.getRangeCheck();
+		case VALUE: return dq.getValueCheck();
+			
+		default: return null;
+		}
 	}
 	
 	public ResultSetHolder save(ResultSetHolder rsHolder, String filePathUrl, String tempTableName, boolean registerTempTable) throws IOException {		
@@ -377,7 +451,7 @@ public class DQRecOperator {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	private List<DQIntelligence> nullCheck(ResultSetHolder rsHolder, String defaultPath,
+	public List<DQIntelligence> nullCheck(ResultSetHolder rsHolder, String defaultPath,
 			String filePath, String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList, float minThreshold) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		List<String> tempTableList = new ArrayList<>();
@@ -436,6 +510,9 @@ public class DQRecOperator {
 				ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
 //				distinctValHolder.getDataFrame().show(false);
 				
+				//***************** dropping temporary tables created *****************//
+				sparkExecutor.dropTempTable(tempTableList);
+				
 				return getCheckTypeListForNullCheck(distinctValHolder, datapod, latestDQList);
 			}
 			
@@ -464,13 +541,13 @@ public class DQRecOperator {
 					dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(1)));
 				
 				//***************** setting check value  *****************//
-				MetaIdentifierHolder valueCheckHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null));
-				valueCheckHolder.setValue(CheckType.NULL.toString());
-				dqIntelligence.setCheckValue(valueCheckHolder);
+				List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
+				checkValueList.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), CheckType.NULL.toString()));
+				dqIntelligence.setCheckValue(checkValueList);
 						
 				
 				//***************** setting dq creation check  *****************//
-				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, row.getString(1)));
+				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.NULL,row.getString(1), row.getString(1)));
 				
 				checkTypeList.add(dqIntelligence);
 			} catch (Exception e) {
@@ -499,22 +576,21 @@ public class DQRecOperator {
 	 * @throws IllegalAccessException 
 	 * @throws IOException 
 	 */
-	private List<DQIntelligence> duplicateCheck(ResultSetHolder rsHolder, String defaultPath,
+	public List<DQIntelligence> duplicateCheck(ResultSetHolder rsHolder, String defaultPath,
 			String filePath, String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList, float minThreshold) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
-
-		List<String> tempTableList = new ArrayList<>();
-		String appUuid = commonServiceImpl.getApp().getUuid();
 		
-		String nullCheckTempTableName = defaultTempTableName.concat("_").concat("duplicate_check");		
-		tempTableList.add(nullCheckTempTableName);
-		
-		boolean anyPrimaryKey = false;
-		
-		StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-		StringBuilder distinctBuilder = new StringBuilder();
-		long totalRows = rsHolder.getCountRows();
-		for(Attribute attribute : datapod.getAttributes()) {
-			if(!StringUtils.isBlank(attribute.getKey())) {
+		List<Attribute> keyAttributeList = metadataServiceImpl.getKeyAttributeList(datapod);
+		if(keyAttributeList != null && !keyAttributeList.isEmpty()) {
+//			List<String> tempTableList = new ArrayList<>();
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+//			String dupCheckTempTableName = defaultTempTableName.concat("_").concat("duplicate_check");		
+//			tempTableList.add(dupCheckTempTableName);
+			
+			StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
+			StringBuilder distinctBuilder = new StringBuilder();
+			long totalRows = rsHolder.getCountRows();
+			for(Attribute attribute : keyAttributeList) {
 				distinctBuilder.append("SELECT ");
 				distinctBuilder.append("'").append(datapod.getUuid()).append("' AS ").append("datapod_uuid").append(", ");
 				distinctBuilder.append("'").append(attribute.getName()).append("' AS ").append("dup_col").append(", ");
@@ -522,18 +598,17 @@ public class DQRecOperator {
 						.append(totalRows).append(") * ").append("100").append(" AS score_col");
 				distinctBuilder.append(" FROM ").append(rsHolder.getTableName());
 				distinctBuilder.append(" UNION ALL ");
-				
-				anyPrimaryKey = true;
 			}
-		}
-		
-		if(anyPrimaryKey) {
+			
 			outerSqlBuilder.append(distinctBuilder.substring(0, distinctBuilder.lastIndexOf(" UNION ALL "))).append(")");
 			outerSqlBuilder.append(" WHERE score_col >= ").append(minThreshold);
 			
 			ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
 //			distinctValHolder.getDataFrame().show(false);
-		
+
+			//***************** dropping temporary tables created *****************//
+//			sparkExecutor.dropTempTable(tempTableList);
+			
 			return getCheckTypeListForDupCheck(distinctValHolder, datapod, latestDQList);
 		}
 		
@@ -545,35 +620,277 @@ public class DQRecOperator {
 		
 		List<DQIntelligence> checkTypeList = new ArrayList<>();
 		
+
+		DQIntelligence dqIntelligence = new DQIntelligence();
+		dqIntelligence.setCheckType(CheckType.DUPLICATE);
+		dqIntelligence.setSampleScore(100);
+		
+		//***************** setting attribute name *****************//
+		dqIntelligence.setAttributeName(null);
+		
 		Dataset<Row> df = rsHolder.getDataFrame();
 		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+
+		List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
+		for (Row row : rows) {
+			try {
+				//***************** setting check value  *****************//
+				checkValueList.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), row.getString(1)));
+				
+				//***************** setting dq creation check  *****************//
+//				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.DUPLICATE, row.getString(1)));
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		dqIntelligence.setCheckValue(checkValueList);
+		checkTypeList.add(dqIntelligence);
+		
+		return checkTypeList;
+	}
+
+	/**
+	 * @param sampleHolder
+	 * @param defaultPath
+	 * @param filePath
+	 * @param tempTableName
+	 * @param sourceDp
+	 * @param latestDQList
+	 * @param minThreshold
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws IOException 
+	 */
+	public List<DQIntelligence> rangeCheck(ResultSetHolder rsHolder, String defaultPath,
+			String filePath, String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList, float minThreshold) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+
+		List<String> tempTableList = new ArrayList<>();
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+//		String rangeCheckTempTableName = defaultTempTableName.concat("_").concat("range_check");		
+//		tempTableList.add(rangeCheckTempTableName);
+		
+		boolean anyNumericCol = false;
+		StringBuilder rangeCheckBuilder = new StringBuilder();
+		for(Attribute attribute : datapod.getAttributes()) {
+			if(attribute.getType().equalsIgnoreCase(DataType.DECIMAL.toString())
+					|| attribute.getType().equalsIgnoreCase(DataType.DOUBLE.toString())
+					|| attribute.getType().equalsIgnoreCase(DataType.FLOAT.toString())
+					|| attribute.getType().equalsIgnoreCase(DataType.INTEGER.toString())
+					|| attribute.getType().equalsIgnoreCase(DataType.LONG.toString())
+					|| attribute.getType().equalsIgnoreCase(DataType.SHORT.toString())) {
+				rangeCheckBuilder.append("SELECT ");
+				rangeCheckBuilder.append("MAX(").append(attribute.getName()).append(") AS ").append("max_val").append(", ");
+				rangeCheckBuilder.append("MIN(").append(attribute.getName()).append(") AS ").append("min_val").append(", ");
+				rangeCheckBuilder.append("'").append(attribute.getName()).append("' AS ").append("range_col").append(", ");
+				rangeCheckBuilder.append(100).append(" AS ").append("score_col").append(", ");
+				rangeCheckBuilder.append("'").append(attribute.getName()).append("' AS ").append("datapod_uuid");
+				rangeCheckBuilder.append(" FROM ").append(rsHolder.getTableName());
+				rangeCheckBuilder.append(" GROUP BY range_col, score_col");
+				rangeCheckBuilder.append(" UNION ALL ");
+				
+				anyNumericCol = true;
+			}
+		}
+		
+		if(anyNumericCol) {
+			String rangeCheckSql = rangeCheckBuilder.substring(0, rangeCheckBuilder.lastIndexOf(" UNION ALL "));
+			
+			ResultSetHolder rangeCheckHolder = sparkExecutor.executeAndRegisterByTempTable(rangeCheckSql, null, false, appUuid);
+//			rangeCheckHolder.getDataFrame().show(false);
+
+			//***************** dropping temporary tables created *****************//
+			sparkExecutor.dropTempTable(tempTableList);
+			
+			return getCheckTypeListForRangeCheck(rangeCheckHolder, datapod, latestDQList);
+		}
+		
+		return new ArrayList<>();
+	}
+
+	/**
+	 * @param rangeCheckHolder
+	 * @param datapod
+	 * @param latestDQList
+	 * @return
+	 */
+	public List<DQIntelligence> getCheckTypeListForRangeCheck(ResultSetHolder rsHolder,
+			Datapod datapod, List<DataQual> latestDQList) {
+		// ********* 0: max_val, 1: min_val, 2: range_col, 3: score_col, 4: datapod_uuid  *********//
+
+		List<DQIntelligence> checkTypeList = new ArrayList<>();
+
+		Dataset<Row> df = rsHolder.getDataFrame();
+		Row[] rows = (Row[]) df.head(Integer.parseInt("" + df.count()));
 
 		for (Row row : rows) {
 			try {
 				DQIntelligence dqIntelligence = new DQIntelligence();
-				dqIntelligence.setCheckType(CheckType.DUPLICATE);
-				dqIntelligence.setSampleScore(row.getDouble(2));
+				dqIntelligence.setCheckType(CheckType.RANGE);
+				dqIntelligence.setSampleScore(Double.parseDouble(row.get(3).toString()));
 
-				//***************** setting attribute name *****************//
-					dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(1)));
-				
-				//***************** setting check value  *****************//
-				MetaIdentifierHolder valueCheckHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null));
-				valueCheckHolder.setValue(CheckType.DUPLICATE.toString());
-				dqIntelligence.setCheckValue(valueCheckHolder);
-						
-				
-				//***************** setting dq creation check  *****************//
-				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, row.getString(1)));
-				
+				// ***************** setting attribute name *****************//
+				dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(2)));
+
+				// ***************** setting check value *****************//
+				List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
+				checkValueList.add(new MetaIdentifierHolder(
+						new MetaIdentifier(MetaType.simple, null, null, "Lower Bound"), row.get(1).toString()));
+				checkValueList.add(new MetaIdentifierHolder(
+						new MetaIdentifier(MetaType.simple, null, null, "Upper Bound"), row.get(0).toString()));
+				dqIntelligence.setCheckValue(checkValueList);
+
+				// ***************** setting dq creation check *****************//
+				dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.RANGE, row.getString(4), row.getString(2)));
+
 				checkTypeList.add(dqIntelligence);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
 		}
-		
+
 		return checkTypeList;
 	}
 
+	/**
+	 * @param sampleHolder
+	 * @param defaultPath
+	 * @param filePath
+	 * @param tempTableName
+	 * @param sourceDp
+	 * @param latestDQList
+	 * @param minThreshold
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws IOException 
+	 */
+	public List<DQIntelligence> valueCheck(ResultSetHolder rsHolder, String defaultPath,
+			String filePath, String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList, float minThreshold) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		List<String> tempTableList = new ArrayList<>();
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		String valueCheckTempTableName = defaultTempTableName.concat("_").concat("dist_value_check");		
+		tempTableList.add(valueCheckTempTableName);
+		
+		StringBuilder distValueCheckBuilder = new StringBuilder("SELECT DISTINCT ");
+		int i = 0;
+		for(Attribute attribute : datapod.getAttributes()) {
+			distValueCheckBuilder.append(attribute.getName());
+			
+			if(i < datapod.getAttributes().size() - 1) {
+				distValueCheckBuilder.append(", ");
+			}
+			
+			i++;
+		}
+		distValueCheckBuilder.append(" FROM ").append(rsHolder.getTableName()).append(" ");
+		
+		ResultSetHolder distinctValHolder = sparkExecutor.executeAndRegisterByTempTable(distValueCheckBuilder.toString(), valueCheckTempTableName, true, appUuid);
+//		distinctValHolder.getDataFrame().show(false);
+		
+		StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
+		StringBuilder valueCheckBuilder = new StringBuilder();
+		long totalRows = rsHolder.getCountRows();
+		for(String col : distinctValHolder.getDataFrame().columns()) {
+			valueCheckBuilder.append("SELECT ");
+			valueCheckBuilder.append("'").append(datapod.getUuid()).append("' AS ").append("datapod_uuid").append(", ");
+			valueCheckBuilder.append("'").append(col).append("' AS ").append("val_col").append(", ");
+			valueCheckBuilder.append("(COUNT(DISTINCT(").append(col).append(")) / ")
+					.append(totalRows).append(") * ").append("100").append(" AS score_col").append(", ");
+			valueCheckBuilder.append("COUNT(DISTINCT(").append(col).append(")) AS dist_count_col");
+			valueCheckBuilder.append(" FROM ").append(valueCheckTempTableName);
+			valueCheckBuilder.append(" UNION ALL ");
+		}
+
+			outerSqlBuilder.append(valueCheckBuilder.substring(0, valueCheckBuilder.lastIndexOf(" UNION ALL "))).append(")");
+			outerSqlBuilder.append(" WHERE score_col >= ").append(minThreshold);
+			
+			ResultSetHolder scoreHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), null, false, appUuid);
+//			scoreHolder.getDataFrame().show(false);
+			
+			List<DQIntelligence> checkTypeList = getCheckTypeListForValueCheck(distinctValHolder, scoreHolder, datapod, latestDQList);
+			
+			//***************** dropping temporary tables created *****************//
+			sparkExecutor.dropTempTable(tempTableList);
+			
+			return checkTypeList;
+	}
+
+	/**
+	 * @param distinctValHolder
+	 * @param datapod
+	 * @param latestDQList
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws NumberFormatException 
+	 */
+	public List<DQIntelligence> getCheckTypeListForValueCheck(ResultSetHolder distinctValHolder, ResultSetHolder scoreHolder,
+			Datapod datapod, List<DataQual> latestDQList) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		// ********* 0: datapod_uuid, 1: val_col, 2: score_col 3: dist_count_col *********//
+
+		List<DQIntelligence> checkTypeList = new ArrayList<>();
+
+		Dataset<Row> df = scoreHolder.getDataFrame();
+		Row[] rows = (Row[]) df.head(Integer.parseInt("" + df.count()));
+
+		int lovThreshold = Integer.parseInt(commonServiceImpl.getConfigValue("framework.dataqual.sample.value.threshold"));
+		for (Row row : rows) {
+			try {
+				if(Integer.parseInt(row.get(3).toString()) <= lovThreshold) {
+					DQIntelligence dqIntelligence = new DQIntelligence();
+					dqIntelligence.setCheckType(CheckType.VALUE);
+					dqIntelligence.setSampleScore(Double.parseDouble(row.get(2).toString()));
+
+					// ***************** setting attribute name *****************//
+					dqIntelligence.setAttributeName(getAttributeName(datapod, row.getString(1)));
+
+					// ***************** setting check value *****************//
+					String sql = "SELECT DISTINCT "+row.getString(1)+" FROM "+distinctValHolder.getTableName();
+					Dataset<Row> distValColDf = distinctValHolder.getDataFrame().sqlContext().sql(sql);
+					distValColDf = distValColDf.select(distValColDf.col(row.getString(1)));
+					
+					Row[] distRowList = (Row[]) distValColDf.head(Integer.parseInt("" + distValColDf.count()));
+					
+					List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
+					for(Row distRow : distRowList) {
+						checkValueList.add(new MetaIdentifierHolder(
+								new MetaIdentifier(MetaType.simple, null, null, null), distRow.get(0).toString()));
+					}
+					
+					dqIntelligence.setCheckValue(checkValueList);
+
+					// ***************** setting dq creation check *****************//
+					dqIntelligence.setCreated(getDQCreationCheck(latestDQList, CheckType.VALUE, row.getString(0), row.getString(1)));
+
+					checkTypeList.add(dqIntelligence);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+
+		return checkTypeList;
+	}
 }
