@@ -89,7 +89,7 @@ public class ParamListServiceImpl {
 		
 		
 		// code added by vaibhav
-		if (execParams.getParamListInfo() != null && execParams.getParamListInfo().size() >= 0)
+		if (execParams!=null && execParams.getParamListInfo() != null && execParams.getParamListInfo().size() >= 0)
 			for (ParamListHolder holder : execParams.getParamListInfo()) {
 				if (ref.getUuid().equalsIgnoreCase(holder.getRef().getUuid()))
 					if (holder.getParamId().equalsIgnoreCase(attributeId.toString())) {
