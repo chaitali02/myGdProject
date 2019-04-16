@@ -85,18 +85,18 @@ public class ParamListServiceImpl {
 				paramListHolder = null;
 			}*/
 		}
+	
 		
 		
-		List<ParamListHolder> paramListHolders=execParams.getParamListInfo();
-		
-		
-	for(ParamListHolder holder:paramListHolders) {
-		if(ref.getUuid().equalsIgnoreCase(holder.getRef().getUuid()))
-		if(holder.getParamId().equalsIgnoreCase(attributeId.toString())) {
-			return holder.getParamValue().getValue();
-		}
-	}
-		
+		// code added by vaibhav
+		if (execParams.getParamListInfo() != null && execParams.getParamListInfo().size() >= 0)
+			for (ParamListHolder holder : execParams.getParamListInfo()) {
+				if (ref.getUuid().equalsIgnoreCase(holder.getRef().getUuid()))
+					if (holder.getParamId().equalsIgnoreCase(attributeId.toString())) {
+						return holder.getParamValue().getValue();
+					}
+			}
+
 		// Get param from ref
 		for (com.inferyx.framework.domain.Param param : paramListRef.getParams()) {
 			if (param.getParamId().equalsIgnoreCase(attributeId.toString())) {
