@@ -1,108 +1,107 @@
 {
-	"uuid" : "82f6fc18-b2ef-4bb4-b3e7-1963a44477af",
-	"version" : "1551213337",
-	"name" : "viz_accounts_by_month",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-			"version" : null,
-			"name" : "dim_account"
-		},
-		"value" : null
-	},
-	"type" : "bar-chart",
-	"limit" : 0,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "formula",
-				"uuid" : "9101aa0b-f5c0-468d-a3a8-9410fffd209b",
-				"version" : null,
-				"name" : "fm_account_onboarding_month"
-			},
-			"attributeId" : null,
-			"function" : null,
-			"value" : null,
-			"attributeName" : null
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 0
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 3
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-				"version" : null,
-				"name" : "dim_account"
-			},
-			"attributeId" : 0,
-			"function" : "COUNT",
-			"value" : null,
-			"attributeName" : "account_id"
-		}
-	],
-	"sortBy" : [ ],
-	"sortOrder" : null,
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "82f6fc18-b2ef-4bb4-b3e7-1963a44477af",
+  "version": "1551213337",
+  "name": "viz_accounts_by_month",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Feb 26 15:35:37 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+      "version": null,
+      "name": "dim_account"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "9101aa0b-f5c0-468d-a3a8-9410fffd209b",
+        "version": null,
+        "name": "fm_account_onboarding_month"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 3
+        }
+    ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+        "version": null,
+        "name": "dim_account"
+      },
+      "attributeId": 0,
+      "function": "COUNT",
+      "value": null,
+      "attributeName": "account_id"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

@@ -1,52 +1,50 @@
 {
-    "_id" : ObjectId("5cb47da1da75e91b2c51a4c6"),
-    "uuid" : "b0a80b5f-44b6-4374-8e8f-ff0458039a8a",
-    "version" : "1552236827",
-    "name" : "db_analyst",
-    "desc" : "Analyst group for db application",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        },
-        "value" : null
+  "uuid": "b0a80b5f-44b6-4374-8e8f-ff0458039a8a",
+  "version": "1552236827",
+  "name": "db_analyst",
+  "desc": "Analyst group for db application",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
-    "createdOn" : "Sun Mar 10 12:53:47 EDT 2019",
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-                "version" : "1464977196",
-                "name" : "Administration"
-            },
-            "value" : null
-        }
-    ],
-    "publicFlag" : "N",
-    "roleId" : {
-        "ref" : {
-            "type" : "role",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f88",
-            "version" : null,
-            "name" : "analyst"
-        },
-        "value" : null
+    "value": null
+  },
+  "createdOn": "Sun Mar 10 12:53:47 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "roleId": {
+    "ref": {
+      "type": "role",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f88",
+      "version": null,
+      "name": "analyst"
     },
-    "appId" : {
-        "ref" : {
-            "type" : "application",
-            "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-            "version" : null,
-            "name" : "Deutsche Admin"
-        },
-        "value" : null
+    "value": null
+  },
+  "appId": {
+    "ref": {
+      "type": "application",
+      "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+      "version": null,
+      "name": "Deutsche Admin"
     },
-    "displyName" : "db_analyst"
+    "value": null
+  }
 }

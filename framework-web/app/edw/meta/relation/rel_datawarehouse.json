@@ -1,290 +1,289 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 		}
 	},
-	"relationInfo" : [
+	"relationInfo": [
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 8
+							"attributeId": 8
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+							"ref": {
+								"type": "datapod",
+								"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 7
+							"attributeId": 7
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+							"ref": {
+								"type": "datapod",
+								"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 4
+							"attributeId": 4
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
+							"ref": {
+								"type": "datapod",
+								"uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 5
+							"attributeId": 5
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
+							"ref": {
+								"type": "datapod",
+								"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 6
+							"attributeId": 6
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
+							"ref": {
+								"type": "datapod",
+								"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 3
+							"attributeId": 3
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+							"ref": {
+								"type": "datapod",
+								"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 2
+							"attributeId": 2
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+							"ref": {
+								"type": "datapod",
+								"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+							"ref": {
+								"type": "datapod",
+								"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 							},
-							"attributeId" : 7
+							"attributeId": 7
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d"
+							"ref": {
+								"type": "datapod",
+								"uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		}
 	],
-	"uuid" : "15beaf47-0a35-486b-9b65-9a57a2e835df",
-	"version" : "1502631202",
-	"name" : "rel_datawarehouse",
-	"desc" : "Relation for Datawarehouse Datapods",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+	"version": "1502631202",
+	"name": "rel_datawarehouse",
+	"desc": "Relation for Datawarehouse Datapods",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
 		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+	]
 }

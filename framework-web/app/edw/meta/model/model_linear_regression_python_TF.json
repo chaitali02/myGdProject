@@ -1,0 +1,37 @@
+{
+  "uuid": "606527f4-be8f-465b-82e3-10f17c700cd4",
+  "version": "1541224994",
+  "name": "model_linear_regression_python_TF",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Nov 03 11:33:14 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "PYTHON",
+  "dependsOn": null,
+  "label": null,
+  "features": [],
+  "scriptName": "606527f4-be8f-465b-82e3-10f17c700cd4_1541224994.py",
+  "customFlag": "Y"
+}

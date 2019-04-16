@@ -1,147 +1,147 @@
 {
-	"uuid" : "8ae08eb3-0634-48fc-a9de-c40e7be87c9b",
-	"version" : "1542053961",
-	"name" : "train_ann_classifier",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.736Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-				"version" : null,
-				"name" : "Fraud Analytics"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "model",
-			"uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
-			"version" : null,
-			"name" : "model_ann_classifier"
-		},
-		"value" : null
-	},
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
-			"version" : null,
-			"name" : "cc_transactions"
-		},
-		"value" : null
-	},
-	"featureAttrMap" : [
-		{
-			"featureMapId" : "0",
-			"featureDisplaySeq" : "0",
-			"feature" : {
-				"featureId" : "0",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
-				}
-			},
-			"attribute" : {
-				"attrId" : "1",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "0",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		},
-		{
-			"featureMapId" : "1",
-			"featureDisplaySeq" : "1",
-			"feature" : {
-				"featureId" : "1",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
-				}
-			},
-			"attribute" : {
-				"attrId" : "2",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "1",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		}
-	],
-	"trainPercent" : 75,
-	"valPercent" : 25,
-	"labelInfo" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
-			"version" : null,
-			"name" : "cc_transactions"
-		},
-		"value" : null,
-		"attrId" : "30",
-		"attrName" : "class",
-		"attrType" : null
-	},
-	"useHyperParams" : "N",
-	"featureImportance" : null,
-	"rowIdentifier" : [
-		{
-			"attrId" : "1",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
-			}
-		},
-		{
-			"attrId" : "2",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
-			}
-		}
-	],
-	"includeFeatures" : "Y",
-	"trainLocation" : {
-		"ref" : {
-			"type" : "file"
-		}
-	},
-	"testLocation" : {
-		"ref" : {
-			"type" : "file"
-		}
-	},
-	"displyName" : "RLU Prediction - LR"
+
+  "uuid": "8ae08eb3-0634-48fc-a9de-c40e7be87c9b",
+  "version": "1542053961",
+  "name": "train_ann_classifier",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": null,
+        "name": "Fraud Analytics"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7",
+      "version": null,
+      "name": "model_ann_classifier"
+    },
+    "value": null
+  },
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+      "version": null,
+      "name": "cc_transactions"
+    },
+    "value": null
+  },
+  "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "c5e0f895-9392-46e1-8cf6-5fd57b7f1ba7"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }
+    ],
+  "trainPercent": 75,
+  "valPercent": 25,
+  "labelInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+      "version": null,
+      "name": "cc_transactions"
+    },
+    "value": null,
+    "attrId": "30",
+    "attrName": "class",
+    "attrType": null
+  },
+  "useHyperParams": "N",
+  "featureImportance": null,
+   "rowIdentifier" : [ 
+        {
+            "attrId" : "1",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+            }
+        }, 
+        {
+            "attrId" : "2",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
+    "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
 }

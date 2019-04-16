@@ -1,0 +1,808 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "dataset",
+            "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "featureDisplaySeq" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "3",
+            "featureDisplaySeq" : "3",
+            "feature" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "featureDisplaySeq" : "4",
+            "feature" : {
+                "featureId" : "4",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "4",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "5",
+            "featureDisplaySeq" : "5",
+            "feature" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "6",
+            "featureDisplaySeq" : "6",
+            "feature" : {
+                "featureId" : "6",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "6",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "6",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "7",
+            "featureDisplaySeq" : "7",
+            "feature" : {
+                "featureId" : "7",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "7",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "7",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "8",
+            "featureDisplaySeq" : "8",
+            "feature" : {
+                "featureId" : "8",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "8",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "8",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "9",
+            "featureDisplaySeq" : "9",
+            "feature" : {
+                "featureId" : "9",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "9",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "9",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "10",
+            "featureDisplaySeq" : "10",
+            "feature" : {
+                "featureId" : "10",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "10",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "10",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "11",
+            "featureDisplaySeq" : "11",
+            "feature" : {
+                "featureId" : "11",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "11",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "11",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "12",
+            "featureDisplaySeq" : "12",
+            "feature" : {
+                "featureId" : "12",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "12",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "13",
+            "featureDisplaySeq" : "13",
+            "feature" : {
+                "featureId" : "13",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "13",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "13",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "14",
+            "featureDisplaySeq" : "14",
+            "feature" : {
+                "featureId" : "14",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "14",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "14",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "15",
+            "featureDisplaySeq" : "15",
+            "feature" : {
+                "featureId" : "15",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "15",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "15",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "16",
+            "featureDisplaySeq" : "16",
+            "feature" : {
+                "featureId" : "16",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "16",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "16",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "17",
+            "featureDisplaySeq" : "17",
+            "feature" : {
+                "featureId" : "17",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "17",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "17",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "18",
+            "featureDisplaySeq" : "18",
+            "feature" : {
+                "featureId" : "18",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "18",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "18",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "19",
+            "featureDisplaySeq" : "19",
+            "feature" : {
+                "featureId" : "19",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "19",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "19",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "20",
+            "featureDisplaySeq" : "20",
+            "feature" : {
+                "featureId" : "20",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "20",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "20",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "21",
+            "featureDisplaySeq" : "21",
+            "feature" : {
+                "featureId" : "21",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "21",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "21",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "22",
+            "featureDisplaySeq" : "22",
+            "feature" : {
+                "featureId" : "22",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "22",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "22",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "23",
+            "featureDisplaySeq" : "23",
+            "feature" : {
+                "featureId" : "23",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "23",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "23",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "24",
+            "featureDisplaySeq" : "24",
+            "feature" : {
+                "featureId" : "24",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "24",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "24",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "25",
+            "featureDisplaySeq" : "25",
+            "feature" : {
+                "featureId" : "25",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "25",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "25",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "26",
+            "featureDisplaySeq" : "26",
+            "feature" : {
+                "featureId" : "26",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "26",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "26",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "27",
+            "featureDisplaySeq" : "27",
+            "feature" : {
+                "featureId" : "27",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "41b247d5-0f64-4729-a72d-6637b275ab68"
+                }
+            },
+            "attribute" : {
+                "attrId" : "27",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "27",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }
+    ],
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "featureImportance" : "N",
+    "labelInfo" : {
+        "attrId" : "28",
+        "ref" : {
+            "type" : "dataset",
+            "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+        }
+    },
+    "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af291",
+    "version" : "1528053499",
+    "name" : "Train Fraud Detection Model (Dataset)",
+    "desc" : "Train the model using CC transactions training dataset.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "useHyperParams": "N",
+    "createdOn" : ISODate("2018-06-03T19:18:19.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+                "version" : "1521430822"
+            }
+        }
+    ],
+ "rowIdentifier" : [ 
+        {
+            "attrId" : "1",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+            }
+        }, 
+        {
+            "attrId" : "2",
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "f2ab0ce3-11a9-483f-ba29-ed483c24c0e9"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
+    "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
+}

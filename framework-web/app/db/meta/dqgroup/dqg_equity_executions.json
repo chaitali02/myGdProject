@@ -1,90 +1,89 @@
 {
-	"uuid" : "6a7b75df-9823-450f-b51f-ed6eae89968f",
-	"version" : "1552345962",
-	"name" : "dqg_equity_executions",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"ruleInfo" : [
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "8fc47cd2-adce-40a5-8043-1d82936c2121",
-				"version" : null,
-				"name" : "dq_equity_executions_rule1"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "fd5f3f02-c648-467e-9e7b-8fcfc6392a42",
-				"version" : null,
-				"name" : "dq_equity_executions_rule2"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "8fc47cd2-adce-40a5-8043-1d82936c2123",
-				"version" : null,
-				"name" : "dq_equity_executions_rule3"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "45f5f608-72bb-4f39-90f7-c3e500744f54",
-				"version" : null,
-				"name" : "dq_equity_executions_rule4"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "a3945b0a-aa86-4169-9128-a0fd580dc005",
-				"version" : null,
-				"name" : "dq_equity_executions_rule5"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "291d1c24-5b2a-43f4-b17c-1cb08d9f3b03",
-				"version" : null,
-				"name" : "dq_equity_executions_rule6"
-			},
-			"value" : null
-		}
-	],
-	"inParallel" : "true",
-	"displyName" : "dqg_equity_orders"
+  "uuid": "6a7b75df-9823-450f-b51f-ed6eae89968f",
+  "version": "1552345962",
+  "name": "dqg_equity_executions",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 19:12:42 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "ruleInfo": [
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "8fc47cd2-adce-40a5-8043-1d82936c2121",
+        "version": null,
+        "name": "dq_equity_executions_rule1"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "fd5f3f02-c648-467e-9e7b-8fcfc6392a42",
+        "version": null,
+        "name": "dq_equity_executions_rule2"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "8fc47cd2-adce-40a5-8043-1d82936c2123",
+        "version": null,
+        "name": "dq_equity_executions_rule3"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "45f5f608-72bb-4f39-90f7-c3e500744f54",
+        "version": null,
+        "name": "dq_equity_executions_rule4"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc005",
+        "version": null,
+        "name": "dq_equity_executions_rule5"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "dq",
+        "uuid": "291d1c24-5b2a-43f4-b17c-1cb08d9f3b03",
+        "version": null,
+        "name": "dq_equity_executions_rule6"
+      },
+      "value": null
+    }
+  ],
+  "inParallel": "true"
 }

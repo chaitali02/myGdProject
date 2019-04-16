@@ -1,35 +1,34 @@
 {
-	"uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
-	"version" : "1525530938",
-	"name" : "Histogram",
-	"desc" : "Calculate histogram on columns",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:44.911Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"pubRlished" : "N",
-	"operatorType" : "Histogram",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"paramList" : {
-		"ref" : {
-			"type" : "paramlist",
-			"uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7"
-		}
-	},
-	"displyName" : "Histogram"
+  "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
+  "version": "1525530938",
+  "name": "Histogram",
+  "desc": "Calculate histogram on columns",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "pubRlished": "N",
+  "operatorType" : "Histogram",
+   "publicFlag": "Y",
+  "appInfo" : [
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7"
+    }
+  }
 }

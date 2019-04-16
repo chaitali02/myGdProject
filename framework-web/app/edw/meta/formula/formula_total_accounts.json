@@ -1,95 +1,94 @@
 {
-	"uuid" : "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
-	"version" : "1536856233",
-	"name" : "formula_total_accounts",
-	"desc" : "Total Accounts",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [
-		"DEV",
-		"0.1.0"
-	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "15beaf47-0a35-486b-9b65-9a57a2e835df",
-			"version" : null,
-			"name" : "relation_datawarehouse"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002671",
-				"version" : null,
-				"name" : "count(*)"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-				"version" : null,
-				"name" : "dim_account"
-			},
-			"attributeId" : 0,
-			"value" : null,
-			"attributeName" : "account_id",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "aggr",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
+  "version": "1536856233",
+  "name": "formula_total_accounts",
+  "desc": "Total Accounts",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "tags": [
+    "DEV",
+    "0.1.0"
+  ],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
+      "version": null,
+      "name": "relation_datawarehouse"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "count(*)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+        "version": null,
+        "name": "dim_account"
+      },
+      "attributeId": 0,
+      "value": null,
+      "attributeName": "account_id",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
 }

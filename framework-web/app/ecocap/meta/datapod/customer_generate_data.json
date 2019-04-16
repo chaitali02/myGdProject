@@ -1,71 +1,70 @@
 {
-	"id" : "5b2102d22750524fc32ddfee",
-	"uuid" : "d5e766fd-552d-4e21-858d-5a5cd4028de6",
-	"version" : "1528890066",
-	"name" : "customer_generate_data",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-			}
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-		}
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "id",
-			"type" : "integer",
-			"desc" : "id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "id",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 1,
-			"name" : "data",
-			"type" : "double",
-			"desc" : "data",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "data",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 2,
-			"name" : "version",
-			"type" : "integer",
-			"desc" : "version",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "version",
-			"active" : "Y",
-			"expr" : null
-		}
-	],
-	"prefix" : "utm",
-	"displyName" : "security"
+  "id": "5b2102d22750524fc32ddfee",
+  "uuid": "d5e766fd-552d-4e21-858d-5a5cd4028de6",
+  "version": "1528890066",
+  "name": "customer_generate_data",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Wed Jun 13 17:11:06 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+      }
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+    }
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "id",
+      "type": "integer",
+      "desc": "id",
+      "key": "",
+      "partition": "N",
+      "dispName": "id",
+      "active" : "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
+      "name": "data",
+      "type": "double",
+      "desc": "data",
+      "key": "",
+      "partition": "N",
+      "dispName": "data",
+      "active" : "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "version",
+      "type": "integer",
+      "desc": "version",
+      "key": "",
+      "partition": "N",
+      "dispName": "version",
+      "active" : "Y",
+      "expr": null
+    }
+  ],
+	"prefix":"utm"
 }

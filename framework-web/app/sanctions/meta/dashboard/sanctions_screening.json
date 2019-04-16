@@ -1,116 +1,115 @@
 {
-	"uuid" : "51bbce9e-6468-4462-bfa5-e5ecd51dd144",
-	"version" : "1547586315",
-	"name" : "Sanctions Screening",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.823Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"sectionInfo" : [
-		{
-			"sectionId" : null,
-			"name" : "Sender Match Score",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "3e4190b8-1730-42d0-823a-a26ba0507207",
-					"version" : null,
-					"name" : "viz_sender_match_score"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Receiver Match Score",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "da56fedd-21fa-4a24-98ac-e8e747e293b3",
-					"version" : null,
-					"name" : "viz_reciever_match_score"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Total Matches By Country",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "0af6129d-8f73-46c4-a33e-51d88030a32e",
-					"version" : null,
-					"name" : "viz_total_matches_by_country"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 1
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "af93c606-d13e-4eac-a46b-438c06110312",
-			"version" : null,
-			"name" : "ds_sanctions_screening_scores"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "af93c606-d13e-4eac-a46b-438c06110312",
-				"version" : null,
-				"name" : "ds_sanctions_screening_scores"
-			},
-			"value" : null,
-			"attrId" : "3",
-			"attrName" : "transaction_type_code",
-			"attrType" : null,
-			"attrUnitType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "af93c606-d13e-4eac-a46b-438c06110312",
-				"version" : null,
-				"name" : "ds_sanctions_screening_scores"
-			},
-			"value" : null,
-			"attrId" : "5",
-			"attrName" : "transaction_country",
-			"attrType" : null,
-			"attrUnitType" : null
-		}
-	],
-	"displyName" : "Data Quality Summary"
+  "uuid": "51bbce9e-6468-4462-bfa5-e5ecd51dd144",
+  "version": "1547586315",
+  "name": "Sanctions Screening",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Jan 15 16:05:15 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "sectionInfo": [
+    {
+      "sectionId": null,
+      "name": "Sender Match Score",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "3e4190b8-1730-42d0-823a-a26ba0507207",
+          "version": null,
+          "name": "viz_sender_match_score"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Receiver Match Score",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "da56fedd-21fa-4a24-98ac-e8e747e293b3",
+          "version": null,
+          "name": "viz_reciever_match_score"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Total Matches By Country",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "0af6129d-8f73-46c4-a33e-51d88030a32e",
+          "version": null,
+          "name": "viz_total_matches_by_country"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 1
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "af93c606-d13e-4eac-a46b-438c06110312",
+      "version": null,
+      "name": "ds_sanctions_screening_scores"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "af93c606-d13e-4eac-a46b-438c06110312",
+        "version": null,
+        "name": "ds_sanctions_screening_scores"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "transaction_type_code",
+      "attrType": null,
+      "attrUnitType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "af93c606-d13e-4eac-a46b-438c06110312",
+        "version": null,
+        "name": "ds_sanctions_screening_scores"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "transaction_country",
+      "attrType": null,
+      "attrUnitType": null
+    }
+  ]
 }

@@ -1,134 +1,134 @@
 {
-	"uuid" : "62eb9e00-1578-4f83-a3cd-02f6c6f090d0",
-	"version" : "1535755528",
-	"name" : "rpt_customer_es_allocation",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.012Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"limit" : -1,
-	"type" : "default",
-	"attributeFilterInfo" : null,
-	"title" : "Customer ES Allocation",
-	"header" : "Customer ES Allocation",
-	"headerAlign" : "CENTER",
-	"footer" : "Economic Capital",
-	"footerAlign" : "LEFT",
-	"saveOnRefresh" : "Y",
-	"filterInfo" : null,
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
-			"version" : null,
-			"name" : "customer_es_allocation"
-		},
-		"value" : null
-	},
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrSourceName" : "cust_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
-					"version" : null,
-					"name" : "customer_es_allocation"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "cust_id",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrSourceName" : "es_contribution",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
-					"version" : null,
-					"name" : "customer_es_allocation"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "es_contribution",
-				"attrType" : "decimal"
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrSourceName" : "es_allocation",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
-					"version" : null,
-					"name" : "customer_es_allocation"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "es_allocation",
-				"attrType" : "decimal"
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrSourceName" : "reporting_date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
-					"version" : null,
-					"name" : "customer_es_allocation"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "reporting_date",
-				"attrType" : "string"
-			}
-		}
-	],
-	"format" : "EXCEL",
-	"senderInfo" : {
-		"emailTo" : [
-			"jkumar@gtpltech.com"
-		],
-		"emailBCC" : [
-			""
-		],
-		"emailCC" : [
-			"vkatkar@gtpltech.com",
-			"gsonawane@gtpltech.com"
-		],
-		"emailAttachment" : null,
-		"notifOnSuccess" : "Y",
-		"notifyOnFailure" : "Y",
-		"sendAttachment" : "Y"
-	},
-	"displyName" : "rpt_data_quality_summary"
+  "uuid": "62eb9e00-1578-4f83-a3cd-02f6c6f090d0",
+  "version": "1535755528",
+  "name": "rpt_customer_es_allocation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "limit":-1,
+  "type" : "default",
+  "attributeFilterInfo" : null,
+  "title": "Customer ES Allocation",
+  "header": "Customer ES Allocation",
+  "headerAlign": "CENTER",
+  "footer": "Economic Capital",
+  "footerAlign": "LEFT",
+  "saveOnRefresh" : "Y",
+  "filterInfo": null,
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+      "version": null,
+      "name": "customer_es_allocation"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrSourceName": "cust_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "cust_id",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrSourceName": "es_contribution",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "es_contribution",
+        "attrType": "decimal"
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrSourceName": "es_allocation",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "es_allocation",
+        "attrType": "decimal"
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrSourceName": "reporting_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
+          "version": null,
+          "name": "customer_es_allocation"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "reporting_date",
+        "attrType": "string"
+      }
+    }
+  ],
+  "format":"EXCEL",
+  "senderInfo" : {
+        "emailTo" : [ 
+            "jkumar@gtpltech.com"
+        ],
+        "emailBCC" : [ 
+            ""
+        ],
+        "emailCC" : [ 
+            "vkatkar@gtpltech.com", 
+            "gsonawane@gtpltech.com"
+        ],
+        "emailAttachment" : null,
+        "notifOnSuccess" : "Y",
+        "notifyOnFailure" : "Y",
+        "sendAttachment" : "Y"
+    }
 }
+

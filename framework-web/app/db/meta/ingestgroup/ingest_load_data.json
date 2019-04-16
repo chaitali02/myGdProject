@@ -1,63 +1,62 @@
 {
-	"uuid" : "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
-	"version" : "1553031531",
-	"name" : "ingest_load_data",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:44.166Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"ruleInfo" : [
-		{
-			"ref" : {
-				"type" : "ingest",
-				"uuid" : "540ac102-ec10-408c-bff0-5d6453eeb79f",
-				"version" : null,
-				"name" : "ingest_security"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "ingest",
-				"uuid" : "7a9d3508-793d-4c3d-9cdb-a9a050e00caa",
-				"version" : null,
-				"name" : "ingest_equity_orders"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "ingest",
-				"uuid" : "74813857-2c08-4578-ae6f-f7961621841a",
-				"version" : null,
-				"name" : "ingest_equity_executions"
-			},
-			"value" : null
-		}
-	],
-	"inParallel" : null,
-	"displyName" : "ingest_load_data"
+  "uuid": "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
+  "version": "1553031531",
+  "name": "ingest_load_data",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 19 17:38:51 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "ruleInfo": [
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "540ac102-ec10-408c-bff0-5d6453eeb79f",
+        "version": null,
+        "name": "ingest_security"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "7a9d3508-793d-4c3d-9cdb-a9a050e00caa",
+        "version": null,
+        "name": "ingest_equity_orders"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "74813857-2c08-4578-ae6f-f7961621841a",
+        "version": null,
+        "name": "ingest_equity_executions"
+      },
+      "value": null
+    }
+  ],
+  "inParallel": null
 }

@@ -1,78 +1,77 @@
 {
-	"uuid" : "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
-	"version" : "1536442143",
-	"name" : "rc_account_balance",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:45.680Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"sourceAttr" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-			"version" : null,
-			"name" : "account"
-		},
-		"value" : null,
-		"attrId" : "14",
-		"attrName" : "current_balance",
-		"attrType" : null
-	},
-	"sourceFunc" : {
-		"ref" : {
-			"type" : "function",
-			"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002671",
-			"version" : null,
-			"name" : "max(col)"
-		},
-		"value" : null
-	},
-	"targetAttr" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-			"version" : null,
-			"name" : "account"
-		},
-		"value" : null,
-		"attrId" : "14",
-		"attrName" : "current_balance",
-		"attrType" : null
-	},
-	"targetFunc" : {
-		"ref" : {
-			"type" : "function",
-			"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002671",
-			"version" : null,
-			"name" : "max(col)"
-		},
-		"value" : null
-	},
-	"sourceFilter" : null,
-	"targetFilter" : null,
-	"sourceDistinct" : "N",
-	"targetDistinct" : "N",
-	"displyName" : "rc_account_balance"
+  "uuid": "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
+  "version": "1536442143",
+  "name": "rc_account_balance",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Sep 08 17:29:03 EDT 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "sourceAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "version": null,
+      "name": "account"
+    },
+    "value": null,
+    "attrId": "14",
+    "attrName": "current_balance",
+    "attrType": null
+  },
+  "sourceFunc": {
+    "ref": {
+      "type": "function",
+      "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002671",
+      "version": null,
+      "name": "max(col)"
+    },
+    "value": null
+  },
+  "targetAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+      "version": null,
+      "name": "account"
+    },
+    "value": null,
+    "attrId": "14",
+    "attrName": "current_balance",
+    "attrType": null
+  },
+  "targetFunc": {
+    "ref": {
+      "type": "function",
+      "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002671",
+      "version": null,
+      "name": "max(col)"
+    },
+    "value": null
+  },
+  "sourceFilter": null,
+  "targetFilter": null,
+  "sourceDistinct": "N",
+  "targetDistinct": "N"
 }

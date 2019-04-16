@@ -1,58 +1,57 @@
 {
-	"uuid" : "79b38b37-4002-476a-a29d-60abd932b4b6",
-	"version" : "1543080861",
-	"name" : "predict_suspicious_activity_ann",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : null,
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : null,
-			"name" : "file_data"
-		},
-		"value" : null
-	},
-	"cache" : null,
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"displaySeq" : null,
-			"name" : "prediction",
-			"type" : "DOUBLE",
-			"desc" : "",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "prediction",
-			"active" : "Y",
-			"length" : null
-		}
-	],
-	"prefix" : "rdc",
-	"displyName" : "security"
+  "uuid": "79b38b37-4002-476a-a29d-60abd932b4b6",
+  "version": "1543080861",
+  "name": "predict_suspicious_activity_ann",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Nov 24 12:34:21 EST 2018",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "cache": null,
+  "attributes": [
+    {
+      "attributeId": 0,
+      "displaySeq": null,
+      "name": "prediction",
+      "type": "DOUBLE",
+      "desc": "",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "prediction",
+      "active": "Y",
+      "length": null
+    }
+  ],
+	"prefix":"rdc"
 }

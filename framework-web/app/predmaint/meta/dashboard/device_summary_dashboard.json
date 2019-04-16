@@ -1,148 +1,147 @@
 {
-	"uuid" : "e5191f74-4d6b-43e0-b4c8-3a1715b073f8",
-	"version" : "1550346350",
-	"name" : "Device Summary Dashboard",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.823Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1547482153",
-				"name" : "Predictive Maintenance"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"sectionInfo" : [
-		{
-			"sectionId" : null,
-			"name" : "Device Time Series",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "bb72ddc6-f43b-4813-b2cb-b72ef2484b12",
-					"version" : null,
-					"name" : "viz_device_time_series"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Device Problem Reported",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "a809d544-97c7-498e-9789-3d60199987a0",
-					"version" : null,
-					"name" : "viz_device_problem_reported"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Device Problem State",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "011ee127-99a5-4db7-9a34-a4c2f31231b3",
-					"version" : null,
-					"name" : "viz_device_problem_state"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Device Warning State",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "4d8e3de8-8108-404c-8570-1b0510de310f",
-					"version" : null,
-					"name" : "viz_device_warning_state"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Device Faulty State",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "ca06cb36-d16d-48f0-b7ac-86b73a8b30a6",
-					"version" : null,
-					"name" : "viz_device_faulty_state"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 3
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-			"version" : null,
-			"name" : "device_data_final_features"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-				"version" : null,
-				"name" : "device_data_final_features"
-			},
-			"value" : null,
-			"attrId" : "0",
-			"attrName" : "deviceid",
-			"attrType" : null,
-			"attrUnitType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-				"version" : null,
-				"name" : "device_data_final_features"
-			},
-			"value" : null,
-			"attrId" : "1",
-			"attrName" : "date",
-			"attrType" : null,
-			"attrUnitType" : null
-		}
-	],
-	"saveOnRefresh" : "N",
-	"displyName" : "Data Quality Summary"
+  "uuid": "e5191f74-4d6b-43e0-b4c8-3a1715b073f8",
+  "version": "1550346350",
+  "name": "Device Summary Dashboard",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Feb 16 14:45:50 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sectionInfo": [
+    {
+      "sectionId": null,
+      "name": "Device Time Series",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "bb72ddc6-f43b-4813-b2cb-b72ef2484b12",
+          "version": null,
+          "name": "viz_device_time_series"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Device Problem Reported",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "a809d544-97c7-498e-9789-3d60199987a0",
+          "version": null,
+          "name": "viz_device_problem_reported"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Device Problem State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "011ee127-99a5-4db7-9a34-a4c2f31231b3",
+          "version": null,
+          "name": "viz_device_problem_state"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Device Warning State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "4d8e3de8-8108-404c-8570-1b0510de310f",
+          "version": null,
+          "name": "viz_device_warning_state"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Device Faulty State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "ca06cb36-d16d-48f0-b7ac-86b73a8b30a6",
+          "version": null,
+          "name": "viz_device_faulty_state"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 3
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+      "version": null,
+      "name": "device_data_final_features"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "deviceid",
+      "attrType": null,
+      "attrUnitType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "date",
+      "attrType": null,
+      "attrUnitType": null
+    }
+  ],
+  "saveOnRefresh": "N"
 }

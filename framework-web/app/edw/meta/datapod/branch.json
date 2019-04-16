@@ -1,140 +1,139 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"cache" : "Y",
-	"published" : "N",
-	"attributes" : [
+	"cache": "Y",
+	"published": "N",
+	"attributes": [
 		{
-			"attributeId" : 0,
-			"name" : "branch_id",
-			"type" : "integer",
-			"desc" : "branch_id",
-			"dispName" : "branch_id",
-			"key" : 0,
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 0,
+			"name": "branch_id",
+			"type": "integer",
+			"desc": "branch_id",
+			"dispName": "branch_id",
+			"key": 0,
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 1,
-			"name" : "branch_type_id",
-			"type" : "integer",
-			"desc" : "branch_type_id",
-			"dispName" : "branch_type_id",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 1,
+			"name": "branch_type_id",
+			"type": "integer",
+			"desc": "branch_type_id",
+			"dispName": "branch_type_id",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 2,
-			"name" : "bank_id",
-			"type" : "integer",
-			"desc" : "bank_id",
-			"dispName" : "bank_id",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 2,
+			"name": "bank_id",
+			"type": "integer",
+			"desc": "bank_id",
+			"dispName": "bank_id",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 3,
-			"name" : "address_id",
-			"type" : "integer",
-			"desc" : "address_id",
-			"dispName" : "address_id",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 3,
+			"name": "address_id",
+			"type": "integer",
+			"desc": "address_id",
+			"dispName": "address_id",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 4,
-			"name" : "branch_name",
-			"type" : "string",
-			"desc" : "branch_name",
-			"dispName" : "branch_name",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 4,
+			"name": "branch_name",
+			"type": "string",
+			"desc": "branch_name",
+			"dispName": "branch_name",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 5,
-			"name" : "branch_desc",
-			"type" : "string",
-			"desc" : "branch_desc",
-			"dispName" : "branch_desc",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 5,
+			"name": "branch_desc",
+			"type": "string",
+			"desc": "branch_desc",
+			"dispName": "branch_desc",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 6,
-			"name" : "branch_contact_name",
-			"type" : "string",
-			"desc" : "branch_contact_name",
-			"dispName" : "branch_contact_name",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 6,
+			"name": "branch_contact_name",
+			"type": "string",
+			"desc": "branch_contact_name",
+			"dispName": "branch_contact_name",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 7,
-			"name" : "branch_contact_phone",
-			"type" : "string",
-			"desc" : "branch_contact_phone",
-			"dispName" : "branch_contact_phone",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 7,
+			"name": "branch_contact_phone",
+			"type": "string",
+			"desc": "branch_contact_phone",
+			"dispName": "branch_contact_phone",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 8,
-			"name" : "branch_contact_email",
-			"type" : "string",
-			"desc" : "branch_contact_email",
-			"dispName" : "branch_contact_email",
-			"partition" : "N",
-			"active" : "Y"
+			"attributeId": 8,
+			"name": "branch_contact_email",
+			"type": "string",
+			"desc": "branch_contact_email",
+			"dispName": "branch_contact_email",
+			"partition": "N",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 9,
-			"name" : "load_date",
-			"type" : "string",
-			"desc" : "load_date",
-			"dispName" : "load_date",
-			"partition" : "Y",
-			"active" : "Y"
+			"attributeId": 9,
+			"name": "load_date",
+			"type": "string",
+			"desc": "load_date",
+			"dispName": "load_date",
+			"partition": "Y",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 10,
-			"name" : "load_id",
-			"type" : "integer",
-			"desc" : "load_id",
-			"dispName" : "load_id",
-			"partition" : "Y",
-			"active" : "Y"
+			"attributeId": 10,
+			"name": "load_id",
+			"type": "integer",
+			"desc": "load_id",
+			"dispName": "load_id",
+			"partition": "Y",
+			"active": "Y"
 		}
 	],
-	"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-	"version" : "1488620235",
-	"name" : "branch",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
+	"version": "1488620235",
+	"name": "branch",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-			}
-		}
+	    {
+	      "ref": {
+	        "type": "application",
+	        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+	      }
+	    }
 	],
-	"prefix" : "rnh",
-	"displyName" : "security"
+    "prefix" : "rnh"
 }

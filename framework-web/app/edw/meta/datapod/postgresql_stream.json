@@ -1,123 +1,123 @@
 {
-	"uuid" : "50644c42-4857-4df2-9b5b-2c9bf9bbcdf9",
-	"version" : "1542453285",
-	"name" : "postgresql_stream",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028",
-			"version" : null,
-			"name" : "postgres"
-		},
-		"value" : null
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"displaySeq" : null,
-			"name" : "key1",
-			"type" : "integer",
-			"desc" : "key1",
-			"expression" : null,
-			"key" : "0",
-			"partition" : "N",
-			"dispName" : "key1",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 1,
-			"displaySeq" : null,
-			"name" : "value1",
-			"type" : "integer",
-			"desc" : "value1",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "value1",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 2,
-			"displaySeq" : null,
-			"name" : "topic1",
-			"type" : "string",
-			"desc" : "topic1",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "topic1",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 3,
-			"displaySeq" : null,
-			"name" : "partition1",
-			"type" : "string",
-			"desc" : "partition1",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "partition1",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 4,
-			"displaySeq" : null,
-			"name" : "offset1",
-			"type" : "string",
-			"desc" : "offset1",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "offset1",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 5,
-			"displaySeq" : null,
-			"name" : "timestamp1",
-			"type" : "string",
-			"desc" : "timestamp1",
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "timestamp1",
-			"active" : "Y",
-			"length" : null
-		}
-	],
-	"prefix" : "otr",
-	"displyName" : "security"
+
+  "uuid": "50644c42-4857-4df2-9b5b-2c9bf9bbcdf9",
+  "version": "1542453285",
+  "name": "postgresql_stream",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Nov 17 16:44:45 IST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73028",
+      "version": null,
+      "name": "postgres"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "displaySeq": null,
+      "name": "key1",
+      "type": "integer",
+      "desc": "key1",
+      "expression": null,
+      "key": "0",
+      "partition": "N",
+      "dispName": "key1",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 1,
+      "displaySeq": null,
+      "name": "value1",
+      "type": "integer",
+      "desc": "value1",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "value1",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 2,
+      "displaySeq": null,
+      "name": "topic1",
+      "type": "string",
+      "desc": "topic1",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "topic1",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 3,
+      "displaySeq": null,
+      "name": "partition1",
+      "type": "string",
+      "desc": "partition1",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "partition1",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 4,
+      "displaySeq": null,
+      "name": "offset1",
+      "type": "string",
+      "desc": "offset1",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "offset1",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 5,
+      "displaySeq": null,
+      "name": "timestamp1",
+      "type": "string",
+      "desc": "timestamp1",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "timestamp1",
+      "active": "Y",
+      "length": null
+    }
+  ],
+      "prefix" : "otr"
 }

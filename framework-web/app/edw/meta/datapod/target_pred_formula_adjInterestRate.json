@@ -1,0 +1,58 @@
+{
+  "id": "5b028cba2750525081481797",
+  "uuid": "4a92b971-5741-4dcc-a8e0-96c1fa92a327",
+  "version": "1526893754",
+  "name": "target_pred_formula_adjInterestRate",
+  "desc": "Saves the result of prediction which is of the type formula adjInterestRate.",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    }
+  },
+  "createdOn": "Mon May 21 14:39:14 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196"
+      }
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+    }
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "interestRate",
+      "type": "double",
+      "desc": "interestRate",
+      "key": "",
+      "partition": "N",
+      "dispName": "interestRate",
+      "active": "Y"
+    },
+    {
+      "attributeId": 1,
+      "name": "account_id",
+      "type": "double",
+      "desc": "account_id",
+      "key": "",
+      "partition": "N",
+      "dispName": "account_id",
+      "active": "Y"
+    }
+  ],
+      "prefix" : "gtr"
+}

@@ -1,0 +1,79 @@
+{
+	"dependsOn": {
+		"ref": {
+			"type": "paramlist",
+			"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
+		}
+	},
+	"paramInfo": [
+		{
+			"paramSetId": 0,
+			"paramSetVal": [
+				{
+					"ref": {
+						"type": "paramlist",
+						"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
+					},
+					"paramId": 4,
+					"value": "12"
+				},
+				{
+					"ref": {
+						"type": "paramlist",
+						"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
+					},
+					"paramId": 1,
+					"value": "20"
+				}
+			]
+		},
+		{
+			"paramSetId": 1,
+			"paramSetVal": [
+				{
+					"ref": {
+						"type": "paramlist",
+						"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
+					},
+					"paramId": 4,
+					"value": "21"
+				},
+				{
+					"ref": {
+						"type": "paramlist",
+						"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82"
+					},
+					"paramId": 1,
+					"value": "30"
+				}
+			]
+		}
+	],
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a82",
+	"version": "1495146809",
+	"name": "paramset_linear_regression",
+	"desc": "Linear Regression Param Set",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
+		"DEV",
+		"0.1.0"
+	],
+	"active" : "Y",
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
+			}
+		}
+	]
+}

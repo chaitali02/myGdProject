@@ -1,211 +1,210 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "model",
-			"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-		}
-	},
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-		}
-	},
-	"featureAttrMap" : [
-		{
-			"featureMapId" : "0",
-			"featureDisplaySeq" : "0",
-			"feature" : {
-				"featureId" : "0",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-				}
-			},
-			"attribute" : {
-				"attrId" : "0",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "0",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		},
-		{
-			"featureMapId" : "1",
-			"featureDisplaySeq" : "1",
-			"feature" : {
-				"featureId" : "1",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-				}
-			},
-			"attribute" : {
-				"attrId" : "1",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "1",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		},
-		{
-			"featureMapId" : "2",
-			"featureDisplaySeq" : "2",
-			"feature" : {
-				"featureId" : "2",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-				}
-			},
-			"attribute" : {
-				"attrId" : "2",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "2",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		},
-		{
-			"featureMapId" : "3",
-			"featureDisplaySeq" : "3",
-			"feature" : {
-				"featureId" : "3",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-				}
-			},
-			"attribute" : {
-				"attrId" : "3",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "3",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		},
-		{
-			"featureMapId" : "4",
-			"featureDisplaySeq" : "4",
-			"feature" : {
-				"featureId" : "5",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model",
-					"uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
-				}
-			},
-			"attribute" : {
-				"attrId" : "5",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-				}
-			},
-			"imputeMethod" : {
-				"featureId" : "5",
-				"featureDefaultValue" : 0,
-				"ref" : {
-					"type" : "model"
-				}
-			}
-		}
-	],
-	"trainPercent" : 70,
-	"valPercent" : 30,
-	"labelInfo" : {
-		"attrId" : "4",
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-		}
-	},
-	"useHyperParams" : "N",
-	"featureImportance" : "N",
-	"uuid" : "f5581561-ac59-463d-845a-b1b5f8fafbd9",
-	"version" : "1535822030",
-	"name" : "train_linear_svm_classifier",
-	"desc" : ".",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.736Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
-			}
-		}
-	],
-	"rowIdentifier" : [
-		{
-			"attrId" : "0",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-			}
-		},
-		{
-			"attrId" : "1",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-			}
-		}
-	],
-	"includeFeatures" : "Y",
-	"trainLocation" : {
-		"ref" : {
-			"type" : "file"
-		}
-	},
-	"testLocation" : {
-		"ref" : {
-			"type" : "file"
-		}
-	},
-	"displyName" : "RLU Prediction - LR"
+    "dependsOn" : {
+        "ref" : {
+            "type" : "model",
+            "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+        }
+    },
+    "source" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "featureAttrMap" : [ 
+        {
+            "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
+            "feature" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+                }
+            },
+            "attribute" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
+            "feature" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+                }
+            },
+            "attribute" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "2",
+            "featureDisplaySeq" : "2",
+            "feature" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+                }
+            },
+            "attribute" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "3",
+            "featureDisplaySeq" : "3",
+            "feature" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+                }
+            },
+            "attribute" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "4",
+            "featureDisplaySeq" : "4",
+            "feature" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "151d6478-75d2-4b76-a1e8-4c64ea8b7a91"
+                }
+            },
+            "attribute" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+            },
+            "imputeMethod" : {
+                "featureId" : "5",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
+            }
+        }
+    ],
+    "trainPercent" : 70.0,
+    "valPercent" : 30.0,
+    "labelInfo" : {
+        "attrId" : "4",
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+        }
+    },
+    "useHyperParams" : "N",
+    "featureImportance" : "N",
+    "uuid" : "f5581561-ac59-463d-845a-b1b5f8fafbd9",
+    "version" : "1535822030",
+    "name" : "train_linear_svm_classifier",
+    "desc" : ".",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-01T17:13:50.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ],
+"rowIdentifier" : [ 
+        {
+           "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }, 
+        {
+            "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+                }
+        }
+    ],
+    "includeFeatures" : "Y",
+    "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
 }

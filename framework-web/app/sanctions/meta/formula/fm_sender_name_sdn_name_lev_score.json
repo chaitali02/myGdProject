@@ -1,464 +1,463 @@
 {
-	"uuid" : "78d0f790-54b5-46d3-bfb4-f98553683bd4",
-	"version" : "1547497968",
-	"name" : "fm_sender_name_sdn_name_lev_score",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "ec15a0c0-b567-44d2-b264-947fb53d2a8f",
-			"version" : null,
-			"name" : "rel_sanctions_screening"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "1",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "-",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002201",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "c10d8a6d-d128-4367-b903-7865ebb47b74",
-				"version" : null,
-				"name" : "transactions"
-			},
-			"attributeId" : 9,
-			"value" : null,
-			"attributeName" : "sender_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ",",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3029dbfd-2794-4625-855d-6392f0e20a53",
-				"version" : null,
-				"name" : "sdn_primary_list"
-			},
-			"attributeId" : 1,
-			"value" : null,
-			"attributeName" : "sdn_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "/",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f1000",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "c10d8a6d-d128-4367-b903-7865ebb47b74",
-				"version" : null,
-				"name" : "transactions"
-			},
-			"attributeId" : 9,
-			"value" : null,
-			"attributeName" : "sender_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ">",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3029dbfd-2794-4625-855d-6392f0e20a53",
-				"version" : null,
-				"name" : "sdn_primary_list"
-			},
-			"attributeId" : 1,
-			"value" : null,
-			"attributeName" : "sdn_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ",",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "c10d8a6d-d128-4367-b903-7865ebb47b74",
-				"version" : null,
-				"name" : "transactions"
-			},
-			"attributeId" : 9,
-			"value" : null,
-			"attributeName" : "sender_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ",",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3029dbfd-2794-4625-855d-6392f0e20a53",
-				"version" : null,
-				"name" : "sdn_primary_list"
-			},
-			"attributeId" : 1,
-			"value" : null,
-			"attributeName" : "sdn_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "simple",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "78d0f790-54b5-46d3-bfb4-f98553683bd4",
+  "version": "1547497968",
+  "name": "fm_sender_name_sdn_name_lev_score",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 15:32:48 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "ec15a0c0-b567-44d2-b264-947fb53d2a8f",
+      "version": null,
+      "name": "rel_sanctions_screening"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "1",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "-",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002201",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "c10d8a6d-d128-4367-b903-7865ebb47b74",
+        "version": null,
+        "name": "transactions"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "sender_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ",",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3029dbfd-2794-4625-855d-6392f0e20a53",
+        "version": null,
+        "name": "sdn_primary_list"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "sdn_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "/",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "ae9ee197-dc0f-4820-88b1-6025260f1000",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002210",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "c10d8a6d-d128-4367-b903-7865ebb47b74",
+        "version": null,
+        "name": "transactions"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "sender_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ">",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002210",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3029dbfd-2794-4625-855d-6392f0e20a53",
+        "version": null,
+        "name": "sdn_primary_list"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "sdn_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ",",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002210",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "c10d8a6d-d128-4367-b903-7865ebb47b74",
+        "version": null,
+        "name": "transactions"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "sender_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ",",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2bfc-02fb-11e7-93ae-92361f002210",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3029dbfd-2794-4625-855d-6392f0e20a53",
+        "version": null,
+        "name": "sdn_primary_list"
+      },
+      "attributeId": 1,
+      "value": null,
+      "attributeName": "sdn_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "simple"
 }

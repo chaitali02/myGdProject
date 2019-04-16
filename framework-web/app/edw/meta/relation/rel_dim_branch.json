@@ -1,69 +1,68 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
 		}
 	},
-	"relationInfo" : [
+	"relationInfo": [
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+							"ref": {
+								"type": "datapod",
+								"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
 							},
-							"attributeId" : 1
+							"attributeId": 1
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
+							"ref": {
+								"type": "datapod",
+								"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		}
 	],
-	"uuid" : "61e48b8f-bd30-472e-a00c-c4a0683d1315",
-	"version" : "1488711209",
-	"name" : "rel_dim_branch",
-	"desc" : "relation for dim_branch table using raw source tables",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "61e48b8f-bd30-472e-a00c-c4a0683d1315",
+	"version": "1488711209",
+	"name": "rel_dim_branch",
+	"desc": "relation for dim_branch table using raw source tables",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+	]
 }

@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -30,8 +30,8 @@
 			"paramId" : "0",
 			"paramName" : "business_date",
 			"paramType" : "string",
-			"paramDispName" : "Business Date",
-			"paramDesc" : "",
+            "paramDispName" : "Business Date",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple",
@@ -47,8 +47,8 @@
 			"paramId" : "1",
 			"paramName" : "last_30days_start_date",
 			"paramType" : "string",
-			"paramDispName" : "Last 30 Days Start Date",
-			"paramDesc" : "",
+            "paramDispName" : "Last 30 Days Start Date",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple",
@@ -64,8 +64,8 @@
 			"paramId" : "2",
 			"paramName" : "last_60days_start_date",
 			"paramType" : "string",
-			"paramDispName" : "Last 60 Days Start Date",
-			"paramDesc" : "",
+            "paramDispName" : "Last 60 Days Start Date",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple",
@@ -81,8 +81,8 @@
 			"paramId" : "3",
 			"paramName" : "last_90days_start_date",
 			"paramType" : "string",
-			"paramDispName" : "Last 90 Days Start Date",
-			"paramDesc" : "",
+            "paramDispName" : "Last 90 Days Start Date",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple",
@@ -97,6 +97,5 @@
 	],
 	"paramListType" : "application",
 	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+	"templateInfo" : null
 }

@@ -1,128 +1,127 @@
 {
-	"uuid" : "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
-	"version" : "1551857336",
-	"name" : "viz_sector_var_contribution",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-			"version" : null,
-			"name" : "ds_sector_var_contribution_perc"
-		},
-		"value" : null
-	},
-	"type" : "bar-chart",
-	"limit" : -1,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "industry"
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "industry"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "sector_var_contribution_perc"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "reporting_date"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 3,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "version"
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
-				"version" : null,
-				"name" : "ds_sector_var_contribution_perc"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "sector_var_contribution_perc"
-		}
-	],
-	"sortBy" : [ ],
-	"sortOrder" : null,
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
+  "version": "1551857336",
+  "name": "viz_sector_var_contribution",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Mar 06 12:58:56 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+      "version": null,
+      "name": "ds_sector_var_contribution_perc"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": -1,
+  "keys": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "industry"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "industry"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "sector_var_contribution_perc"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "sector_var_contribution_perc"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

@@ -1,155 +1,154 @@
 {
-	"type" : "STREAM-TABLE",
-	"sourceDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050"
-		}
-	},
-	"sourceDetail" : {
-		"ref" : {
-			"type" : "simple"
-		}
-	},
-	"targetDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
-		}
-	},
-	"targetDetail" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-		}
-	},
-	"saveMode" : "APPEND",
-	"ignoreCase" : "N",
-	"attributeMap" : [
-		{
-			"attrMapId" : "0",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "kye"
-			},
-			"targetAttr" : {
-				"attrId" : "0",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		},
-		{
-			"attrMapId" : "1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "value"
-			},
-			"targetAttr" : {
-				"attrId" : "1",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		},
-		{
-			"attrMapId" : "2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "topic"
-			},
-			"targetAttr" : {
-				"attrId" : "2",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		},
-		{
-			"attrMapId" : "3",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "partition"
-			},
-			"targetAttr" : {
-				"attrId" : "3",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		},
-		{
-			"attrMapId" : "4",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "offset"
-			},
-			"targetAttr" : {
-				"attrId" : "4",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		},
-		{
-			"attrMapId" : "5",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "timestamp"
-			},
-			"targetAttr" : {
-				"attrId" : "5",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
-				}
-			}
-		}
-	],
-	"sourceHeader" : "N",
-	"targetHeader" : "N",
-	"uuid" : "61496e87-edb0-4fcf-b7b2-f70ebe906516",
-	"version" : "1540909783",
-	"name" : "hive_stream_s2t_stream_hive",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.264Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			}
-		}
-	],
-	"displyName" : "ingest_security"
+    "type" : "STREAM-TABLE",
+    "sourceDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050"
+        }
+    },
+    "sourceDetail" : {
+        "ref" : {
+            "type" : "simple"
+        }
+    },
+    "targetDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
+        }
+    },
+    "targetDetail" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+        }
+    },
+    "saveMode" : "APPEND",
+    "ignoreCase" : "N",
+    "attributeMap" : [ 
+        {
+            "attrMapId" : "0",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "kye"
+            },
+            "targetAttr" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "1",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "value"
+            },
+            "targetAttr" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "2",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "topic"
+            },
+            "targetAttr" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "partition"
+            },
+            "targetAttr" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "4",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "offset"
+            },
+            "targetAttr" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }, 
+        {
+            "attrMapId" : "5",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "timestamp"
+            },
+            "targetAttr" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f"
+                }
+            }
+        }
+    ],
+    "sourceHeader" : "N",
+    "targetHeader" : "N",
+    "uuid" : "61496e87-edb0-4fcf-b7b2-f70ebe906516",
+    "version" : "1540909783",
+    "name" : "hive_stream_s2t_stream_hive",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-30T14:29:43.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            }
+        }
+    ]
 }

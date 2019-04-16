@@ -1,92 +1,91 @@
 {
-	"uuid" : "312025d3-f8d4-4d31-9109-70d54291cbee",
-	"version" : "1532641788",
-	"name" : "fm_portfolio_ul_cust_summary",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "cf20f8a3-7917-4761-b44f-39644fc34133",
-			"version" : null,
-			"name" : "ds_customer_portfolio_ul_calc_final"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671",
-				"version" : null,
-				"name" : "sum(col)"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "cf20f8a3-7917-4761-b44f-39644fc34133",
-				"version" : null,
-				"name" : "ds_customer_portfolio_ul_calc_final"
-			},
-			"attributeId" : 9,
-			"value" : null,
-			"attributeName" : "portfolio_ul_calc",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "aggr",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "312025d3-f8d4-4d31-9109-70d54291cbee",
+  "version": "1532641788",
+  "name": "fm_portfolio_ul_cust_summary",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+      "version": null,
+      "name": "ds_customer_portfolio_ul_calc_final"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "sum(col)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "cf20f8a3-7917-4761-b44f-39644fc34133",
+        "version": null,
+        "name": "ds_customer_portfolio_ul_calc_final"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "portfolio_ul_calc",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
 }

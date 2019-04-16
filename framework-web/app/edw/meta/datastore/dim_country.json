@@ -1,56 +1,55 @@
 {
-	"uuid" : "c403c935-a2aa-4039-a5fa-21845a5ffa75",
-	"version" : "1551892948",
-	"name" : "dim_country",
-	"desc" : "Creating datastore for dim_country",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.127Z"),
-	"tags" : null,
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1548315769",
-				"name" : "Enterprise Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"metaId" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-			"version" : "1502631071",
-			"name" : "dim_country"
-		},
-		"value" : null
-	},
-	"execId" : {
-		"ref" : {
-			"type" : "loadExec",
-			"uuid" : "2ddde474-5166-4721-bd17-c2cd8bb30afb",
-			"version" : "1551892947",
-			"name" : "dim_country"
-		},
-		"value" : null
-	},
-	"location" : "/570bb0dc-067e-4aed-9893-30033e73f584/1502631071/1551892947",
-	"persistMode" : "DISK_ONLY",
-	"dimInfo" : null,
-	"numRows" : 249,
-	"runMode" : "BATCH",
-	"displyName" : "security"
+  "uuid": "c403c935-a2aa-4039-a5fa-21845a5ffa75",
+  "version": "1551892948",
+  "name": "dim_country",
+  "desc": "Creating datastore for dim_country",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Mar 06 12:22:28 EST 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1548315769",
+        "name": "Enterprise Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
+      "version": "1502631071",
+      "name": "dim_country"
+    },
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "2ddde474-5166-4721-bd17-c2cd8bb30afb",
+      "version": "1551892947",
+      "name": "dim_country"
+    },
+    "value": null
+  },
+  "location": "/570bb0dc-067e-4aed-9893-30033e73f584/1502631071/1551892947",
+  "persistMode": "DISK_ONLY",
+  "dimInfo": null,
+  "numRows": 249,
+  "runMode": "BATCH"
 }

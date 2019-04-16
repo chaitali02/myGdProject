@@ -1,25 +1,25 @@
 {
-	"uuid" : "df194acf-c346-432c-8ac0-bcd452bc6a34",
-	"name" : "recon",
-	"version" : "1464977196",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid": "df194acf-c346-432c-8ac0-bcd452bc6a34",
+	"name": "recon",
+	"version": "1464977196",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
+  "locked" : "N",
 	"appInfo" : [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
+			"ref" : 
+				{
+					"type" : "application",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+				}
 		}
-	],
-	"desc" : "Meta for recon",
-	"menu" : "",
-	"displyName" : "recon"
+    ],
+    "desc" : "Meta for recon",
+    "menu":""
 }

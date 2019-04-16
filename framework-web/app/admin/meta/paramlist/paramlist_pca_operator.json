@@ -1,74 +1,73 @@
 {
-	"params" : [
+	"params": [
 		{
-			"paramId" : "0",
-			"paramName" : "sourceDatapod",
-			"paramType" : "datapod",
-			"paramDispName" : "sourceDatapod"
+			"paramId": "0",
+			"paramName": "sourceDatapod",
+			"paramType": "datapod",
+			"paramDispName": "sourceDatapod"
 		},
 		{
-			"paramId" : "1",
-			"paramName" : "K",
-			"paramType" : "integer",
-			"paramDispName" : "K",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "1",
+			"paramName": "K",
+			"paramType": "integer",
+			"paramDispName": "K",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "3"
+				"value": "3"
 			}
 		},
 		{
-			"paramId" : "2",
-			"paramName" : "inputColList",
-			"paramType" : "attributes",
-			"paramDispName" : "inputColList"
+			"paramId": "2",
+			"paramName": "inputColList",
+			"paramType": "attributes",
+			"paramDispName": "inputColList"
 		},
 		{
-			"paramId" : "4",
-			"paramName" : "inputKeyNames",
-			"paramType" : "attributes",
-			"paramDispName" : "inputKeyNames"
+			"paramId": "4",
+			"paramName": "inputKeyNames",
+			"paramType": "attributes",
+			"paramDispName": "inputKeyNames"
 		},
 		{
-			"paramId" : "5",
-			"paramName" : "saveLocation",
-			"paramType" : "datapod",
-			"paramDispName" : "saveLocation"
+			"paramId": "5",
+			"paramName": "saveLocation",
+			"paramType": "datapod",
+			"paramDispName": "saveLocation"
 		},
 		{
-			"paramId" : "6",
-			"paramName" : "outputFeatureName",
-			"paramType" : "attributes",
-			"paramDispName" : "outputFeatureName"
+			"paramId": "6",
+			"paramName": "outputFeatureName",
+			"paramType": "attributes",
+			"paramDispName": "outputFeatureName"
 		}
 	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
-	"version" : "1549013239",
-	"name" : "paramlist_pca_operator",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
+	"paramListType": "model",
+	"templateFlg": "Y",
+	"uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+	"version": "1549013239",
+	"name": "paramlist_pca_operator",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": "1464977196",
+			"name": "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
+	"createdOn": ISODate("2019-02-01T09:27:19.000Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"publicFlag": "Y",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		}
-	],
-	"displyName" : "paramlist_dq_rule"
+	]
 }

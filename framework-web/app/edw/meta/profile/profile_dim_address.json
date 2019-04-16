@@ -1,122 +1,121 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 		}
 	},
-	"attributeInfo" : [
+	"attributeInfo": [
 		{
-			"attrId" : "0",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "0",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "1",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "1",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "2",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "2",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "3",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "3",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "4",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "4",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "5",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "5",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "6",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "6",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "7",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "7",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "8",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "8",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "9",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "9",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "10",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "10",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		},
 		{
-			"attrId" : "11",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrId": "11",
+			"ref": {
+				"type": "datapod",
+				"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 			}
 		}
 	],
-	"uuid" : "2b479143-5cd7-4c48-9211-03a3aa9ce397",
-	"version" : "1491912432",
-	"name" : "profile_dim_address",
-	"desc" : "Data profiling to see statistical check results on dw tables for all columns",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "2b479143-5cd7-4c48-9211-03a3aa9ce397",
+	"version": "1491912432",
+	"name": "profile_dim_address",
+	"desc": "Data profiling to see statistical check results on dw tables for all columns",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.516Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "dp_equity_orders"
+	]
 }

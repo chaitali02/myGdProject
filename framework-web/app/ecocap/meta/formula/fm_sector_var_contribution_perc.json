@@ -1,124 +1,123 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "9547b33a-4453-449b-b056-a63460389a03"
-		}
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "e26970d6-999e-4ffa-9903-0f6e8ac39rtc"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "/"
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "df53dc10-db85-4d17-b868-e1a88c9fd87d"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "*"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "100 , 2"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		}
-	],
-	"formulaType" : "aggr",
-	"uuid" : "bd2f37d9-46dd-4bb1-892f-acd1718f8127",
-	"version" : "1535776370",
-	"name" : "fm_sector_var_contribution_perc",
-	"desc" : "",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822"
-			}
-		}
-	],
-	"displyName" : "fm_total_pass_pct"
+    "dependsOn" : {
+        "ref" : {
+            "type" : "relation",
+            "uuid" : "9547b33a-4453-449b-b056-a63460389a03"
+        }
+    },
+    "formulaInfo" : [ 
+        {
+            "ref" : {
+                "type" : "function",
+                "uuid" : "e26970d6-999e-4ffa-9903-0f6e8ac39rtc"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "function",
+                "uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "e5430fca-1df7-42ee-8732-a21b49878662"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "/"
+        }, 
+        {
+            "ref" : {
+                "type" : "function",
+                "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "df53dc10-db85-4d17-b868-e1a88c9fd87d"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "*"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "100 , 2"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }
+    ],
+    "formulaType" : "aggr",
+    "uuid" : "bd2f37d9-46dd-4bb1-892f-acd1718f8127",
+    "version" : "1535776370",
+    "name" : "fm_sector_var_contribution_perc",
+    "desc" : "",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-01T04:32:50.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
+            }
+        }
+    ]
 }

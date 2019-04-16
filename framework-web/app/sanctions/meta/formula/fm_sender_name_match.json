@@ -1,332 +1,331 @@
 {
-	"uuid" : "b73ec504-de28-4f0f-9ed1-e9dc3f2e608f",
-	"version" : "1547506496",
-	"name" : "fm_sender_name_match",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
-			"version" : null,
-			"name" : "ds_sanctions_screening_base"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "CASE",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "WHEN ",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002200",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
-				"version" : null,
-				"name" : "ds_sanctions_screening_base"
-			},
-			"attributeId" : 9,
-			"value" : null,
-			"attributeName" : "sender_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "=",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002200",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
-				"version" : null,
-				"name" : "ds_sanctions_screening_base"
-			},
-			"attributeId" : 15,
-			"value" : null,
-			"attributeName" : "sdn_name",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "OR",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
-				"version" : null,
-				"name" : "ds_sanctions_screening_base"
-			},
-			"attributeId" : 40,
-			"value" : null,
-			"attributeName" : "sender_name_sdn_name_lev_score",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ">=",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "0.5",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "OR",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
-				"version" : null,
-				"name" : "ds_sanctions_screening_base"
-			},
-			"attributeId" : 41,
-			"value" : null,
-			"attributeName" : "sender_name_alt_name_lev_score",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ">=",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "0.5",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "THEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'MATCH'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "ELSE",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'NO-MATCH'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "END",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "simple",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "b73ec504-de28-4f0f-9ed1-e9dc3f2e608f",
+  "version": "1547506496",
+  "name": "fm_sender_name_match",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 17:54:56 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+      "version": null,
+      "name": "ds_sanctions_screening_base"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "CASE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN ",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002200",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "version": null,
+        "name": "ds_sanctions_screening_base"
+      },
+      "attributeId": 9,
+      "value": null,
+      "attributeName": "sender_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002200",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "version": null,
+        "name": "ds_sanctions_screening_base"
+      },
+      "attributeId": 15,
+      "value": null,
+      "attributeName": "sdn_name",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "OR",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "version": null,
+        "name": "ds_sanctions_screening_base"
+      },
+      "attributeId": 40,
+      "value": null,
+      "attributeName": "sender_name_sdn_name_lev_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ">=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0.5",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "OR",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "55ba6c7d-d85d-4dbd-9c1f-2614da9c14ef",
+        "version": null,
+        "name": "ds_sanctions_screening_base"
+      },
+      "attributeId": 41,
+      "value": null,
+      "attributeName": "sender_name_alt_name_lev_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ">=",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0.5",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'MATCH'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ELSE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'NO-MATCH'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "END",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "simple"
 }

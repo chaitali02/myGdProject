@@ -26,6 +26,5 @@
             }
         }
     ],
-    "publicFlag" : "Y",
-	"displyName" : "Price"
+    "publicFlag" : "Y"
 }

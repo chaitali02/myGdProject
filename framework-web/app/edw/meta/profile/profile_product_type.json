@@ -1,66 +1,65 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 		}
 	},
-	"attributeInfo" : [
+	"attributeInfo": [
 		{
-			"attrId" : "0",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+			"attrId": "0",
+			"ref": {
+				"type": "datapod",
+				"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 			}
 		},
 		{
-			"attrId" : "1",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+			"attrId": "1",
+			"ref": {
+				"type": "datapod",
+				"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 			}
 		},
 		{
-			"attrId" : "2",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+			"attrId": "2",
+			"ref": {
+				"type": "datapod",
+				"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 			}
 		},
 		{
-			"attrId" : "3",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+			"attrId": "3",
+			"ref": {
+				"type": "datapod",
+				"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 			}
 		}
 	],
-	"uuid" : "e2a814bd-0fbe-4378-914a-18a84eee34e8",
-	"version" : "1491903867",
-	"name" : "profile_product_type",
-	"desc" : "Data profiling to see statistical check results on raw tables for all columns",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "e2a814bd-0fbe-4378-914a-18a84eee34e8",
+	"version": "1491903867",
+	"name": "profile_product_type",
+	"desc": "Data profiling to see statistical check results on raw tables for all columns",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.516Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "dp_equity_orders"
+	]
 }

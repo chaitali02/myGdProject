@@ -1,45 +1,44 @@
 {
-	"uuid" : "bb03523e-8f00-45e3-8dba-3ef1b113d37a",
-	"version" : "1542407675",
-	"name" : "last_3y_window",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"inputReq" : "N",
-	"functionInfo" : [
-		{
-			"name" : "add_months(trunc(current_date,'MM'),-36)",
-			"type" : "file",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"name" : "add_months(trunc(current_date,'MM'),-36)",
-			"type" : "hive",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"returnType" : "INTEGER",
-	"category" : "date",
-	"publicFlag" : "Y",
-	"displyName" : "year"
+  "uuid": "bb03523e-8f00-45e3-8dba-3ef1b113d37a",
+  "version": "1542407675",
+  "name": "last_3y_window",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Nov 16 17:34:35 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+  ],
+  "inputReq": "N",
+  "functionInfo": [
+    {
+      "name": "add_months(trunc(current_date,'MM'),-36)",
+      "type": "file",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "add_months(trunc(current_date,'MM'),-36)",
+      "type": "hive",
+      "paramInfoHolder": []
+    }
+  ],
+  "returnType":"INTEGER",
+  "category": "date",
+  "publicFlag" : "Y"
 }

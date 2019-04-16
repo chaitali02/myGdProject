@@ -1,69 +1,68 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 		}
 	},
-	"relationInfo" : [
+	"relationInfo": [
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 				}
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+							"ref": {
+								"type": "datapod",
+								"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 							},
-							"attributeId" : 3
+							"attributeId": 3
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+							"ref": {
+								"type": "datapod",
+								"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 							},
-							"attributeId" : 0
+							"attributeId": 0
 						}
 					]
 				}
 			]
 		}
 	],
-	"uuid" : "cfb6d8b8-8240-40da-8c9c-b52b49da8460",
-	"version" : "1489655038",
-	"name" : "rel_fact_summary_monthly",
-	"desc" : "relation joining fact_transaction with dim_date in order to populate aggregation tables",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "cfb6d8b8-8240-40da-8c9c-b52b49da8460",
+	"version": "1489655038",
+	"name": "rel_fact_summary_monthly",
+	"desc": "relation joining fact_transaction with dim_date in order to populate aggregation tables",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+	]
 }

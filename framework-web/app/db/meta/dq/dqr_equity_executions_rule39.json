@@ -1,86 +1,80 @@
 {
-	"uuid" : "b1e707af-deeb-48aa-9d58-f8003318fd4f",
-	"version" : "1553184109",
-	"name" : "dqr_equity_executions_rule39",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
-	"tags" : null,
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : null
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"abortCondition" : null,
-	"target" : null,
-	"attribute" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-			"version" : "1552238970",
-			"name" : null
-		},
-		"value" : null,
-		"attrId" : "38",
-		"attrName" : "market_identifier",
-		"attrType" : null,
-		"attrUnitType" : null,
-		"function" : null
-	},
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-			"version" : "1552238970",
-			"name" : null
-		},
-		"value" : null
-	},
-	"duplicateKeyCheck" : "N",
-	"nullCheck" : "Y",
-	"valueCheck" : [ ],
-	"rangeCheck" : {
-		
-	},
-	"dataTypeCheck" : "",
-	"dateFormatCheck" : null,
-	"customFormatCheck" : null,
-	"lengthCheck" : {
-		
-	},
-	"refIntegrityCheck" : {
-		"dependsOn" : null,
-		"targetAttr" : null
-	},
-	"filterInfo" : null,
-	"userInfo" : null,
-	"thresholdInfo" : {
-		"low" : "25",
-		"medium" : "50",
-		"high" : "75",
-		"type" : "NUMERIC"
-	},
-	"domainCheck" : null,
-	"blankSpaceCheck" : null,
-	"expressionCheck" : null,
-	"caseCheck" : null,
-	"displyName" : "dqr_security_rule5"
+
+  "uuid" : "b1e707af-deeb-48aa-9d58-f8003318fd4f",
+  "version" : "1553184109",
+  "name" : "dqr_equity_executions_rule39",
+  "desc" : null,
+  "createdBy" : {
+    "ref" : {
+      "type" : "user",
+      "uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version" : "1548315952",
+      "name" : "db_admin"
+    },
+    "value" : null
+  },
+  "createdOn" : "Thu Mar 21 21:31:49 IST 2019",
+  "tags" : null,
+  "active" : "Y",
+  "locked" : "N",
+  "published" : "N",
+  "appInfo" : [ {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+      "version" : "1552267311",
+      "name" : null
+    },
+    "value" : null
+  } ],
+  "publicFlag" : "N",
+  "abortCondition" : null,
+  "target" : null,
+  "attribute" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+      "version" : "1552238970",
+      "name" : null
+    },
+    "value" : null,
+    "attrId" : "38",
+    "attrName" : "market_identifier",
+    "attrType" : null,
+    "attrUnitType" : null,
+    "function" : null
+  },
+  "dependsOn" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+      "version" : "1552238970",
+      "name" : null
+    },
+    "value" : null
+  },
+  "duplicateKeyCheck" : "N",
+  "nullCheck" : "Y",
+  "valueCheck" : [ ],
+  "rangeCheck" : { },
+  "dataTypeCheck" : "",
+  "dateFormatCheck" : null,
+  "customFormatCheck" : null,
+  "lengthCheck" : { },
+  "refIntegrityCheck" : {
+    "dependsOn" : null,
+    "targetAttr" : null
+  },
+  "filterInfo" : null,
+  "userInfo" : null,
+  "thresholdInfo" : {
+    "low" : "25",
+    "medium" : "50",
+    "high" : "75",
+    "type" : "NUMERIC"
+  },
+  "domainCheck" : null,
+  "blankSpaceCheck" : null,
+  "expressionCheck" : null,
+  "caseCheck" : null
 }

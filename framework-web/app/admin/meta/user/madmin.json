@@ -1,55 +1,54 @@
 {
-	"firstName" : "Administrator",
-	"middleName" : "",
-	"lastName" : "Administrator",
-	"emailId" : "admin@mufg.com",
-	"password" : "madmin",
-	"groupInfo" : [
+	"firstName": "Administrator",
+	"middleName": "",
+	"lastName": "Administrator",
+	"emailId": "admin@mufg.com",
+	"password": "madmin",
+	"groupInfo": [
 		{
-			"ref" : {
-				"type" : "group",
-				"uuid" : "ea362f29-06a6-478f-bcaa-08476e3f12c4"
+			"ref": {
+				"type": "group",
+				"uuid": "ea362f29-06a6-478f-bcaa-08476e3f12c4"
 			}
 		}
 	],
-	"defaultGroup" : {
-		"ref" : {
-			"type" : "group",
-			"uuid" : "ea362f29-06a6-478f-bcaa-08476e3f12c4"
+	"defaultGroup": {
+		"ref": {
+			"type": "group",
+			"uuid": "ea362f29-06a6-478f-bcaa-08476e3f12c4"
 		}
 	},
-	"orgInfo" : {
-		"ref" : {
-			"type" : "organization",
-			"uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+	"orgInfo": {
+		"ref": {
+			"type": "organization",
+			"uuid": "39937670-837c-4027-aa45-aff8a57b738a"
 		}
 	},
-	"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3263",
-	"version" : "1548315952",
-	"name" : "madmin",
-	"desc" : "Admin user",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
-			"version" : "1464977196",
-			"name" : "admin"
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3263",
+	"version": "1548315952",
+	"name": "madmin",
+	"desc": "Admin user",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+	"createdOn": ISODate("2019-01-24T13:05:54.507Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-				"version" : "1464977196",
-				"name" : "Administration"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version": "1464977196",
+				"name": "Administration"
 			}
 		}
-	],
-	"displyName" : "madmin"
+	]
 }

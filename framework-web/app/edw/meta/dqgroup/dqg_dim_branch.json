@@ -1,89 +1,88 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "6437c593-a27a-4eb6-933a-58e50a7dcf34",
-				"version" : "1490112163"
+			"ref": {
+				"type": "dq",
+				"uuid": "6437c593-a27a-4eb6-933a-58e50a7dcf34",
+				"version": "1490112163"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "cf00725d-f82e-4669-b324-cd30034da3c6",
-				"version" : "1490088236"
+			"ref": {
+				"type": "dq",
+				"uuid": "cf00725d-f82e-4669-b324-cd30034da3c6",
+				"version": "1490088236"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "f56e3a0a-157a-40ac-aad9-afdcd6d68c11",
-				"version" : "1490088310"
+			"ref": {
+				"type": "dq",
+				"uuid": "f56e3a0a-157a-40ac-aad9-afdcd6d68c11",
+				"version": "1490088310"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "2107f252-cfa2-4976-ba92-70f4b8087060",
-				"version" : "1490088374"
+			"ref": {
+				"type": "dq",
+				"uuid": "2107f252-cfa2-4976-ba92-70f4b8087060",
+				"version": "1490088374"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "71c64922-7a53-4da8-af7a-85aaa66b9cd6",
-				"version" : "1490088470"
+			"ref": {
+				"type": "dq",
+				"uuid": "71c64922-7a53-4da8-af7a-85aaa66b9cd6",
+				"version": "1490088470"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "e954d957-5a4b-420c-8317-73648808d549",
-				"version" : "1490088538"
+			"ref": {
+				"type": "dq",
+				"uuid": "e954d957-5a4b-420c-8317-73648808d549",
+				"version": "1490088538"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "b5c4923e-2799-4ace-befa-e86130459d0e",
-				"version" : "1490088609"
+			"ref": {
+				"type": "dq",
+				"uuid": "b5c4923e-2799-4ace-befa-e86130459d0e",
+				"version": "1490088609"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "656f237e-015b-4e7d-aef1-e5d913c30bb9",
-				"version" : "1490088690"
+			"ref": {
+				"type": "dq",
+				"uuid": "656f237e-015b-4e7d-aef1-e5d913c30bb9",
+				"version": "1490088690"
 			}
 		}
 	],
-	"uuid" : "e3e5d90a-0d07-4894-98b0-dab7d5407fb5",
-	"version" : "1490117473",
-	"name" : "dqg_dim_branch",
-	"desc" : "dq rule group for combination of all dq rules for table - dim branch",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "e3e5d90a-0d07-4894-98b0-dab7d5407fb5",
+	"version": "1490117473",
+	"name": "dqg_dim_branch",
+	"desc": "dq rule group for combination of all dq rules for table - dim branch",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

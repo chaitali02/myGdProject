@@ -1,55 +1,54 @@
 {
-	"firstName" : "Administrator",
-	"middleName" : "",
-	"lastName" : "Administrator",
-	"emailId" : "admin@aptivaa.com",
-	"password" : "aadmin",
-	"groupInfo" : [
+	"firstName": "Administrator",
+	"middleName": "",
+	"lastName": "Administrator",
+	"emailId": "admin@aptivaa.com",
+	"password": "aadmin",
+	"groupInfo": [
 		{
-			"ref" : {
-				"type" : "group",
-				"uuid" : "29792fd8-74f1-4940-a0d8-89f039df5138"
+			"ref": {
+				"type": "group",
+				"uuid": "29792fd8-74f1-4940-a0d8-89f039df5138"
 			}
 		}
 	],
-	"defaultGroup" : {
-		"ref" : {
-			"type" : "group",
-			"uuid" : "29792fd8-74f1-4940-a0d8-89f039df5138"
+	"defaultGroup": {
+		"ref": {
+			"type": "group",
+			"uuid": "29792fd8-74f1-4940-a0d8-89f039df5138"
 		}
 	},
-	"orgInfo" : {
-		"ref" : {
-			"type" : "organization",
-			"uuid" : "548b440b-5366-487a-a982-45ebfe9e708c"
+	"orgInfo": {
+		"ref": {
+			"type": "organization",
+			"uuid": "548b440b-5366-487a-a982-45ebfe9e708c"
 		}
 	},
-	"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3266",
-	"version" : "1548315952",
-	"name" : "aadmin",
-	"desc" : "Admin user",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
-			"version" : "1464977196",
-			"name" : "admin"
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3266",
+	"version": "1548315952",
+	"name": "aadmin",
+	"desc": "Admin user",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:46.785Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+	"createdOn": ISODate("2019-01-24T13:05:54.507Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-				"version" : "1464977196",
-				"name" : "Administration"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version": "1464977196",
+				"name": "Administration"
 			}
 		}
-	],
-	"displyName" : "aadmin"
+	]
 }

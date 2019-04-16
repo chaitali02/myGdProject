@@ -26,6 +26,5 @@
             }
         }
     ],
-    "publicFlag" : "Y",
-	"displyName" : "Discover_CC"
+    "publicFlag" : "Y"
 }

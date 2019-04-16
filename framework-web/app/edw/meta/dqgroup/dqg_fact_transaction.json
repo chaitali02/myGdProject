@@ -1,145 +1,144 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "ff8972bc-abda-4125-80da-72de2a09ee8f",
-				"version" : "1490112539"
+			"ref": {
+				"type": "dq",
+				"uuid": "ff8972bc-abda-4125-80da-72de2a09ee8f",
+				"version": "1490112539"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "cfda002c-a740-4320-ba9c-5532de1a2e46",
-				"version" : "1490090861"
+			"ref": {
+				"type": "dq",
+				"uuid": "cfda002c-a740-4320-ba9c-5532de1a2e46",
+				"version": "1490090861"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "b3aedf7f-45d9-4cc1-a375-384a8a69fb80",
-				"version" : "1490090929"
+			"ref": {
+				"type": "dq",
+				"uuid": "b3aedf7f-45d9-4cc1-a375-384a8a69fb80",
+				"version": "1490090929"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "f1c291a6-83c1-42a5-8aa3-14ae95d982d7",
-				"version" : "1490091037"
+			"ref": {
+				"type": "dq",
+				"uuid": "f1c291a6-83c1-42a5-8aa3-14ae95d982d7",
+				"version": "1490091037"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "2d7085f0-762f-4d1f-b456-fed60810f4ae",
-				"version" : "1490091132"
+			"ref": {
+				"type": "dq",
+				"uuid": "2d7085f0-762f-4d1f-b456-fed60810f4ae",
+				"version": "1490091132"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "7b24f083-6e38-4289-82b3-6b9d01c81bf4",
-				"version" : "1490091244"
+			"ref": {
+				"type": "dq",
+				"uuid": "7b24f083-6e38-4289-82b3-6b9d01c81bf4",
+				"version": "1490091244"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "3e0a07d0-4b08-4105-bf4b-cb5ce6655538",
-				"version" : "1490091322"
+			"ref": {
+				"type": "dq",
+				"uuid": "3e0a07d0-4b08-4105-bf4b-cb5ce6655538",
+				"version": "1490091322"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "74a2dd0c-e836-4740-b6ba-e110afda7dc2",
-				"version" : "1490091388"
+			"ref": {
+				"type": "dq",
+				"uuid": "74a2dd0c-e836-4740-b6ba-e110afda7dc2",
+				"version": "1490091388"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "3de92fa4-b137-4b67-b5f3-54f3733f0a9d",
-				"version" : "1490091468"
+			"ref": {
+				"type": "dq",
+				"uuid": "3de92fa4-b137-4b67-b5f3-54f3733f0a9d",
+				"version": "1490091468"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "9d2fdab7-959a-4906-8e4f-e9f4dc78cac4",
-				"version" : "1490091555"
+			"ref": {
+				"type": "dq",
+				"uuid": "9d2fdab7-959a-4906-8e4f-e9f4dc78cac4",
+				"version": "1490091555"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "88de5833-a543-4a10-8d96-1280d0a6b8a3",
-				"version" : "1490091637"
+			"ref": {
+				"type": "dq",
+				"uuid": "88de5833-a543-4a10-8d96-1280d0a6b8a3",
+				"version": "1490091637"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "2e352eaf-edf5-41e5-92c9-2acc2951851d",
-				"version" : "1490091747"
+			"ref": {
+				"type": "dq",
+				"uuid": "2e352eaf-edf5-41e5-92c9-2acc2951851d",
+				"version": "1490091747"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "05a2d88a-b5fc-41a0-b3d5-55adc96fb7be",
-				"version" : "1490091831"
+			"ref": {
+				"type": "dq",
+				"uuid": "05a2d88a-b5fc-41a0-b3d5-55adc96fb7be",
+				"version": "1490091831"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "1614c357-a4cc-4fc0-a1ab-04cc37fc3b3d",
-				"version" : "1490091919"
+			"ref": {
+				"type": "dq",
+				"uuid": "1614c357-a4cc-4fc0-a1ab-04cc37fc3b3d",
+				"version": "1490091919"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "2dd6e307-0d52-404a-8e73-58b12e6cc773",
-				"version" : "1490091986"
+			"ref": {
+				"type": "dq",
+				"uuid": "2dd6e307-0d52-404a-8e73-58b12e6cc773",
+				"version": "1490091986"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "1d3951e2-687d-4730-9d82-9d291a65363f",
-				"version" : "1490092056"
+			"ref": {
+				"type": "dq",
+				"uuid": "1d3951e2-687d-4730-9d82-9d291a65363f",
+				"version": "1490092056"
 			}
 		}
 	],
-	"uuid" : "9a13ee57-22f0-48d4-a0c6-914e1e39183b",
-	"version" : "1490119549",
-	"name" : "dqg_fact_transaction",
-	"desc" : "dq rule group for combination of all dq rules for table - fact transaction",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "9a13ee57-22f0-48d4-a0c6-914e1e39183b",
+	"version": "1490119549",
+	"name": "dqg_fact_transaction",
+	"desc": "dq rule group for combination of all dq rules for table - fact transaction",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

@@ -24,10 +24,5 @@
 	    "locked" : "N",
 	    "published" : "N",
 	    "publicFlag" :"Y",
-<<<<<<< HEAD
-	    "regEx" : "^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$",
-	"displyName" : "EMAIL"
-=======
 	    "regEx" : "^\\\\w+@[a-zA-Z_]+?\\\\.[a-zA-Z]{2,3}$"
->>>>>>> ceacf5d660642e4a97094eb6e8bb36e7d83967bd
 	}

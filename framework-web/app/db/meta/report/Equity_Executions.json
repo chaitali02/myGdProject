@@ -1,0 +1,350 @@
+{
+  "uuid": "a97d9e14-1923-4c90-b97f-67233a9589c2",
+  "version": "1554383456",
+  "name": "Equity Executions",
+  "desc": "Data Quality Report for critical data elements under equity execution feed",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Apr 04 09:10:56 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": "Data Quality Report",
+  "header": "EQUITY EXECUTIONS",
+  "headerAlign": "CENTER",
+  "footer": "Confidential Document - Internal Use Only",
+  "footerAlign": "CENTER",
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "LIKE",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+            "version": null,
+            "name": "dq_result_summary"
+          },
+          "attributeId": 63,
+          "value": null,
+          "attributeName": "param_info",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "60c44573-30e8-4fa2-8a3d-12efc2377438",
+            "version": null,
+            "name": "paramlist_data_quality"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "version": null,
+      "name": "dq_result_summary"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": null,
+      "attrSourceName": "CDE_Name",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "attribute_name",
+        "attrType": "varchar",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": null,
+      "attrSourceName": "CDE_Description",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "datapod_desc",
+        "attrType": "varchar",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Data_Accuracy_Rule",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "rule_desc",
+        "attrType": "varchar",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Failed_Record_Count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "57",
+        "attrName": "total_fail_count",
+        "attrType": "integer",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Failed_Record_Percentage",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "58",
+        "attrName": "total_fail_percentage",
+        "attrType": "decimal",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Failure_Threshold_Type",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "59",
+        "attrName": "threshold_type",
+        "attrType": "VARCHAR",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Failure_Threshold_Limit",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "60",
+        "attrName": "threshold_limit",
+        "attrType": "INTEGER",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq": null,
+      "attrSourceName": "Failure_Threshold_Indicator",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+          "version": null,
+          "name": "dq_result_summary"
+        },
+        "value": null,
+        "attrId": "61",
+        "attrName": "threshold_ind",
+        "attrType": "VARCHAR",
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "saveOnRefresh": "Y",
+  "senderInfo": {
+    "emailTo": [],
+    "emailBCC": [],
+    "emailCC": [],
+    "emailAttachment": null,
+    "notifyOnSuccess": "Y",
+    "notifyOnFailure": "Y",
+    "sendAttachment": "Y"
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "60c44573-30e8-4fa2-8a3d-12efc2377438",
+      "version": null,
+      "name": "paramlist_data_quality"
+    },
+    "value": null
+  },
+  "limit": -1,
+  "format": "PDF",
+  "layout": "LANDSCAPE",
+  "type": "dq",
+  "attributeFilterInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "trade_execution_identifier",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "trade_execution_event_number",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "trade_execution_event_type_code",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "trade_execution_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "trade_execution_event_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+        "version": null,
+        "name": "equity_executions"
+      },
+      "value": null,
+      "attrId": "32",
+      "attrName": "security_identifier",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
+  ]
+}

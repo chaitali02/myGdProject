@@ -1,77 +1,76 @@
 {
-	"uuid" : "9d44b8e9-b806-4340-ae32-4bf457cdb88c",
-	"version" : "1488801521",
-	"name" : "nvl",
-	"desc" : "Returns default value if value is null else returns value (as of HIve 0.11)",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"paramInfo" : [
-		{
-			"paramId" : "0",
-			"paramName" : "value",
-			"paramType" : "T",
-			"paramReq" : "Y",
-			"paramDefVal" : ""
-		},
-		{
-			"paramId" : "1",
-			"paramName" : "default_value",
-			"paramType" : "T",
-			"paramReq" : "Y",
-			"paramDefVal" : ""
-		}
-	],
-	"tags" : [
-		"DEV",
-		"1.0.1",
-		"DEMO"
-	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"inputReq" : "Y",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"returnType" : "STRING",
-	"category" : "CONDITIONAL",
-	"functionInfo" : [
-		{
-			"type" : "file",
-			"name" : "nvl",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "mysql",
-			"name" : "nvl",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "hive",
-			"name" : "nvl",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "impala",
-			"name" : "nvl",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "oracle",
-			"name" : "nvl",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"displyName" : "year"
+    "uuid" : "9d44b8e9-b806-4340-ae32-4bf457cdb88c",
+    "version" : "1488801521",
+    "name" : "nvl",
+    "desc" : "Returns default value if value is null else returns value (as of HIve 0.11)",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
+    "paramInfo" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "value",
+            "paramType" : "T",
+            "paramReq" : "Y",
+            "paramDefVal" : ""
+        }, 
+        {
+            "paramId" : "1",
+            "paramName" : "default_value",
+            "paramType" : "T",
+            "paramReq" : "Y",
+            "paramDefVal" : ""
+        }
+    ],
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "inputReq" : "Y",
+    "publicFlag" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+    "returnType":"STRING",
+  "category" : "CONDITIONAL",
+    "functionInfo" : [ 
+        {
+            "type" : "file",
+            "name" : "nvl",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "mysql",
+            "name" : "nvl",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "nvl",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "nvl",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "nvl",
+            "paramInfoHolder" : []
+        }
+    ]
 }

@@ -1,110 +1,109 @@
 {
-	"uuid" : "60a4e9d8-1f96-431e-9560-d78c5963db07",
-	"version" : "1530956592",
-	"name" : "paramlist_decision_tree_classifier_wh",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"params" : [
-		{
-			"paramId" : "0",
-			"paramName" : "minInfoGain",
-			"paramType" : "list",
-			"paramDispName" : "Min InfoGain",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "0.0, 0.5, 1.0"
-			}
-		},
-		{
-			"paramId" : "1",
-			"paramName" : "maxDepth",
-			"paramType" : "list",
-			"paramDispName" : "Max Depth",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "5, 8, 10"
-			}
-		},
-		{
-			"paramId" : "2",
-			"paramName" : "minInstancesPerNode",
-			"paramType" : "list",
-			"paramDispName" : "Min InstancesPerNode",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "1, 2, 3"
-			}
-		},
-		{
-			"paramId" : "3",
-			"paramName" : "maxBins",
-			"paramType" : "list",
-			"paramDispName" : "Max Bins",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "32, 35, 38"
-			}
-		},
-		{
-			"paramId" : "4",
-			"paramName" : "seed",
-			"paramType" : "list",
-			"paramDispName" : "Seed",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "159147643, 1000, 100000"
-			}
-		},
-		{
-			"paramId" : "5",
-			"paramName" : "numFolds",
-			"paramType" : "integer",
-			"paramDispName" : "Num Folds",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "3"
-			}
-		}
-	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+  "uuid": "60a4e9d8-1f96-431e-9560-d78c5963db07",
+  "version": "1530956592",
+  "name": "paramlist_decision_tree_classifier_wh",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Sat Jul 07 15:13:12 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  	"publicFlag": "Y",
+  "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "minInfoGain",
+      "paramType": "list",
+      "paramDispName" : "Min InfoGain",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "0.0, 0.5, 1.0"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "maxDepth",
+      "paramType": "list",
+      "paramDispName" : "Max Depth",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "5, 8, 10"
+      }
+    },
+    {
+      "paramId": "2",
+      "paramName": "minInstancesPerNode",
+      "paramType": "list",
+      "paramDispName" : "Min InstancesPerNode",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "1, 2, 3"
+      }
+    },
+    {
+      "paramId": "3",
+      "paramName": "maxBins",
+      "paramType": "list",
+      "paramDispName" : "Max Bins",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "32, 35, 38"
+      }
+    },
+    {
+      "paramId": "4",
+      "paramName": "seed",
+      "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "159147643, 1000, 100000"
+      }
+    },
+    {
+      "paramId": "5",
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
+    }
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }

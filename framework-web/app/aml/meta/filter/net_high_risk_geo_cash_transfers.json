@@ -1,217 +1,216 @@
 {
-	"uuid" : "79fd0685-366b-4e07-1234-53b99125baaa",
-	"version" : "1540039357",
-	"name" : "Net High Risk Geo Cash Transfers",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.861Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-			"version" : null,
-			"name" : "fact_transaction_journal"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"logicalOperator" : "",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 4,
-					"value" : null,
-					"attributeName" : "transaction_type_code",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "simple",
-						"uuid" : null,
-						"version" : null,
-						"name" : null
-					},
-					"attributeId" : null,
-					"value" : "CA",
-					"attributeName" : null,
-					"attributeType" : "string"
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : "IN",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 8,
-					"value" : null,
-					"attributeName" : "reciever_country",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "dataset",
-						"uuid" : "901b398f-41d9-4b31-9803-c9611bf63eb2",
-						"version" : null,
-						"name" : "ds_high_risk_geographies"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "country_code",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "005e4b59-c62d-4e50-9bad-00289273e3af",
-						"version" : null,
-						"name" : "fm_trans_count"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "ce0492ec-6240-4b5c-87cf-139a58c111b2",
-						"version" : null,
-						"name" : "paramlist_high_risk_geo_transfers"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "trans_count",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "cc9143af-e545-41df-9436-3e8c433141b8",
-						"version" : null,
-						"name" : "fm_trans_net_amount"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "ce0492ec-6240-4b5c-87cf-139a58c111b2",
-						"version" : null,
-						"name" : "paramlist_high_risk_geo_transfers"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "trans_amount_usd",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "a41039ea-453d-40f3-93ff-40b030c5ca89"
-					}
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : "<",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-						"version" : null,
-						"name" : "paramlist_aml"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "business_date",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"displyName" : "Outgoing Wire Transfers"
+  "uuid": "79fd0685-366b-4e07-1234-53b99125baaa",
+  "version": "1540039357",
+  "name": "Net High Risk Geo Cash Transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "filterInfo": [
+      {
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 4,
+          "value": null,
+          "attributeName": "transaction_type_code",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "simple",
+            "uuid": null,
+            "version": null,
+            "name": null
+          },
+          "attributeId": null,
+          "value": "CA",
+          "attributeName": null,
+          "attributeType": "string"
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": "IN",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 8,
+          "value": null,
+          "attributeName": "reciever_country",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "dataset",
+            "uuid": "901b398f-41d9-4b31-9803-c9611bf63eb2",
+            "version": null,
+            "name": "ds_high_risk_geographies"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "country_code",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
+            "version": null,
+            "name": "fm_trans_count"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "ce0492ec-6240-4b5c-87cf-139a58c111b2",
+            "version": null,
+            "name": "paramlist_high_risk_geo_transfers"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "trans_count",
+          "attributeType": null
+        }
+      ]
+    },
+   {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
+            "version": null,
+            "name": "fm_trans_net_amount"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "ce0492ec-6240-4b5c-87cf-139a58c111b2",
+            "version": null,
+            "name": "paramlist_high_risk_geo_transfers"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_amount_usd",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+         {
+                    "ref" : {
+                        "type" : "formula",
+                        "uuid" : "a41039ea-453d-40f3-93ff-40b030c5ca89"
+                    }
+                }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": "<",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ]
 }

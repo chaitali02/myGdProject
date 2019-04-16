@@ -1,0 +1,65 @@
+{
+    "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+    "version" : "1547481776",
+    "name" : "Inferyx Inc",
+    "desc" : null,
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        },
+        "value" : null
+    },
+    "createdOn" : ISODate("2019-01-24T07:29:34.979Z"),
+    "tags" : [ 
+        "DEV", 
+        "DEMO"
+    ],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "version" : null,
+                "name" : "Administration"
+            },
+            "value" : null
+        }
+    ],
+    "contact" : [ 
+        {
+            "title" : "Owner",
+            "name" : "Yogesh Palrecha",
+            "phone" : "502-418-2417",
+            "emailId" : "ypalrecha@inferyx.com"
+        }
+    ],
+    "phone" : [ 
+        {
+            "type" : "business",
+            "number" : "502-418-2417"
+        }
+    ],
+    "email" : [ 
+        {
+            "type" : "business",
+            "emailId" : "ypalrecha@inferyx.com"
+        }
+    ],
+    "address" : [ 
+        {
+            "type" : "business",
+            "addressLine1" : "26 Old Beach Glen Road",
+            "addressLine2" : null,
+            "city" : "Rockaway",
+            "state" : "New Jersey",
+            "country" : "USA",
+            "zipcode" : "07866"
+        }
+    ]
+}

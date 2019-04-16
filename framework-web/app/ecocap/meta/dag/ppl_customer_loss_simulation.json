@@ -1,307 +1,307 @@
 {
-	"uuid" : "1fa51b87-946f-424b-abb5-4f4f3236b2cb",
-	"version" : "1534530472",
-	"name" : "ppl_customer_loss_simulation",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"xPos" : 30,
-	"yPos" : 330,
-	"templateFlg" : "N",
-	"templateInfo" : null,
-	"stages" : [
-		{
-			"stageId" : "stage_0",
-			"dependsOn" : [ ],
-			"tasks" : [
-				{
-					"taskId" : "1353043c-1820-431b-98b2-727f5a8b1875",
-					"dependsOn" : [ ],
-					"name" : "Customer Loss SImulation",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "operator",
-										"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc197e",
-										"version" : null,
-										"name" : "Generate Data for attribute"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								"EXEC_PARAMS" : {
-									"refKeyList" : null,
-									"paramInfo" : null,
-									"filterInfo" : null,
-									"stageInfo" : null,
-									"currParamSet" : null,
-									"paramListHolder" : null,
-									"paramListInfo" : [
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f8",
-												"version" : "1525519035",
-												"name" : "paramlist_generate_data_for_attribute"
-											},
-											"value" : null,
-											"paramId" : "0",
-											"paramName" : "distribution",
-											"paramType" : "distribution",
-											"paramValue" : {
-												"ref" : {
-													"type" : "distribution",
-													"uuid" : "e6104187-625b-49e4-806b-12c93a3b2279",
-													"version" : null,
-													"name" : null
-												},
-												"value" : null
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f8",
-												"version" : "1525519035",
-												"name" : "paramlist_generate_data_for_attribute"
-											},
-											"value" : null,
-											"paramId" : "1",
-											"paramName" : "numIterations",
-											"paramType" : "integer",
-											"paramValue" : {
-												"ref" : {
-													"type" : "simple",
-													"uuid" : null,
-													"version" : null,
-													"name" : null
-												},
-												"value" : "1000"
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f8",
-												"version" : "1525519035",
-												"name" : "paramlist_generate_data_for_attribute"
-											},
-											"value" : null,
-											"paramId" : "2",
-											"paramName" : "saveLocation",
-											"paramType" : "datapod",
-											"paramValue" : {
-												"ref" : {
-													"type" : "datapod",
-													"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-													"version" : null,
-													"name" : null
-												},
-												"value" : null
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f8",
-												"version" : "1525519035",
-												"name" : "paramlist_generate_data_for_attribute"
-											},
-											"value" : null,
-											"paramId" : "3",
-											"paramName" : "attrRef",
-											"paramType" : "attribute",
-											"paramValue" : null,
-											"attributeInfo" : [
-												{
-													"ref" : {
-														"type" : "dataset",
-														"uuid" : "7c85e971-bb92-4d71-9c8e-9b5c6633aa69",
-														"version" : null,
-														"name" : "ds_customer_portfolio"
-													},
-													"value" : null,
-													"attrId" : "0",
-													"attrName" : "cust_id",
-													"attrType" : null
-												}
-											]
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
-												"version" : "1524229596",
-												"name" : "paramlist_normal_distribution"
-											},
-											"value" : null,
-											"paramId" : "0",
-											"paramName" : "min",
-											"paramType" : "integer",
-											"paramValue" : {
-												"ref" : {
-													"type" : "simple",
-													"uuid" : null,
-													"version" : null,
-													"name" : null
-												},
-												"value" : "-4"
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
-												"version" : "1524229596",
-												"name" : "paramlist_normal_distribution"
-											},
-											"value" : null,
-											"paramId" : "1",
-											"paramName" : "max",
-											"paramType" : "integer",
-											"paramValue" : {
-												"ref" : {
-													"type" : "simple",
-													"uuid" : null,
-													"version" : null,
-													"name" : null
-												},
-												"value" : "4"
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
-												"version" : "1524229596",
-												"name" : "paramlist_normal_distribution"
-											},
-											"value" : null,
-											"paramId" : "2",
-											"paramName" : "mean",
-											"paramType" : "double",
-											"paramValue" : {
-												"ref" : {
-													"type" : "simple",
-													"uuid" : null,
-													"version" : null,
-													"name" : null
-												},
-												"value" : "0"
-											},
-											"attributeInfo" : null
-										},
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
-												"version" : "1524229596",
-												"name" : "paramlist_normal_distribution"
-											},
-											"value" : null,
-											"paramId" : "3",
-											"paramName" : "seed",
-											"paramType" : "double",
-											"paramValue" : {
-												"ref" : {
-													"type" : "simple",
-													"uuid" : null,
-													"version" : null,
-													"name" : null
-												},
-												"value" : "4526"
-											},
-											"attributeInfo" : null
-										}
-									],
-									"internalVarMap" : null,
-									"otherParams" : null,
-									"executionContext" : null,
-									"graphFilter" : null
-								}
-							}
-						}
-					],
-					"xPos" : 390,
-					"yPos" : 330,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "e44ec21f-ddb7-460e-af3a-837468d415b2",
-					"dependsOn" : [
-						"1353043c-1820-431b-98b2-727f5a8b1875"
-					],
-					"name" : "map_customer_idiosyncratic_transpose",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "fcafbe6e-80eb-467a-84dd-4247e3b51c2c",
-										"version" : null,
-										"name" : "map_customer_idiosyncratic_transpose"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 640,
-					"yPos" : 330,
-					"active" : "Y",
-					"statusList" : [ ]
-				}
-			],
-			"name" : "new stage",
-			"xPos" : 210,
-			"yPos" : 330,
-			"active" : "Y",
-			"statusList" : [ ]
-		}
-	],
-	"statusList" : [ ],
-	"paramList" : null,
-	"displyName" : "ppl_e2e_exec"
+  "uuid": "1fa51b87-946f-424b-abb5-4f4f3236b2cb",
+  "version": "1534530472",
+  "name": "ppl_customer_loss_simulation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "xPos": 30,
+  "yPos": 330,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "stage_0",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "1353043c-1820-431b-98b2-727f5a8b1875",
+          "dependsOn": [],
+          "name": "Customer Loss SImulation",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "operator",
+                    "uuid": "9f0063af-86b4-4610-bf6e-047d74fc197e",
+                    "version": null,
+                    "name": "Generate Data for attribute"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "distribution",
+                      "paramType": "distribution",
+                      "paramValue": {
+                        "ref": {
+                          "type": "distribution",
+                          "uuid": "e6104187-625b-49e4-806b-12c93a3b2279",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "numIterations",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "1000"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "saveLocation",
+                      "paramType": "datapod",
+                      "paramValue": {
+                        "ref": {
+                          "type": "datapod",
+                          "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "dae183bc-0f49-455a-8e25-ce6f015777f8",
+                        "version": "1525519035",
+                        "name": "paramlist_generate_data_for_attribute"
+                      },
+                      "value": null,
+                      "paramId": "3",
+                      "paramName": "attrRef",
+                      "paramType": "attribute",
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "7c85e971-bb92-4d71-9c8e-9b5c6633aa69",
+                            "version": null,
+                            "name": "ds_customer_portfolio"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "cust_id",
+                          "attrType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "min",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "-4"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "max",
+                      "paramType": "integer",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "4"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "mean",
+                      "paramType": "double",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "0"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+                        "version": "1524229596",
+                        "name": "paramlist_normal_distribution"
+                      },
+                      "value": null,
+                      "paramId": "3",
+                      "paramName": "seed",
+                      "paramType": "double",
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "4526"
+                      },
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 390,
+          "yPos": 330,
+          "active" : "Y",
+
+          "statusList": []
+        },
+        {
+          "taskId": "e44ec21f-ddb7-460e-af3a-837468d415b2",
+          "dependsOn": [
+            "1353043c-1820-431b-98b2-727f5a8b1875"
+          ],
+          "name": "map_customer_idiosyncratic_transpose",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "fcafbe6e-80eb-467a-84dd-4247e3b51c2c",
+                    "version": null,
+                    "name": "map_customer_idiosyncratic_transpose"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 640,
+          "yPos": 330,
+          "active" : "Y",
+
+          "statusList": []
+        }
+      ],
+      "name": "new stage",
+      "xPos": 210,
+      "yPos": 330,
+      "active" : "Y",
+
+      "statusList": []
+    }
+  ],
+  "statusList": [],
+  "paramList": null
 }

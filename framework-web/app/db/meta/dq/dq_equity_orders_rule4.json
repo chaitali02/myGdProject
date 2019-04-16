@@ -1,91 +1,86 @@
 {
-	"uuid" : "45f5f608-72bb-4f39-90f7-c3e500744f5a",
-	"version" : "1553032635",
-	"name" : "dq_equity_orders_rule4",
-	"desc" : "Order Received time must be less than or equal to the order event time",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"target" : null,
-	"attribute" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
-			"version" : null,
-			"name" : "equity_orders"
-		},
-		"value" : null,
-		"attrId" : "25",
-		"attrName" : "order_received_time",
-		"attrType" : null,
-		"attrUnitType" : null,
-		"function" : null
-	},
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
-			"version" : null,
-			"name" : "equity_orders"
-		},
-		"value" : null
-	},
-	"duplicateKeyCheck" : "N",
-	"nullCheck" : "Y",
-	"valueCheck" : [ ],
-	"rangeCheck" : {
-		
-	},
-	"dataTypeCheck" : "",
-	"dateFormatCheck" : null,
-	"customFormatCheck" : null,
-	"lengthCheck" : {
-		
-	},
-	"refIntegrityCheck" : null,
-	"filterInfo" : null,
-	"userInfo" : null,
-	"thresholdInfo" : {
-		"low" : "25",
-		"medium" : "50",
-		"high" : "75",
-		"type" : "PERCENTAGE"
-	},
-	"domainCheck" : null,
-	"blankSpaceCheck" : null,
-	"expressionCheck" : {
-		"ref" : {
-			"type" : "expression",
-			"uuid" : "f5d8f521-d622-4779-be88-a43160234069",
-			"version" : null,
-			"name" : "expr_dq_equity_orders_rule4"
-		},
-		"value" : null
-	},
-	"caseCheck" : null,
-	"abortCondition" : null,
-	"displyName" : "dqr_security_rule5"
+  "uuid": "45f5f608-72bb-4f39-90f7-c3e500744f5a",
+  "version": "1553032635",
+  "name": "dq_equity_orders_rule4",
+  "desc": "Order Received time must be less than or equal to the order event time",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 19 17:57:15 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "target": null,
+  "attribute": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "version": null,
+      "name": "equity_orders"
+    },
+    "value": null,
+    "attrId": "25",
+    "attrName": "order_received_time",
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "version": null,
+      "name": "equity_orders"
+    },
+    "value": null
+  },
+  "duplicateKeyCheck": "N",
+  "nullCheck": "Y",
+  "valueCheck": [],
+  "rangeCheck": {},
+  "dataTypeCheck": "",
+  "dateFormatCheck": null,
+  "customFormatCheck": null,
+  "lengthCheck": {},
+  "refIntegrityCheck": null,
+  "filterInfo": null,
+  "userInfo": null,
+  "thresholdInfo": {
+    "low": "25",
+    "medium": "50",
+    "high": "75",
+    "type": "PERCENTAGE"
+  },
+  "domainCheck": null,
+  "blankSpaceCheck": null,
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "f5d8f521-d622-4779-be88-a43160234069",
+      "version": null,
+      "name": "expr_dq_equity_orders_rule4"
+    },
+    "value": null
+  },
+  "caseCheck": null,
+  "abortCondition": null
 }

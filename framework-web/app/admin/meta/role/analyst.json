@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:45.960Z"),
+	"createdOn" : ISODate("2019-03-18T14:22:00.385Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -6228,6 +6228,5 @@
 				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		}
-	],
-	"displyName" : "analyst"
+	]
 }

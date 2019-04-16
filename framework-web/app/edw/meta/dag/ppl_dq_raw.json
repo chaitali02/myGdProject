@@ -1,274 +1,251 @@
 {
-	"uuid" : "8618bc88-e8ac-452b-bebc-77e52b90af07",
-	"name" : "ppl_dq_raw",
-	"version" : "1460270910",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "8618bc88-e8ac-452b-bebc-77e52b90af07",
+	"name": "ppl_dq_raw",
+	"version": "1460270910",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
 	],
-	"tags" : [
+	"tags": [
 		"A",
 		"B"
 	],
-	"desc" : "Perform DQ on raw data",
-	"xPos" : 20,
-	"yPos" : 400,
+	"desc": "Perform DQ on raw data",
+	"xPos": 20,
+	"yPos": 400,
 	"templateFlg" : "N",
-	"stages" : [
+	"stages": [
 		{
-			"stageId" : "747ffa53-64ac-4fa5-80ab-572e1d8fe0ce",
-			"xPos" : 270,
-			"yPos" : 400,
-			"dependsOn" : [ ],
-			"name" : "DQ on raw data",
-			"tasks" : [
+			"stageId": "747ffa53-64ac-4fa5-80ab-572e1d8fe0ce",
+			"xPos": 270,
+			"yPos": 400,
+			"dependsOn": [],
+			"name": "DQ on raw data",
+			"tasks": [
 				{
-					"taskId" : "294e3dfc-7c33-40b5-9e47-e45e7bdd80d2",
-					"xPos" : 510,
-					"yPos" : 90,
-					"dependsOn" : [ ],
-					"name" : "DQ on account",
-					"operators" : [
+					"taskId": "294e3dfc-7c33-40b5-9e47-e45e7bdd80d2",
+					"xPos": 510,
+					"yPos": 90,
+					"dependsOn": [],
+					"name": "DQ on account",
+					"operators": [
 						{
-							"operatorId" : "64f8cc78-42ac-4e6e-8d6c-93f0d154e9e7",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "ea2eb904-f4d1-4365-ab9e-a8b0825408de"
-									}
+							"operatorId": "64f8cc78-42ac-4e6e-8d6c-93f0d154e9e7",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "ea2eb904-f4d1-4365-ab9e-a8b0825408de"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "3c0177e8-8082-4398-bc3d-59b3bbcfb983",
-					"xPos" : 460,
-					"yPos" : 70,
-					"dependsOn" : [ ],
-					"name" : "DQ on account_status_type",
-					"operators" : [
+					"taskId": "3c0177e8-8082-4398-bc3d-59b3bbcfb983",
+					"xPos": 460,
+					"yPos": 70,
+					"dependsOn": [],
+					"name": "DQ on account_status_type",
+					"operators": [
 						{
-							"operatorId" : "30c19833-cd33-4865-97c1-6f272ffac756",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "80c39cc7-f2a8-40ee-953f-b6586da5783b"
-									}
+							"operatorId": "30c19833-cd33-4865-97c1-6f272ffac756",
+							"dependsOn": [],
+							"operatorInfo": [{
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "80c39cc7-f2a8-40ee-953f-b6586da5783b"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "7d732c11-65aa-4e65-95eb-eac4265d0b9e",
-					"xPos" : 600,
-					"yPos" : 130,
-					"dependsOn" : [ ],
-					"name" : "DQ on account_type",
-					"operators" : [
+					"taskId": "7d732c11-65aa-4e65-95eb-eac4265d0b9e",
+					"xPos": 600,
+					"yPos": 130,
+					"dependsOn": [],
+					"name": "DQ on account_type",
+					"operators": [
 						{
-							"operatorId" : "6b72c628-b38b-4149-ae52-9ea5ad4575be",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "0c9c2d41-26cf-4e7f-a884-eeffee82814d"
-									}
+							"operatorId": "6b72c628-b38b-4149-ae52-9ea5ad4575be",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "0c9c2d41-26cf-4e7f-a884-eeffee82814d"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "80ad93bc-136d-4b4c-b91d-3e2e3f76f237",
-					"xPos" : 690,
-					"yPos" : 200,
-					"dependsOn" : [ ],
-					"name" : "DQ on address",
-					"operators" : [
+					"taskId": "80ad93bc-136d-4b4c-b91d-3e2e3f76f237",
+					"xPos": 690,
+					"yPos": 200,
+					"dependsOn": [],
+					"name": "DQ on address",
+					"operators": [
 						{
-							"operatorId" : "8d4fe6a9-18f3-4d91-b3de-72c6c29933e5",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "f1f7cee1-081e-44fa-8e44-fbb37c12ebdc"
-									}
+							"operatorId": "8d4fe6a9-18f3-4d91-b3de-72c6c29933e5",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "f1f7cee1-081e-44fa-8e44-fbb37c12ebdc"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "572651ae-d3ac-4a0c-a54d-9cae89cee52d",
-					"xPos" : 740,
-					"yPos" : 290,
-					"dependsOn" : [ ],
-					"name" : "DQ on bank",
-					"operators" : [
+					"taskId": "572651ae-d3ac-4a0c-a54d-9cae89cee52d",
+					"xPos": 740,
+					"yPos": 290,
+					"dependsOn": [],
+					"name": "DQ on bank",
+					"operators": [
 						{
-							"operatorId" : "cfde1b08-0606-4521-b158-31e6cca89acb",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c"
-									}
+							"operatorId": "cfde1b08-0606-4521-b158-31e6cca89acb",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "1adb0a94-a67a-461f-b32f-62d8b0d71824",
-					"xPos" : 760,
-					"yPos" : 390,
-					"dependsOn" : [ ],
-					"name" : "DQ on branch",
-					"operators" : [
+					"taskId": "1adb0a94-a67a-461f-b32f-62d8b0d71824",
+					"xPos": 760,
+					"yPos": 390,
+					"dependsOn": [],
+					"name": "DQ on branch",
+					"operators": [
 						{
-							"operatorId" : "4b5b1ed8-c21a-4b93-9550-7193b24a447b",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "c18b766e-77fe-4319-b6c5-8cb61bd56d18"
-									}
+							"operatorId": "4b5b1ed8-c21a-4b93-9550-7193b24a447b",
+							"dependsOn": [],
+							"operatorInfo": [{
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "c18b766e-77fe-4319-b6c5-8cb61bd56d18"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "eaf1426e-36d5-40f2-a87a-a1178e617f53x",
-					"xPos" : 780,
-					"yPos" : 480,
-					"dependsOn" : [ ],
-					"name" : "DQ on branch_type",
-					"operators" : [
+					"taskId": "eaf1426e-36d5-40f2-a87a-a1178e617f53x",
+					"xPos": 780,
+					"yPos": 480,
+					"dependsOn": [],
+					"name": "DQ on branch_type",
+					"operators": [
 						{
-							"operatorId" : "72b5b373-868f-4a87-9a96-0e89634f1410",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261"
-									}
+							"operatorId": "72b5b373-868f-4a87-9a96-0e89634f1410",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "956f7311-5639-45a0-8b0d-b490a2a31b1c",
-					"xPos" : 740,
-					"yPos" : 580,
-					"dependsOn" : [ ],
-					"name" : "DQ on customer",
-					"operators" : [
+					"taskId": "956f7311-5639-45a0-8b0d-b490a2a31b1c",
+					"xPos": 740,
+					"yPos": 580,
+					"dependsOn": [],
+					"name": "DQ on customer",
+					"operators": [
 						{
-							"operatorId" : "c23b42cc-378a-451c-bce7-611c1c784da3",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "853c0149-f51a-413e-9e5f-a0dd6860a296"
-									}
+							"operatorId": "c23b42cc-378a-451c-bce7-611c1c784da3",
+							"dependsOn": [],
+							"operatorInfo": [{
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "853c0149-f51a-413e-9e5f-a0dd6860a296"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "6b6b965d-7016-4869-992e-2ac42832b7a0",
-					"xPos" : 630,
-					"yPos" : 660,
-					"dependsOn" : [ ],
-					"name" : "DQ on product_type",
-					"operators" : [
+					"taskId": "6b6b965d-7016-4869-992e-2ac42832b7a0",
+					"xPos": 630,
+					"yPos": 660,
+					"dependsOn": [],
+					"name": "DQ on product_type",
+					"operators": [
 						{
-							"operatorId" : "c8dec8c5-34f0-436e-8193-31c4783b7fee",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "6eb56e2c-03e3-4434-8557-29b7cbeeb6aa"
-									}
+							"operatorId": "c8dec8c5-34f0-436e-8193-31c4783b7fee",
+							"dependsOn": [],
+							"operatorInfo":[ {
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "6eb56e2c-03e3-4434-8557-29b7cbeeb6aa"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "2863d24b-e022-4838-8371-137b23115f48",
-					"xPos" : 490,
-					"yPos" : 720,
-					"dependsOn" : [ ],
-					"name" : "DQ on transaction",
-					"operators" : [
+					"taskId": "2863d24b-e022-4838-8371-137b23115f48",
+					"xPos": 490,
+					"yPos": 720,
+					"dependsOn": [],
+					"name": "DQ on transaction",
+					"operators": [
 						{
-							"operatorId" : "bdd62be8-807b-4ef3-bfc6-5b5edb233757",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "72eeaf8e-da21-41dd-bb11-3381f15a526c"
-									}
+							"operatorId": "bdd62be8-807b-4ef3-bfc6-5b5edb233757",
+							"dependsOn": [],
+							"operatorInfo": [{
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "72eeaf8e-da21-41dd-bb11-3381f15a526c"
 								}
-							]
+							}]
 						}
 					]
 				},
 				{
-					"taskId" : "3bfd548a-e924-49a5-9dfd-499864487090",
-					"xPos" : 320,
-					"yPos" : 740,
-					"dependsOn" : [ ],
-					"name" : "DQ on transaction_type",
-					"operators" : [
+					"taskId": "3bfd548a-e924-49a5-9dfd-499864487090",
+					"xPos": 320,
+					"yPos": 740,
+					"dependsOn": [],
+					"name": "DQ on transaction_type",
+					"operators": [
 						{
-							"operatorId" : "449636c6-1e36-4b15-bd29-7f218092bfe0",
-							"dependsOn" : [ ],
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "dqgroup",
-										"uuid" : "9028015c-049a-4845-8e0e-d245f5b6a1d0"
-									}
+							"operatorId": "449636c6-1e36-4b15-bd29-7f218092bfe0",
+							"dependsOn": [],
+							"operatorInfo": [{
+								"ref": {
+									"type": "dqgroup",
+									"uuid": "9028015c-049a-4845-8e0e-d245f5b6a1d0"
 								}
-							]
+							}]
 						}
 					]
 				}
 			]
 		}
-	],
-	"displyName" : "ppl_e2e_exec"
+	]
 }

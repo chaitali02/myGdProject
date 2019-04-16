@@ -1,107 +1,106 @@
 {
-	"uuid" : "1503714e-1ecd-45db-b9f6-835fb4e70a56",
-	"version" : "1494310792",
-	"name" : "profile_group_raw",
-	"desc" : "Profile Group for Raw data",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : null,
-			"name" : "ypalrecha"
+	"uuid": "1503714e-1ecd-45db-b9f6-835fb4e70a56",
+	"version": "1494310792",
+	"name": "profile_group_raw",
+	"desc": "Profile Group for Raw data",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": null,
+			"name": "ypalrecha"
 		},
-		"value" : null
+		"value": null
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.658Z"),
-	"tags" : [ ],
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : null
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196",
+				"name": null
 			},
-			"value" : null
+			"value": null
 		}
 	],
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
-				"version" : null,
-				"name" : "profile_bank"
+			"ref": {
+				"type": "profile",
+				"uuid": "e8935d31-f5e5-467a-a634-276c82a766b4",
+				"version": null,
+				"name": "profile_bank"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "c4fd6174-e8c7-4995-aa5c-ec9ca239146e",
-				"version" : null,
-				"name" : "profile_account_status_type"
+			"ref": {
+				"type": "profile",
+				"uuid": "c4fd6174-e8c7-4995-aa5c-ec9ca239146e",
+				"version": null,
+				"name": "profile_account_status_type"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
-				"version" : null,
-				"name" : "profile_account"
+			"ref": {
+				"type": "profile",
+				"uuid": "0067c2a4-837d-49dc-bbbb-d60d10600dcb",
+				"version": null,
+				"name": "profile_account"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
-				"version" : null,
-				"name" : "profile_account_type"
+			"ref": {
+				"type": "profile",
+				"uuid": "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
+				"version": null,
+				"name": "profile_account_type"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "5ba9f2c3-bfbd-422f-ae27-6ff94ac6b874",
-				"version" : null,
-				"name" : "profile_address"
+			"ref": {
+				"type": "profile",
+				"uuid": "5ba9f2c3-bfbd-422f-ae27-6ff94ac6b874",
+				"version": null,
+				"name": "profile_address"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "43bc864f-d8eb-4ef8-a675-0aae391ee764",
-				"version" : null,
-				"name" : "profile_branch"
+			"ref": {
+				"type": "profile",
+				"uuid": "43bc864f-d8eb-4ef8-a675-0aae391ee764",
+				"version": null,
+				"name": "profile_branch"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "28070b4d-63e2-4a38-a286-04ce7b8918bd",
-				"version" : null,
-				"name" : "profile_branch_type"
+			"ref": {
+				"type": "profile",
+				"uuid": "28070b4d-63e2-4a38-a286-04ce7b8918bd",
+				"version": null,
+				"name": "profile_branch_type"
 			},
-			"value" : null
+			"value": null
 		},
 		{
-			"ref" : {
-				"type" : "profile",
-				"uuid" : "c5e241b7-e32b-42bb-a618-800e8dd3aa08",
-				"version" : null,
-				"name" : "profile_customer"
+			"ref": {
+				"type": "profile",
+				"uuid": "c5e241b7-e32b-42bb-a618-800e8dd3aa08",
+				"version": null,
+				"name": "profile_customer"
 			},
-			"value" : null
+			"value": null
 		}
 	],
-	"inParallel" : null,
-	"displyName" : "dpg_equity"
+	"inParallel": null
 }

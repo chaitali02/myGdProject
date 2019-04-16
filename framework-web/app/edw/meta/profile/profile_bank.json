@@ -1,87 +1,86 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 		}
 	},
-	"attributeInfo" : [
+	"attributeInfo": [
 		{
-			"attrId" : "0",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "0",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "1",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "1",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "2",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "2",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "3",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "3",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "4",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "4",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "5",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "5",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		},
 		{
-			"attrId" : "6",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrId": "6",
+			"ref": {
+				"type": "datapod",
+				"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 			}
 		}
 	],
-	"uuid" : "e8935d31-f5e5-467a-a634-276c82a766b4",
-	"version" : "1491902259",
-	"name" : "profile_bank",
-	"desc" : "Data profiling to see statistical check results on raw tables for all columns",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "e8935d31-f5e5-467a-a634-276c82a766b4",
+	"version": "1491902259",
+	"name": "profile_bank",
+	"desc": "Data profiling to see statistical check results on raw tables for all columns",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.516Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "dp_equity_orders"
+	]
 }

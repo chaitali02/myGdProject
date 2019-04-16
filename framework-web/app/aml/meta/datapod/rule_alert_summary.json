@@ -1,110 +1,109 @@
 {
-	"uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060",
-	"version" : "1542671126",
-	"name" : "rule_alert_summary",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : null,
-			"name" : "file_data"
-		},
-		"value" : null
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"displaySeq" : 0,
-			"name" : "rule_type",
-			"type" : "string",
-			"desc" : null,
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "rule_type",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 1,
-			"displaySeq" : 1,
-			"name" : "focus_type",
-			"type" : "string",
-			"desc" : null,
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "focus_type",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 2,
-			"displaySeq" : 2,
-			"name" : "alerted",
-			"type" : "integer",
-			"desc" : null,
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "alerted",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 3,
-			"displaySeq" : 3,
-			"name" : "non_alerted",
-			"type" : "integer",
-			"desc" : null,
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "non_alerted",
-			"active" : "Y",
-			"length" : null
-		},
-		{
-			"attributeId" : 4,
-			"displaySeq" : 4,
-			"name" : "business_date",
-			"type" : "string",
-			"desc" : null,
-			"expression" : null,
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "business_date",
-			"active" : "Y",
-			"length" : null
-		}
-	],
-	"prefix" : "rla",
-	"displyName" : "security"
+  "uuid": "04afa6cf-0021-4ca1-a492-966bb528d060",
+  "version": "1542671126",
+  "name": "rule_alert_summary",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Nov 19 18:45:26 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "displaySeq": 0,
+      "name": "rule_type",
+      "type": "string",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "rule_type",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 1,
+      "displaySeq": 1,
+      "name": "focus_type",
+      "type": "string",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "focus_type",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 2,
+      "displaySeq": 2,
+      "name": "alerted",
+      "type": "integer",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "alerted",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 3,
+      "displaySeq": 3,
+      "name": "non_alerted",
+      "type": "integer",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "non_alerted",
+      "active": "Y",
+      "length": null
+    },
+    {
+      "attributeId": 4,
+      "displaySeq": 4,
+      "name": "business_date",
+      "type": "string",
+      "desc": null,
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "business_date",
+      "active": "Y",
+      "length": null
+    }
+  ],
+  "prefix":"rla"
 }

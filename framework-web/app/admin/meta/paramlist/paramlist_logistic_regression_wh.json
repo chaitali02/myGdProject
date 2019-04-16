@@ -1,71 +1,70 @@
 {
-	"uuid" : "ffc49c07-e7cb-40ee-8050-fc69121a189b",
-	"version" : "1530800450",
-	"name" : "paramlist_logistic_regression_wh",
-	"desc" : "LogisticRegression Param List with Hyper Params",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"params" : [
-		{
-			"paramId" : "0",
-			"paramName" : "regParam",
-			"paramType" : "list",
-			"paramDispName" : "Reg Param",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "0.3, 0.1, 0.05, 0.01, 0.005"
-			}
-		},
-		{
-			"paramId" : "1",
-			"paramName" : "elasticNetParam",
-			"paramType" : "list",
-			"paramDispName" : "Elastic NetParam",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "0.1, 0.05, 0.01, 0.005, 0.001"
-			}
-		},
-		{
-			"paramId" : "2",
-			"paramName" : "numFolds",
-			"paramType" : "integer",
-			"paramDispName" : "Num Folds",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "3"
-			}
-		}
-	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+  "uuid": "ffc49c07-e7cb-40ee-8050-fc69121a189b",
+  "version": "1530800450",
+  "name": "paramlist_logistic_regression_wh",
+  "desc": "LogisticRegression Param List with Hyper Params",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+ 	"publicFlag": "Y",
+  "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "regParam",
+      "paramType": "list",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "0.3, 0.1, 0.05, 0.01, 0.005"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "elasticNetParam",
+      "paramType": "list",
+  	  "paramDispName" : "Elastic NetParam",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "0.1, 0.05, 0.01, 0.005, 0.001"
+      }
+    },
+    {
+      "paramId": "2",
+      "paramName": "numFolds",
+      "paramType": "integer",
+  	  "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
+    }
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }

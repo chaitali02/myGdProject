@@ -51,6 +51,5 @@
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 1,
-  "runMode": "BATCH",
-	"displyName" : "dq_result_summary"
+  "runMode": "BATCH"
 }

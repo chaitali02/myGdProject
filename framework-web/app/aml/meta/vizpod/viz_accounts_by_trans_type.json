@@ -1,108 +1,107 @@
 {
-	"uuid" : "846a79fe-f6e8-47d2-ae87-bba6366dc006",
-	"version" : "1551217730",
-	"name" : "viz_accounts_by_trans_type",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "37d53ff8-eb7f-4536-9383-239aeae1f451",
-			"version" : null,
-			"name" : "rel_fact_transaction_report"
-		},
-		"value" : null
-	},
-	"type" : "bar-chart",
-	"limit" : 0,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-				"version" : null,
-				"name" : "dim_transaction_type"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "transaction_type_code"
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 0
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 3
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
-				"version" : null,
-				"name" : "fact_transaction"
-			},
-			"attributeId" : 8,
-			"function" : "COUNT",
-			"value" : null,
-			"attributeName" : "account_id"
-		}
-	],
-	"sortBy" : [ ],
-	"sortOrder" : null,
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "846a79fe-f6e8-47d2-ae87-bba6366dc006",
+  "version": "1551217730",
+  "name": "viz_accounts_by_trans_type",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Feb 26 16:48:50 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "relation",
+      "uuid": "37d53ff8-eb7f-4536-9383-239aeae1f451",
+      "version": null,
+      "name": "rel_fact_transaction_report"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+        "version": null,
+        "name": "dim_transaction_type"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_type_code"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 3
+        }
+    ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
+        "version": null,
+        "name": "fact_transaction"
+      },
+      "attributeId": 8,
+      "function": "COUNT",
+      "value": null,
+      "attributeName": "account_id"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

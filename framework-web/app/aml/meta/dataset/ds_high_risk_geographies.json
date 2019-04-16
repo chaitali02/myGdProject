@@ -1,111 +1,110 @@
 {
-	"uuid" : "901b398f-41d9-4b31-9803-c9611bf63eb2",
-	"version" : "1540034311",
-	"name" : "ds_high_risk_geographies",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-			"version" : null,
-			"name" : "dim_country"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"logicalOperator" : "",
-			"operator" : ">",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-						"version" : null,
-						"name" : "dim_country"
-					},
-					"attributeId" : 3,
-					"value" : null,
-					"attributeName" : "country_risk_level",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "simple",
-						"uuid" : null,
-						"version" : null,
-						"name" : null
-					},
-					"attributeId" : null,
-					"value" : "5",
-					"attributeName" : null,
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "country_code",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-					"version" : null,
-					"name" : "dim_country"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "country_code",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "country_risk_level",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-					"version" : null,
-					"name" : "dim_country"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "country_risk_level",
-				"attrType" : "integer"
-			}
-		}
-	],
-	"groupBy" : null,
-	"limit" : 0,
-	"displyName" : "ds_rule_dashboard_timeliness"
+  "uuid": "901b398f-41d9-4b31-9803-c9611bf63eb2",
+  "version": "1540034311",
+  "name": "ds_high_risk_geographies",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 20 16:48:31 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
+      "version": null,
+      "name": "dim_country"
+    },
+    "value": null
+  },
+   "filterInfo" : [ 
+        {
+            "logicalOperator" : "",
+            "operator" : ">",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
+                        "version" : null,
+                        "name" : "dim_country"
+                    },
+                    "attributeId" : 3,
+                    "value" : null,
+                    "attributeName" : "country_risk_level",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "simple",
+                        "uuid" : null,
+                        "version" : null,
+                        "name" : null
+                    },
+                    "attributeId" : null,
+                    "value" : "5",
+                    "attributeName" : null,
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
+      "attrSourceName": "country_code",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
+          "version": null,
+          "name": "dim_country"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "country_code",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
+      "attrSourceName": "country_risk_level",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
+          "version": null,
+          "name": "dim_country"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "country_risk_level",
+        "attrType": "integer"
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
 }

@@ -1,5 +1,5 @@
 {
-    "_id" : ObjectId("5cb47da0da75e91b2c51a496"),
+   
     "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1",
     "name" : "admin",
     "version" : "1464977196",
@@ -10,9 +10,9 @@
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "active" : "Y",
-    "locked" : "N",
+  "locked" : "N",
     "appInfo" : [ 
         {
             "ref" : {
@@ -46,6 +46,5 @@
             "type" : "application",
             "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
         }
-    },
-    "displyName" : "admin"
+    }
 }

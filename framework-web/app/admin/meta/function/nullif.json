@@ -1,66 +1,66 @@
 {
-	"uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002888",
-	"version" : "1488801521",
-	"name" : "nullif",
-	"desc" : "Returns the first v that is not NULL, or NULL if all v's are NULL.",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [
-		"DEV",
-		"1.0.1",
-		"DEMO"
+    "uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002888",
+    "version" : "1488801521",
+    "name" : "nullif",
+    "desc" : "Returns the first v that is not NULL, or NULL if all v's are NULL.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+  	"locked" : "N",
+    "published" : "N",
+    "inputReq" : "Y",
+    "publicFlag" : "Y",
+   	"appInfo": [
+			{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
 	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"inputReq" : "Y",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"returnType" : "STRING",
-	"category" : "SIMPLE",
-	"functionInfo" : [
-		{
-			"type" : "file",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "mysql",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "hive",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "impala",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "oracle",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "postgres",
-			"name" : "coalesce",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"displyName" : "year"
+
+    "returnType":"STRING",
+  "category" : "SIMPLE",
+    "functionInfo" : [  
+        {
+            "type" : "file",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "mysql",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "coalesce",
+            "paramInfoHolder" : []
+        }
+    ]
 }

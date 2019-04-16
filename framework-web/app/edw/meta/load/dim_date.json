@@ -1,39 +1,38 @@
 {
-	"header" : "Y",
-	"append" : "Y",
-	"source" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"header": "Y",
+	"append": "Y",
+	"source": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		},
-		"value" : "/user/hive/warehouse/framework/upload/dim_date.csv"
+		"value": "/user/hive/warehouse/framework/upload/dim_date.csv"
 	},
-	"target" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+	"target": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 		}
 	},
-	"uuid" : "3d101e78-79e0-4324-a5f5-e4117e1af3e3",
-	"version" : "1490432237",
-	"name" : "dim_date",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "3d101e78-79e0-4324-a5f5-e4117e1af3e3",
+	"version": "1490432237",
+	"name": "dim_date",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.405Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "device_data_compute_rolling_std"
+	]
 }

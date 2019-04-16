@@ -21,6 +21,5 @@
 		}
     ],
     "desc" : "Meta for ingestgroupexec",
-    "menu":"",
-	"displyName" : "ingestgroup"
+    "menu":""
 }

@@ -1,64 +1,63 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "15beaf47-0a35-486b-9b65-9a57a2e835df"
+	"dependsOn": {
+		"ref": {
+			"type": "relation",
+			"uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df"
 		}
 	},
-	"formulaInfo" : [
+	"formulaInfo": [
 		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002671"
+			"ref": {
+				"type": "function",
+				"uuid": "9e3e2936-02fb-11e7-93ae-92361f002671"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "simple"
+			"ref": {
+				"type": "simple"
 			},
-			"value" : "("
+			"value": "("
 		},
 		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+			"ref": {
+				"type": "datapod",
+				"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
 			},
-			"attributeId" : 6
+			"attributeId": 6
 		},
 		{
-			"ref" : {
-				"type" : "simple"
+			"ref": {
+				"type": "simple"
 			},
-			"value" : ")"
+			"value": ")"
 		}
 	],
-	"formulaType" : "aggr",
-	"uuid" : "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
-	"version" : "1494803596",
-	"name" : "formula_total_customers",
-	"desc" : "Total Customers",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"formulaType": "aggr",
+	"uuid": "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
+	"version": "1494803596",
+	"name": "formula_total_customers",
+	"desc": "Total Customers",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "fm_total_pass_pct"
+	]
 }

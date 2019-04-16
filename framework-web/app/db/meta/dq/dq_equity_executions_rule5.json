@@ -1,91 +1,86 @@
 {
-	"uuid" : "a3945b0a-aa86-4169-9128-a0fd580dc005",
-	"version" : "1553032283",
-	"name" : "dq_equity_executions_rule5",
-	"desc" : "Execution Price must be a positive number",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.446Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"target" : null,
-	"attribute" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-			"version" : null,
-			"name" : "equity_executions"
-		},
-		"value" : null,
-		"attrId" : "40",
-		"attrName" : "price_issuing",
-		"attrType" : null,
-		"attrUnitType" : null,
-		"function" : null
-	},
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-			"version" : null,
-			"name" : "equity_executions"
-		},
-		"value" : null
-	},
-	"duplicateKeyCheck" : "N",
-	"nullCheck" : "Y",
-	"valueCheck" : [ ],
-	"rangeCheck" : {
-		
-	},
-	"dataTypeCheck" : "",
-	"dateFormatCheck" : null,
-	"customFormatCheck" : null,
-	"lengthCheck" : {
-		
-	},
-	"refIntegrityCheck" : null,
-	"filterInfo" : null,
-	"userInfo" : null,
-	"thresholdInfo" : {
-		"low" : "25",
-		"medium" : "50",
-		"high" : "75",
-		"type" : "PERCENTAGE"
-	},
-	"domainCheck" : null,
-	"blankSpaceCheck" : null,
-	"expressionCheck" : {
-		"ref" : {
-			"type" : "expression",
-			"uuid" : "1f65205b-4df2-44c5-bcd2-85312ded509b",
-			"version" : null,
-			"name" : "expr_dq_equity_executions_rule5"
-		},
-		"value" : null
-	},
-	"caseCheck" : null,
-	"abortCondition" : null,
-	"displyName" : "dqr_security_rule5"
+  "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc005",
+  "version": "1553032283",
+  "name": "dq_equity_executions_rule5",
+  "desc": "Execution Price must be a positive number",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 19 17:51:23 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "target": null,
+  "attribute": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+      "version": null,
+      "name": "equity_executions"
+    },
+    "value": null,
+    "attrId": "40",
+    "attrName": "price_issuing",
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+      "version": null,
+      "name": "equity_executions"
+    },
+    "value": null
+  },
+  "duplicateKeyCheck": "N",
+  "nullCheck": "Y",
+  "valueCheck": [],
+  "rangeCheck": {},
+  "dataTypeCheck": "",
+  "dateFormatCheck": null,
+  "customFormatCheck": null,
+  "lengthCheck": {},
+  "refIntegrityCheck": null,
+  "filterInfo": null,
+  "userInfo": null,
+  "thresholdInfo": {
+    "low": "25",
+    "medium": "50",
+    "high": "75",
+    "type": "PERCENTAGE"
+  },
+  "domainCheck": null,
+  "blankSpaceCheck": null,
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "1f65205b-4df2-44c5-bcd2-85312ded509b",
+      "version": null,
+      "name": "expr_dq_equity_executions_rule5"
+    },
+    "value": null
+  },
+  "caseCheck": null,
+  "abortCondition": null
 }

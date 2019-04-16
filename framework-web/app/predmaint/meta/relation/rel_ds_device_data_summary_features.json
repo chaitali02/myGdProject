@@ -1,351 +1,350 @@
 {
-	"uuid" : "387470b1-4916-40bb-bc8b-3cd59f8c6fc8",
-	"version" : "1549636216",
-	"name" : "rel_ds_device_data_summary_features",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1547482153",
-				"name" : "Predictive Maintenance"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-			"version" : null,
-			"name" : "device_data_compute_rolling_mean"
-		},
-		"value" : null
-	},
-	"relationInfo" : [
-		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
-					"version" : null,
-					"name" : "device_data_compute_rolling_min"
-				},
-				"value" : null
-			},
-			"joinType" : "",
-			"joinKey" : [
-				{
-					"display_seq" : null,
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
-								"version" : null,
-								"name" : "device_data_compute_rolling_min"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						}
-					]
-				},
-				{
-					"display_seq" : null,
-					"logicalOperator" : "AND",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
-								"version" : null,
-								"name" : "device_data_compute_rolling_min"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						}
-					]
-				}
-			],
-			"logicaloperand" : null
-		},
-		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
-					"version" : null,
-					"name" : "device_data_compute_rolling_max"
-				},
-				"value" : null
-			},
-			"joinType" : "",
-			"joinKey" : [
-				{
-					"display_seq" : null,
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
-								"version" : null,
-								"name" : "device_data_compute_rolling_max"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						}
-					]
-				},
-				{
-					"display_seq" : null,
-					"logicalOperator" : "AND",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
-								"version" : null,
-								"name" : "device_data_compute_rolling_max"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						}
-					]
-				}
-			],
-			"logicaloperand" : null
-		},
-		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
-					"version" : null,
-					"name" : "device_data_compute_rolling_diff"
-				},
-				"value" : null
-			},
-			"joinType" : "",
-			"joinKey" : [
-				{
-					"display_seq" : null,
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
-								"version" : null,
-								"name" : "device_data_compute_rolling_diff"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						}
-					]
-				},
-				{
-					"display_seq" : null,
-					"logicalOperator" : "AND",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
-								"version" : null,
-								"name" : "device_data_compute_rolling_diff"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						}
-					]
-				}
-			],
-			"logicaloperand" : null
-		},
-		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
-					"version" : null,
-					"name" : "device_data_compute_rolling_std"
-				},
-				"value" : null
-			},
-			"joinType" : "",
-			"joinKey" : [
-				{
-					"display_seq" : null,
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
-								"version" : null,
-								"name" : "device_data_compute_rolling_std"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "deviceid",
-							"attributeType" : "string"
-						}
-					]
-				},
-				{
-					"display_seq" : null,
-					"logicalOperator" : "AND",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
-								"version" : null,
-								"name" : "device_data_compute_rolling_mean"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
-								"version" : null,
-								"name" : "device_data_compute_rolling_std"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "date",
-							"attributeType" : "string"
-						}
-					]
-				}
-			],
-			"logicaloperand" : null
-		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+  "uuid": "387470b1-4916-40bb-bc8b-3cd59f8c6fc8",
+  "version": "1549636216",
+  "name": "rel_ds_device_data_summary_features",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 08 09:30:16 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+      "version": null,
+      "name": "device_data_compute_rolling_mean"
+    },
+    "value": null
+  },
+  "relationInfo": [
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
+          "version": null,
+          "name": "device_data_compute_rolling_min"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
+                "version": null,
+                "name": "device_data_compute_rolling_min"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
+                "version": null,
+                "name": "device_data_compute_rolling_min"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
+          "version": null,
+          "name": "device_data_compute_rolling_max"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
+                "version": null,
+                "name": "device_data_compute_rolling_max"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
+                "version": null,
+                "name": "device_data_compute_rolling_max"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
+          "version": null,
+          "name": "device_data_compute_rolling_diff"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
+                "version": null,
+                "name": "device_data_compute_rolling_diff"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
+                "version": null,
+                "name": "device_data_compute_rolling_diff"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
+          "version": null,
+          "name": "device_data_compute_rolling_std"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
+                "version": null,
+                "name": "device_data_compute_rolling_std"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
+                "version": null,
+                "name": "device_data_compute_rolling_mean"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
+                "version": null,
+                "name": "device_data_compute_rolling_std"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    }
+  ]
 }

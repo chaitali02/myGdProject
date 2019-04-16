@@ -1,110 +1,109 @@
 {
-	"uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b",
-	"version" : "1530887155",
-	"name" : "paramlist_random_forest_wh",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "a82581f7-3818-40bb-a98d-3b518b755e0b",
+	"version": "1530887155",
+	"name": "paramlist_random_forest_wh",
+	"desc": null,
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
+	"createdOn": ISODate("2018-06-11T12:47:30.806Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"publicFlag": "Y",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
 			}
 		}
 	],
-	"params" : [
+	"params": [
 		{
-			"paramId" : "0",
-			"paramName" : "numTrees",
-			"paramType" : "list",
-			"paramDispName" : "Num Trees",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "0",
+			"paramName": "numTrees",
+			"paramType": "list",
+			"paramDispName": "Num Trees",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "15, 20, 30"
+				"value": "15, 20, 30"
 			}
 		},
 		{
-			"paramId" : "1",
-			"paramName" : "maxDepth",
-			"paramType" : "list",
-			"paramDispName" : "Max Depth",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "1",
+			"paramName": "maxDepth",
+			"paramType": "list",
+			"paramDispName": "Max Depth",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "5, 8, 10"
+				"value": "5, 8, 10"
 			}
 		},
 		{
-			"paramId" : "2",
-			"paramName" : "minInstancesPerNode",
-			"paramType" : "list",
-			"paramDispName" : "Min Instances PerNode",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "2",
+			"paramName": "minInstancesPerNode",
+			"paramType": "list",
+			"paramDispName": "Min Instances PerNode",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "1, 2, 3"
+				"value": "1, 2, 3"
 			}
 		},
 		{
-			"paramId" : "3",
-			"paramName" : "maxBins",
-			"paramType" : "list",
-			"paramDispName" : "Max Bins",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "3",
+			"paramName": "maxBins",
+			"paramType": "list",
+			"paramDispName": "Max Bins",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "32, 35, 38"
+				"value": "32, 35, 38"
 			}
 		},
 		{
-			"paramId" : "4",
-			"paramName" : "seed",
-			"paramType" : "list",
-			"paramDispName" : "Seed",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "4",
+			"paramName": "seed",
+			"paramType": "list",
+			"paramDispName": "Seed",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "159147643, 1000, 100000"
+				"value": "159147643, 1000, 100000"
 			}
 		},
 		{
-			"paramId" : "5",
-			"paramName" : "numFolds",
-			"paramType" : "integer",
-			"paramDispName" : "Num Folds",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
+			"paramId": "5",
+			"paramName": "numFolds",
+			"paramType": "integer",
+			"paramDispName": "Num Folds",
+			"paramDesc": "",
+			"paramValue": {
+				"ref": {
+					"type": "simple"
 				},
-				"value" : "3"
+				"value": "3"
 			}
 		}
 	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+	"paramListType": "model",
+	"templateFlg": "Y",
+	"templateInfo": null
 }

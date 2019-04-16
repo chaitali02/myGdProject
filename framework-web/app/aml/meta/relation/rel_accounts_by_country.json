@@ -1,90 +1,89 @@
 {
-	"uuid" : "0354a551-301f-4d4e-a1d0-fb2bc7a06d7c",
-	"version" : "1550868928",
-	"name" : "rel_accounts_by_country",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-			"version" : null,
-			"name" : "dim_account"
-		},
-		"value" : null
-	},
-	"relationInfo" : [
-		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
-					"version" : null,
-					"name" : "dim_customer"
-				},
-				"value" : null
-			},
-			"joinType" : "",
-			"joinKey" : [
-				{
-					"display_seq" : null,
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-								"version" : null,
-								"name" : "dim_account"
-							},
-							"attributeId" : 20,
-							"value" : null,
-							"attributeName" : "customer_id",
-							"attributeType" : "string"
-						},
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
-								"version" : null,
-								"name" : "dim_customer"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_customer_id",
-							"attributeType" : "string"
-						}
-					]
-				}
-			],
-			"logicaloperand" : null
-		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+  "uuid": "0354a551-301f-4d4e-a1d0-fb2bc7a06d7c",
+  "version": "1550868928",
+  "name": "rel_accounts_by_country",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 22 15:55:28 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+      "version": null,
+      "name": "dim_account"
+    },
+    "value": null
+  },
+  "relationInfo": [
+    {
+      "join": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
+          "version": null,
+          "name": "dim_customer"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+                "version": null,
+                "name": "dim_account"
+              },
+              "attributeId": 20,
+              "value": null,
+              "attributeName": "customer_id",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
+                "version": null,
+                "name": "dim_customer"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "src_customer_id",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    }
+  ]
 }

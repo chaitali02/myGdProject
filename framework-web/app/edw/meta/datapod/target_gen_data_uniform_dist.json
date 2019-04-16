@@ -1,79 +1,78 @@
 {
-	"id" : "5afbd0cc2750524ccbe5bf51",
-	"uuid" : "85321be8-a318-4b08-befa-492dc3cb99a6",
-	"version" : "1526452428",
-	"name" : "target_gen_data_uniform_dist",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : null,
-			"name" : "File"
-		},
-		"value" : null
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "id",
-			"type" : "integer",
-			"desc" : "id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "id",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 1,
-			"name" : "col1",
-			"type" : "double",
-			"desc" : "col1",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "col1",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 2,
-			"name" : "version",
-			"type" : "integer",
-			"desc" : "version",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "version",
-			"active" : "Y",
-			"expr" : null
-		}
-	],
-	"prefix" : "agt",
-	"displyName" : "security"
+  "id": "5afbd0cc2750524ccbe5bf51",
+  "uuid": "85321be8-a318-4b08-befa-492dc3cb99a6",
+  "version": "1526452428",
+  "name": "target_gen_data_uniform_dist",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed May 16 00:03:48 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "id",
+      "type": "integer",
+      "desc": "id",
+      "key": "",
+      "partition": "N",
+      "dispName": "id",
+      "active" : "Y",
+       "expr":   null
+    },
+    {
+      "attributeId": 1,
+      "name": "col1",
+      "type": "double",
+      "desc": "col1",
+      "key": "",
+      "partition": "N",
+      "dispName": "col1",
+      "active" : "Y",
+       "expr":   null
+    },
+    {
+      "attributeId": 2,
+      "name": "version",
+      "type": "integer",
+      "desc": "version",
+      "key": "",
+      "partition": "N",
+      "dispName": "version",
+      "active" : "Y",
+       "expr":   null
+    }
+  ],
+      "prefix" : "agt"
 }

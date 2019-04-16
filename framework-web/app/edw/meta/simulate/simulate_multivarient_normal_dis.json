@@ -1,84 +1,83 @@
 {
-	"id" : "5afbd1e92750524ccbe5bfa4",
-	"uuid" : "00c1af72-5815-4e52-b452-1c781961d040",
-	"version" : "1526452713",
-	"name" : "simulate_multivarient_normal_dis",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:46.598Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "model",
-			"uuid" : "4f746686-019f-47da-a744-b77acf1b2a99",
-			"version" : null,
-			"name" : "formula_adjInterestRate"
-		},
-		"value" : null
-	},
-	"target" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "3a027498-e7d7-48d8-8d02-22c161c4e816",
-			"version" : null,
-			"name" : "target_sim_multivarient_normal_dis"
-		},
-		"value" : null
-	},
-	"numIterations" : 1000,
-	"featureInfo" : [
-		{
-			"ref" : {
-				"type" : "model",
-				"uuid" : "4f746686-019f-47da-a744-b77acf1b2a99",
-				"version" : null,
-				"name" : "formula_adjInterestRate"
-			},
-			"value" : null,
-			"featureId" : "0",
-			"featureName" : "interestRate"
-		}
-	],
-	"distributionTypeInfo" : {
-		"ref" : {
-			"type" : "distribution",
-			"uuid" : "aea101dd-fb99-45c8-a4af-c753e457f050",
-			"version" : null,
-			"name" : "multivariate_normal_distribution"
-		},
-		"value" : null
-	},
-	"paramList" : {
-		"ref" : {
-			"type" : "paramlist",
-			"uuid" : "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
-			"version" : null,
-			"name" : "paramlist_simulate"
-		},
-		"value" : null
-	},
-	"type" : "DEFAULT",
-	"displyName" : "simulate_multivarient_normal_dis"
+  "id": "5afbd1e92750524ccbe5bfa4",
+  "uuid": "00c1af72-5815-4e52-b452-1c781961d040",
+  "version": "1526452713",
+  "name": "simulate_multivarient_normal_dis",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed May 16 00:08:33 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "model",
+      "uuid": "4f746686-019f-47da-a744-b77acf1b2a99",
+      "version": null,
+      "name": "formula_adjInterestRate"
+    },
+    "value": null
+  },
+  "target": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "3a027498-e7d7-48d8-8d02-22c161c4e816",
+      "version": null,
+      "name": "target_sim_multivarient_normal_dis"
+    },
+    "value": null
+  },
+  "numIterations": 1000,
+  "featureInfo": [
+    {
+      "ref": {
+        "type": "model",
+        "uuid": "4f746686-019f-47da-a744-b77acf1b2a99",
+        "version": null,
+        "name": "formula_adjInterestRate"
+      },
+      "value": null,
+      "featureId": "0",
+      "featureName": "interestRate"
+    }
+  ],
+  "distributionTypeInfo": {
+    "ref": {
+      "type": "distribution",
+      "uuid": "aea101dd-fb99-45c8-a4af-c753e457f050",
+      "version": null,
+      "name": "multivariate_normal_distribution"
+    },
+    "value": null
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
+      "version": null,
+      "name": "paramlist_simulate"
+    },
+    "value": null
+  },
+  "type": "DEFAULT"
 }

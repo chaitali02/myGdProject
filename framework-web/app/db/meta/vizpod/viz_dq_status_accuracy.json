@@ -1,212 +1,211 @@
 {
-	"uuid" : "c374e454-075b-4749-8098-247d2fa688fe",
-	"version" : "1553796335",
-	"name" : "viz_dq_status_accuracy",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:46.940Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-			"version" : null,
-			"name" : "ds_rule_dashboard_accuracy"
-		},
-		"value" : null
-	},
-	"type" : "score-card",
-	"limit" : 0,
-	"keys" : [ ],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "rule_uuid"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "rule_version"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "rule_name"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 3,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "datapod_uuid"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 4,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "datapod_version"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 5,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "datapod_name"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 6,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "check_type"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 7,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "check_pass_count"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 8,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "check_fail_count"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 9,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "score"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 10,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "dimension"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 11,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "version"
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
-				"version" : null,
-				"name" : "ds_rule_dashboard_accuracy"
-			},
-			"attributeId" : 9,
-			"function" : "AVG",
-			"value" : null,
-			"attributeName" : "score"
-		}
-	],
-	"sortBy" : [ ],
-	"sortOrder" : null,
-	"colorPalette" : null,
-	"displyName" : "viz_dq_status_accuracy"
+  "uuid": "c374e454-075b-4749-8098-247d2fa688fe",
+  "version": "1553796335",
+  "name": "viz_dq_status_accuracy",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Mar 28 14:05:35 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+      "version": null,
+      "name": "ds_rule_dashboard_accuracy"
+    },
+    "value": null
+  },
+  "type": "score-card",
+  "limit": 0,
+  "keys": [],
+  "dimension": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_uuid"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_version"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_uuid"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_version"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 5,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 6,
+      "function": null,
+      "value": null,
+      "attributeName": "check_type"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 7,
+      "function": null,
+      "value": null,
+      "attributeName": "check_pass_count"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 8,
+      "function": null,
+      "value": null,
+      "attributeName": "check_fail_count"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 9,
+      "function": null,
+      "value": null,
+      "attributeName": "score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 10,
+      "function": null,
+      "value": null,
+      "attributeName": "dimension"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 11,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "1030d440-18c3-4f5b-ab26-a2eb1d66a61f",
+        "version": null,
+        "name": "ds_rule_dashboard_accuracy"
+      },
+      "attributeId": 9,
+      "function": "AVG",
+      "value": null,
+      "attributeName": "score"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null,
+  "colorPalette": null
 }

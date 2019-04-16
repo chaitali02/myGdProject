@@ -1,126 +1,125 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : "1464977196"
-		}
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "cust_id",
-			"type" : "string",
-			"desc" : "cust_id",
-			"dispName" : "cust_id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 1,
-			"name" : "industry",
-			"type" : "string",
-			"desc" : "industry",
-			"dispName" : "industry",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 2,
-			"name" : "pd",
-			"type" : "double",
-			"desc" : "pd",
-			"dispName" : "pd",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 3,
-			"name" : "exposure",
-			"type" : "integer",
-			"desc" : "exposure",
-			"dispName" : "exposure",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 4,
-			"name" : "lgd",
-			"type" : "double",
-			"desc" : "lgd",
-			"dispName" : "lgd",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 5,
-			"name" : "lgd_var",
-			"type" : "integer",
-			"desc" : "lgd_var",
-			"dispName" : "lgd_var",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 6,
-			"name" : "correlation",
-			"type" : "double",
-			"desc" : "correlation",
-			"dispName" : "correlation",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 7,
-			"name" : "sqrt_correlation",
-			"type" : "double",
-			"desc" : "sqrt_correlation",
-			"dispName" : "sqrt_correlation",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 8,
-			"name" : "def_point",
-			"type" : "double",
-			"desc" : "def_point",
-			"dispName" : "def_point",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 9,
-			"name" : "reporting_date",
-			"type" : "string",
-			"desc" : "reporting_date",
-			"dispName" : "reporting_date",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 10,
-			"name" : "version",
-			"type" : "Integer",
-			"desc" : "version",
-			"dispName" : "version",
-			"active" : "Y"
-		}
-	],
-	"uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
-	"version" : "1526085077",
-	"name" : "customer_portfolio",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822"
-			}
-		}
-	],
-	"prefix" : "oepr",
-	"displyName" : "security"
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "version" : "1464977196"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "cust_id",
+            "type" : "string",
+            "desc" : "cust_id",
+            "dispName" : "cust_id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "industry",
+            "type" : "string",
+            "desc" : "industry",
+            "dispName" : "industry",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "pd",
+            "type" : "double",
+            "desc" : "pd",
+            "dispName" : "pd",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "exposure",
+            "type" : "integer",
+            "desc" : "exposure",
+            "dispName" : "exposure",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "lgd",
+            "type" : "double",
+            "desc" : "lgd",
+            "dispName" : "lgd",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 5,
+            "name" : "lgd_var",
+            "type" : "integer",
+            "desc" : "lgd_var",
+            "dispName" : "lgd_var",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 6,
+            "name" : "correlation",
+            "type" : "double",
+            "desc" : "correlation",
+            "dispName" : "correlation",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 7,
+            "name" : "sqrt_correlation",
+            "type" : "double",
+            "desc" : "sqrt_correlation",
+            "dispName" : "sqrt_correlation",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 8,
+            "name" : "def_point",
+            "type" : "double",
+            "desc" : "def_point",
+            "dispName" : "def_point",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 9,
+            "name" : "reporting_date",
+            "type" : "string",
+            "desc" : "reporting_date",
+            "dispName" : "reporting_date",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 10,
+            "name" : "version",
+            "type" : "Integer",
+            "desc" : "version",
+            "dispName" : "version",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "7640609c-db5e-42fd-a814-f2d2f0d75fee",
+    "version" : "1526085077",
+    "name" : "customer_portfolio",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-05-12T00:31:17.000Z"),
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
+            }
+        }
+    ],
+	"prefix":"oepr"
 }

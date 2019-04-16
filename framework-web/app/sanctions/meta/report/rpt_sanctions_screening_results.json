@@ -1,376 +1,375 @@
 {
-	"uuid" : "11bab89f-b658-42c4-a54a-9ca4d5ffafd2",
-	"version" : "1547573625",
-	"name" : "rpt_sanctions_screening_results",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.012Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"limit" : -1,
-	"title" : "Sanctions Screening Report",
-	"header" : "Sanctions Screening Report",
-	"headerAlign" : "CENTER",
-	"footer" : "Sanctions Screening Report",
-	"footerAlign" : "CENTER",
-	"saveOnRefresh" : "Y",
-	"filterInfo" : null,
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-			"version" : null,
-			"name" : "ds_sanctions_screening_matches"
-		},
-		"value" : null
-	},
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "transaction_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "transaction_id",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "account_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "account_id",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "customer_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "customer_id",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "transaction_date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "4",
-				"attrName" : "transaction_date",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "amount_usd",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "8",
-				"attrName" : "amount_usd",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "transaction_country",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "5",
-				"attrName" : "transaction_country",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "sender_country",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "6",
-				"attrName" : "sender_country",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "7",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "sender_name",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "9",
-				"attrName" : "sender_name",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "8",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "sender_address",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "11",
-				"attrName" : "sender_address",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "9",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "reciever_country",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "7",
-				"attrName" : "reciever_country",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "10",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "reciever_name",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "10",
-				"attrName" : "reciever_name",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "11",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "reciever_address",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "12",
-				"attrName" : "reciever_address",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "12",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "sender_name_match",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "44",
-				"attrName" : "sender_name_match",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "13",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "sender_address_name_match",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "46",
-				"attrName" : "sender_address_name_match",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "14",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "reciever_name_match",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "45",
-				"attrName" : "reciever_name_match",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "15",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "reciever_address_name_match",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "dataset",
-					"uuid" : "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-					"version" : null,
-					"name" : "ds_sanctions_screening_matches"
-				},
-				"value" : null,
-				"attrId" : "47",
-				"attrName" : "reciever_address_name_match",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "16",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "overall_match_flag",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "5f55f88c-eade-4079-85b8-342b892f86eb",
-					"version" : null,
-					"name" : "fm_overall_match_flag"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		}
-	],
-	"format" : "EXCEL",
-	"senderInfo" : {
-		"emailTo" : [
-			"jkumar@gtpltech.com"
-		],
-		"emailBCC" : [
-			""
-		],
-		"emailCC" : [
-			"vkatkar@gtpltech.com",
-			"gsonawane@gtpltech.com"
-		],
-		"emailAttachment" : null,
-		"notifOnSuccess" : "Y",
-		"notifyOnFailure" : "Y",
-		"sendAttachment" : "Y"
-	},
-	"type" : "default",
-	"attributeFilterInfo" : null,
-	"displyName" : "rpt_data_quality_summary"
+  "uuid": "11bab89f-b658-42c4-a54a-9ca4d5ffafd2",
+  "version": "1547573625",
+  "name": "rpt_sanctions_screening_results",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Jan 15 12:33:45 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "limit":-1,
+  "title": "Sanctions Screening Report",
+  "header": "Sanctions Screening Report",
+  "headerAlign": "CENTER",
+  "footer": "Sanctions Screening Report",
+  "footerAlign": "CENTER",
+  "saveOnRefresh" : "Y",
+  "filterInfo":null,
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+      "version": null,
+      "name": "ds_sanctions_screening_matches"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": null,
+      "attrSourceName": "transaction_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "transaction_id",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": null,
+      "attrSourceName": "account_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "account_id",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": null,
+      "attrSourceName": "customer_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "customer_id",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": null,
+      "attrSourceName": "transaction_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "transaction_date",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": null,
+      "attrSourceName": "amount_usd",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "amount_usd",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq": null,
+      "attrSourceName": "transaction_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "transaction_country",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq": null,
+      "attrSourceName": "sender_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "sender_country",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq": null,
+      "attrSourceName": "sender_name",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "sender_name",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrDisplaySeq": null,
+      "attrSourceName": "sender_address",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "sender_address",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrDisplaySeq": null,
+      "attrSourceName": "reciever_country",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "reciever_country",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrDisplaySeq": null,
+      "attrSourceName": "reciever_name",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "reciever_name",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrDisplaySeq": null,
+      "attrSourceName": "reciever_address",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "reciever_address",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrDisplaySeq": null,
+      "attrSourceName": "sender_name_match",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "44",
+        "attrName": "sender_name_match",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "13",
+      "attrDisplaySeq": null,
+      "attrSourceName": "sender_address_name_match",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "46",
+        "attrName": "sender_address_name_match",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "14",
+      "attrDisplaySeq": null,
+      "attrSourceName": "reciever_name_match",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "45",
+        "attrName": "reciever_name_match",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "15",
+      "attrDisplaySeq": null,
+      "attrSourceName": "reciever_address_name_match",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+          "version": null,
+          "name": "ds_sanctions_screening_matches"
+        },
+        "value": null,
+        "attrId": "47",
+        "attrName": "reciever_address_name_match",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "16",
+      "attrDisplaySeq": null,
+      "attrSourceName": "overall_match_flag",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "5f55f88c-eade-4079-85b8-342b892f86eb",
+          "version": null,
+          "name": "fm_overall_match_flag"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    }
+  ],
+ "format":"EXCEL",
+"senderInfo" : {
+        "emailTo" : [ 
+            "jkumar@gtpltech.com"
+        ],
+        "emailBCC" : [ 
+            ""
+        ],
+        "emailCC" : [ 
+            "vkatkar@gtpltech.com", 
+            "gsonawane@gtpltech.com"
+        ],
+        "emailAttachment" : null,
+        "notifOnSuccess" : "Y",
+        "notifyOnFailure" : "Y",
+        "sendAttachment" : "Y"
+    },
+        "type" : "default",
+        "attributeFilterInfo" : null
 }

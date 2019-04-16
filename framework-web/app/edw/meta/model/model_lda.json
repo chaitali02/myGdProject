@@ -1,79 +1,78 @@
 {
-	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
-	"version" : "1535748849",
-	"name" : "model_lda",
-	"desc" : "LDA Model",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.916Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"type" : "SPARK",
-	"dependsOn" : {
-		"ref" : {
-			"type" : "algorithm",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
-			"version" : null,
-			"name" : "LDA"
-		},
-		"value" : null
-	},
-	"label" : "branch_id",
-	"features" : [
-		{
-			"featureId" : "0",
-			"name" : "customer_id",
-			"type" : "integer",
-			"desc" : "customer_id",
-			"minVal" : 1,
-			"maxVal" : 10
-		},
-		{
-			"featureId" : "1",
-			"name" : "address_id",
-			"type" : "integer",
-			"desc" : "address_id",
-			"minVal" : 1,
-			"maxVal" : 10
-		},
-		{
-			"featureId" : "2",
-			"name" : "branch_id",
-			"type" : "integer",
-			"desc" : "branch_id",
-			"minVal" : 1,
-			"maxVal" : 10
-		},
-		{
-			"featureId" : "3",
-			"name" : "commute_distance_miles",
-			"type" : "integer",
-			"desc" : "commute_distance_miles",
-			"minVal" : 1,
-			"maxVal" : 10
-		}
-	],
-	"scriptName" : null,
-	"customFlag" : "N",
-	"displyName" : "RLU Prediction - LR"
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
+  "version": "1535748849",
+  "name": "model_lda",
+  "desc": "LDA Model",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "SPARK",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789",
+      "version": null,
+      "name": "LDA"
+    },
+    "value": null
+  },
+  "label": "branch_id",
+  "features": [
+    {
+      "featureId": "0",
+      "name": "customer_id",
+      "type": "integer",
+      "desc": "customer_id",
+      "minVal": 1,
+      "maxVal": 10
+    },
+    {
+      "featureId": "1",
+      "name": "address_id",
+      "type": "integer",
+      "desc": "address_id",
+      "minVal": 1,
+      "maxVal": 10
+    },
+    {
+      "featureId": "2",
+      "name": "branch_id",
+      "type": "integer",
+      "desc": "branch_id",
+      "minVal": 1,
+      "maxVal": 10
+    },
+    {
+      "featureId": "3",
+      "name": "commute_distance_miles",
+      "type": "integer",
+      "desc": "commute_distance_miles",
+      "minVal": 1,
+      "maxVal": 10
+    }
+  ],
+  "scriptName": null,
+  "customFlag": "N"
 }

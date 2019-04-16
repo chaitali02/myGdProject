@@ -1,87 +1,86 @@
 {
-	"uuid" : "2054aca1-22a5-4488-9b8e-833f73b02fe8",
-	"version" : "1535748754",
-	"name" : "model_randomforest_classifier",
-	"desc" : "Random Forest Classifier Model",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.916Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"type" : "SPARK",
-	"dependsOn" : {
-		"ref" : {
-			"type" : "algorithm",
-			"uuid" : "27350544-dd58-4d22-a14f-5789ca9c55ca",
-			"version" : null,
-			"name" : "Random Forest Classifier"
-		},
-		"value" : null
-	},
-	"label" : "label",
-	"features" : [
-		{
-			"featureId" : "0",
-			"name" : "customer_id",
-			"type" : "integer",
-			"desc" : "customer_id",
-			"minVal" : 1,
-			"maxVal" : 100
-		},
-		{
-			"featureId" : "1",
-			"name" : "address_id",
-			"type" : "integer",
-			"desc" : "address_id",
-			"minVal" : 1,
-			"maxVal" : 100
-		},
-		{
-			"featureId" : "2",
-			"name" : "branch_id",
-			"type" : "integer",
-			"desc" : "branch_id",
-			"minVal" : 1,
-			"maxVal" : 100
-		},
-		{
-			"featureId" : "3",
-			"name" : "commute_distance_miles",
-			"type" : "integer",
-			"desc" : "commute_distance_miles",
-			"minVal" : 1,
-			"maxVal" : 100
-		},
-		{
-			"featureId" : "5",
-			"name" : "censor",
-			"type" : "integer",
-			"desc" : "censor",
-			"minVal" : 1,
-			"maxVal" : 100
-		}
-	],
-	"scriptName" : null,
-	"customFlag" : "N",
-	"displyName" : "RLU Prediction - LR"
+  "uuid": "2054aca1-22a5-4488-9b8e-833f73b02fe8",
+  "version": "1535748754",
+  "name": "model_randomforest_classifier",
+  "desc": "Random Forest Classifier Model",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "SPARK",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "27350544-dd58-4d22-a14f-5789ca9c55ca",
+      "version": null,
+      "name": "Random Forest Classifier"
+    },
+    "value": null
+  },
+  "label": "label",
+  "features": [
+    {
+      "featureId": "0",
+      "name": "customer_id",
+      "type": "integer",
+      "desc": "customer_id",
+      "minVal": 1,
+      "maxVal": 100
+    },
+    {
+      "featureId": "1",
+      "name": "address_id",
+      "type": "integer",
+      "desc": "address_id",
+      "minVal": 1,
+      "maxVal": 100
+    },
+    {
+      "featureId": "2",
+      "name": "branch_id",
+      "type": "integer",
+      "desc": "branch_id",
+      "minVal": 1,
+      "maxVal": 100
+    },
+    {
+      "featureId": "3",
+      "name": "commute_distance_miles",
+      "type": "integer",
+      "desc": "commute_distance_miles",
+      "minVal": 1,
+      "maxVal": 100
+    },
+    {
+      "featureId": "5",
+      "name": "censor",
+      "type": "integer",
+      "desc": "censor",
+      "minVal": 1,
+      "maxVal": 100
+    }
+  ],
+  "scriptName": null,
+  "customFlag": "N"
 }

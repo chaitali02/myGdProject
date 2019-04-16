@@ -1,368 +1,368 @@
 {
-	"uuid" : "9decfa52-ab8c-43e0-8251-5c053773679c",
-	"version" : "1550866612",
-	"name" : "fm_account_by_age_bucket",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-			"version" : null,
-			"name" : "dim_account"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "CASE",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "WHEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "formula",
-				"uuid" : "017a63de-8265-4229-8508-bf2f5982d36a",
-				"version" : null,
-				"name" : "fm_customer_opening_age"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "BETWEEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "0 AND 90",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "THEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'<3 Months'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "WHEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "formula",
-				"uuid" : "017a63de-8265-4229-8508-bf2f5982d36a",
-				"version" : null,
-				"name" : "fm_customer_opening_age"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "BETWEEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "91 AND 180",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "THEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'3-6 Months'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "WHEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "formula",
-				"uuid" : "017a63de-8265-4229-8508-bf2f5982d36a",
-				"version" : null,
-				"name" : "fm_customer_opening_age"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "BETWEEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "181 AND 270",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "THEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'6-9 Months'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "WHEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "formula",
-				"uuid" : "017a63de-8265-4229-8508-bf2f5982d36a",
-				"version" : null,
-				"name" : "fm_customer_opening_age"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "BETWEEN 271 AND 365",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "THEN",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'9-12 Months'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "ELSE",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "'>12 Months'",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "END",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : null
+  "uuid": "9decfa52-ab8c-43e0-8251-5c053773679c",
+  "version": "1550866612",
+  "name": "fm_account_by_age_bucket",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 22 15:16:52 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+      "version": null,
+      "name": "dim_account"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "CASE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "017a63de-8265-4229-8508-bf2f5982d36a",
+        "version": null,
+        "name": "fm_customer_opening_age"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "BETWEEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "0 AND 90",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'<3 Months'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "017a63de-8265-4229-8508-bf2f5982d36a",
+        "version": null,
+        "name": "fm_customer_opening_age"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "BETWEEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "91 AND 180",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'3-6 Months'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "017a63de-8265-4229-8508-bf2f5982d36a",
+        "version": null,
+        "name": "fm_customer_opening_age"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "BETWEEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "181 AND 270",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'6-9 Months'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "WHEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "017a63de-8265-4229-8508-bf2f5982d36a",
+        "version": null,
+        "name": "fm_customer_opening_age"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "BETWEEN 271 AND 365",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "THEN",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'9-12 Months'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "ELSE",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "'>12 Months'",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "END",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": null
 }

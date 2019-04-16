@@ -1,196 +1,195 @@
 {
-	"uuid" : "d64a94eb-805d-4987-b4ac-8b88bcaa72b7",
-	"version" : "1533001517",
-	"name" : "ds_portfolio_loss_simulation_el",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "7714b8bb-b1ea-4575-bc35-38cc375f21f3",
-			"version" : null,
-			"name" : "rel_portfolio_loss_simulation"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"logicalOperator" : " ",
-			"operator" : ">",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-						"version" : null,
-						"name" : "portfolio_loss_simulation"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "portfolio_loss",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-						"version" : null,
-						"name" : "portfolio_loss_simulaton_aggr"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "value_at_risk",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "iterationid",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-					"version" : null,
-					"name" : "portfolio_loss_simulation"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "iterationid",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "portfolio_loss",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-					"version" : null,
-					"name" : "portfolio_loss_simulation"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "portfolio_loss",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "expected_loss",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-					"version" : null,
-					"name" : "portfolio_loss_simulaton_aggr"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "expected_loss",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "value_at_risk",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-					"version" : null,
-					"name" : "portfolio_loss_simulaton_aggr"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "value_at_risk",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "economic_capital",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-					"version" : null,
-					"name" : "portfolio_loss_simulaton_aggr"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "economic_capital",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : "5",
-			"attrSourceName" : "reporting_date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-					"version" : null,
-					"name" : "portfolio_loss_simulation"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "reporting_date",
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : "6",
-			"attrSourceName" : "version",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-					"version" : null,
-					"name" : "portfolio_loss_simulation"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "version",
-				"attrType" : null
-			}
-		}
-	],
-	"groupBy" : null,
-	"limit" : 0,
-	"displyName" : "ds_rule_dashboard_timeliness"
+  "uuid": "d64a94eb-805d-4987-b4ac-8b88bcaa72b7",
+  "version": "1533001517",
+  "name": "ds_portfolio_loss_simulation_el",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jul 30 21:45:17 EDT 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "7714b8bb-b1ea-4575-bc35-38cc375f21f3",
+      "version": null,
+      "name": "rel_portfolio_loss_simulation"
+    },
+    "value": null
+  },
+   "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : ">",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+                        "version" : null,
+                        "name" : "portfolio_loss_simulation"
+                    },
+                    "attributeId" : 1,
+                    "value" : null,
+                    "attributeName" : "portfolio_loss",
+                    "attributeType" : null
+                }, 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+                        "version" : null,
+                        "name" : "portfolio_loss_simulaton_aggr"
+                    },
+                    "attributeId" : 1,
+                    "value" : null,
+                    "attributeName" : "value_at_risk",
+                    "attributeType" : null
+                }
+            ]
+        }
+    ],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
+      "attrSourceName": "iterationid",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "iterationid",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
+      "attrSourceName": "portfolio_loss",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "portfolio_loss",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
+      "attrSourceName": "expected_loss",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "version": null,
+          "name": "portfolio_loss_simulaton_aggr"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "expected_loss",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
+      "attrSourceName": "value_at_risk",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "version": null,
+          "name": "portfolio_loss_simulaton_aggr"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "value_at_risk",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
+      "attrSourceName": "economic_capital",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+          "version": null,
+          "name": "portfolio_loss_simulaton_aggr"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "economic_capital",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
+      "attrSourceName": "reporting_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "reporting_date",
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
+      "attrSourceName": "version",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+          "version": null,
+          "name": "portfolio_loss_simulation"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "version",
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
 }

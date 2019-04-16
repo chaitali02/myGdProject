@@ -1,442 +1,444 @@
 {
-	"uuid" : "919d133e-6a68-492e-a0df-efd8d62f1f42",
-	"version" : "1537893843",
-	"name" : "account_t2f_mysql_parquet",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.264Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"type" : "TABLE-FILE",
-	"sourceDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
-			"version" : null,
-			"name" : "MySql"
-		},
-		"value" : null
-	},
-	"sourceDetail" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
-			"version" : null,
-			"name" : "account_mysql"
-		},
-		"value" : null
-	},
-	"targetDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : null,
-			"name" : "File_Data"
-		},
-		"value" : null
-	},
-	"targetDetail" : {
-		"ref" : {
-			"type" : "simple"
-		},
-		"value" : "account_parquet"
-	},
-	"filterInfo" : null,
-	"runParams" : null,
-	"sourceFormat" : null,
-	"targetFormat" : "PARQUET",
-	"saveMode" : "OVERWRITE",
-	"ignoreCase" : "N",
-	"sourceHeader" : "N",
-	"targetHeader" : "N",
-	"incrAttr" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-		},
-		"attrId" : "21"
-	},
-	"splitBy" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-		},
-		"attrId" : "0"
-	},
-	"attributeMap" : [
-		{
-			"attrMapId" : "0",
-			"sourceAttr" : {
-				"attrId" : "0",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "account_id"
-			}
-		},
-		{
-			"attrMapId" : "1",
-			"sourceAttr" : {
-				"attrId" : "1",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "account_type_id"
-			}
-		},
-		{
-			"attrMapId" : "2",
-			"sourceAttr" : {
-				"attrId" : "2",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "account_status_id"
-			}
-		},
-		{
-			"attrMapId" : "3",
-			"sourceAttr" : {
-				"attrId" : "3",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "product_type_id"
-			}
-		},
-		{
-			"attrMapId" : "4",
-			"sourceAttr" : {
-				"attrId" : "4",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "customer_id"
-			}
-		},
-		{
-			"attrMapId" : "5",
-			"sourceAttr" : {
-				"attrId" : "5",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "pin_number"
-			}
-		},
-		{
-			"attrMapId" : "6",
-			"sourceAttr" : {
-				"attrId" : "6",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "nationality"
-			}
-		},
-		{
-			"attrMapId" : "7",
-			"sourceAttr" : {
-				"attrId" : "7",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "primary_iden_doc"
-			}
-		},
-		{
-			"attrMapId" : "8",
-			"sourceAttr" : {
-				"attrId" : "8",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "primary_iden_doc_id"
-			}
-		},
-		{
-			"attrMapId" : "9",
-			"sourceAttr" : {
-				"attrId" : "9",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "secondary_iden_doc"
-			}
-		},
-		{
-			"attrMapId" : "10",
-			"sourceAttr" : {
-				"attrId" : "10",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "secondary_iden_doc_id"
-			}
-		},
-		{
-			"attrMapId" : "11",
-			"sourceAttr" : {
-				"attrId" : "11",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "account_open_date"
-			}
-		},
-		{
-			"attrMapId" : "12",
-			"sourceAttr" : {
-				"attrId" : "12",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "account_number"
-			}
-		},
-		{
-			"attrMapId" : "13",
-			"sourceAttr" : {
-				"attrId" : "13",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "opening_balance"
-			}
-		},
-		{
-			"attrMapId" : "14",
-			"sourceAttr" : {
-				"attrId" : "14",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "current_balance"
-			}
-		},
-		{
-			"attrMapId" : "15",
-			"sourceAttr" : {
-				"attrId" : "15",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "overdue_balance"
-			}
-		},
-		{
-			"attrMapId" : "16",
-			"sourceAttr" : {
-				"attrId" : "16",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "overdue_date"
-			}
-		},
-		{
-			"attrMapId" : "17",
-			"sourceAttr" : {
-				"attrId" : "17",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "currency_code"
-			}
-		},
-		{
-			"attrMapId" : "18",
-			"sourceAttr" : {
-				"attrId" : "18",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "interest_type"
-			}
-		},
-		{
-			"attrMapId" : "19",
-			"sourceAttr" : {
-				"attrId" : "19",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "interest_rate"
-			}
-		},
-		{
-			"attrMapId" : "20",
-			"sourceAttr" : {
-				"attrId" : "20",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "load_date"
-			}
-		},
-		{
-			"attrMapId" : "21",
-			"sourceAttr" : {
-				"attrId" : "21",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
-				}
-			},
-			"targetAttr" : {
-				"ref" : {
-					"type" : "attribute"
-				},
-				"value" : "load_id"
-			}
-		}
-	],
-	"displyName" : "ingest_security"
+
+  "uuid": "919d133e-6a68-492e-a0df-efd8d62f1f42",
+  "version": "1537893843",
+  "name": "account_t2f_mysql_parquet",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "type": "TABLE-FILE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "MySql"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+   
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071",
+      "version": null,
+      "name": "account_mysql"
+    },
+    "value": null
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File_Data"
+    },
+    "value": null
+  },
+  "targetDetail": {
+      "ref" : {
+            "type" : "simple"
+        },
+    "value": "account_parquet"
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": null,
+  "targetFormat" : "PARQUET",
+  "saveMode" : "OVERWRITE",
+  "ignoreCase" : "N",
+  "sourceHeader" : "N",
+  "targetHeader" : "N",
+  "incrAttr": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+    },
+    "attrId": "21"
+   
+  },
+   "splitBy": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+    },
+    "attrId": "0"
+  },
+"attributeMap" : [ 
+        {
+            "attrMapId" : "0",
+            "sourceAttr" : {
+                "attrId" : "0",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "account_id"
+            }
+        }, 
+        {
+            "attrMapId" : "1",
+            "sourceAttr" : {
+                "attrId" : "1",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "account_type_id"
+            }
+        }, 
+        {
+            "attrMapId" : "2",
+            "sourceAttr" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "account_status_id"
+            }
+        }, 
+        {
+            "attrMapId" : "3",
+            "sourceAttr" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "product_type_id"
+            }
+        }, 
+        {
+            "attrMapId" : "4",
+            "sourceAttr" : {
+                "attrId" : "4",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "customer_id"
+            }
+        }, 
+        {
+            "attrMapId" : "5",
+            "sourceAttr" : {
+                "attrId" : "5",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "pin_number"
+            }
+        }, 
+        {
+            "attrMapId" : "6",
+            "sourceAttr" : {
+                "attrId" : "6",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "nationality"
+            }
+        }, 
+        {
+            "attrMapId" : "7",
+            "sourceAttr" : {
+                "attrId" : "7",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "primary_iden_doc"
+            }
+        }, 
+        {
+            "attrMapId" : "8",
+            "sourceAttr" : {
+                "attrId" : "8",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "primary_iden_doc_id"
+            }
+        }, 
+        {
+            "attrMapId" : "9",
+            "sourceAttr" : {
+                "attrId" : "9",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "secondary_iden_doc"
+            }
+        }, 
+        {
+            "attrMapId" : "10",
+            "sourceAttr" : {
+                "attrId" : "10",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "secondary_iden_doc_id"
+            }
+        }, 
+        {
+            "attrMapId" : "11",
+            "sourceAttr" : {
+                "attrId" : "11",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "account_open_date"
+            }
+        }, 
+        {
+            "attrMapId" : "12",
+            "sourceAttr" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "account_number"
+            }
+        }, 
+        {
+            "attrMapId" : "13",
+            "sourceAttr" : {
+                "attrId" : "13",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "opening_balance"
+            }
+        }, 
+        {
+            "attrMapId" : "14",
+            "sourceAttr" : {
+                "attrId" : "14",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "current_balance"
+            }
+        }, 
+        {
+            "attrMapId" : "15",
+            "sourceAttr" : {
+                "attrId" : "15",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "overdue_balance"
+            }
+        }, 
+        {
+            "attrMapId" : "16",
+            "sourceAttr" : {
+                "attrId" : "16",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "overdue_date"
+            }
+        }, 
+        {
+            "attrMapId" : "17",
+            "sourceAttr" : {
+                "attrId" : "17",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "currency_code"
+            }
+        }, 
+        {
+            "attrMapId" : "18",
+            "sourceAttr" : {
+                "attrId" : "18",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "interest_type"
+            }
+        }, 
+        {
+            "attrMapId" : "19",
+            "sourceAttr" : {
+                "attrId" : "19",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "interest_rate"
+            }
+        }, 
+        {
+            "attrMapId" : "20",
+            "sourceAttr" : {
+                "attrId" : "20",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "load_date"
+            }
+        }, 
+        {
+            "attrMapId" : "21",
+            "sourceAttr" : {
+                "attrId" : "21",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "638d18d3-45c2-4d4d-8a15-95cab1bfb071"
+                }
+            },
+            "targetAttr" : {
+                "ref" : {
+                    "type" : "attribute"
+                },
+                "value" : "load_id"
+            }
+        }
+    ]
 }

@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
+	"createdOn" : ISODate("2018-11-14T16:12:33.669Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -33,8 +33,8 @@
 			"paramId" : "0",
 			"paramName" : "business_date",
 			"paramType" : "string",
-			"paramDispName" : "Business Date",
-			"paramDesc" : "",
+            "paramDispName" : "Business Date",
+            "paramDesc" : "",
 			"paramValue" : {
 				"ref" : {
 					"type" : "simple",
@@ -49,6 +49,5 @@
 	],
 	"paramListType" : "application",
 	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+	"templateInfo" : null
 }

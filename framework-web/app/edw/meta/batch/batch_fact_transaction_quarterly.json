@@ -1,52 +1,51 @@
 {
-	"pipelineInfo" : [
-		{
-			"ref" : {
-				"type" : "dag",
-				"uuid" : "6dd713ed-3ea9-4940-8c36-8b872c7576e2"
-			}
-		}
-	],
-	"uuid" : "fe374874-faf1-4a17-9c68-441fcbd535ce",
-	"version" : "1541161674",
-	"name" : "batch_fact_transaction_quarterly",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:42.478Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
-			}
-		}
-	],
-	"senderInfo" : {
-		"emailTo" : [
-			"jkumar@gtpltech.com"
-		],
-		"emailBCC" : [
-			"ypalrecha@inferyx.com"
-		],
-		"emailCC" : [
-			"vkatkar@gtpltech.com",
-			"gsonawane@gtpltech.com"
-		],
-		"emailAttachment" : null,
-		"notifOnSuccess" : "Y",
-		"notifyOnFailure" : "Y",
-		"sendAttachment" : "Y"
-	},
-	"displyName" : "batch_fact_transaction_quarterly"
+    "pipelineInfo" : [ 
+        {
+            "ref" : {
+                "type" : "dag",
+                "uuid" : "6dd713ed-3ea9-4940-8c36-8b872c7576e2"
+            }
+        }
+    ],
+    "uuid" : "fe374874-faf1-4a17-9c68-441fcbd535ce",
+    "version" : "1541161674",
+    "name" : "batch_fact_transaction_quarterly",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-11-02T12:27:54.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ],
+"senderInfo" : {
+        "emailTo" : [ 
+            "jkumar@gtpltech.com"
+        ],
+        "emailBCC" : [ 
+            "ypalrecha@inferyx.com"
+        ],
+        "emailCC" : [ 
+            "vkatkar@gtpltech.com", 
+            "gsonawane@gtpltech.com"
+        ],
+        "emailAttachment" : null,
+        "notifOnSuccess" : "Y",
+        "notifyOnFailure" : "Y",
+        "sendAttachment" : "Y"
+    }
 }

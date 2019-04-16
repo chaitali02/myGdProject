@@ -1,247 +1,246 @@
 {
-	"uuid" : "b354a33f-ee51-4f24-b5f0-4c63bd555330",
-	"version" : "1540038853",
-	"name" : "Outgoing Cross Border Wire Transfers",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.861Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-			"version" : null,
-			"name" : "fact_transaction_journal"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"logicalOperator" : "",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "direction",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "simple",
-						"uuid" : null,
-						"version" : null,
-						"name" : null
-					},
-					"attributeId" : null,
-					"value" : "OUTGOING",
-					"attributeName" : null,
-					"attributeType" : "string"
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 4,
-					"value" : null,
-					"attributeName" : "transaction_type_code",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "simple",
-						"uuid" : null,
-						"version" : null,
-						"name" : null
-					},
-					"attributeId" : null,
-					"value" : "WR",
-					"attributeName" : null,
-					"attributeType" : "string"
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : "!=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 7,
-					"value" : null,
-					"attributeName" : "sender_country",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 8,
-					"value" : null,
-					"attributeName" : "reciever_country",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "005e4b59-c62d-4e50-9bad-00289273e3af",
-						"version" : null,
-						"name" : "fm_trans_count"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
-						"version" : null,
-						"name" : "paramlist_cross_border_transfers"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "trans_count",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "c8889a2f-825f-47be-b121-0152ab6fa92c",
-						"version" : null,
-						"name" : "fm_trans_sum_usd"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
-						"version" : null,
-						"name" : "paramlist_cross_border_transfers"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "trans_amount_usd",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "953851e7-2dad-4421-82d8-3b5d05b50845"
-					}
-				}
-			]
-		},
-		{
-			"logicalOperator" : "AND",
-			"operator" : "<",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-						"version" : null,
-						"name" : "paramlist_aml"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "business_date",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"displyName" : "Outgoing Wire Transfers"
+  "uuid": "b354a33f-ee51-4f24-b5f0-4c63bd555330",
+  "version": "1540038853",
+  "name": "Outgoing Cross Border Wire Transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "direction",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "simple",
+            "uuid": null,
+            "version": null,
+            "name": null
+          },
+          "attributeId": null,
+          "value": "OUTGOING",
+          "attributeName": null,
+          "attributeType": "string"
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 4,
+          "value": null,
+          "attributeName": "transaction_type_code",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "simple",
+            "uuid": null,
+            "version": null,
+            "name": null
+          },
+          "attributeId": null,
+          "value": "WR",
+          "attributeName": null,
+          "attributeType": "string"
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": "!=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 7,
+          "value": null,
+          "attributeName": "sender_country",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 8,
+          "value": null,
+          "attributeName": "reciever_country",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
+            "version": null,
+            "name": "fm_trans_count"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
+            "version": null,
+            "name": "paramlist_cross_border_transfers"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "trans_count",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "c8889a2f-825f-47be-b121-0152ab6fa92c",
+            "version": null,
+            "name": "fm_trans_sum_usd"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "ecc2d860-709a-4b44-8b72-8c6681d5ebb1",
+            "version": null,
+            "name": "paramlist_cross_border_transfers"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_amount_usd",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+       {
+                    "ref" : {
+                        "type" : "formula",
+                        "uuid" : "953851e7-2dad-4421-82d8-3b5d05b50845"
+                    }
+                }
+      ]
+    },
+    {
+      "logicalOperator": "AND",
+      "operator": "<",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ]
 }

@@ -1,5 +1,4 @@
 {
-    "_id" : ObjectId("5cb47db3da75e91b2c51bcfe"),
     "dataSource" : {
         "ref" : {
             "type" : "datasource",
@@ -32,18 +31,17 @@
             "name" : "admin"
         }
     },
-    "createdOn" : ISODate("2019-04-15T12:49:37.468Z"),
+    "createdOn" : ISODate("2019-01-24T07:42:49.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
-        {
+         {
             "ref" : {
                 "type" : "application",
                 "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
             }
         }
-    ],
-    "displyName" : "Enterprise Data Warehouse"
+    ]
 }

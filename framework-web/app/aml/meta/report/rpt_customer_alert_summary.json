@@ -1,192 +1,191 @@
 {
-	"uuid" : "6a1074a8-9b70-4fd4-8739-69691d54d62b",
-	"version" : "1551894086",
-	"name" : "rpt_customer_alert_summary",
-	"desc" : "Customer Alert Summary",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.012Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : "AML Monitoring Report",
-	"header" : "Customer Alert Summary",
-	"headerAlign" : "CENTER",
-	"footer" : "End of Report",
-	"footerAlign" : "RIGHT",
-	"filterInfo" : [
-		{
-			"display_seq" : "0",
-			"logicalOperator" : "",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-						"version" : null,
-						"name" : "customer_alert_summary"
-					},
-					"attributeId" : 3,
-					"value" : null,
-					"attributeName" : "business_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
-						"version" : null,
-						"name" : "paramlist_customer_alert_summary"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "rpt_business_date",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-			"version" : null,
-			"name" : "customer_alert_summary"
-		},
-		"value" : null
-	},
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "customer_id",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-					"version" : null,
-					"name" : "customer_alert_summary"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "customer_id",
-				"attrType" : "string",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "business_date",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-					"version" : null,
-					"name" : "customer_alert_summary"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "business_date",
-				"attrType" : "string",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "alerted_transactions",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-					"version" : null,
-					"name" : "customer_alert_summary"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "alerted",
-				"attrType" : "integer",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : null,
-			"attrSourceName" : "non_alerted_transactions",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-					"version" : null,
-					"name" : "customer_alert_summary"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "non_alerted",
-				"attrType" : "integer",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		}
-	],
-	"saveOnRefresh" : "Y",
-	"senderInfo" : {
-		"emailTo" : [
-			"jkumar@gtpltech.com"
-		],
-		"emailBCC" : [
-			"vkatkar@gtpltech.com"
-		],
-		"emailCC" : [
-			"vkatkar@gtpltech.com",
-			"gsonawane@gtpltech.com"
-		],
-		"emailAttachment" : null,
-		"notifyOnSuccess" : "Y",
-		"notifyOnFailure" : "Y",
-		"sendAttachment" : "Y"
-	},
-	"paramList" : {
-		"ref" : {
-			"type" : "paramlist",
-			"uuid" : "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
-			"version" : null,
-			"name" : "paramlist_customer_alert_summary"
-		},
-		"value" : null
-	},
-	"limit" : -1,
-	"format" : "EXCEL",
-	"type" : "default",
-	"attributeFilterInfo" : null,
-	"displyName" : "rpt_data_quality_summary"
+  "uuid": "6a1074a8-9b70-4fd4-8739-69691d54d62b",
+  "version": "1551894086",
+  "name": "rpt_customer_alert_summary",
+  "desc": "Customer Alert Summary",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Mar 06 12:41:26 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": "AML Monitoring Report",
+  "header": "Customer Alert Summary",
+  "headerAlign": "CENTER",
+  "footer": "End of Report",
+  "footerAlign": "RIGHT",
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+            "version": null,
+            "name": "customer_alert_summary"
+          },
+          "attributeId": 3,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
+            "version": null,
+            "name": "paramlist_customer_alert_summary"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "rpt_business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+      "version": null,
+      "name": "customer_alert_summary"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": null,
+      "attrSourceName": "customer_id",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+          "version": null,
+          "name": "customer_alert_summary"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "customer_id",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": null,
+      "attrSourceName": "business_date",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+          "version": null,
+          "name": "customer_alert_summary"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "business_date",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": null,
+      "attrSourceName": "alerted_transactions",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+          "version": null,
+          "name": "customer_alert_summary"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "alerted",
+        "attrType": "integer",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": null,
+      "attrSourceName": "non_alerted_transactions",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+          "version": null,
+          "name": "customer_alert_summary"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "non_alerted",
+        "attrType": "integer",
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "saveOnRefresh": "Y",
+  "senderInfo": {
+    "emailTo": [
+      "jkumar@gtpltech.com"
+    ],
+    "emailBCC": [
+      "vkatkar@gtpltech.com"
+    ],
+    "emailCC": [
+      "vkatkar@gtpltech.com",
+      "gsonawane@gtpltech.com"
+    ],
+    "emailAttachment": null,
+    "notifyOnSuccess": "Y",
+    "notifyOnFailure": "Y",
+    "sendAttachment": "Y"
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "29bc269d-8c3c-4aa2-8196-a6f36e07d681",
+      "version": null,
+      "name": "paramlist_customer_alert_summary"
+    },
+    "value": null
+  },
+  "limit": -1,
+  "format": "EXCEL",
+  "type" : "default",
+  "attributeFilterInfo" : null
 }

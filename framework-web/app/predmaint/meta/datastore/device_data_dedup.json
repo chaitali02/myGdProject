@@ -1,55 +1,54 @@
 {
-	"uuid" : "4acfcb7e-5c32-42b0-8972-8fce0bca00a4",
-	"version" : "1546895846",
-	"name" : "device_data_dedup",
-	"desc" : "Creating datastore for device_data_dedup",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.127Z"),
-	"tags" : null,
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1521430822",
-				"name" : "Dept Of Transportation"
-			},
-			"value" : null
-		}
-	],
-	"metaId" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz",
-			"version" : "1545347790",
-			"name" : "device_data_dedup"
-		},
-		"value" : null
-	},
-	"execId" : {
-		"ref" : {
-			"type" : "loadExec",
-			"uuid" : "c54dd31c-1e47-4c25-a86d-c6f3d41fe40e",
-			"version" : "1546895705",
-			"name" : "device_data_dedup"
-		},
-		"value" : null
-	},
-	"location" : "/db48358e-4b2b-4e91-9f9c-b0373f121xyz/1545347790/1546895705",
-	"persistMode" : "DISK_ONLY",
-	"dimInfo" : null,
-	"numRows" : 4392,
-	"runMode" : "BATCH",
-	"displyName" : "security"
+  "uuid": "4acfcb7e-5c32-42b0-8972-8fce0bca00a4",
+  "version": "1546895846",
+  "name": "device_data_dedup",
+  "desc": "Creating datastore for device_data_dedup",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 07 16:17:26 EST 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyz",
+      "version": "1545347790",
+      "name": "device_data_dedup"
+    },
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "c54dd31c-1e47-4c25-a86d-c6f3d41fe40e",
+      "version": "1546895705",
+      "name": "device_data_dedup"
+    },
+    "value": null
+  },
+  "location": "/db48358e-4b2b-4e91-9f9c-b0373f121xyz/1545347790/1546895705",
+  "persistMode": "DISK_ONLY",
+  "dimInfo": null,
+  "numRows": 4392,
+  "runMode": "BATCH"
 }

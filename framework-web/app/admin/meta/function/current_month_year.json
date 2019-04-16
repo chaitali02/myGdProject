@@ -1,40 +1,40 @@
 {
-	"uuid" : "55a1a87e-a57c-48f1-a81f-cf9ac108529e",
-	"version" : "1540013308",
-	"name" : "current_month_year",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"inputReq" : "N",
-	"functionInfo" : [
-		{
-			"name" : "concat(month(current_date),'-',year(current_date))",
-			"type" : "file",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"returnType" : "STRING",
-	"category" : "DATE",
-	"publicFlag" : "Y",
-	"displyName" : "year"
+  "uuid": "55a1a87e-a57c-48f1-a81f-cf9ac108529e",
+  "version": "1540013308",
+  "name": "current_month_year",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Oct 20 10:58:28 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+   {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+  ],
+  "inputReq": "N",
+
+  "functionInfo": [
+    {
+      "name": "concat(month(current_date),'-',year(current_date))",
+      "type": "file",
+      "paramInfoHolder": []
+    }
+  ],
+  "returnType":"STRING",
+  "category": "DATE",
+  "publicFlag" : "Y"
 }

@@ -1,62 +1,61 @@
 {
-	"type" : "FILE-FILE",
-	"sourceDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
-		}
-	},
-	"sourceDetail" : {
-		"ref" : {
-			"type" : "simple"
-		},
-		"value" : "account_psv"
-	},
-	"targetDatasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-		}
-	},
-	"targetDetail" : {
-		"ref" : {
-			"type" : "simple"
-		},
-		"value" : "account_tsv"
-	},
-	"sourceFormat" : "PSV",
-	"targetFormat" : "TSV",
-	"sourceExtn" : "PSV",
-	"targetExtn" : "TSV",
-	"sourceHeader" : "N",
-	"targetHeader" : "N",
-	"saveMode" : "OVERWRITE",
-	"ignoreCase" : "N",
-	"uuid" : "4345df81-5d37-4fa1-bc2d-7fc89ed9f962",
-	"version" : "1537863016",
-	"name" : "account_f2f_psv_tsv",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.264Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			}
-		}
-	],
-	"displyName" : "ingest_security"
+    "type" : "FILE-FILE",
+    "sourceDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+        }
+    },
+    "sourceDetail" : {
+        "ref" : {
+            "type" : "simple"
+        },
+        "value" : "account_psv"
+    },
+    "targetDatasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "targetDetail" : {
+         "ref" : {
+            "type" : "simple"
+        },
+        "value" : "account_tsv"
+    },
+    "sourceFormat" : "PSV",
+    "targetFormat" : "TSV",
+     "sourceExtn":"PSV",
+    "targetExtn":"TSV",
+     "sourceHeader" : "N",
+    "targetHeader" : "N",
+    "saveMode" : "OVERWRITE",
+    "ignoreCase" : "N",
+    "uuid" : "4345df81-5d37-4fa1-bc2d-7fc89ed9f962",
+    "version" : "1537863016",
+    "name" : "account_f2f_psv_tsv",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-25T08:10:16.000Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196",
+                "name" : "Data Warehouse"
+            }
+        }
+    ]
 }

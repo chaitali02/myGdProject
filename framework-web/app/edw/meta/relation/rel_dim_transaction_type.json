@@ -1,37 +1,36 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "b51a6e3d-792a-4298-a8de-c216d0c5424e"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "b51a6e3d-792a-4298-a8de-c216d0c5424e"
 		}
 	},
-	"relationInfo" : [ ],
-	"uuid" : "adbc1dd1-6369-4ef5-9a01-5250db30e06b",
-	"version" : "1488708047",
-	"name" : "rel_dim_transaction_type",
-	"desc" : "relation for dim_transaction_type table using raw source table",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"relationInfo": [],
+	"uuid": "adbc1dd1-6369-4ef5-9a01-5250db30e06b",
+	"version": "1488708047",
+	"name": "rel_dim_transaction_type",
+	"desc": "relation for dim_transaction_type table using raw source table",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+	]
 }

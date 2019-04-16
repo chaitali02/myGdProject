@@ -1,116 +1,115 @@
 {
-	"uuid" : "ed9507cd-9ea5-4785-ab7e-2c2c4b41ebbe",
-	"version" : "1547498480",
-	"name" : "fm_sdn_full_address",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "ec15a0c0-b567-44d2-b264-947fb53d2a8f",
-			"version" : null,
-			"name" : "rel_sanctions_screening"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002699",
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "c8f95358-0439-4603-8717-bb3d9013f1c3",
-				"version" : null,
-				"name" : "sdn_address"
-			},
-			"attributeId" : 2,
-			"value" : null,
-			"attributeName" : "address1",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ",",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "c8f95358-0439-4603-8717-bb3d9013f1c3",
-				"version" : null,
-				"name" : "sdn_address"
-			},
-			"attributeId" : 3,
-			"value" : null,
-			"attributeName" : "address2",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "simple",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "ed9507cd-9ea5-4785-ab7e-2c2c4b41ebbe",
+  "version": "1547498480",
+  "name": "fm_sdn_full_address",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 15:41:20 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "ec15a0c0-b567-44d2-b264-947fb53d2a8f",
+      "version": null,
+      "name": "rel_sanctions_screening"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002699",
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "c8f95358-0439-4603-8717-bb3d9013f1c3",
+        "version": null,
+        "name": "sdn_address"
+      },
+      "attributeId": 2,
+      "value": null,
+      "attributeName": "address1",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ",",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "c8f95358-0439-4603-8717-bb3d9013f1c3",
+        "version": null,
+        "name": "sdn_address"
+      },
+      "attributeId": 3,
+      "value": null,
+      "attributeName": "address2",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "simple"
 }

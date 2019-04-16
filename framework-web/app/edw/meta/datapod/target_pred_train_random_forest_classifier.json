@@ -1,138 +1,139 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-		}
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "customer_id",
-			"type" : "integer",
-			"desc" : "customer_id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "customer_id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 1,
-			"name" : "address_id",
-			"type" : "integer",
-			"desc" : "address_id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "address_id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 2,
-			"name" : "branch_id",
-			"type" : "integer",
-			"desc" : "branch_id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "branch_id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 3,
-			"name" : "commute_distance_miles",
-			"type" : "integer",
-			"desc" : "commute_distance_miles",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "commute_distance_miles",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 4,
-			"name" : "label",
-			"type" : "integer",
-			"desc" : "label",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "label",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 5,
-			"name" : "censor",
-			"type" : "integer",
-			"desc" : "censor",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "censor",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 6,
-			"name" : "features",
-			"type" : "string",
-			"desc" : "features",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "features",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 7,
-			"name" : "rawPrediction",
-			"type" : "string",
-			"desc" : "rawPrediction",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "rawPrediction",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 8,
-			"name" : "probability",
-			"type" : "string",
-			"desc" : "probability",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "probability",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 9,
-			"name" : "prediction",
-			"type" : "integer",
-			"desc" : "prediction",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "prediction",
-			"active" : "Y"
-		}
-	],
-	"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df7f",
-	"version" : "1535817666",
-	"name" : "target_pred_train_random_forest_classifier",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
-			}
-		}
-	],
-	"prefix" : "rdri",
-	"displyName" : "security"
+    "_id" : ObjectId("5b8d0a931b60fec67fab3fe5"),
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "customer_id",
+            "type" : "integer",
+            "desc" : "customer_id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "customer_id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "address_id",
+            "type" : "integer",
+            "desc" : "address_id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "address_id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "branch_id",
+            "type" : "integer",
+            "desc" : "branch_id",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "branch_id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "commute_distance_miles",
+            "type" : "integer",
+            "desc" : "commute_distance_miles",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "commute_distance_miles",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "label",
+            "type" : "integer",
+            "desc" : "label",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "label",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 5,
+            "name" : "censor",
+            "type" : "integer",
+            "desc" : "censor",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "censor",
+            "active" : "Y"
+        }, 
+       
+        {
+            "attributeId" : 6,
+            "name" : "features",
+            "type" : "string",
+            "desc" : "features",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "features",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 7,
+            "name" : "rawPrediction",
+            "type" : "string",
+            "desc" : "rawPrediction",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rawPrediction",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" :8,
+            "name" : "probability",
+            "type" : "string",
+            "desc" : "probability",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "probability",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 9,
+            "name" : "prediction",
+            "type" : "integer",
+            "desc" : "prediction",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "prediction",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df7f",
+    "version" : "1535817666",
+    "name" : "target_pred_train_random_forest_classifier",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-09-01T18:48:24.561Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ],
+      "prefix" : "rdri"
 }

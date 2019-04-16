@@ -1,135 +1,134 @@
 {
-	"debugMode" : false,
-	"source" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "ee2781b3-a252-4207-92d7-5989f0bcc0ad"
+	"debugMode": false,
+	"source": {
+		"ref": {
+			"type": "relation",
+			"uuid": "ee2781b3-a252-4207-92d7-5989f0bcc0ad"
 		}
 	},
-	"attributeInfo" : [
+	"attributeInfo": [
 		{
-			"attrSourceId" : "0",
-			"attrSourceName" : "bank_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78"
+			"attrSourceId": "0",
+			"attrSourceName": "bank_id",
+			"sourceAttr": {
+				"ref": {
+					"type": "function",
+					"uuid": "d265ac19-4fd0-42d9-8f1b-c704918dad78"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "1",
-			"attrSourceName" : "src_bank_id",
-			"sourceAttr" : {
-				"attrId" : "0",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "1",
+			"attrSourceName": "src_bank_id",
+			"sourceAttr": {
+				"attrId": "0",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "2",
-			"attrSourceName" : "bank_code",
-			"sourceAttr" : {
-				"attrId" : "1",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "2",
+			"attrSourceName": "bank_code",
+			"sourceAttr": {
+				"attrId": "1",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "3",
-			"attrSourceName" : "bank_name",
-			"sourceAttr" : {
-				"attrId" : "2",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "3",
+			"attrSourceName": "bank_name",
+			"sourceAttr": {
+				"attrId": "2",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "4",
-			"attrSourceName" : "bank_account_number",
-			"sourceAttr" : {
-				"attrId" : "3",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "4",
+			"attrSourceName": "bank_account_number",
+			"sourceAttr": {
+				"attrId": "3",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "5",
-			"attrSourceName" : "bank_currency_code",
-			"sourceAttr" : {
-				"attrId" : "4",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "5",
+			"attrSourceName": "bank_currency_code",
+			"sourceAttr": {
+				"attrId": "4",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "6",
-			"attrSourceName" : "bank_check_digits",
-			"sourceAttr" : {
-				"attrId" : "5",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+			"attrSourceId": "6",
+			"attrSourceName": "bank_check_digits",
+			"sourceAttr": {
+				"attrId": "5",
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933"
 				}
 			}
 		},
 		{
-			"attrSourceId" : "7",
-			"attrSourceName" : "load_date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
+			"attrSourceId": "7",
+			"attrSourceName": "load_date",
+			"sourceAttr": {
+				"ref": {
+					"type": "function",
+					"uuid": "9e3de26e-02fb-11e7-93ae-92361f002671"
 				}
 			}
-		},
-		{
-			"attrSourceId" : "8",
-			"attrSourceName" : "load_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
-				}
-			}
-		}
+		}, 
+        {
+            "attrSourceId" : "8",
+            "attrSourceName" : "load_id",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+                }
+            }
+        }
 	],
-	"uuid" : "76d1032e-c5ba-4ade-bb42-f782f9e14a5e",
-	"version" : "1490410443",
-	"name" : "rule_dim_bank",
-	"desc" : "rule for mapping transformation from source relation to target datapod",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "76d1032e-c5ba-4ade-bb42-f782f9e14a5e",
+	"version": "1490410443",
+	"name": "rule_dim_bank",
+	"desc": "rule for mapping transformation from source relation to target datapod",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.156Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "Rule2"
+	]
 }

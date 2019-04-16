@@ -1,82 +1,81 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "57af1eca-1f65-4f1a-b2e5-345ec830096f",
-				"version" : "1490112094"
+			"ref": {
+				"type": "dq",
+				"uuid": "57af1eca-1f65-4f1a-b2e5-345ec830096f",
+				"version": "1490112094"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "e7f3ac35-630a-449c-baf0-3760e0d5807a",
-				"version" : "1490087419"
+			"ref": {
+				"type": "dq",
+				"uuid": "e7f3ac35-630a-449c-baf0-3760e0d5807a",
+				"version": "1490087419"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "47e5e08b-b342-4557-bacf-65b1ec719ac3",
-				"version" : "1490087483"
+			"ref": {
+				"type": "dq",
+				"uuid": "47e5e08b-b342-4557-bacf-65b1ec719ac3",
+				"version": "1490087483"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "b2eca494-6251-4868-8a2d-8ff78bf75da1",
-				"version" : "1490087553"
+			"ref": {
+				"type": "dq",
+				"uuid": "b2eca494-6251-4868-8a2d-8ff78bf75da1",
+				"version": "1490087553"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "d6c51137-be88-43ab-aaba-81cdd00b49e3",
-				"version" : "1490087951"
+			"ref": {
+				"type": "dq",
+				"uuid": "d6c51137-be88-43ab-aaba-81cdd00b49e3",
+				"version": "1490087951"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "e4d56016-968b-4bbe-935e-145015df0e45",
-				"version" : "1490088071"
+			"ref": {
+				"type": "dq",
+				"uuid": "e4d56016-968b-4bbe-935e-145015df0e45",
+				"version": "1490088071"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "4e6588e2-7969-4400-a061-072b160b54d9",
-				"version" : "1490088140"
+			"ref": {
+				"type": "dq",
+				"uuid": "4e6588e2-7969-4400-a061-072b160b54d9",
+				"version": "1490088140"
 			}
 		}
 	],
-	"uuid" : "f2d79ecf-f357-444b-8e85-4221cd9ffe33",
-	"version" : "1490117199",
-	"name" : "dqg_dim_bank",
-	"desc" : "dq rule group for combination of all dq rules for table - dim bank",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "f2d79ecf-f357-444b-8e85-4221cd9ffe33",
+	"version": "1490117199",
+	"name": "dqg_dim_bank",
+	"desc": "dq rule group for combination of all dq rules for table - dim bank",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

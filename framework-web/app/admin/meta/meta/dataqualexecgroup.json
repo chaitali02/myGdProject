@@ -1,0 +1,18 @@
+{
+	"uuid": "75b63f1a-9eab-44ea-8bee-8fcde26d58e8",
+	"name": "dqgroupexec",
+	"version": "1464977196",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active" : "Y",
+  "locked" : "N",
+	"appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
+    			],
+	"desc": "Meta for dataqualgroupexec",
+    "menu":"JobMonitoring"
+}

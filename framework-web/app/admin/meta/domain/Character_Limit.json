@@ -26,6 +26,5 @@
             }
         }
     ],
-    "publicFlag" : "Y",
-	"displyName" : "Character_Limit"
+    "publicFlag" : "Y"
 }

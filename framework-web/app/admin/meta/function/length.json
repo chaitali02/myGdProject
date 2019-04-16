@@ -1,66 +1,66 @@
 {
-	"uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
-	"version" : "1488801521",
-	"name" : "length",
-	"desc" : "Returns the length of the string.",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [
-		"DEV",
-		"1.0.1",
-		"DEMO"
-	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"inputReq" : "Y",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"returnType" : "INTEGER",
-	"category" : "STRING",
-	"functionInfo" : [
-		{
-			"type" : "file",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "mysql",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "hive",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "impala",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "oracle",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "postgres",
-			"name" : "length",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"displyName" : "year"
+    "uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002210",
+    "version" : "1488801521",
+    "name" : "length",
+    "desc" : "Returns the length of the string.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "inputReq" : "Y",
+    "publicFlag" : "Y",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+
+    "returnType":"INTEGER",
+  "category" : "STRING",
+    "functionInfo" : [  
+        {
+            "type" : "file",
+            "name" : "length",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "mysql",
+            "name" : "length",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "length",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "length",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "length",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "length",
+            "paramInfoHolder" : []
+        }
+    ]
 }

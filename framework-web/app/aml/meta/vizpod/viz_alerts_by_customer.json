@@ -1,117 +1,116 @@
 {
-	"uuid" : "4dfdab37-bc56-4103-b0bc-9a522860526d",
-	"version" : "1542671644",
-	"name" : "viz_alerts_by_customer",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-			"version" : null,
-			"name" : "customer_alert_summary"
-		},
-		"value" : null
-	},
-	"type" : "bar-line-chart",
-	"limit" : -1,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-				"version" : null,
-				"name" : "customer_alert_summary"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "customer_id"
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
-			},
-			"attributeId" : 0
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
-			},
-			"attributeId" : 3
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-				"version" : null,
-				"name" : "customer_alert_summary"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "alerted"
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-				"version" : null,
-				"name" : "customer_alert_summary"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "non_alerted"
-		}
-	],
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "4dfdab37-bc56-4103-b0bc-9a522860526d",
+  "version": "1542671644",
+  "name": "viz_alerts_by_customer",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Nov 19 18:54:04 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+      "version": null,
+      "name": "customer_alert_summary"
+    },
+    "value": null
+  },
+  "type": "bar-line-chart",
+  "limit": -1,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+        "version": null,
+        "name": "customer_alert_summary"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "customer_id"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 3
+        }
+    ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+        "version": null,
+        "name": "customer_alert_summary"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "alerted"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
+        "version": null,
+        "name": "customer_alert_summary"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "non_alerted"
+    }
+  ]
 }

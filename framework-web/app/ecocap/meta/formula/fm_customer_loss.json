@@ -1,230 +1,229 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-		}
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "CASE"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "WHEN"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 5
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "*"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 11
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "+"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "1"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "-"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 4
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "*"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 8
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "<"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 12
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "THEN"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "*"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
-			},
-			"attributeId" : 3
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "ELSE"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "0"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "END"
-		}
-	],
-	"formulaType" : "simple",
-	"uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5",
-	"version" : "1526603194",
-	"name" : "fm_customer_loss",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822"
-			}
-		}
-	],
-	"displyName" : "fm_total_pass_pct"
+    "dependsOn" : {
+        "ref" : {
+            "type" : "dataset",
+            "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+        }
+    },
+    "formulaInfo" : [ 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "CASE"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "WHEN"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 5
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "*"
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 11
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "+"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "function",
+                "uuid" : "9e3e25b2-02fb-11e7-93ae-92361f002671"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "1"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "-"
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 4
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "*"
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 8
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "<"
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 12
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "THEN"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "("
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "*"
+        }, 
+        {
+            "ref" : {
+                "type" : "dataset",
+                "uuid" : "dd2392c7-f68c-4933-bbc8-e69401f006rr"
+            },
+            "attributeId" : 3
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : ")"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "ELSE"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "0"
+        }, 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "END"
+        }
+    ],
+    "formulaType" : "simple",
+    "uuid" : "0f8d33a6-b20b-4f2f-8d11-14696461f2a5",
+    "version" : "1526603194",
+    "name" : "fm_customer_loss",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-07-24T18:05:35.631Z"),
+    "tags" : [],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
+            }
+        }
+    ]
 }

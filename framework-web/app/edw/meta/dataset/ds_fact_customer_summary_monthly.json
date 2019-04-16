@@ -1,121 +1,120 @@
 {
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "cfb6d8b8-8240-40da-8c9c-b52b49da8460"
+	"dependsOn": {
+		"ref": {
+			"type": "relation",
+			"uuid": "cfb6d8b8-8240-40da-8c9c-b52b49da8460"
 		}
 	},
-	"filterInfo" : [ ],
-	"limit" : 0,
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "customer_id",
-			"sourceAttr" : {
-				"attrId" : "6",
-				"attrType" : "string",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "yyyy_mm",
-			"sourceAttr" : {
-				"attrId" : "55",
-				"attrType" : "string",
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "formula_total_trans_count",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "ff8d4132-370a-41d6-97a0-ad70ffea6180"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "formula_sum_trans_amount_usd",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "fbb3e147-92a3-4159-bde9-1ef3b1f84559"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "formula_avg_trans_amount",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "822419a1-2b72-4b36-9f8c-147ca8bbcc3a"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : "5",
-			"attrSourceName" : "formula_min_amount",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "8b2e51db-1551-455a-9bf2-390e6bc07634"
-				}
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : "6",
-			"attrSourceName" : "formula_max_amount",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "6c6b76f9-d301-44da-b00e-462da3d5054d"
-				}
-			}
-		}
+	"filterInfo": [],
+    	"limit" : 0,
+	"attributeInfo": [
+		 {
+            "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
+            "attrSourceName" : "customer_id",
+            "sourceAttr" : {
+                "attrId" : "6",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
+            "attrSourceName" : "yyyy_mm",
+            "sourceAttr" : {
+                "attrId" : "55",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
+            "attrSourceName" : "formula_total_trans_count",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "ff8d4132-370a-41d6-97a0-ad70ffea6180"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
+            "attrSourceName" : "formula_sum_trans_amount_usd",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "fbb3e147-92a3-4159-bde9-1ef3b1f84559"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
+            "attrSourceName" : "formula_avg_trans_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "822419a1-2b72-4b36-9f8c-147ca8bbcc3a"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
+            "attrSourceName" : "formula_min_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "8b2e51db-1551-455a-9bf2-390e6bc07634"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
+            "attrSourceName" : "formula_max_amount",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "6c6b76f9-d301-44da-b00e-462da3d5054d"
+                }
+            }
+        }
 	],
-	"uuid" : "b1de8190-a60b-4f69-8ea6-e8ad3b6d4ab1",
-	"version" : "1491486002",
-	"name" : "ds_fact_customer_summary_monthly",
-	"desc" : "dataset made on relation_summary_monthly to perform aggregation roll ups and populate datapods",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "b1de8190-a60b-4f69-8ea6-e8ad3b6d4ab1",
+	"version": "1491486002",
+	"name": "ds_fact_customer_summary_monthly",
+	"desc": "dataset made on relation_summary_monthly to perform aggregation roll ups and populate datapods",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	],
-	"displyName" : "ds_rule_dashboard_timeliness"
+	]
 }

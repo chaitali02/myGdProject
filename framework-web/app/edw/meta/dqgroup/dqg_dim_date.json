@@ -1,40 +1,39 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "4b25ffe6-7b32-4626-bab7-4bed477a5a1d",
-				"version" : "1490112346"
+			"ref": {
+				"type": "dq",
+				"uuid": "4b25ffe6-7b32-4626-bab7-4bed477a5a1d",
+				"version": "1490112346"
 			}
 		}
 	],
-	"uuid" : "9e069490-e270-4ae5-ad04-0c4f67d1ca57",
-	"version" : "1490119106",
-	"name" : "dqg_dim_date",
-	"desc" : "dq rule group for combination of all dq rules for table - dim date",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "9e069490-e270-4ae5-ad04-0c4f67d1ca57",
+	"version": "1490119106",
+	"name": "dqg_dim_date",
+	"desc": "dq rule group for combination of all dq rules for table - dim date",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

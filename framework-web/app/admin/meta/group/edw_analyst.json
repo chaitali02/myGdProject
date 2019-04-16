@@ -10,9 +10,9 @@
             "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
         }
     },
-    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
     "active" : "Y",
-    "locked" : "N",
+  "locked" : "N",
     "appInfo" : [ 
         {
             "ref" : {
@@ -46,6 +46,5 @@
             "type" : "application",
             "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
         }
-    },
-    "displyName" : "edw_analyst"
+    }
 }

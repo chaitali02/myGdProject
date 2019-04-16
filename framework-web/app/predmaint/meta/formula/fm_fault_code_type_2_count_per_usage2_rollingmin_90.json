@@ -1,110 +1,94 @@
 {
-	"uuid" : "3bd12aa0-1e4c-11e9-ab14-d663bd873d93",
-	"version" : "1547142394",
-	"name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_90",
-	"desc" : "Formula for fault_code_type_2_count_per_usage2",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-			}
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
-		}
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002671"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
-			},
-			"attributeId" : 25
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		},
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f"
-			}
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "("
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "PARTITION BY"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
-			},
-			"attributeId" : 0
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : "ORDER BY UNIX_TIMESTAMP("
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ",'MM/DD/YY') ROWS BETWEEN 90 PRECEDING AND CURRENT ROW"
-		},
-		{
-			"ref" : {
-				"type" : "simple"
-			},
-			"value" : ")"
-		}
-	],
-	"formulaType" : "aggr",
-	"displyName" : "fm_total_pass_pct"
+  "uuid" : "3bd12aa0-1e4c-11e9-ab14-d663bd873d93",
+  "version" : "1547142394",
+  "name" : "fm_fault_code_type_2_count_per_usage2_rollingmin_90",
+  "desc" : "Formula for fault_code_type_2_count_per_usage2",
+  "createdBy" : {
+    "ref" : {
+      "type" : "user",
+      "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn" : "Thu Jan 10 12:46:34 EST 2019",
+  "tags" : [ ],
+  "active" : "Y",
+  "locked" : "N",
+  "published" : "N",
+  "appInfo" : [ {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+    }
+  } ],
+  "dependsOn" : {
+    "ref" : {
+      "type" : "dataset",
+      "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+    }
+  },
+  "formulaInfo" : [ {
+    "ref" : {
+      "type" : "function",
+      "uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002671"
+    }
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : "("
+  }, {
+    "ref" : {
+      "type" : "dataset",
+      "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+    },
+    "attributeId" : 25
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : ")"
+  }, {
+    "ref" : {
+      "type" : "function",
+      "uuid" : "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f"
+    }
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : "("
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : "PARTITION BY"
+  }, {
+    "ref" : {
+      "type" : "dataset",
+      "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+    },
+    "attributeId" : 0
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : "ORDER BY UNIX_TIMESTAMP("
+  }, {
+    "ref" : {
+      "type" : "dataset",
+      "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+    },
+    "attributeId" : 1
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : ",'MM/DD/YY') ROWS BETWEEN 90 PRECEDING AND CURRENT ROW"
+  }, {
+    "ref" : {
+      "type" : "simple"
+    },
+    "value" : ")"
+  } ],
+  "formulaType" : "aggr"
 }

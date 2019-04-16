@@ -1,60 +1,58 @@
 {
-    "_id" : ObjectId("5cb47dc9da75e91b2c51d51b"),
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-    "version" : "1547482153",
-    "name" : "Predictive Maintenance",
-    "desc" : "Predictive Maintenance",
-    "applicationType" : "DEFAULT",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        },
-        "value" : null
+  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+  "version": "1547482153",
+  "name": "Predictive Maintenance",
+  "desc": "Predictive Maintenance",
+  "applicationType": "DEFAULT",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
-    "createdOn" : ISODate("2019-04-15T12:49:37.468Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
-            },
-            "value" : null
-        }
-    ],
-    "dataSource" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-            "version" : null,
-            "name" : "file_data"
-        },
-        "value" : null
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 11:09:13 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
+      },
+      "value": null
+    }
+  ],
+  "dataSource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "file_data"
     },
-    "paramList" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "20e34834-fe0f-4e12-b89b-030b7b3690f8",
-            "version" : null,
-            "name" : "paramlist_Predictive Maintenance"
-        },
-        "value" : null
+    "value": null
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "20e34834-fe0f-4e12-b89b-030b7b3690f8",
+      "version": null,
+      "name": "paramlist_Predictive Maintenance"
     },
-    "deployPort" : "5001",
-    "orgInfo" : {
-        "ref" : {
-            "type" : "organization",
-            "uuid" : "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9",
-            "version" : null,
-            "name" : "Department of Transportation - FL"
-        },
-        "value" : null
+    "value": null
+  },
+  "deployPort": "5001",
+  "orgInfo": {
+    "ref": {
+      "type": "organization",
+      "uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9",
+      "version": null,
+      "name": "Department of Transportation - FL"
     },
-    "displyName" : "Predictive Maintenance"
+    "value": null
+  }
 }

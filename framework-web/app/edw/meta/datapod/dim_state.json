@@ -1,86 +1,85 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : "1464977196"
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version": "1464977196"
 		}
 	},
-	"cache" : "Y",
-	"attributes" : [
+	"cache": "Y",
+	"attributes": [
 		{
-			"attributeId" : 0,
-			"name" : "state_code",
-			"type" : "string",
-			"desc" : "state_code",
-			"dispName" : "state_code",
-			"active" : "Y"
+			"attributeId": 0,
+			"name": "state_code",
+			"type": "string",
+			"desc": "state_code",
+			"dispName": "state_code",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 1,
-			"name" : "state_name",
-			"type" : "string",
-			"desc" : "state_name",
-			"dispName" : "state_name",
-			"active" : "Y"
+			"attributeId": 1,
+			"name": "state_name",
+			"type": "string",
+			"desc": "state_name",
+			"dispName": "state_name",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 2,
-			"name" : "country_code",
-			"type" : "string",
-			"desc" : "country_code",
-			"dispName" : "country_code",
-			"active" : "Y"
+			"attributeId": 2,
+			"name": "country_code",
+			"type": "string",
+			"desc": "country_code",
+			"dispName": "country_code",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 3,
-			"name" : "state_population",
-			"type" : "integer",
-			"desc" : "state_population",
-			"dispName" : "state_population",
-			"active" : "Y"
+			"attributeId": 3,
+			"name": "state_population",
+			"type": "integer",
+			"desc": "state_population",
+			"dispName": "state_population",
+			"active": "Y"
 		},
 		{
-			"attributeId" : 4,
-			"name" : "version",
-			"type" : "Integer",
-			"desc" : "version",
-			"dispName" : "version",
-			"active" : "Y"
+			"attributeId": 4,
+			"name": "version",
+			"type": "Integer",
+			"desc": "version",
+			"dispName": "version",
+			"active": "Y"
 		}
 	],
-	"uuid" : "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
-	"version" : "1502631072",
-	"name" : "dim_state",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "6ce01cf2-1204-4add-8e9c-f735dfd9207d",
+	"version": "1502631072",
+	"name": "dim_state",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
-		}
+		}	
 	],
-	"prefix" : "dmt",
-	"displyName" : "security"
+      "prefix" : "dmt"
 }

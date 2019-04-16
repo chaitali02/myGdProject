@@ -1,87 +1,86 @@
 {
-	"uuid" : "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
-	"version" : "1533897886",
-	"name" : "paramlist_histogram",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"params" : [
-		{
-			"paramId" : "0",
-			"paramName" : "sourceAttr",
-			"paramType" : "attribute",
-			"paramDispName" : "Source Attr",
-			"paramDesc" : "",
-			"paramValue" : null,
-			"paramRef" : null
-		},
-		{
-			"paramId" : "1",
-			"paramName" : "numBuckets",
-			"paramType" : "integer",
-			"paramDispName" : "Num Buckets",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple",
-					"uuid" : null,
-					"version" : null,
-					"name" : null
-				},
-				"value" : "10"
-			},
-			"paramRef" : null
-		},
-		{
-			"paramId" : "2",
-			"paramName" : "saveLocation",
-			"paramType" : "datapod",
-			"paramDispName" : "Save Location",
-			"paramDesc" : "",
-			"paramValue" : null,
-			"paramRef" : null
-		},
-		{
-			"paramId" : "3",
-			"paramName" : "key",
-			"paramType" : "string",
-			"paramDispName" : "Key",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple",
-					"uuid" : null,
-					"version" : null,
-					"name" : null
-				},
-				"value" : "03/31/2018"
-			},
-			"paramRef" : null
-		}
-	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+  "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7",
+  "version": "1533897886",
+  "name": "paramlist_histogram",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Aug 08 16:40:14 EDT 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+ "publicFlag": "Y",
+  "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "sourceAttr",
+      "paramType": "attribute",
+      "paramDispName" : "Source Attr",
+      "paramDesc" : "",	
+      "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "1",
+      "paramName": "numBuckets",
+      "paramType": "integer",
+      "paramDispName" : "Num Buckets",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "10"
+      },
+      "paramRef": null
+    },
+    {
+      "paramId": "2",
+      "paramName": "saveLocation",
+      "paramType": "datapod",
+      "paramDispName" : "Save Location",
+      "paramDesc" : "",	
+      "paramValue": null,
+      "paramRef": null
+    },
+    {
+      "paramId": "3",
+      "paramName": "key",
+      "paramType": "string",
+      "paramDispName" : "Key",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "03/31/2018"
+      },
+      "paramRef": null
+    }
+  ],
+  "paramListType": "model",
+  "templateFlg": "Y",
+  "templateInfo": null
 }

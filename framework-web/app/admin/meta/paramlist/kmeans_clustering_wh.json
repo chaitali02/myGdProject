@@ -1,84 +1,83 @@
 {
-	"uuid" : "67773bc7-6db5-4598-a288-c8d33d7e8c52",
-	"version" : "1530964625",
-	"name" : "kmeans_clustering_wh",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.216Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"params" : [
-		{
-			"paramId" : "0",
-			"paramName" : "kMeans",
-			"paramType" : "list",
-			"paramDispName" : "K Means",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "2, 5, 10"
-			}
-		},
-		{
-			"paramId" : "1",
-			"paramName" : "initSteps",
-			"paramType" : "list",
-			"paramDispName" : "Init Steps",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "5, 8, 10"
-			}
-		},
-		{
-			"paramId" : "2",
-			"paramName" : "seed",
-			"paramType" : "list",
-			"paramDispName" : "Seed",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "-1689246527, -1000, 100000"
-			}
-		},
-		{
-			"paramId" : "3",
-			"paramName" : "numFolds",
-			"paramType" : "integer",
-			"paramDispName" : "Num Folds",
-			"paramDesc" : "",
-			"paramValue" : {
-				"ref" : {
-					"type" : "simple"
-				},
-				"value" : "3"
-			}
-		}
-	],
-	"paramListType" : "model",
-	"templateFlg" : "Y",
-	"templateInfo" : null,
-	"displyName" : "paramlist_dq_rule"
+  "uuid": "67773bc7-6db5-4598-a288-c8d33d7e8c52",
+  "version": "1530964625",
+  "name": "kmeans_clustering_wh",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+  "createdOn": "Sat Jul 07 17:27:05 IST 2018",
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+ 	"publicFlag": "Y",
+  "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+  "params": [
+    {
+      "paramId": "0",
+      "paramName": "kMeans",
+      "paramType": "list",
+      "paramDispName" : "K Means",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "2, 5, 10"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "initSteps",
+      "paramType": "list",
+      "paramDispName" : "Init Steps",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "5, 8, 10"
+      }
+    },
+    {
+      "paramId": "2",
+      "paramName": "seed",
+      "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "-1689246527, -1000, 100000"
+      }
+    },
+    {
+      "paramId": "3",
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "3"
+      }
+    }
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }

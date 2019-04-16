@@ -1,89 +1,88 @@
 {
-	"uuid" : "b112fd87-2a09-48b1-b2e0-301f1db2fb49",
-	"version" : "1532645570",
-	"name" : "customer_portfolio_ul_calc_allocation",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : null,
-			"name" : "File"
-		},
-		"value" : null
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "cust_id",
-			"type" : "string",
-			"desc" : "cust_id",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "cust_id",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 1,
-			"name" : "portfolio_ul_cust_allocation",
-			"type" : "double",
-			"desc" : "portfolio_ul_cust_allocation",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "portfolio_ul_cust_allocation",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 2,
-			"name" : "reporting_date",
-			"type" : "string",
-			"desc" : "reporting_date",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "reporting_date",
-			"active" : "Y",
-			"expr" : null
-		},
-		{
-			"attributeId" : 3,
-			"name" : "version",
-			"type" : "integer",
-			"desc" : "version",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "version",
-			"active" : "Y",
-			"expr" : null
-		}
-	],
-	"prefix" : "csoe",
-	"displyName" : "security"
+  "uuid": "b112fd87-2a09-48b1-b2e0-301f1db2fb49",
+  "version": "1532645570",
+  "name": "customer_portfolio_ul_calc_allocation",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": null,
+      "name": "File"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "name": "cust_id",
+      "type": "string",
+      "desc": "cust_id",
+      "key": "",
+      "partition": "N",
+      "dispName": "cust_id",
+      "active" : "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 1,
+      "name": "portfolio_ul_cust_allocation",
+      "type": "double",
+      "desc": "portfolio_ul_cust_allocation",
+      "key": "",
+      "partition": "N",
+      "dispName": "portfolio_ul_cust_allocation",
+      "active" : "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 2,
+      "name": "reporting_date",
+      "type": "string",
+      "desc": "reporting_date",
+      "key": "",
+      "partition": "N",
+      "dispName": "reporting_date",
+      "active" : "Y",
+      "expr": null
+    },
+    {
+      "attributeId": 3,
+      "name": "version",
+      "type": "integer",
+      "desc": "version",
+      "key": "",
+      "partition": "N",
+      "dispName": "version",
+      "active" : "Y",
+      "expr": null
+    }
+  ],
+	"prefix":"csoe"
 }

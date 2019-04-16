@@ -167,7 +167,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
+	"createdOn" : ISODate("2019-01-04T22:09:22Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -181,6 +181,5 @@
 				"name" : "Dept Of Transportation"
 			}
 		}
-	],
-	"displyName" : "fm_total_pass_pct"
+	]
 }

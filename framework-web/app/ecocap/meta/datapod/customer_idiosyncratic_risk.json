@@ -1,830 +1,829 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : "1464977196"
-		}
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "iteration_id",
-			"type" : "integer",
-			"desc" : "iteration_id",
-			"dispName" : "iteration_id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 1,
-			"name" : "cust1",
-			"type" : "double",
-			"desc" : "cust1",
-			"dispName" : "cust1",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 2,
-			"name" : "cust2",
-			"type" : "double",
-			"desc" : "cust2",
-			"dispName" : "cust2",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 3,
-			"name" : "cust3",
-			"type" : "double",
-			"desc" : "cust3",
-			"dispName" : "cust3",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 4,
-			"name" : "cust4",
-			"type" : "double",
-			"desc" : "cust4",
-			"dispName" : "cust4",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 5,
-			"name" : "cust5",
-			"type" : "double",
-			"desc" : "cust5",
-			"dispName" : "cust5",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 6,
-			"name" : "cust6",
-			"type" : "double",
-			"desc" : "cust6",
-			"dispName" : "cust6",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 7,
-			"name" : "cust7",
-			"type" : "double",
-			"desc" : "cust7",
-			"dispName" : "cust7",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 8,
-			"name" : "cust8",
-			"type" : "double",
-			"desc" : "cust8",
-			"dispName" : "cust8",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 9,
-			"name" : "cust9",
-			"type" : "double",
-			"desc" : "cust9",
-			"dispName" : "cust9",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 10,
-			"name" : "cust10",
-			"type" : "double",
-			"desc" : "cust10",
-			"dispName" : "cust10",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 11,
-			"name" : "cust11",
-			"type" : "double",
-			"desc" : "cust11",
-			"dispName" : "cust11",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 12,
-			"name" : "cust12",
-			"type" : "double",
-			"desc" : "cust12",
-			"dispName" : "cust12",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 13,
-			"name" : "cust13",
-			"type" : "double",
-			"desc" : "cust13",
-			"dispName" : "cust13",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 14,
-			"name" : "cust14",
-			"type" : "double",
-			"desc" : "cust14",
-			"dispName" : "cust14",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 15,
-			"name" : "cust15",
-			"type" : "double",
-			"desc" : "cust15",
-			"dispName" : "cust15",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 16,
-			"name" : "cust16",
-			"type" : "double",
-			"desc" : "cust16",
-			"dispName" : "cust16",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 17,
-			"name" : "cust17",
-			"type" : "double",
-			"desc" : "cust17",
-			"dispName" : "cust17",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 18,
-			"name" : "cust18",
-			"type" : "double",
-			"desc" : "cust18",
-			"dispName" : "cust18",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 19,
-			"name" : "cust19",
-			"type" : "double",
-			"desc" : "cust19",
-			"dispName" : "cust19",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 20,
-			"name" : "cust20",
-			"type" : "double",
-			"desc" : "cust20",
-			"dispName" : "cust20",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 21,
-			"name" : "cust21",
-			"type" : "double",
-			"desc" : "cust21",
-			"dispName" : "cust21",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 22,
-			"name" : "cust22",
-			"type" : "double",
-			"desc" : "cust22",
-			"dispName" : "cust22",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 23,
-			"name" : "cust23",
-			"type" : "double",
-			"desc" : "cust23",
-			"dispName" : "cust23",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 24,
-			"name" : "cust24",
-			"type" : "double",
-			"desc" : "cust24",
-			"dispName" : "cust24",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 25,
-			"name" : "cust25",
-			"type" : "double",
-			"desc" : "cust25",
-			"dispName" : "cust25",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 26,
-			"name" : "cust26",
-			"type" : "double",
-			"desc" : "cust26",
-			"dispName" : "cust26",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 27,
-			"name" : "cust27",
-			"type" : "double",
-			"desc" : "cust27",
-			"dispName" : "cust27",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 28,
-			"name" : "cust28",
-			"type" : "double",
-			"desc" : "cust28",
-			"dispName" : "cust28",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 29,
-			"name" : "cust29",
-			"type" : "double",
-			"desc" : "cust29",
-			"dispName" : "cust29",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 30,
-			"name" : "cust30",
-			"type" : "double",
-			"desc" : "cust30",
-			"dispName" : "cust30",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 31,
-			"name" : "cust31",
-			"type" : "double",
-			"desc" : "cust31",
-			"dispName" : "cust31",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 32,
-			"name" : "cust32",
-			"type" : "double",
-			"desc" : "cust32",
-			"dispName" : "cust32",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 33,
-			"name" : "cust33",
-			"type" : "double",
-			"desc" : "cust33",
-			"dispName" : "cust33",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 34,
-			"name" : "cust34",
-			"type" : "double",
-			"desc" : "cust34",
-			"dispName" : "cust34",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 35,
-			"name" : "cust35",
-			"type" : "double",
-			"desc" : "cust35",
-			"dispName" : "cust35",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 36,
-			"name" : "cust36",
-			"type" : "double",
-			"desc" : "cust36",
-			"dispName" : "cust36",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 37,
-			"name" : "cust37",
-			"type" : "double",
-			"desc" : "cust37",
-			"dispName" : "cust37",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 38,
-			"name" : "cust38",
-			"type" : "double",
-			"desc" : "cust38",
-			"dispName" : "cust38",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 39,
-			"name" : "cust39",
-			"type" : "double",
-			"desc" : "cust39",
-			"dispName" : "cust39",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 40,
-			"name" : "cust40",
-			"type" : "double",
-			"desc" : "cust40",
-			"dispName" : "cust40",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 41,
-			"name" : "cust41",
-			"type" : "double",
-			"desc" : "cust41",
-			"dispName" : "cust41",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 42,
-			"name" : "cust42",
-			"type" : "double",
-			"desc" : "cust42",
-			"dispName" : "cust42",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 43,
-			"name" : "cust43",
-			"type" : "double",
-			"desc" : "cust43",
-			"dispName" : "cust43",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 44,
-			"name" : "cust44",
-			"type" : "double",
-			"desc" : "cust44",
-			"dispName" : "cust44",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 45,
-			"name" : "cust45",
-			"type" : "double",
-			"desc" : "cust45",
-			"dispName" : "cust45",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 46,
-			"name" : "cust46",
-			"type" : "double",
-			"desc" : "cust46",
-			"dispName" : "cust46",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 47,
-			"name" : "cust47",
-			"type" : "double",
-			"desc" : "cust47",
-			"dispName" : "cust47",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 48,
-			"name" : "cust48",
-			"type" : "double",
-			"desc" : "cust48",
-			"dispName" : "cust48",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 49,
-			"name" : "cust49",
-			"type" : "double",
-			"desc" : "cust49",
-			"dispName" : "cust49",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 50,
-			"name" : "cust50",
-			"type" : "double",
-			"desc" : "cust50",
-			"dispName" : "cust50",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 51,
-			"name" : "cust51",
-			"type" : "double",
-			"desc" : "cust51",
-			"dispName" : "cust51",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 52,
-			"name" : "cust52",
-			"type" : "double",
-			"desc" : "cust52",
-			"dispName" : "cust52",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 53,
-			"name" : "cust53",
-			"type" : "double",
-			"desc" : "cust53",
-			"dispName" : "cust53",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 54,
-			"name" : "cust54",
-			"type" : "double",
-			"desc" : "cust54",
-			"dispName" : "cust54",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 55,
-			"name" : "cust55",
-			"type" : "double",
-			"desc" : "cust55",
-			"dispName" : "cust55",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 56,
-			"name" : "cust56",
-			"type" : "double",
-			"desc" : "cust56",
-			"dispName" : "cust56",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 57,
-			"name" : "cust57",
-			"type" : "double",
-			"desc" : "cust57",
-			"dispName" : "cust57",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 58,
-			"name" : "cust58",
-			"type" : "double",
-			"desc" : "cust58",
-			"dispName" : "cust58",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 59,
-			"name" : "cust59",
-			"type" : "double",
-			"desc" : "cust59",
-			"dispName" : "cust59",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 60,
-			"name" : "cust60",
-			"type" : "double",
-			"desc" : "cust60",
-			"dispName" : "cust60",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 61,
-			"name" : "cust61",
-			"type" : "double",
-			"desc" : "cust61",
-			"dispName" : "cust61",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 62,
-			"name" : "cust62",
-			"type" : "double",
-			"desc" : "cust62",
-			"dispName" : "cust62",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 63,
-			"name" : "cust63",
-			"type" : "double",
-			"desc" : "cust63",
-			"dispName" : "cust63",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 64,
-			"name" : "cust64",
-			"type" : "double",
-			"desc" : "cust64",
-			"dispName" : "cust64",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 65,
-			"name" : "cust65",
-			"type" : "double",
-			"desc" : "cust65",
-			"dispName" : "cust65",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 66,
-			"name" : "cust66",
-			"type" : "double",
-			"desc" : "cust66",
-			"dispName" : "cust66",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 67,
-			"name" : "cust67",
-			"type" : "double",
-			"desc" : "cust67",
-			"dispName" : "cust67",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 68,
-			"name" : "cust68",
-			"type" : "double",
-			"desc" : "cust68",
-			"dispName" : "cust68",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 69,
-			"name" : "cust69",
-			"type" : "double",
-			"desc" : "cust69",
-			"dispName" : "cust69",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 70,
-			"name" : "cust70",
-			"type" : "double",
-			"desc" : "cust70",
-			"dispName" : "cust70",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 71,
-			"name" : "cust71",
-			"type" : "double",
-			"desc" : "cust71",
-			"dispName" : "cust71",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 72,
-			"name" : "cust72",
-			"type" : "double",
-			"desc" : "cust72",
-			"dispName" : "cust72",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 73,
-			"name" : "cust73",
-			"type" : "double",
-			"desc" : "cust73",
-			"dispName" : "cust73",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 74,
-			"name" : "cust74",
-			"type" : "double",
-			"desc" : "cust74",
-			"dispName" : "cust74",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 75,
-			"name" : "cust75",
-			"type" : "double",
-			"desc" : "cust75",
-			"dispName" : "cust75",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 76,
-			"name" : "cust76",
-			"type" : "double",
-			"desc" : "cust76",
-			"dispName" : "cust76",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 77,
-			"name" : "cust77",
-			"type" : "double",
-			"desc" : "cust77",
-			"dispName" : "cust77",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 78,
-			"name" : "cust78",
-			"type" : "double",
-			"desc" : "cust78",
-			"dispName" : "cust78",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 79,
-			"name" : "cust79",
-			"type" : "double",
-			"desc" : "cust79",
-			"dispName" : "cust79",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 80,
-			"name" : "cust80",
-			"type" : "double",
-			"desc" : "cust80",
-			"dispName" : "cust80",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 81,
-			"name" : "cust81",
-			"type" : "double",
-			"desc" : "cust81",
-			"dispName" : "cust81",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 82,
-			"name" : "cust82",
-			"type" : "double",
-			"desc" : "cust82",
-			"dispName" : "cust82",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 83,
-			"name" : "cust83",
-			"type" : "double",
-			"desc" : "cust83",
-			"dispName" : "cust83",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 84,
-			"name" : "cust84",
-			"type" : "double",
-			"desc" : "cust84",
-			"dispName" : "cust84",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 85,
-			"name" : "cust85",
-			"type" : "double",
-			"desc" : "cust85",
-			"dispName" : "cust85",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 86,
-			"name" : "cust86",
-			"type" : "double",
-			"desc" : "cust86",
-			"dispName" : "cust86",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 87,
-			"name" : "cust87",
-			"type" : "double",
-			"desc" : "cust87",
-			"dispName" : "cust87",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 88,
-			"name" : "cust88",
-			"type" : "double",
-			"desc" : "cust88",
-			"dispName" : "cust88",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 89,
-			"name" : "cust89",
-			"type" : "double",
-			"desc" : "cust89",
-			"dispName" : "cust89",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 90,
-			"name" : "cust90",
-			"type" : "double",
-			"desc" : "cust90",
-			"dispName" : "cust90",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 91,
-			"name" : "cust91",
-			"type" : "double",
-			"desc" : "cust91",
-			"dispName" : "cust91",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 92,
-			"name" : "cust92",
-			"type" : "double",
-			"desc" : "cust92",
-			"dispName" : "cust92",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 93,
-			"name" : "cust93",
-			"type" : "double",
-			"desc" : "cust93",
-			"dispName" : "cust93",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 94,
-			"name" : "cust94",
-			"type" : "double",
-			"desc" : "cust94",
-			"dispName" : "cust94",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 95,
-			"name" : "cust95",
-			"type" : "double",
-			"desc" : "cust95",
-			"dispName" : "cust95",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 96,
-			"name" : "cust96",
-			"type" : "double",
-			"desc" : "cust96",
-			"dispName" : "cust96",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 97,
-			"name" : "reporting_date",
-			"type" : "string",
-			"desc" : "reporting_date",
-			"dispName" : "reporting_date",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 98,
-			"name" : "version",
-			"type" : "Integer",
-			"desc" : "version",
-			"dispName" : "version",
-			"active" : "Y"
-		}
-	],
-	"uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9",
-	"version" : "1526084553",
-	"name" : "customer_idiosyncratic_risk",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822"
-			}
-		}
-	],
-	"prefix" : "soe",
-	"displyName" : "security"
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "version" : "1464977196"
+        }
+    },
+    "cache" : "Y",
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "iteration_id",
+            "type" : "integer",
+            "desc" : "iteration_id",
+            "dispName" : "iteration_id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "cust1",
+            "type" : "double",
+            "desc" : "cust1",
+            "dispName" : "cust1",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "cust2",
+            "type" : "double",
+            "desc" : "cust2",
+            "dispName" : "cust2",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "cust3",
+            "type" : "double",
+            "desc" : "cust3",
+            "dispName" : "cust3",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "cust4",
+            "type" : "double",
+            "desc" : "cust4",
+            "dispName" : "cust4",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 5,
+            "name" : "cust5",
+            "type" : "double",
+            "desc" : "cust5",
+            "dispName" : "cust5",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 6,
+            "name" : "cust6",
+            "type" : "double",
+            "desc" : "cust6",
+            "dispName" : "cust6",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 7,
+            "name" : "cust7",
+            "type" : "double",
+            "desc" : "cust7",
+            "dispName" : "cust7",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 8,
+            "name" : "cust8",
+            "type" : "double",
+            "desc" : "cust8",
+            "dispName" : "cust8",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 9,
+            "name" : "cust9",
+            "type" : "double",
+            "desc" : "cust9",
+            "dispName" : "cust9",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 10,
+            "name" : "cust10",
+            "type" : "double",
+            "desc" : "cust10",
+            "dispName" : "cust10",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 11,
+            "name" : "cust11",
+            "type" : "double",
+            "desc" : "cust11",
+            "dispName" : "cust11",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 12,
+            "name" : "cust12",
+            "type" : "double",
+            "desc" : "cust12",
+            "dispName" : "cust12",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 13,
+            "name" : "cust13",
+            "type" : "double",
+            "desc" : "cust13",
+            "dispName" : "cust13",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 14,
+            "name" : "cust14",
+            "type" : "double",
+            "desc" : "cust14",
+            "dispName" : "cust14",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 15,
+            "name" : "cust15",
+            "type" : "double",
+            "desc" : "cust15",
+            "dispName" : "cust15",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 16,
+            "name" : "cust16",
+            "type" : "double",
+            "desc" : "cust16",
+            "dispName" : "cust16",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 17,
+            "name" : "cust17",
+            "type" : "double",
+            "desc" : "cust17",
+            "dispName" : "cust17",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 18,
+            "name" : "cust18",
+            "type" : "double",
+            "desc" : "cust18",
+            "dispName" : "cust18",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 19,
+            "name" : "cust19",
+            "type" : "double",
+            "desc" : "cust19",
+            "dispName" : "cust19",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 20,
+            "name" : "cust20",
+            "type" : "double",
+            "desc" : "cust20",
+            "dispName" : "cust20",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 21,
+            "name" : "cust21",
+            "type" : "double",
+            "desc" : "cust21",
+            "dispName" : "cust21",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 22,
+            "name" : "cust22",
+            "type" : "double",
+            "desc" : "cust22",
+            "dispName" : "cust22",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 23,
+            "name" : "cust23",
+            "type" : "double",
+            "desc" : "cust23",
+            "dispName" : "cust23",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 24,
+            "name" : "cust24",
+            "type" : "double",
+            "desc" : "cust24",
+            "dispName" : "cust24",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 25,
+            "name" : "cust25",
+            "type" : "double",
+            "desc" : "cust25",
+            "dispName" : "cust25",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 26,
+            "name" : "cust26",
+            "type" : "double",
+            "desc" : "cust26",
+            "dispName" : "cust26",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 27,
+            "name" : "cust27",
+            "type" : "double",
+            "desc" : "cust27",
+            "dispName" : "cust27",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 28,
+            "name" : "cust28",
+            "type" : "double",
+            "desc" : "cust28",
+            "dispName" : "cust28",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 29,
+            "name" : "cust29",
+            "type" : "double",
+            "desc" : "cust29",
+            "dispName" : "cust29",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 30,
+            "name" : "cust30",
+            "type" : "double",
+            "desc" : "cust30",
+            "dispName" : "cust30",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 31,
+            "name" : "cust31",
+            "type" : "double",
+            "desc" : "cust31",
+            "dispName" : "cust31",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 32,
+            "name" : "cust32",
+            "type" : "double",
+            "desc" : "cust32",
+            "dispName" : "cust32",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 33,
+            "name" : "cust33",
+            "type" : "double",
+            "desc" : "cust33",
+            "dispName" : "cust33",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 34,
+            "name" : "cust34",
+            "type" : "double",
+            "desc" : "cust34",
+            "dispName" : "cust34",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 35,
+            "name" : "cust35",
+            "type" : "double",
+            "desc" : "cust35",
+            "dispName" : "cust35",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 36,
+            "name" : "cust36",
+            "type" : "double",
+            "desc" : "cust36",
+            "dispName" : "cust36",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 37,
+            "name" : "cust37",
+            "type" : "double",
+            "desc" : "cust37",
+            "dispName" : "cust37",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 38,
+            "name" : "cust38",
+            "type" : "double",
+            "desc" : "cust38",
+            "dispName" : "cust38",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 39,
+            "name" : "cust39",
+            "type" : "double",
+            "desc" : "cust39",
+            "dispName" : "cust39",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 40,
+            "name" : "cust40",
+            "type" : "double",
+            "desc" : "cust40",
+            "dispName" : "cust40",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 41,
+            "name" : "cust41",
+            "type" : "double",
+            "desc" : "cust41",
+            "dispName" : "cust41",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 42,
+            "name" : "cust42",
+            "type" : "double",
+            "desc" : "cust42",
+            "dispName" : "cust42",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 43,
+            "name" : "cust43",
+            "type" : "double",
+            "desc" : "cust43",
+            "dispName" : "cust43",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 44,
+            "name" : "cust44",
+            "type" : "double",
+            "desc" : "cust44",
+            "dispName" : "cust44",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 45,
+            "name" : "cust45",
+            "type" : "double",
+            "desc" : "cust45",
+            "dispName" : "cust45",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 46,
+            "name" : "cust46",
+            "type" : "double",
+            "desc" : "cust46",
+            "dispName" : "cust46",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 47,
+            "name" : "cust47",
+            "type" : "double",
+            "desc" : "cust47",
+            "dispName" : "cust47",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 48,
+            "name" : "cust48",
+            "type" : "double",
+            "desc" : "cust48",
+            "dispName" : "cust48",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 49,
+            "name" : "cust49",
+            "type" : "double",
+            "desc" : "cust49",
+            "dispName" : "cust49",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 50,
+            "name" : "cust50",
+            "type" : "double",
+            "desc" : "cust50",
+            "dispName" : "cust50",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 51,
+            "name" : "cust51",
+            "type" : "double",
+            "desc" : "cust51",
+            "dispName" : "cust51",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 52,
+            "name" : "cust52",
+            "type" : "double",
+            "desc" : "cust52",
+            "dispName" : "cust52",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 53,
+            "name" : "cust53",
+            "type" : "double",
+            "desc" : "cust53",
+            "dispName" : "cust53",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 54,
+            "name" : "cust54",
+            "type" : "double",
+            "desc" : "cust54",
+            "dispName" : "cust54",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 55,
+            "name" : "cust55",
+            "type" : "double",
+            "desc" : "cust55",
+            "dispName" : "cust55",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 56,
+            "name" : "cust56",
+            "type" : "double",
+            "desc" : "cust56",
+            "dispName" : "cust56",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 57,
+            "name" : "cust57",
+            "type" : "double",
+            "desc" : "cust57",
+            "dispName" : "cust57",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 58,
+            "name" : "cust58",
+            "type" : "double",
+            "desc" : "cust58",
+            "dispName" : "cust58",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 59,
+            "name" : "cust59",
+            "type" : "double",
+            "desc" : "cust59",
+            "dispName" : "cust59",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 60,
+            "name" : "cust60",
+            "type" : "double",
+            "desc" : "cust60",
+            "dispName" : "cust60",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 61,
+            "name" : "cust61",
+            "type" : "double",
+            "desc" : "cust61",
+            "dispName" : "cust61",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 62,
+            "name" : "cust62",
+            "type" : "double",
+            "desc" : "cust62",
+            "dispName" : "cust62",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 63,
+            "name" : "cust63",
+            "type" : "double",
+            "desc" : "cust63",
+            "dispName" : "cust63",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 64,
+            "name" : "cust64",
+            "type" : "double",
+            "desc" : "cust64",
+            "dispName" : "cust64",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 65,
+            "name" : "cust65",
+            "type" : "double",
+            "desc" : "cust65",
+            "dispName" : "cust65",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 66,
+            "name" : "cust66",
+            "type" : "double",
+            "desc" : "cust66",
+            "dispName" : "cust66",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 67,
+            "name" : "cust67",
+            "type" : "double",
+            "desc" : "cust67",
+            "dispName" : "cust67",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 68,
+            "name" : "cust68",
+            "type" : "double",
+            "desc" : "cust68",
+            "dispName" : "cust68",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 69,
+            "name" : "cust69",
+            "type" : "double",
+            "desc" : "cust69",
+            "dispName" : "cust69",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 70,
+            "name" : "cust70",
+            "type" : "double",
+            "desc" : "cust70",
+            "dispName" : "cust70",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 71,
+            "name" : "cust71",
+            "type" : "double",
+            "desc" : "cust71",
+            "dispName" : "cust71",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 72,
+            "name" : "cust72",
+            "type" : "double",
+            "desc" : "cust72",
+            "dispName" : "cust72",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 73,
+            "name" : "cust73",
+            "type" : "double",
+            "desc" : "cust73",
+            "dispName" : "cust73",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 74,
+            "name" : "cust74",
+            "type" : "double",
+            "desc" : "cust74",
+            "dispName" : "cust74",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 75,
+            "name" : "cust75",
+            "type" : "double",
+            "desc" : "cust75",
+            "dispName" : "cust75",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 76,
+            "name" : "cust76",
+            "type" : "double",
+            "desc" : "cust76",
+            "dispName" : "cust76",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 77,
+            "name" : "cust77",
+            "type" : "double",
+            "desc" : "cust77",
+            "dispName" : "cust77",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 78,
+            "name" : "cust78",
+            "type" : "double",
+            "desc" : "cust78",
+            "dispName" : "cust78",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 79,
+            "name" : "cust79",
+            "type" : "double",
+            "desc" : "cust79",
+            "dispName" : "cust79",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 80,
+            "name" : "cust80",
+            "type" : "double",
+            "desc" : "cust80",
+            "dispName" : "cust80",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 81,
+            "name" : "cust81",
+            "type" : "double",
+            "desc" : "cust81",
+            "dispName" : "cust81",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 82,
+            "name" : "cust82",
+            "type" : "double",
+            "desc" : "cust82",
+            "dispName" : "cust82",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 83,
+            "name" : "cust83",
+            "type" : "double",
+            "desc" : "cust83",
+            "dispName" : "cust83",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 84,
+            "name" : "cust84",
+            "type" : "double",
+            "desc" : "cust84",
+            "dispName" : "cust84",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 85,
+            "name" : "cust85",
+            "type" : "double",
+            "desc" : "cust85",
+            "dispName" : "cust85",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 86,
+            "name" : "cust86",
+            "type" : "double",
+            "desc" : "cust86",
+            "dispName" : "cust86",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 87,
+            "name" : "cust87",
+            "type" : "double",
+            "desc" : "cust87",
+            "dispName" : "cust87",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 88,
+            "name" : "cust88",
+            "type" : "double",
+            "desc" : "cust88",
+            "dispName" : "cust88",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 89,
+            "name" : "cust89",
+            "type" : "double",
+            "desc" : "cust89",
+            "dispName" : "cust89",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 90,
+            "name" : "cust90",
+            "type" : "double",
+            "desc" : "cust90",
+            "dispName" : "cust90",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 91,
+            "name" : "cust91",
+            "type" : "double",
+            "desc" : "cust91",
+            "dispName" : "cust91",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 92,
+            "name" : "cust92",
+            "type" : "double",
+            "desc" : "cust92",
+            "dispName" : "cust92",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 93,
+            "name" : "cust93",
+            "type" : "double",
+            "desc" : "cust93",
+            "dispName" : "cust93",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 94,
+            "name" : "cust94",
+            "type" : "double",
+            "desc" : "cust94",
+            "dispName" : "cust94",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 95,
+            "name" : "cust95",
+            "type" : "double",
+            "desc" : "cust95",
+            "dispName" : "cust95",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 96,
+            "name" : "cust96",
+            "type" : "double",
+            "desc" : "cust96",
+            "dispName" : "cust96",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 97,
+            "name" : "reporting_date",
+            "type" : "string",
+            "desc" : "reporting_date",
+            "dispName" : "reporting_date",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 98,
+            "name" : "version",
+            "type" : "Integer",
+            "desc" : "version",
+            "dispName" : "version",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "6f300854-46f3-4e72-9976-38cdc8b91ff9",
+    "version" : "1526084553",
+    "name" : "customer_idiosyncratic_risk",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-05-12T00:22:33.000Z"),
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+                "version" : "1521430822"
+            }
+        }
+    ],
+	"prefix":"soe"
 }

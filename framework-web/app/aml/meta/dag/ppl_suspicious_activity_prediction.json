@@ -1,415 +1,406 @@
 {
-	"uuid" : "4c2252fc-ff2b-4424-b658-8615efcb01f9",
-	"version" : "1547156959",
-	"name" : "ppl_suspicious_activity_prediction",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"xPos" : 50,
-	"yPos" : 320,
-	"templateFlg" : "N",
-	"templateInfo" : null,
-	"stages" : [
-		{
-			"stageId" : "stage_0",
-			"dependsOn" : [ ],
-			"tasks" : [
-				{
-					"taskId" : "2cb6728e-9495-40cd-b570-2ca1fefa8c8a",
-					"dependsOn" : [ ],
-					"name" : "AML - Suspicious Transaction Activity - GBT",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "train",
-										"uuid" : "2bd68a97-c1c2-47b6-bb41-b3ed00c582bc",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - GBT"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								"EXEC_PARAMS" : {
-									"refKeyList" : null,
-									"paramInfo" : null,
-									"filterInfo" : null,
-									"stageInfo" : null,
-									"currParamSet" : null,
-									"paramListHolder" : null,
-									"paramListInfo" : [
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
-												"version" : null,
-												"name" : null
-											},
-											"value" : null,
-											"paramId" : null,
-											"paramName" : null,
-											"paramType" : null,
-											"paramDispName" : null,
-											"paramDesc" : null,
-											"paramValue" : null,
-											"attributeInfo" : null
-										}
-									],
-									"internalVarMap" : null,
-									"otherParams" : null,
-									"executionContext" : null,
-									"graphFilter" : null
-								}
-							}
-						}
-					],
-					"xPos" : 510,
-					"yPos" : 130,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "df3ca6fa-4470-424b-b03d-fc0c867f57d6",
-					"dependsOn" : [ ],
-					"name" : "AML - Suspicious Transaction Activity - LR",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "train",
-										"uuid" : "83ecfcc0-19f6-4a6d-a352-c2d61e3b0690",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - LR"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								"EXEC_PARAMS" : {
-									"refKeyList" : null,
-									"paramInfo" : null,
-									"filterInfo" : null,
-									"stageInfo" : null,
-									"currParamSet" : null,
-									"paramListHolder" : null,
-									"paramListInfo" : [
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a80",
-												"version" : null,
-												"name" : null
-											},
-											"value" : null,
-											"paramId" : null,
-											"paramName" : null,
-											"paramType" : null,
-											"paramDispName" : null,
-											"paramDesc" : null,
-											"paramValue" : null,
-											"attributeInfo" : null
-										}
-									],
-									"internalVarMap" : null,
-									"otherParams" : null,
-									"executionContext" : null,
-									"graphFilter" : null
-								}
-							}
-						}
-					],
-					"xPos" : 510,
-					"yPos" : 380,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "d1a0e41f-0fbb-4403-8665-7eef7bfdfc9a",
-					"dependsOn" : [ ],
-					"name" : "AML - Suspicious Transaction Activity - DTC",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "train",
-										"uuid" : "a35f771b-e06c-4820-ad8e-999ecc1f56ff",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - DTC"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								"EXEC_PARAMS" : {
-									"refKeyList" : null,
-									"paramInfo" : null,
-									"filterInfo" : null,
-									"stageInfo" : null,
-									"currParamSet" : null,
-									"paramListHolder" : null,
-									"paramListInfo" : [
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84",
-												"version" : null,
-												"name" : null
-											},
-											"value" : null,
-											"paramId" : null,
-											"paramName" : null,
-											"paramType" : null,
-											"paramDispName" : null,
-											"paramDesc" : null,
-											"paramValue" : null,
-											"attributeInfo" : null
-										}
-									],
-									"internalVarMap" : null,
-									"otherParams" : null,
-									"executionContext" : null,
-									"graphFilter" : null
-								}
-							}
-						}
-					],
-					"xPos" : 510,
-					"yPos" : 250,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "d9f407f5-8d62-46f5-9f11-94cb49c500b8",
-					"dependsOn" : [ ],
-					"name" : "AML - Suspicious Transaction Activity - ANN",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "train",
-										"uuid" : "65cb72cd-a115-4d25-ac72-af8e43b5e264",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - ANN"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								"EXEC_PARAMS" : {
-									"refKeyList" : null,
-									"paramInfo" : null,
-									"filterInfo" : null,
-									"stageInfo" : null,
-									"currParamSet" : null,
-									"paramListHolder" : null,
-									"paramListInfo" : [
-										{
-											"ref" : {
-												"type" : "paramlist",
-												"uuid" : "a9884a61-3b96-48b0-930a-bc6afcddfce8",
-												"version" : null,
-												"name" : null
-											},
-											"value" : null,
-											"paramId" : null,
-											"paramName" : null,
-											"paramType" : null,
-											"paramDispName" : null,
-											"paramDesc" : null,
-											"paramValue" : null,
-											"attributeInfo" : null
-										}
-									],
-									"internalVarMap" : null,
-									"otherParams" : null,
-									"executionContext" : null,
-									"graphFilter" : null
-								}
-							}
-						}
-					],
-					"xPos" : 510,
-					"yPos" : 500,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "1550373e-7998-46d2-8757-454257718a84",
-					"dependsOn" : [
-						"2cb6728e-9495-40cd-b570-2ca1fefa8c8a"
-					],
-					"name" : "AML - Suspicious Transaction Activity - GBT",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "predict",
-										"uuid" : "6516ac65-3698-4a01-8f6e-7cad456758af",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - GBT"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 850,
-					"yPos" : 130,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "63b0c6e6-dc4f-47e4-aed3-0e9858008a38",
-					"dependsOn" : [
-						"df3ca6fa-4470-424b-b03d-fc0c867f57d6"
-					],
-					"name" : "AML - Suspicious Transaction Activity - LR",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "predict",
-										"uuid" : "6516ac65-3698-4a01-8f6e-7cad45675888",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - LR"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 850,
-					"yPos" : 380,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "b0ae2b4e-3f79-46e0-861a-bdd8b1604e55",
-					"dependsOn" : [
-						"d1a0e41f-0fbb-4403-8665-7eef7bfdfc9a"
-					],
-					"name" : "AML - Suspicious Transaction Activity - DTC",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "predict",
-										"uuid" : "215d76cb-4b1b-426a-93d9-a70f27a022b3",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - DTC"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 850,
-					"yPos" : 250,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "719fd4d8-246a-45d0-8457-4c4d647aaee1",
-					"dependsOn" : [
-						"d9f407f5-8d62-46f5-9f11-94cb49c500b8"
-					],
-					"name" : "AML - Suspicious Transaction Activity - ANN",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "predict",
-										"uuid" : "d4558cc0-bd62-490b-9747-d548193d9fc1",
-										"version" : null,
-										"name" : "AML - Suspicious Transaction Activity - ANN"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 850,
-					"yPos" : 500,
-					"active" : "Y",
-					"statusList" : [ ]
-				}
-			],
-			"name" : "stage",
-			"xPos" : 250,
-			"yPos" : 320,
-			"active" : "Y",
-			"statusList" : [ ]
-		}
-	],
-	"statusList" : [ ],
-	"paramList" : null,
-	"displyName" : "ppl_e2e_exec"
+  "uuid": "4c2252fc-ff2b-4424-b658-8615efcb01f9",
+  "version": "1547156959",
+  "name": "ppl_suspicious_activity_prediction",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Jan 10 16:49:19 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "xPos": 50,
+  "yPos": 320,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "stage_0",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "2cb6728e-9495-40cd-b570-2ca1fefa8c8a",
+          "dependsOn": [],
+          "name": "AML - Suspicious Transaction Activity - GBT",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "2bd68a97-c1c2-47b6-bb41-b3ed00c582bc",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - GBT"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 510,
+          "yPos": 130,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "df3ca6fa-4470-424b-b03d-fc0c867f57d6",
+          "dependsOn": [],
+          "name": "AML - Suspicious Transaction Activity - LR",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "83ecfcc0-19f6-4a6d-a352-c2d61e3b0690",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - LR"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 510,
+          "yPos": 380,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "d1a0e41f-0fbb-4403-8665-7eef7bfdfc9a",
+          "dependsOn": [],
+          "name": "AML - Suspicious Transaction Activity - DTC",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "a35f771b-e06c-4820-ad8e-999ecc1f56ff",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - DTC"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 510,
+          "yPos": 250,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "d9f407f5-8d62-46f5-9f11-94cb49c500b8",
+          "dependsOn": [],
+          "name": "AML - Suspicious Transaction Activity - ANN",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "65cb72cd-a115-4d25-ac72-af8e43b5e264",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - ANN"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "a9884a61-3b96-48b0-930a-bc6afcddfce8",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 510,
+          "yPos": 500,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "1550373e-7998-46d2-8757-454257718a84",
+          "dependsOn": [
+            "2cb6728e-9495-40cd-b570-2ca1fefa8c8a"
+          ],
+          "name": "AML - Suspicious Transaction Activity - GBT",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "predict",
+                    "uuid": "6516ac65-3698-4a01-8f6e-7cad456758af",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - GBT"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 850,
+          "yPos": 130,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "63b0c6e6-dc4f-47e4-aed3-0e9858008a38",
+          "dependsOn": [
+            "df3ca6fa-4470-424b-b03d-fc0c867f57d6"
+          ],
+          "name": "AML - Suspicious Transaction Activity - LR",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "predict",
+                    "uuid": "6516ac65-3698-4a01-8f6e-7cad45675888",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - LR"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 850,
+          "yPos": 380,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "b0ae2b4e-3f79-46e0-861a-bdd8b1604e55",
+          "dependsOn": [
+            "d1a0e41f-0fbb-4403-8665-7eef7bfdfc9a"
+          ],
+          "name": "AML - Suspicious Transaction Activity - DTC",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "predict",
+                    "uuid": "215d76cb-4b1b-426a-93d9-a70f27a022b3",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - DTC"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 850,
+          "yPos": 250,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "719fd4d8-246a-45d0-8457-4c4d647aaee1",
+          "dependsOn": [
+            "d9f407f5-8d62-46f5-9f11-94cb49c500b8"
+          ],
+          "name": "AML - Suspicious Transaction Activity - ANN",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "predict",
+                    "uuid": "d4558cc0-bd62-490b-9747-d548193d9fc1",
+                    "version": null,
+                    "name": "AML - Suspicious Transaction Activity - ANN"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 850,
+          "yPos": 500,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "stage",
+      "xPos": 250,
+      "yPos": 320,
+      "active": "Y",
+      "statusList": []
+    }
+  ],
+  "statusList": [],
+  "paramList": null
 }

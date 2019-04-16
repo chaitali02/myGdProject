@@ -13,7 +13,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:45.296Z"),
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -35,6 +35,5 @@
 			}
 		}
 	],
-	"publicFlag" : "Y",
-	"displyName" : "ExportLock"
+	"publicFlag" : "Y"
 }

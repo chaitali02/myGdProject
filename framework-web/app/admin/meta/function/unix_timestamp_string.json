@@ -1,101 +1,101 @@
 {
-	"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002777",
-	"version" : "1488801521",
-	"name" : "unix_timestamp_string",
-	"desc" : "Gets current Unix timestamp in seconds. This function is not deterministic and its value is not fixed for the scope of a query execution, therefore prevents proper optimization of queries - this has been deprecated since 2.0 in favour of CURRENT_TIMESTAMP constant.",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid": "9e3dff24-02fb-11e7-93ae-92361f002777",
+	"version": "1488801521",
+	"name": "unix_timestamp_string",
+	"desc": "Gets current Unix timestamp in seconds. This function is not deterministic and its value is not fixed for the scope of a query execution, therefore prevents proper optimization of queries - this has been deprecated since 2.0 in favour of CURRENT_TIMESTAMP constant.",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"inputReq" : "N",
-	"publicFlag" : "Y",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"inputReq": "N",
+        "publicFlag" : "Y",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
 	],
-	"returnType" : "STRING",
-	"category" : "DATE",
-	"functionInfo" : [
-		{
-			"type" : "file",
-			"name" : "CAST",
-			"paramInfoHolder" : [
-				{
-					"paramId" : "0",
-					"paramName" : "UNIX_TIMESTAMP() AS STRING",
-					"paramType" : "string",
-					"paramReq" : "N",
-					"paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
-				}
-			]
-		},
-		{
-			"type" : "mysql",
-			"name" : "CAST",
-			"paramInfoHolder" : [
-				{
-					"paramId" : "0",
-					"paramName" : "UNIX_TIMESTAMP() AS STRING",
-					"paramType" : "string",
-					"paramReq" : "N",
-					"paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
-				}
-			]
-		},
-		{
-			"type" : "hive",
-			"name" : "CAST",
-			"paramInfoHolder" : [
-				{
-					"paramId" : "0",
-					"paramName" : "UNIX_TIMESTAMP() AS STRING",
-					"paramType" : "string",
-					"paramReq" : "N",
-					"paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
-				}
-			]
-		},
-		{
-			"type" : "impala",
-			"name" : "CAST",
-			"paramInfoHolder" : [
-				{
-					"paramId" : "0",
-					"paramName" : "UNIX_TIMESTAMP() AS STRING",
-					"paramType" : "string",
-					"paramReq" : "N",
-					"paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
-				}
-			]
-		},
-		{
-			"type" : "oracle",
-			"name" : "CAST",
-			"paramInfoHolder" : [
-				{
-					"paramId" : "0",
-					"paramName" : "UNIX_TIMESTAMP() AS STRING",
-					"paramType" : "string",
-					"paramReq" : "N",
-					"paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
-				}
-			]
-		}
-	],
-	"displyName" : "year"
+
+	"returnType":"STRING",
+     "category": "DATE",
+	"functionInfo" : [ 
+        {
+            "type" : "file",
+            "name" : "CAST",
+            "paramInfoHolder" : [
+            	{
+                    "paramId" : "0",
+                    "paramName" : "UNIX_TIMESTAMP() AS STRING",
+                    "paramType" : "string",
+                    "paramReq" : "N",
+                    "paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
+                }
+            ]
+        },
+        {
+            "type" : "mysql",
+            "name" : "CAST",
+            "paramInfoHolder" : [
+            	{
+                    "paramId" : "0",
+                    "paramName" : "UNIX_TIMESTAMP() AS STRING",
+                    "paramType" : "string",
+                    "paramReq" : "N",
+                    "paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
+                }
+            ]
+        }, 
+        {
+            "type" : "hive",
+            "name" : "CAST",
+            "paramInfoHolder" : [
+            	{
+                    "paramId" : "0",
+                    "paramName" : "UNIX_TIMESTAMP() AS STRING",
+                    "paramType" : "string",
+                    "paramReq" : "N",
+                    "paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
+                }
+            ]
+        }, 
+        {
+            "type" : "impala",
+            "name" : "CAST",
+            "paramInfoHolder" : [
+              {
+                    "paramId" : "0",
+                    "paramName" : "UNIX_TIMESTAMP() AS STRING",
+                    "paramType" : "string",
+                    "paramReq" : "N",
+                    "paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
+                }
+             ]
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "CAST",
+            "paramInfoHolder" : [
+              {
+                    "paramId" : "0",
+                    "paramName" : "UNIX_TIMESTAMP() AS STRING",
+                    "paramType" : "string",
+                    "paramReq" : "N",
+                    "paramDefVal" : "UNIX_TIMESTAMP() AS STRING"
+                }
+             ]
+        }
+    ]
 }

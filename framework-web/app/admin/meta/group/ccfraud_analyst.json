@@ -1,39 +1,37 @@
 {
-    "_id" : ObjectId("5cb47da0da75e91b2c51a4ba"),
-    "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67",
-    "version" : "1521430857",
-    "name" : "ccfraud_analyst",
-    "desc" : "Analyst group for Credit Card Fraud application",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2017-11-07T10:24:13.443Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "roleId" : {
-        "ref" : {
-            "type" : "role",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f88"
-        }
-    },
-    "appId" : {
-        "ref" : {
-            "type" : "application",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-        }
-    },
-    "displyName" : "ccfraud_analyst"
+  "uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67",
+  "version": "1521430857",
+  "name": "ccfraud_analyst",
+  "desc": "Analyst group for Credit Card Fraud application",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+    }
+  },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+      }
+    }
+  ],
+  "roleId": {
+    "ref": {
+      "type": "role",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f88"
+    }
+  },
+  "appId": {
+    "ref": {
+      "type": "application",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+    }
+  }
 }

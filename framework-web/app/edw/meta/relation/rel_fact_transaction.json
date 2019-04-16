@@ -1,562 +1,561 @@
 {
-	"uuid" : "a57e93e8-6e27-4a95-9fd7-6b56a8b40e06",
-	"version" : "1490555278",
-	"name" : "rel_fact_transaction",
-	"desc" : "relation for fact_transaction table using raw source tables",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : null,
-			"name" : "ypalrecha"
+	"uuid": "a57e93e8-6e27-4a95-9fd7-6b56a8b40e06",
+	"version": "1490555278",
+	"name": "rel_fact_transaction",
+	"desc": "relation for fact_transaction table using raw source tables",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": null,
+			"name": "ypalrecha"
 		},
-		"value" : null
+		"value": null
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:40.941Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"name" : "Data Warehouse"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"name": "Data Warehouse"
 			},
-			"value" : null
+			"value": null
 		}
 	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-			"version" : null,
-			"name" : "transaction"
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "49fc0656-109d-46a2-a826-c09e92895035",
+			"version": null,
+			"name": "transaction"
 		},
-		"value" : null
+		"value": null
 	},
-	"relationInfo" : [
+	"relationInfo": [
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-					"version" : null,
-					"name" : "dim_date"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+					"version": null,
+					"name": "dim_date"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-								"version" : null,
-								"name" : "transaction"
+							"ref": {
+								"type": "datapod",
+								"uuid": "49fc0656-109d-46a2-a826-c09e92895035",
+								"version": null,
+								"name": "transaction"
 							},
-							"attributeId" : 3,
-							"value" : null,
-							"attributeName" : "transaction_date"
+							"attributeId": 3,
+							"value": null,
+							"attributeName": "transaction_date"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
-								"version" : null,
-								"name" : "dim_date"
+							"ref": {
+								"type": "datapod",
+								"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+								"version": null,
+								"name": "dim_date"
 							},
-							"attributeId" : 2,
-							"value" : null,
-							"attributeName" : "date_val"
+							"attributeId": 2,
+							"value": null,
+							"attributeName": "date_val"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-					"version" : null,
-					"name" : "account"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+					"version": null,
+					"name": "account"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-								"version" : null,
-								"name" : "transaction"
+							"ref": {
+								"type": "datapod",
+								"uuid": "49fc0656-109d-46a2-a826-c09e92895035",
+								"version": null,
+								"name": "transaction"
 							},
-							"attributeId" : 2,
-							"value" : null,
-							"attributeName" : "account_id"
+							"attributeId": 2,
+							"value": null,
+							"attributeName": "account_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-								"version" : null,
-								"name" : "account"
+							"ref": {
+								"type": "datapod",
+								"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+								"version": null,
+								"name": "account"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "account_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "account_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-					"version" : null,
-					"name" : "customer"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+					"version": null,
+					"name": "customer"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-								"version" : null,
-								"name" : "account"
+							"ref": {
+								"type": "datapod",
+								"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+								"version": null,
+								"name": "account"
 							},
-							"attributeId" : 4,
-							"value" : null,
-							"attributeName" : "customer_id"
+							"attributeId": 4,
+							"value": null,
+							"attributeName": "customer_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-								"version" : null,
-								"name" : "customer"
+							"ref": {
+								"type": "datapod",
+								"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+								"version": null,
+								"name": "customer"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "customer_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "customer_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": "address"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-								"version" : null,
-								"name" : "customer"
+							"ref": {
+								"type": "datapod",
+								"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+								"version": null,
+								"name": "customer"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "address_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "address_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-								"version" : null,
-								"name" : "address"
+							"ref": {
+								"type": "datapod",
+								"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+								"version": null,
+								"name": "address"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "address_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "address_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-					"version" : null,
-					"name" : "branch"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
+					"version": null,
+					"name": "branch"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-								"version" : null,
-								"name" : "customer"
+							"ref": {
+								"type": "datapod",
+								"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+								"version": null,
+								"name": "customer"
 							},
-							"attributeId" : 2,
-							"value" : null,
-							"attributeName" : "branch_id"
+							"attributeId": 2,
+							"value": null,
+							"attributeName": "branch_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-								"version" : null,
-								"name" : "branch"
+							"ref": {
+								"type": "datapod",
+								"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
+								"version": null,
+								"name": "branch"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "branch_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "branch_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "838251a0-bc55-42c2-96eb-327527512933",
-					"version" : null,
-					"name" : "bank"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "838251a0-bc55-42c2-96eb-327527512933",
+					"version": null,
+					"name": "bank"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "",
-			"joinKey" : [
+			"joinType": "",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-								"version" : null,
-								"name" : "branch"
+							"ref": {
+								"type": "datapod",
+								"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
+								"version": null,
+								"name": "branch"
 							},
-							"attributeId" : 2,
-							"value" : null,
-							"attributeName" : "bank_id"
+							"attributeId": 2,
+							"value": null,
+							"attributeName": "bank_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "838251a0-bc55-42c2-96eb-327527512933",
-								"version" : null,
-								"name" : "bank"
+							"ref": {
+								"type": "datapod",
+								"uuid": "838251a0-bc55-42c2-96eb-327527512933",
+								"version": null,
+								"name": "bank"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "bank_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "bank_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-					"version" : null,
-					"name" : "dim_transaction_type"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+					"version": null,
+					"name": "dim_transaction_type"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
-								"version" : null,
-								"name" : "transaction"
+							"ref": {
+								"type": "datapod",
+								"uuid": "49fc0656-109d-46a2-a826-c09e92895035",
+								"version": null,
+								"name": "transaction"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "transaction_type_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "transaction_type_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-								"version" : null,
-								"name" : "dim_transaction_type"
+							"ref": {
+								"type": "datapod",
+								"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+								"version": null,
+								"name": "dim_transaction_type"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_transaction_type_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_transaction_type_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-					"version" : null,
-					"name" : "dim_bank"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+					"version": null,
+					"name": "dim_bank"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "838251a0-bc55-42c2-96eb-327527512933",
-								"version" : null,
-								"name" : "bank"
+							"ref": {
+								"type": "datapod",
+								"uuid": "838251a0-bc55-42c2-96eb-327527512933",
+								"version": null,
+								"name": "bank"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "bank_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "bank_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
-								"version" : null,
-								"name" : "dim_bank"
+							"ref": {
+								"type": "datapod",
+								"uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e",
+								"version": null,
+								"name": "dim_bank"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_bank_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_bank_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
-					"version" : null,
-					"name" : "dim_branch"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
+					"version": null,
+					"name": "dim_branch"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-								"version" : null,
-								"name" : "branch"
+							"ref": {
+								"type": "datapod",
+								"uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
+								"version": null,
+								"name": "branch"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "branch_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "branch_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
-								"version" : null,
-								"name" : "dim_branch"
+							"ref": {
+								"type": "datapod",
+								"uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
+								"version": null,
+								"name": "dim_branch"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_branch_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_branch_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
-					"version" : null,
-					"name" : "dim_customer"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
+					"version": null,
+					"name": "dim_customer"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-								"version" : null,
-								"name" : "customer"
+							"ref": {
+								"type": "datapod",
+								"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+								"version": null,
+								"name": "customer"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "customer_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "customer_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
-								"version" : null,
-								"name" : "dim_customer"
+							"ref": {
+								"type": "datapod",
+								"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
+								"version": null,
+								"name": "dim_customer"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_customer_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_customer_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-					"version" : null,
-					"name" : "dim_address"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+					"version": null,
+					"name": "dim_address"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-								"version" : null,
-								"name" : "address"
+							"ref": {
+								"type": "datapod",
+								"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+								"version": null,
+								"name": "address"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "address_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "address_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-								"version" : null,
-								"name" : "dim_address"
+							"ref": {
+								"type": "datapod",
+								"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+								"version": null,
+								"name": "dim_address"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_address_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_address_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		},
 		{
-			"join" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-					"version" : null,
-					"name" : "dim_account"
+			"join": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version": null,
+					"name": "dim_account"
 				},
-				"value" : null
+				"value": null
 			},
-			"joinType" : "LEFT OUTER",
-			"joinKey" : [
+			"joinType": "LEFT OUTER",
+			"joinKey": [
 				{
-					"logicalOperator" : "",
-					"operator" : "=",
-					"operand" : [
+					"logicalOperator": "",
+					"operator": "=",
+					"operand": [
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
-								"version" : null,
-								"name" : "account"
+							"ref": {
+								"type": "datapod",
+								"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
+								"version": null,
+								"name": "account"
 							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "account_id"
+							"attributeId": 0,
+							"value": null,
+							"attributeName": "account_id"
 						},
 						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-								"version" : null,
-								"name" : "dim_account"
+							"ref": {
+								"type": "datapod",
+								"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+								"version": null,
+								"name": "dim_account"
 							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "src_account_id"
+							"attributeId": 1,
+							"value": null,
+							"attributeName": "src_account_id"
 						}
 					]
 				}
 			],
-			"logicaloperand" : null
+			"logicaloperand": null
 		}
-	],
-	"displyName" : "rel_dq_equity_executions_rule7"
+	]
 }

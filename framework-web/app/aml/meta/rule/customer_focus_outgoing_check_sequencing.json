@@ -208,7 +208,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.156Z"),
+	"createdOn" : ISODate("2018-11-19T05:09:06Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -222,6 +222,5 @@
 				"name" : "Anti Money Laundering"
 			}
 		}
-	],
-	"displyName" : "Rule2"
+	]
 }

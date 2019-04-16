@@ -9,7 +9,7 @@
 			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:45.296Z"),
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
 	"active" : "Y",
 	"locked" : "N",
 	"privType" : "Edit",
@@ -27,6 +27,5 @@
 			}
 		}
 	],
-	"publicFlag" : "Y",
-	"displyName" : "ProfileEdit"
+	"publicFlag" : "Y"
 }

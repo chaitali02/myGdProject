@@ -1,25 +1,18 @@
 {
-	"uuid" : "0031d20c-3aef-44e6-b9c6-6f67053e693g",
-	"name" : "rule2",
-	"version" : "1464977196d",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid": "0031d20c-3aef-44e6-b9c6-6f67053e693g",
+	"name": "rule2",
+	"version": "1464977196d",
+"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
 	"active" : "Y",
-	"locked" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"desc" : "Meta for rule",
-	"menu" : "BusinessRules",
-	"displyName" : "rule2"
+  "locked" : "N",
+	"appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
+    			],
+	"desc": "Meta for rule",
+        "menu":"BusinessRules"	
 }

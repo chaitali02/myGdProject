@@ -1,82 +1,81 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "374afe5a-ef59-4967-b86f-84b85f65a4d1",
-				"version" : "1491628665"
+			"ref": {
+				"type": "dq",
+				"uuid": "374afe5a-ef59-4967-b86f-84b85f65a4d1",
+				"version": "1491628665"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "0d42ed85-5d1a-4de0-922f-222569e71dcf",
-				"version" : "1491628014"
+			"ref": {
+				"type": "dq",
+				"uuid": "0d42ed85-5d1a-4de0-922f-222569e71dcf",
+				"version": "1491628014"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "6796e691-3892-4f78-9b9f-a35ef58b72ca",
-				"version" : "1491628274"
+			"ref": {
+				"type": "dq",
+				"uuid": "6796e691-3892-4f78-9b9f-a35ef58b72ca",
+				"version": "1491628274"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "fbb05739-e275-48bf-8366-742bd1d138b5",
-				"version" : "1491628140"
+			"ref": {
+				"type": "dq",
+				"uuid": "fbb05739-e275-48bf-8366-742bd1d138b5",
+				"version": "1491628140"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "1e100996-717d-4fcd-bf6d-11177fb33d84",
-				"version" : "1491628379"
+			"ref": {
+				"type": "dq",
+				"uuid": "1e100996-717d-4fcd-bf6d-11177fb33d84",
+				"version": "1491628379"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "ca6cde86-e08c-4f81-b823-f0d3b9854ca2",
-				"version" : "1491628473"
+			"ref": {
+				"type": "dq",
+				"uuid": "ca6cde86-e08c-4f81-b823-f0d3b9854ca2",
+				"version": "1491628473"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "c18a32d1-bd77-44c9-bf0d-8812e90da1e6",
-				"version" : "1491628573"
+			"ref": {
+				"type": "dq",
+				"uuid": "c18a32d1-bd77-44c9-bf0d-8812e90da1e6",
+				"version": "1491628573"
 			}
 		}
 	],
-	"uuid" : "b4d36eea-0b28-4b87-bbf5-a511c101b6c7",
-	"version" : "1491629390",
-	"name" : "dqg_fact_account_summary_monthly",
-	"desc" : "dq rule group for fact_account_summary_monthly column level and table level dq checks",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "b4d36eea-0b28-4b87-bbf5-a511c101b6c7",
+	"version": "1491629390",
+	"name": "dqg_fact_account_summary_monthly",
+	"desc": "dq rule group for fact_account_summary_monthly column level and table level dq checks",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

@@ -1,25 +1,25 @@
 {
-	"uuid" : "02f263f8-b8ad-40d2-8fbe-a7516f913071",
-	"name" : "Hive",
-	"version" : "1464977196",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:44.699Z"),
-	"active" : "Y",
-	"locked" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"desc" : "Meta for Hive",
-	"menu" : "",
-	"displyName" : "Hive"
+    "_id" : ObjectId("59bcfa1b662b6b7c3ec749e2"),
+    "uuid" : "02f263f8-b8ad-40d2-8fbe-a7516f913071",
+    "name" : "Hive",
+    "version" : "1464977196",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "active" : "Y",
+  "locked" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+    "desc" : "Meta for Hive",
+    "menu" : ""
 }

@@ -1,143 +1,142 @@
 {
-	"uuid" : "c8f95358-0439-4603-8717-bb3d9013f1c3",
-	"version" : "1547486947",
-	"name" : "sdn_address",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"tags" : null,
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-				"version" : "1547486102",
-				"name" : "Sanctions"
-			},
-			"value" : null
-		}
-	],
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : "1464977196",
-			"name" : "file_data"
-		},
-		"value" : null
-	},
-	"cache" : "Y",
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"displaySeq" : null,
-			"name" : "ent_num",
-			"type" : "integer",
-			"desc" : "ent_num",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "ent_num",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 1,
-			"displaySeq" : null,
-			"name" : "add_num",
-			"type" : "integer",
-			"desc" : "add_num",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "add_num",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 2,
-			"displaySeq" : null,
-			"name" : "address1",
-			"type" : "string",
-			"desc" : "address1",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "address1",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 3,
-			"displaySeq" : null,
-			"name" : "address2",
-			"type" : "string",
-			"desc" : "address2",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "address2",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 4,
-			"displaySeq" : null,
-			"name" : "country",
-			"type" : "string",
-			"desc" : "country",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "country",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 5,
-			"displaySeq" : null,
-			"name" : "add_remarks",
-			"type" : "string",
-			"desc" : "add_remarks",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "add_remarks",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		},
-		{
-			"attributeId" : 6,
-			"displaySeq" : null,
-			"name" : "version",
-			"type" : "Integer",
-			"desc" : "version",
-			"expression" : null,
-			"key" : null,
-			"partition" : null,
-			"dispName" : "version",
-			"active" : "Y",
-			"length" : null,
-			"attrUnitType" : null
-		}
-	],
-	"prefix" : "snd",
-	"displyName" : "security"
+  "uuid": "c8f95358-0439-4603-8717-bb3d9013f1c3",
+  "version": "1547486947",
+  "name": "sdn_address",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Jan 14 12:29:07 EST 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+        "version": "1547486102",
+        "name": "Sanctions"
+      },
+      "value": null
+    }
+  ],
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+      "version": "1464977196",
+      "name": "file_data"
+    },
+    "value": null
+  },
+  "cache": "Y",
+  "attributes": [
+    {
+      "attributeId": 0,
+      "displaySeq": null,
+      "name": "ent_num",
+      "type": "integer",
+      "desc": "ent_num",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "ent_num",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 1,
+      "displaySeq": null,
+      "name": "add_num",
+      "type": "integer",
+      "desc": "add_num",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "add_num",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 2,
+      "displaySeq": null,
+      "name": "address1",
+      "type": "string",
+      "desc": "address1",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "address1",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 3,
+      "displaySeq": null,
+      "name": "address2",
+      "type": "string",
+      "desc": "address2",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "address2",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 4,
+      "displaySeq": null,
+      "name": "country",
+      "type": "string",
+      "desc": "country",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "country",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 5,
+      "displaySeq": null,
+      "name": "add_remarks",
+      "type": "string",
+      "desc": "add_remarks",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "add_remarks",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 6,
+      "displaySeq": null,
+      "name": "version",
+      "type": "Integer",
+      "desc": "version",
+      "expression": null,
+      "key": null,
+      "partition": null,
+      "dispName": "version",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    }
+  ],
+      "prefix" : "snd"
 }

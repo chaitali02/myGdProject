@@ -1,140 +1,139 @@
 {
-	"uuid" : "d08bce3c-2c73-481c-8809-4e2c24b9596c",
-	"version" : "1551857273",
-	"name" : "viz_portfolio_total_var",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-				"version" : "1521430822",
-				"name" : "Economic Capital"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "dataset",
-			"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-			"version" : null,
-			"name" : "ds_portfolio_var_heatmap"
-		},
-		"value" : null
-	},
-	"type" : "bar-chart",
-	"limit" : -1,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 3,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "reporting_date"
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "portfolio_pd_bucket"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "portfolio_lgd_bucket"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "fm_portfolio_var_heatmap"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 3,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "reporting_date"
-		},
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 4,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "version"
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "dataset",
-				"uuid" : "6d29226b-05b1-4717-9344-4c5c18652a49",
-				"version" : null,
-				"name" : "ds_portfolio_var_heatmap"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "fm_portfolio_var_heatmap"
-		}
-	],
-	"sortBy" : [ ],
-	"sortOrder" : null,
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "d08bce3c-2c73-481c-8809-4e2c24b9596c",
+  "version": "1551857273",
+  "name": "viz_portfolio_total_var",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Mar 06 12:57:53 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+        "version": "1521430822",
+        "name": "Economic Capital"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+      "version": null,
+      "name": "ds_portfolio_var_heatmap"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": -1,
+  "keys": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "portfolio_pd_bucket"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "portfolio_lgd_bucket"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "fm_portfolio_var_heatmap"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "fm_portfolio_var_heatmap"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

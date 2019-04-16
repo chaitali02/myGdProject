@@ -1,96 +1,95 @@
 {
-	"ruleInfo" : [
+	"ruleInfo": [
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "fa443087-29f7-4509-9fcd-3aa1b3297227",
-				"version" : "1490111455"
+			"ref": {
+				"type": "dq",
+				"uuid": "fa443087-29f7-4509-9fcd-3aa1b3297227",
+				"version": "1490111455"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "ccc0f24a-bd81-40d3-957f-ec449d095eed",
-				"version" : "1490079446"
+			"ref": {
+				"type": "dq",
+				"uuid": "ccc0f24a-bd81-40d3-957f-ec449d095eed",
+				"version": "1490079446"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "c4327f97-0f0c-4175-ad32-960307da2af4",
-				"version" : "1490079525"
+			"ref": {
+				"type": "dq",
+				"uuid": "c4327f97-0f0c-4175-ad32-960307da2af4",
+				"version": "1490079525"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "f00c9557-89a6-4deb-8760-b28815d1af90",
-				"version" : "1490079610"
+			"ref": {
+				"type": "dq",
+				"uuid": "f00c9557-89a6-4deb-8760-b28815d1af90",
+				"version": "1490079610"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "80e60268-dbb5-46c6-9704-6e8321d251f2",
-				"version" : "1490079676"
+			"ref": {
+				"type": "dq",
+				"uuid": "80e60268-dbb5-46c6-9704-6e8321d251f2",
+				"version": "1490079676"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "0caa657d-420d-4829-acba-286f2d1145c2",
-				"version" : "1490079835"
+			"ref": {
+				"type": "dq",
+				"uuid": "0caa657d-420d-4829-acba-286f2d1145c2",
+				"version": "1490079835"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "d2dff297-95af-45f5-ba0a-91349490d88d",
-				"version" : "1490079997"
+			"ref": {
+				"type": "dq",
+				"uuid": "d2dff297-95af-45f5-ba0a-91349490d88d",
+				"version": "1490079997"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "44710f9c-10af-4b63-9462-acd90d3dd818",
-				"version" : "1490080111"
+			"ref": {
+				"type": "dq",
+				"uuid": "44710f9c-10af-4b63-9462-acd90d3dd818",
+				"version": "1490080111"
 			}
 		},
 		{
-			"ref" : {
-				"type" : "dq",
-				"uuid" : "0560c6fb-d075-4f05-b1bb-a8b3c6898df1",
-				"version" : "1490080207"
+			"ref": {
+				"type": "dq",
+				"uuid": "0560c6fb-d075-4f05-b1bb-a8b3c6898df1",
+				"version": "1490080207"
 			}
 		}
 	],
-	"uuid" : "c18b766e-77fe-4319-b6c5-8cb61bd56d18",
-	"version" : "1490114224",
-	"name" : "dqg_branch",
-	"desc" : "dq rule group for combination of all dq rules for table - branch",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid": "c18b766e-77fe-4319-b6c5-8cb61bd56d18",
+	"version": "1490114224",
+	"name": "dqg_branch",
+	"desc": "dq rule group for combination of all dq rules for table - branch",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.643Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196"
 			}
 		}
-	],
-	"displyName" : "dqg_equity_orders"
+	]
 }

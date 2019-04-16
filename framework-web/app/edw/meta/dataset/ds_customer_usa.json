@@ -1,241 +1,240 @@
 {
-	"id" : "5920e30f096b64f63e501d3c",
-	"uuid" : "b7b0a515-9a71-43ba-a89d-195299dc2052",
-	"version" : "1495327503",
-	"name" : "ds_customer_usa",
-	"desc" : "All USA Customers",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : null,
-			"name" : "ypalrecha"
+	"id": "5920e30f096b64f63e501d3c",
+	"uuid": "b7b0a515-9a71-43ba-a89d-195299dc2052",
+	"version": "1495327503",
+	"name": "ds_customer_usa",
+	"desc": "All USA Customers",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": null,
+			"name": "ypalrecha"
 		},
-		"value" : null
+		"value": null
 	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"tags": [
 		"DEV",
 		"0.1.0"
 	],
-	"limit" : 0,
+    	"limit" : 0,
 	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
+  "locked" : "N",
+	"published": "N",
+	"appInfo": [
 		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version": "1464977196",
+				"name": "Data Warehouse"
 			},
-			"value" : null
+			"value": null
 		}
 	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc196b",
-			"version" : null,
-			"name" : null
+	"dependsOn": {
+		"ref": {
+			"type": "relation",
+			"uuid": "9f0063af-86b4-4610-bf6e-047d74fc196b",
+			"version": null,
+			"name": null
 		},
-		"value" : null
+		"value": null
 	},
-	"filterInfo" : [
+	 "filterInfo" : [ 
+        {
+            "logicalOperator" : " ",
+            "operator" : "=",
+            "operand" : [ 
+                {
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    },
+                    "attributeId" : 8
+                }, 
+                {
+                    "ref" : {
+                        "type" : "simple"
+                    },
+                    "attributeType" : "string",
+                    "value" : "USA"
+                }
+            ]
+        }
+    ],
+	"attributeInfo": [
 		{
-			"logicalOperator" : " ",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
-					},
-					"attributeId" : 8
+			"attrSourceId": "0",
+            "attrDisplaySeq" : "0",
+			"attrSourceName": "customer_id",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+					"version": null,
+					"name": null
 				},
-				{
-					"ref" : {
-						"type" : "simple"
-					},
-					"attributeType" : "string",
-					"value" : "USA"
-				}
-			]
+				"value": null,
+				"attrId": "0",
+				"attrType": "integer",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "1",
+            "attrDisplaySeq" : "1",
+			"attrSourceName": "address_id",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "1",
+				"attrType": "integer",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "2",
+            "attrDisplaySeq" : "2",
+			"attrSourceName": "first_name",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "4",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "3",
+            "attrDisplaySeq" : "3",
+			"attrSourceName": "last_name",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "1b905436-3237-4dac-8093-8ceab5403752",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "6",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "4",
+            "attrDisplaySeq" : "4",
+			"attrSourceName": "address_line1",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "1",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "5",
+            "attrDisplaySeq" : "5",
+			"attrSourceName": "address_line2",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "2",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "6",
+            "attrDisplaySeq" : "6",
+			"attrSourceName": "city",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "4",
+				"attrType": "",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "7",
+            "attrDisplaySeq" : "7",
+			"attrSourceName": "state",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "6",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "8",
+            "attrDisplaySeq" : "8",
+			"attrSourceName": "country",
+			"sourceAttr": {
+				"ref": {
+					"type": "datapod",
+					"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": "8",
+				"attrType": "string",
+				"attrName": null
+			}
+		},
+		{
+			"attrSourceId": "9",
+            "attrDisplaySeq" : "9",
+			"attrSourceName": "state_risk_band",
+			"sourceAttr": {
+				"ref": {
+					"type": "expression",
+					"uuid": "ffdfdb82-ba9e-4ca3-9c1f-a6fd4e797558",
+					"version": null,
+					"name": null
+				},
+				"value": null,
+				"attrId": null,
+				"attrType": "",
+				"attrName": null
+			}
 		}
 	],
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "customer_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrType" : "integer",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "address_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrType" : "integer",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "first_name",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "4",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "last_name",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "1b905436-3237-4dac-8093-8ceab5403752",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "6",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "address_line1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : "5",
-			"attrSourceName" : "address_line2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : "6",
-			"attrSourceName" : "city",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "4",
-				"attrType" : "",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "7",
-			"attrDisplaySeq" : "7",
-			"attrSourceName" : "state",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "6",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "8",
-			"attrDisplaySeq" : "8",
-			"attrSourceName" : "country",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : "8",
-				"attrType" : "string",
-				"attrName" : null
-			}
-		},
-		{
-			"attrSourceId" : "9",
-			"attrDisplaySeq" : "9",
-			"attrSourceName" : "state_risk_band",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "expression",
-					"uuid" : "ffdfdb82-ba9e-4ca3-9c1f-a6fd4e797558",
-					"version" : null,
-					"name" : null
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrType" : "",
-				"attrName" : null
-			}
-		}
-	],
-	"groupBy" : null,
-	"displyName" : "ds_rule_dashboard_timeliness"
+	"groupBy": null
 }

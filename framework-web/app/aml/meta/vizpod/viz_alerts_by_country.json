@@ -1,117 +1,116 @@
 {
-	"uuid" : "8496cb17-3a02-48f2-ab78-64bc13fa5215",
-	"version" : "1542671587",
-	"name" : "viz_alerts_by_country",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.949Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"title" : null,
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
-			"version" : null,
-			"name" : "country_alert_summary"
-		},
-		"value" : null
-	},
-	"type" : "world-map",
-	"limit" : -1,
-	"keys" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
-				"version" : null,
-				"name" : "country_alert_summary"
-			},
-			"attributeId" : 0,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "country_code"
-		}
-	],
-	"dimension" : [ ],
-	"detailAttr" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 0
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 1
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 2
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
-			},
-			"attributeId" : 3
-		}
-	],
-	"filterInfo" : [ ],
-	"groups" : [ ],
-	"values" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
-				"version" : null,
-				"name" : "country_alert_summary"
-			},
-			"attributeId" : 1,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "alerted"
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
-				"version" : null,
-				"name" : "country_alert_summary"
-			},
-			"attributeId" : 2,
-			"function" : null,
-			"value" : null,
-			"attributeName" : "non_alerted"
-		}
-	],
-	"displyName" : "viz_status_by_dimension"
+  "uuid": "8496cb17-3a02-48f2-ab78-64bc13fa5215",
+  "version": "1542671587",
+  "name": "viz_alerts_by_country",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Nov 19 18:53:07 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
+      "version": null,
+      "name": "country_alert_summary"
+    },
+    "value": null
+  },
+  "type": "world-map",
+  "limit": -1,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
+        "version": null,
+        "name": "country_alert_summary"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "country_code"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 3
+        }
+    ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
+        "version": null,
+        "name": "country_alert_summary"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "alerted"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "d84332ef-3c2e-4d27-8733-ce0b6e699d0f",
+        "version": null,
+        "name": "country_alert_summary"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "non_alerted"
+    }
+  ]
 }

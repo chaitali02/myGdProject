@@ -1,288 +1,287 @@
 {
-	"uuid" : "4c5de4a0-9c86-4034-98c6-525d4eac8278",
-	"version" : "1540127847",
-	"name" : "ds_dim_address",
-	"desc" : "dataset for mapping transformation from source relation to target datapod",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [
-		"DEV",
-		"1.0.1",
-		"DEMO"
-	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "relation",
-			"uuid" : "55ed3e38-7de7-4c90-b6df-257b4167c647",
-			"version" : null,
-			"name" : "relation_dim_address"
-		},
-		"value" : null
-	},
-	"filterInfo" : [ ],
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "address_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78",
-					"version" : null,
-					"name" : "function_uuid"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "src_address_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "address_id",
-				"attrType" : "integer"
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "address_line1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "address_line1",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "address_line2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "address_line2",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "address_line3",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "address_line3",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : "5",
-			"attrSourceName" : "city",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "4",
-				"attrName" : "city",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : "6",
-			"attrSourceName" : "county",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "5",
-				"attrName" : "county",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "7",
-			"attrDisplaySeq" : "7",
-			"attrSourceName" : "state",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "6",
-				"attrName" : "state",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "8",
-			"attrDisplaySeq" : "8",
-			"attrSourceName" : "zipcode",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "7",
-				"attrName" : "zipcode",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "9",
-			"attrDisplaySeq" : "9",
-			"attrSourceName" : "country",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "570bb0dc-067e-4aed-9893-30033e73f584",
-					"version" : null,
-					"name" : "dim_country"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "country_code",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "10",
-			"attrDisplaySeq" : "10",
-			"attrSourceName" : "latitude",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "9",
-				"attrName" : "latitude",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "11",
-			"attrDisplaySeq" : "11",
-			"attrSourceName" : "longitude",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-					"version" : null,
-					"name" : "address"
-				},
-				"value" : null,
-				"attrId" : "10",
-				"attrName" : "longitude",
-				"attrType" : "string"
-			}
-		},
-		{
-			"attrSourceId" : "12",
-			"attrDisplaySeq" : "12",
-			"attrSourceName" : "load_date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671",
-					"version" : null,
-					"name" : "current_date"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null
-			}
-		},
-		{
-			"attrSourceId" : "13",
-			"attrDisplaySeq" : "13",
-			"attrSourceName" : "load_id",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "function",
-					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671",
-					"version" : null,
-					"name" : "unix_timestamp()"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null
-			}
-		}
-	],
-	"groupBy" : null,
-	"limit" : 0,
-	"displyName" : "ds_rule_dashboard_timeliness"
+  "uuid": "4c5de4a0-9c86-4034-98c6-525d4eac8278",
+  "version": "1540127847",
+  "name": "ds_dim_address",
+  "desc": "dataset for mapping transformation from source relation to target datapod",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Oct 21 18:47:27 IST 2018",
+  "tags": [
+    "DEV",
+    "1.0.1",
+    "DEMO"
+  ],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "relation",
+      "uuid": "55ed3e38-7de7-4c90-b6df-257b4167c647",
+      "version": null,
+      "name": "relation_dim_address"
+    },
+    "value": null
+  },
+  "filterInfo": [],
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq" : "0",
+      "attrSourceName": "address_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "d265ac19-4fd0-42d9-8f1b-c704918dad78",
+          "version": null,
+          "name": "function_uuid"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq" : "1",
+      "attrSourceName": "src_address_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "address_id",
+        "attrType": "integer"
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq" : "2",
+      "attrSourceName": "address_line1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "address_line1",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq" : "3",
+      "attrSourceName": "address_line2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "address_line2",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq" : "4",
+      "attrSourceName": "address_line3",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "address_line3",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq" : "5",
+      "attrSourceName": "city",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "city",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq" : "6",
+      "attrSourceName": "county",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "county",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq" : "7",
+      "attrSourceName": "state",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "state",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrDisplaySeq" : "8",
+      "attrSourceName": "zipcode",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "zipcode",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrDisplaySeq" : "9",
+      "attrSourceName": "country",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
+          "version": null,
+          "name": "dim_country"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "country_code",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrDisplaySeq" : "10",
+      "attrSourceName": "latitude",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "latitude",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrDisplaySeq" : "11",
+      "attrSourceName": "longitude",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+          "version": null,
+          "name": "address"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "longitude",
+        "attrType": "string"
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrDisplaySeq" : "12",
+      "attrSourceName": "load_date",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "9e3de26e-02fb-11e7-93ae-92361f002671",
+          "version": null,
+          "name": "current_date"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    },
+    {
+      "attrSourceId": "13",
+      "attrDisplaySeq" : "13",
+      "attrSourceName": "load_id",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "9e3dff24-02fb-11e7-93ae-92361f002671",
+          "version": null,
+          "name": "unix_timestamp()"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": 0
 }

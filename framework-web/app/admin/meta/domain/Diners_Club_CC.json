@@ -26,6 +26,5 @@
             }
         }
     ],
-    "publicFlag" : "Y",
-	"displyName" : "Diners_Club_CC"
+    "publicFlag" : "Y"
 }

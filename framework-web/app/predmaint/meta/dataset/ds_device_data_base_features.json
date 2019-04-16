@@ -1,892 +1,891 @@
 {
-	"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-	"version" : "1547760902",
-	"name" : "ds_device_data_base_features",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.971Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1521430822",
-				"name" : "Dept Of Transportation"
-			},
-			"value" : null
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-			"version" : null,
-			"name" : "device_data_fillna"
-		},
-		"value" : null
-	},
-	"filterInfo" : null,
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "deviceid",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "0",
-				"attrName" : "deviceid",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "date",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "1",
-				"attrName" : "date",
-				"attrType" : "string",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "warn_type1_total",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "8391d40d-cd8e-409b-ad5b-7bfe57859c22",
-					"version" : null,
-					"name" : "fm_warn_type1_total"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "warn_type2_total",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "8b9fbc88-9ce2-4b61-8704-5546cc1f1195",
-					"version" : null,
-					"name" : "fm_warn_type2_total"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "cat1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "97f8e1a6-9ce2-4765-b5bc-b6fa3602deb4",
-					"version" : null,
-					"name" : "fm_device_data_cat1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "5",
-			"attrDisplaySeq" : "5",
-			"attrSourceName" : "cat2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "7ee4a3f3-f98a-44b0-9874-9a5b67babffe",
-					"version" : null,
-					"name" : "fm_device_data_cat2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "6",
-			"attrDisplaySeq" : "6",
-			"attrSourceName" : "cat3",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "f3c1697f-9884-4e21-82b2-c96a6c9540e7",
-					"version" : null,
-					"name" : "fm_device_data_cat3"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "7",
-			"attrDisplaySeq" : "7",
-			"attrSourceName" : "cat4",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "bccf7333-3df6-49ba-877a-c3cbc0c5249a",
-					"version" : null,
-					"name" : "fm_device_data_cat4"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "8",
-			"attrDisplaySeq" : "8",
-			"attrSourceName" : "fault_code_type_1_count",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "b5f5943d-ca9b-4800-b183-7a85e66c7b90",
-					"version" : null,
-					"name" : "fm_fault_code_type_1_count"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "9",
-			"attrDisplaySeq" : "9",
-			"attrSourceName" : "fault_code_type_2_count",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "06e3426c-0a80-4135-9633-e08b48d98d34",
-					"version" : null,
-					"name" : "fm_fault_code_type_2_count"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "10",
-			"attrDisplaySeq" : "10",
-			"attrSourceName" : "fault_code_type_3_count",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "5b9062f1-3411-41a3-b99c-3243d99b36ef",
-					"version" : null,
-					"name" : "fm_fault_code_type_3_count"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "11",
-			"attrDisplaySeq" : "11",
-			"attrSourceName" : "fault_code_type_4_count",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "98e298ef-4843-47d1-a139-ef84835768b4",
-					"version" : null,
-					"name" : "fm_fault_code_type_4_count"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "12",
-			"attrDisplaySeq" : "12",
-			"attrSourceName" : "problem_type_1_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "bce4fb59-05c5-4365-8e23-ae75d1d1b059",
-					"version" : null,
-					"name" : "fm_problem_type_1_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "13",
-			"attrDisplaySeq" : "13",
-			"attrSourceName" : "problem_type_2_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "b8b134e2-c292-4760-80dc-952f03be47e5",
-					"version" : null,
-					"name" : "fm_problem_type_2_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "14",
-			"attrDisplaySeq" : "14",
-			"attrSourceName" : "problem_type_3_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "172f4e19-74d5-4546-8cad-dd5d0d952147",
-					"version" : null,
-					"name" : "fm_problem_type_3_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "15",
-			"attrDisplaySeq" : "15",
-			"attrSourceName" : "problem_type_4_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "b84bc4b8-a1a6-4f98-8b29-ef9c32269a0d",
-					"version" : null,
-					"name" : "fm_problem_type_4_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "16",
-			"attrDisplaySeq" : "16",
-			"attrSourceName" : "fault_code_type_1_count_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "bb3dcb43-48f1-407e-aeb6-89a32d6b7bbc",
-					"version" : null,
-					"name" : "fm_fault_code_type_1_count_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "17",
-			"attrDisplaySeq" : "17",
-			"attrSourceName" : "fault_code_type_2_count_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "3dffd96b-ce1e-4982-93ef-11170050a9f3",
-					"version" : null,
-					"name" : "fm_fault_code_type_2_count_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "18",
-			"attrDisplaySeq" : "18",
-			"attrSourceName" : "fault_code_type_3_count_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "f8f55ba9-a7eb-4d5a-b650-783045ca6746",
-					"version" : null,
-					"name" : "fm_fault_code_type_3_count_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "19",
-			"attrDisplaySeq" : "19",
-			"attrSourceName" : "fault_code_type_4_count_per_usage1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "9bd71d9e-6f83-4979-9f17-a126e9a2a345",
-					"version" : null,
-					"name" : "fm_fault_code_type_4_count_per_usage1"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "20",
-			"attrDisplaySeq" : "20",
-			"attrSourceName" : "problem_type_1_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "d72741eb-c435-42fd-a1a3-f738aeb6ef53",
-					"version" : null,
-					"name" : "fm_problem_type_1_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "21",
-			"attrDisplaySeq" : "21",
-			"attrSourceName" : "problem_type_2_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "bf018a7c-63b5-4bcb-b634-c4375576381a",
-					"version" : null,
-					"name" : "fm_problem_type_2_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "22",
-			"attrDisplaySeq" : "22",
-			"attrSourceName" : "problem_type_3_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "f7b69402-d7c6-4c55-abc5-f76e89ec68ae",
-					"version" : null,
-					"name" : "fm_problem_type_3_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "23",
-			"attrDisplaySeq" : "23",
-			"attrSourceName" : "problem_type_4_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "b8e6847f-1e9b-4d78-ae6f-4ed957a373ce",
-					"version" : null,
-					"name" : "fm_problem_type_4_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "24",
-			"attrDisplaySeq" : "24",
-			"attrSourceName" : "fault_code_type_1_count_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "f75353c7-bc0f-4c08-8f56-78fd6c16f623",
-					"version" : null,
-					"name" : "fm_fault_code_type_1_count_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "25",
-			"attrDisplaySeq" : "25",
-			"attrSourceName" : "fault_code_type_2_count_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "b6f4b5a2-822c-43bf-89c1-32e428f9c1a3",
-					"version" : null,
-					"name" : "fm_fault_code_type_2_count_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "26",
-			"attrDisplaySeq" : "26",
-			"attrSourceName" : "fault_code_type_3_count_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "22cc9605-e898-4c5e-b494-d068b7b5f75d",
-					"version" : null,
-					"name" : "fm_fault_code_type_3_count_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "27",
-			"attrDisplaySeq" : "27",
-			"attrSourceName" : "fault_code_type_4_count_per_usage2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "e5d98619-9294-4fa2-a9ef-273c106a0814",
-					"version" : null,
-					"name" : "fm_fault_code_type_4_count_per_usage2"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "28",
-			"attrDisplaySeq" : "28",
-			"attrSourceName" : "problem_type_1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "6",
-				"attrName" : "problem_type_1",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "29",
-			"attrDisplaySeq" : "29",
-			"attrSourceName" : "problem_type_2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "9",
-				"attrName" : "problem_type_2",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "30",
-			"attrDisplaySeq" : "30",
-			"attrSourceName" : "problem_type_3",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "10",
-				"attrName" : "problem_type_3",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "31",
-			"attrDisplaySeq" : "31",
-			"attrSourceName" : "problem_type_4",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "11",
-				"attrName" : "problem_type_4",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "33",
-			"attrDisplaySeq" : "32",
-			"attrSourceName" : "problemreported",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "171",
-				"attrName" : "problemreported",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "34",
-			"attrDisplaySeq" : "33",
-			"attrSourceName" : "usage_count_1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "7",
-				"attrName" : "usage_count_1",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "35",
-			"attrDisplaySeq" : "34",
-			"attrSourceName" : "usage_count_2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "8",
-				"attrName" : "usage_count_2",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "36",
-			"attrDisplaySeq" : "35",
-			"attrSourceName" : "error_count_1",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "159",
-				"attrName" : "error_count_1",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "37",
-			"attrDisplaySeq" : "36",
-			"attrSourceName" : "error_count_2",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "160",
-				"attrName" : "error_count_2",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "38",
-			"attrDisplaySeq" : "37",
-			"attrSourceName" : "error_count_3",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "161",
-				"attrName" : "error_count_3",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "39",
-			"attrDisplaySeq" : "38",
-			"attrSourceName" : "error_count_4",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "162",
-				"attrName" : "error_count_4",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "40",
-			"attrDisplaySeq" : "39",
-			"attrSourceName" : "error_count_5",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "163",
-				"attrName" : "error_count_5",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "41",
-			"attrDisplaySeq" : "40",
-			"attrSourceName" : "error_count_6",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "164",
-				"attrName" : "error_count_6",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "42",
-			"attrDisplaySeq" : "41",
-			"attrSourceName" : "error_count_7",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "165",
-				"attrName" : "error_count_7",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "43",
-			"attrDisplaySeq" : "42",
-			"attrSourceName" : "error_count_8",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "166",
-				"attrName" : "error_count_8",
-				"attrType" : "integer",
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "44",
-			"attrDisplaySeq" : "43",
-			"attrSourceName" : "date_month",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "f8c26abc-dbec-4263-b026-fb82c9d93257",
-					"version" : null,
-					"name" : "fm_date_month"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "45",
-			"attrDisplaySeq" : "44",
-			"attrSourceName" : "date_week",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "c4ca9910-1273-4827-aad7-87b9cd0f8f6d",
-					"version" : null,
-					"name" : "fm_date_week"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "46",
-			"attrDisplaySeq" : "45",
-			"attrSourceName" : "date_day",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "010422b5-2c4e-4aa0-b640-b7aabcc87311",
-					"version" : null,
-					"name" : "fm_date_day"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null
-			}
-		},
-		{
-			"attrSourceId" : "47",
-			"attrDisplaySeq" : "46",
-			"attrSourceName" : "version",
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
-					"version" : null,
-					"name" : "device_data_fillna"
-				},
-				"value" : null,
-				"attrId" : "172",
-				"attrName" : "version",
-				"attrType" : "Integer",
-				"attrUnitType" : null
-			}
-		}
-	],
-	"groupBy" : null,
-	"limit" : -1,
-	"displyName" : "ds_rule_dashboard_timeliness"
+  "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+  "version": "1547760902",
+  "name": "ds_device_data_base_features",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Jan 17 16:35:02 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1521430822",
+        "name": "Dept Of Transportation"
+      },
+      "value": null
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+      "version": null,
+      "name": "device_data_fillna"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": "0",
+      "attrSourceName": "deviceid",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "deviceid",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": "1",
+      "attrSourceName": "date",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "date",
+        "attrType": "string",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": "2",
+      "attrSourceName": "warn_type1_total",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "8391d40d-cd8e-409b-ad5b-7bfe57859c22",
+          "version": null,
+          "name": "fm_warn_type1_total"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": "3",
+      "attrSourceName": "warn_type2_total",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "8b9fbc88-9ce2-4b61-8704-5546cc1f1195",
+          "version": null,
+          "name": "fm_warn_type2_total"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": "4",
+      "attrSourceName": "cat1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "97f8e1a6-9ce2-4765-b5bc-b6fa3602deb4",
+          "version": null,
+          "name": "fm_device_data_cat1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq": "5",
+      "attrSourceName": "cat2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "7ee4a3f3-f98a-44b0-9874-9a5b67babffe",
+          "version": null,
+          "name": "fm_device_data_cat2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq": "6",
+      "attrSourceName": "cat3",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f3c1697f-9884-4e21-82b2-c96a6c9540e7",
+          "version": null,
+          "name": "fm_device_data_cat3"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq": "7",
+      "attrSourceName": "cat4",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "bccf7333-3df6-49ba-877a-c3cbc0c5249a",
+          "version": null,
+          "name": "fm_device_data_cat4"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrDisplaySeq": "8",
+      "attrSourceName": "fault_code_type_1_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b5f5943d-ca9b-4800-b183-7a85e66c7b90",
+          "version": null,
+          "name": "fm_fault_code_type_1_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrDisplaySeq": "9",
+      "attrSourceName": "fault_code_type_2_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "06e3426c-0a80-4135-9633-e08b48d98d34",
+          "version": null,
+          "name": "fm_fault_code_type_2_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrDisplaySeq": "10",
+      "attrSourceName": "fault_code_type_3_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "5b9062f1-3411-41a3-b99c-3243d99b36ef",
+          "version": null,
+          "name": "fm_fault_code_type_3_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrDisplaySeq": "11",
+      "attrSourceName": "fault_code_type_4_count",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "98e298ef-4843-47d1-a139-ef84835768b4",
+          "version": null,
+          "name": "fm_fault_code_type_4_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrDisplaySeq": "12",
+      "attrSourceName": "problem_type_1_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "bce4fb59-05c5-4365-8e23-ae75d1d1b059",
+          "version": null,
+          "name": "fm_problem_type_1_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "13",
+      "attrDisplaySeq": "13",
+      "attrSourceName": "problem_type_2_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b8b134e2-c292-4760-80dc-952f03be47e5",
+          "version": null,
+          "name": "fm_problem_type_2_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "14",
+      "attrDisplaySeq": "14",
+      "attrSourceName": "problem_type_3_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "172f4e19-74d5-4546-8cad-dd5d0d952147",
+          "version": null,
+          "name": "fm_problem_type_3_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "15",
+      "attrDisplaySeq": "15",
+      "attrSourceName": "problem_type_4_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b84bc4b8-a1a6-4f98-8b29-ef9c32269a0d",
+          "version": null,
+          "name": "fm_problem_type_4_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "16",
+      "attrDisplaySeq": "16",
+      "attrSourceName": "fault_code_type_1_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "bb3dcb43-48f1-407e-aeb6-89a32d6b7bbc",
+          "version": null,
+          "name": "fm_fault_code_type_1_count_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "17",
+      "attrDisplaySeq": "17",
+      "attrSourceName": "fault_code_type_2_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "3dffd96b-ce1e-4982-93ef-11170050a9f3",
+          "version": null,
+          "name": "fm_fault_code_type_2_count_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "18",
+      "attrDisplaySeq": "18",
+      "attrSourceName": "fault_code_type_3_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f8f55ba9-a7eb-4d5a-b650-783045ca6746",
+          "version": null,
+          "name": "fm_fault_code_type_3_count_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "19",
+      "attrDisplaySeq": "19",
+      "attrSourceName": "fault_code_type_4_count_per_usage1",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "9bd71d9e-6f83-4979-9f17-a126e9a2a345",
+          "version": null,
+          "name": "fm_fault_code_type_4_count_per_usage1"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "20",
+      "attrDisplaySeq": "20",
+      "attrSourceName": "problem_type_1_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "d72741eb-c435-42fd-a1a3-f738aeb6ef53",
+          "version": null,
+          "name": "fm_problem_type_1_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "21",
+      "attrDisplaySeq": "21",
+      "attrSourceName": "problem_type_2_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "bf018a7c-63b5-4bcb-b634-c4375576381a",
+          "version": null,
+          "name": "fm_problem_type_2_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "22",
+      "attrDisplaySeq": "22",
+      "attrSourceName": "problem_type_3_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f7b69402-d7c6-4c55-abc5-f76e89ec68ae",
+          "version": null,
+          "name": "fm_problem_type_3_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "23",
+      "attrDisplaySeq": "23",
+      "attrSourceName": "problem_type_4_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b8e6847f-1e9b-4d78-ae6f-4ed957a373ce",
+          "version": null,
+          "name": "fm_problem_type_4_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "24",
+      "attrDisplaySeq": "24",
+      "attrSourceName": "fault_code_type_1_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f75353c7-bc0f-4c08-8f56-78fd6c16f623",
+          "version": null,
+          "name": "fm_fault_code_type_1_count_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "25",
+      "attrDisplaySeq": "25",
+      "attrSourceName": "fault_code_type_2_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "b6f4b5a2-822c-43bf-89c1-32e428f9c1a3",
+          "version": null,
+          "name": "fm_fault_code_type_2_count_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "26",
+      "attrDisplaySeq": "26",
+      "attrSourceName": "fault_code_type_3_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "22cc9605-e898-4c5e-b494-d068b7b5f75d",
+          "version": null,
+          "name": "fm_fault_code_type_3_count_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "27",
+      "attrDisplaySeq": "27",
+      "attrSourceName": "fault_code_type_4_count_per_usage2",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "e5d98619-9294-4fa2-a9ef-273c106a0814",
+          "version": null,
+          "name": "fm_fault_code_type_4_count_per_usage2"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "28",
+      "attrDisplaySeq": "28",
+      "attrSourceName": "problem_type_1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "problem_type_1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "29",
+      "attrDisplaySeq": "29",
+      "attrSourceName": "problem_type_2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "problem_type_2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "30",
+      "attrDisplaySeq": "30",
+      "attrSourceName": "problem_type_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "problem_type_3",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "31",
+      "attrDisplaySeq": "31",
+      "attrSourceName": "problem_type_4",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "problem_type_4",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "33",
+      "attrDisplaySeq": "32",
+      "attrSourceName": "problemreported",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "171",
+        "attrName": "problemreported",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "34",
+      "attrDisplaySeq": "33",
+      "attrSourceName": "usage_count_1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "usage_count_1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "35",
+      "attrDisplaySeq": "34",
+      "attrSourceName": "usage_count_2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "usage_count_2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "36",
+      "attrDisplaySeq": "35",
+      "attrSourceName": "error_count_1",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "159",
+        "attrName": "error_count_1",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "37",
+      "attrDisplaySeq": "36",
+      "attrSourceName": "error_count_2",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "160",
+        "attrName": "error_count_2",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "38",
+      "attrDisplaySeq": "37",
+      "attrSourceName": "error_count_3",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "161",
+        "attrName": "error_count_3",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "39",
+      "attrDisplaySeq": "38",
+      "attrSourceName": "error_count_4",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "162",
+        "attrName": "error_count_4",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "40",
+      "attrDisplaySeq": "39",
+      "attrSourceName": "error_count_5",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "163",
+        "attrName": "error_count_5",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "41",
+      "attrDisplaySeq": "40",
+      "attrSourceName": "error_count_6",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "164",
+        "attrName": "error_count_6",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "42",
+      "attrDisplaySeq": "41",
+      "attrSourceName": "error_count_7",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "165",
+        "attrName": "error_count_7",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "43",
+      "attrDisplaySeq": "42",
+      "attrSourceName": "error_count_8",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "166",
+        "attrName": "error_count_8",
+        "attrType": "integer",
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "44",
+      "attrDisplaySeq": "43",
+      "attrSourceName": "date_month",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f8c26abc-dbec-4263-b026-fb82c9d93257",
+          "version": null,
+          "name": "fm_date_month"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "45",
+      "attrDisplaySeq": "44",
+      "attrSourceName": "date_week",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "c4ca9910-1273-4827-aad7-87b9cd0f8f6d",
+          "version": null,
+          "name": "fm_date_week"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "46",
+      "attrDisplaySeq": "45",
+      "attrSourceName": "date_day",
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "010422b5-2c4e-4aa0-b640-b7aabcc87311",
+          "version": null,
+          "name": "fm_date_day"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null
+      }
+    },
+    {
+      "attrSourceId": "47",
+      "attrDisplaySeq": "46",
+      "attrSourceName": "version",
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "db48358e-4b2b-4e91-9f9c-b0373f121xyt",
+          "version": null,
+          "name": "device_data_fillna"
+        },
+        "value": null,
+        "attrId": "172",
+        "attrName": "version",
+        "attrType": "Integer",
+        "attrUnitType": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": -1
 }

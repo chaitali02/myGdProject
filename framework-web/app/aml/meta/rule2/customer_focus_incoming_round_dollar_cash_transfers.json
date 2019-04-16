@@ -1,215 +1,214 @@
 {
-	"uuid" : "d928db33-0256-4ced-a28c-2138ab313ba0",
-	"version" : "1552915263",
-	"name" : "Customer Focus - Incoming Round Dollar Cash Transfers",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:46.102Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1548315745",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"sourceInfo" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-			"version" : null,
-			"name" : "customer_summary_daily"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"display_seq" : "0",
-			"logicalOperator" : "",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-						"version" : null,
-						"name" : "customer_summary_daily"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "trans_start_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "7eca606a-b789-4826-a91d-42511d8c1a08",
-						"version" : null,
-						"name" : "fm_lookback_date_round_amount_transfers"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"display_seq" : "1",
-			"logicalOperator" : "AND",
-			"operator" : "<=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-						"version" : null,
-						"name" : "customer_summary_daily"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "trans_start_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-						"version" : null,
-						"name" : "paramlist_aml_app"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "business_date",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"entityType" : "Customer",
-	"scoringMethod" : null,
-	"entityId" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-			"version" : null,
-			"name" : "customer_summary_daily"
-		},
-		"value" : null,
-		"attrId" : "0",
-		"attrName" : "customer_id",
-		"attrType" : null,
-		"attrUnitType" : null,
-		"function" : null
-	},
-	"criteriaInfo" : [
-		{
-			"criteriaId" : "0",
-			"criteriaName" : "Transaction Volume",
-			"activeFlag" : "Y",
-			"criteriaFilter" : [
-				{
-					"display_seq" : "0",
-					"logicalOperator" : "",
-					"operator" : ">=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-								"version" : null,
-								"name" : "customer_summary_daily"
-							},
-							"attributeId" : 10,
-							"value" : null,
-							"attributeName" : "in_cash_transfers_trans_count",
-							"attributeType" : null
-						},
-						{
-							"ref" : {
-								"type" : "paramlist",
-								"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143",
-								"version" : null,
-								"name" : "paramlist_round_amount_transfers"
-							},
-							"attributeId" : 0,
-							"value" : null,
-							"attributeName" : "trans_count",
-							"attributeType" : null
-						}
-					]
-				}
-			],
-			"score" : 1,
-			"filter_critria" : null,
-			"criteriaWeight" : 0.5
-		},
-		{
-			"criteriaId" : "1",
-			"criteriaName" : "Transaction Value",
-			"activeFlag" : "Y",
-			"criteriaFilter" : [
-				{
-					"display_seq" : "0",
-					"logicalOperator" : "",
-					"operator" : ">=",
-					"operand" : [
-						{
-							"ref" : {
-								"type" : "datapod",
-								"uuid" : "d4b99ce6-59a5-455e-a540-733b27c33277",
-								"version" : null,
-								"name" : "customer_summary_daily"
-							},
-							"attributeId" : 11,
-							"value" : null,
-							"attributeName" : "in_cash_transfers_trans_amount_usd",
-							"attributeType" : null
-						},
-						{
-							"ref" : {
-								"type" : "paramlist",
-								"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143",
-								"version" : null,
-								"name" : "paramlist_round_amount_transfers"
-							},
-							"attributeId" : 1,
-							"value" : null,
-							"attributeName" : "trans_amount_usd",
-							"attributeType" : null
-						}
-					]
-				}
-			],
-			"score" : 1,
-			"filter_critria" : null,
-			"criteriaWeight" : 0.5
-		}
-	],
-	"paramList" : {
-		"ref" : {
-			"type" : "paramlist",
-			"uuid" : "c27cb79d-3150-47ee-98b9-d9a832cad143",
-			"version" : null,
-			"name" : "paramlist_round_amount_transfers"
-		},
-		"value" : null
-	},
-	"displyName" : "Customer Focus - Incoming Round Dollar Cash Transfers"
+  "uuid": "d928db33-0256-4ced-a28c-2138ab313ba0",
+  "version": "1552915263",
+  "name": "Customer Focus - Incoming Round Dollar Cash Transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 18 18:51:03 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sourceInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+      "version": null,
+      "name": "customer_summary_daily"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+            "version": null,
+            "name": "customer_summary_daily"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "7eca606a-b789-4826-a91d-42511d8c1a08",
+            "version": null,
+            "name": "fm_lookback_date_round_amount_transfers"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+            "version": null,
+            "name": "customer_summary_daily"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "entityType": "Customer",
+  "scoringMethod": null,
+  "entityId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+      "version": null,
+      "name": "customer_summary_daily"
+    },
+    "value": null,
+    "attrId": "0",
+    "attrName": "customer_id",
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "criteriaInfo": [
+    {
+      "criteriaId": "0",
+      "criteriaName": "Transaction Volume",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+                "version": null,
+                "name": "customer_summary_daily"
+              },
+              "attributeId": 10,
+              "value": null,
+              "attributeName": "in_cash_transfers_trans_count",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "paramlist",
+                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+                "version": null,
+                "name": "paramlist_round_amount_transfers"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "trans_count",
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
+    },
+    {
+      "criteriaId": "1",
+      "criteriaName": "Transaction Value",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+                "version": null,
+                "name": "customer_summary_daily"
+              },
+              "attributeId": 11,
+              "value": null,
+              "attributeName": "in_cash_transfers_trans_amount_usd",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "paramlist",
+                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+                "version": null,
+                "name": "paramlist_round_amount_transfers"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "trans_amount_usd",
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
+    }
+  ],
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+      "version": null,
+      "name": "paramlist_round_amount_transfers"
+    },
+    "value": null
+  }
 }

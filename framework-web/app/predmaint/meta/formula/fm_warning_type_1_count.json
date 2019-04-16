@@ -1,93 +1,92 @@
 {
-	"uuid" : "fe0d1839-5781-4cbc-9daa-28689b101692",
-	"version" : "1550346958",
-	"name" : "fm_warning_type_1_count",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:38.933Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1547482153",
-				"name" : "Predictive Maintenance"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-			"version" : null,
-			"name" : "device_data_final_features"
-		},
-		"value" : null
-	},
-	"formulaInfo" : [
-		{
-			"ref" : {
-				"type" : "function",
-				"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671",
-				"version" : null,
-				"name" : "sum(col)"
-			},
-			"attributeId" : null,
-			"value" : null,
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : "(",
-			"attributeName" : null,
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-				"version" : null,
-				"name" : "device_data_final_features"
-			},
-			"attributeId" : 2,
-			"value" : null,
-			"attributeName" : "warn_type1_total",
-			"attributeType" : null
-		},
-		{
-			"ref" : {
-				"type" : "simple",
-				"uuid" : null,
-				"version" : null,
-				"name" : null
-			},
-			"attributeId" : null,
-			"value" : ")",
-			"attributeName" : null,
-			"attributeType" : null
-		}
-	],
-	"formulaType" : "aggr",
-	"displyName" : "fm_total_pass_pct"
+  "uuid": "fe0d1839-5781-4cbc-9daa-28689b101692",
+  "version": "1550346958",
+  "name": "fm_warning_type_1_count",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Feb 16 14:55:58 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+      "version": null,
+      "name": "device_data_final_features"
+    },
+    "value": null
+  },
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "sum(col)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 2,
+      "value": null,
+      "attributeName": "warn_type1_total",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    }
+  ],
+  "formulaType": "aggr"
 }

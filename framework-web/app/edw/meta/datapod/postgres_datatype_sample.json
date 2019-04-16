@@ -1,167 +1,166 @@
 {
-	"datasource" : {
-		"ref" : {
-			"type" : "datasource",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version" : "1464977196"
-		}
-	},
-	"attributes" : [
-		{
-			"attributeId" : 0,
-			"name" : "id",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "id",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 1,
-			"name" : "code",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "code",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 2,
-			"name" : "name",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "name",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 3,
-			"name" : "desciption",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "desciption",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 4,
-			"name" : "comment",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "comment",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 5,
-			"name" : "percentage",
-			"type" : "numeric",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "percentage",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 6,
-			"name" : "currency",
-			"type" : "numeric",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "currency",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 7,
-			"name" : "flag",
-			"type" : "bool",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "flag",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 8,
-			"name" : "date",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "date",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 9,
-			"name" : "address_line",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "address_line",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 10,
-			"name" : "phone",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "phone",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 11,
-			"name" : "ssn",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "ssn",
-			"active" : "Y"
-		},
-		{
-			"attributeId" : 12,
-			"name" : "xyz",
-			"type" : "varchar",
-			"desc" : "",
-			"key" : "",
-			"partition" : "N",
-			"dispName" : "xyz",
-			"active" : "Y"
-		}
-	],
-	"uuid" : "3ecc8324-1e49-4c6c-ad0b-92c5ead63289",
-	"version" : "1538663767",
-	"name" : "postgres_datatype_sample",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.895Z"),
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196"
-			}
-		}
-	],
-	"prefix" : "psg",
-	"displyName" : "security"
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "version" : "1464977196"
+        }
+    },
+    "attributes" : [ 
+        {
+            "attributeId" : 0,
+            "name" : "id",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "id",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 1,
+            "name" : "code",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "code",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 2,
+            "name" : "name",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "name",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 3,
+            "name" : "desciption",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "desciption",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 4,
+            "name" : "comment",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "comment",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 5,
+            "name" : "percentage",
+            "type" : "numeric",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "percentage",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 6,
+            "name" : "currency",
+            "type" : "numeric",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "currency",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 7,
+            "name" : "flag",
+            "type" : "bool",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "flag",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 8,
+            "name" : "date",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "date",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 9,
+            "name" : "address_line",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "address_line",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 10,
+            "name" : "phone",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "phone",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 11,
+            "name" : "ssn",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "ssn",
+            "active" : "Y"
+        }, 
+        {
+            "attributeId" : 12,
+            "name" : "xyz",
+            "type" : "varchar",
+            "desc" : "",
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "xyz",
+            "active" : "Y"
+        }
+    ],
+    "uuid" : "3ecc8324-1e49-4c6c-ad0b-92c5ead63289",
+    "version" : "1538663767",
+    "name" : "postgres_datatype_sample",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-10-04T14:36:07.000Z"),
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1464977196"
+            }
+        }
+    ],
+      "prefix" : "psg"
 }

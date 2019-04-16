@@ -1,238 +1,225 @@
 {
-	"uuid" : "dc0ff083-4e61-492c-b1d0-4050f6be9c50",
-	"version" : "1550095815",
-	"name" : "ppl_device_data_calculate_features",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:37.681Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-				"version" : "1547482153",
-				"name" : "Predictive Maintenance"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"xPos" : 30,
-	"yPos" : 250,
-	"templateFlg" : "N",
-	"templateInfo" : null,
-	"stages" : [
-		{
-			"stageId" : "stage_0",
-			"dependsOn" : [ ],
-			"tasks" : [
-				{
-					"taskId" : "6cae2b36-83d8-435c-824c-8726b96f9b9a",
-					"dependsOn" : [ ],
-					"name" : "Map_device_data_compute_rolling_diff",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "1edf6289-7c33-41be-b335-728ac3c666e6",
-										"version" : null,
-										"name" : "map_device_data_compute_rolling_diff"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 610,
-					"yPos" : 30,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "f4212ccc-887f-4d1e-ba3b-af5d79153be1",
-					"dependsOn" : [ ],
-					"name" : "map_device_data_compute_rolling_max",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "b4caf556-388a-43d1-933b-7304ada15ede",
-										"version" : null,
-										"name" : "map_device_data_compute_rolling_max"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 600,
-					"yPos" : 140,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "893c34d9-07c8-4ff6-a4cc-f466c2b5c4c5",
-					"dependsOn" : [ ],
-					"name" : "map_device_data_compute_rolling_mean",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "dff434ce-763e-48f9-9e49-af454321763a",
-										"version" : null,
-										"name" : "map_device_data_compute_rolling_mean"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 600,
-					"yPos" : 250,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "e6d3475b-e0ad-459d-a5de-1d4080bc0214",
-					"dependsOn" : [ ],
-					"name" : "map_device_data_compute_rolling_min",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "5ff1d4e3-950a-49c8-99bd-125022f631d2",
-										"version" : null,
-										"name" : "map_device_data_compute_rolling_min"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 600,
-					"yPos" : 360,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "c039eb45-7d81-4fd2-bd12-d08bcd62f409",
-					"dependsOn" : [ ],
-					"name" : "map_device_data_compute_rolling_std",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "8dc9d45d-8f16-44dc-b178-4513a3abc30e",
-										"version" : null,
-										"name" : "map_device_data_compute_rolling_std"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 590,
-					"yPos" : 480,
-					"active" : "Y",
-					"statusList" : [ ]
-				},
-				{
-					"taskId" : "d71c4faf-f9f4-4750-a114-5679f7277c86",
-					"dependsOn" : [
-						"6cae2b36-83d8-435c-824c-8726b96f9b9a",
-						"f4212ccc-887f-4d1e-ba3b-af5d79153be1",
-						"893c34d9-07c8-4ff6-a4cc-f466c2b5c4c5",
-						"e6d3475b-e0ad-459d-a5de-1d4080bc0214",
-						"c039eb45-7d81-4fd2-bd12-d08bcd62f409"
-					],
-					"name" : "map_device_data_final_features",
-					"operators" : [
-						{
-							"operatorId" : null,
-							"dependsOn" : [ ],
-							"operatorType" : null,
-							"operatorInfo" : [
-								{
-									"ref" : {
-										"type" : "map",
-										"uuid" : "b9a2408e-fcd3-411e-861a-e0f78639da3d",
-										"version" : null,
-										"name" : "map_device_data_final_features"
-									},
-									"value" : null
-								}
-							],
-							"operatorParams" : {
-								
-							}
-						}
-					],
-					"xPos" : 990,
-					"yPos" : 250,
-					"active" : "Y",
-					"statusList" : [ ]
-				}
-			],
-			"name" : "new stage",
-			"xPos" : 240,
-			"yPos" : 250,
-			"active" : "Y",
-			"statusList" : [ ]
-		}
-	],
-	"statusList" : [ ],
-	"paramList" : null,
-	"displyName" : "ppl_e2e_exec"
+  "uuid": "dc0ff083-4e61-492c-b1d0-4050f6be9c50",
+  "version": "1550095815",
+  "name": "ppl_device_data_calculate_features",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Feb 13 17:10:15 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "xPos": 30,
+  "yPos": 250,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "stage_0",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "6cae2b36-83d8-435c-824c-8726b96f9b9a",
+          "dependsOn": [],
+          "name": "Map_device_data_compute_rolling_diff",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "1edf6289-7c33-41be-b335-728ac3c666e6",
+                    "version": null,
+                    "name": "map_device_data_compute_rolling_diff"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 610,
+          "yPos": 30,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "f4212ccc-887f-4d1e-ba3b-af5d79153be1",
+          "dependsOn": [],
+          "name": "map_device_data_compute_rolling_max",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "b4caf556-388a-43d1-933b-7304ada15ede",
+                    "version": null,
+                    "name": "map_device_data_compute_rolling_max"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 600,
+          "yPos": 140,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "893c34d9-07c8-4ff6-a4cc-f466c2b5c4c5",
+          "dependsOn": [],
+          "name": "map_device_data_compute_rolling_mean",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "dff434ce-763e-48f9-9e49-af454321763a",
+                    "version": null,
+                    "name": "map_device_data_compute_rolling_mean"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 600,
+          "yPos": 250,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "e6d3475b-e0ad-459d-a5de-1d4080bc0214",
+          "dependsOn": [],
+          "name": "map_device_data_compute_rolling_min",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "5ff1d4e3-950a-49c8-99bd-125022f631d2",
+                    "version": null,
+                    "name": "map_device_data_compute_rolling_min"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 600,
+          "yPos": 360,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "c039eb45-7d81-4fd2-bd12-d08bcd62f409",
+          "dependsOn": [],
+          "name": "map_device_data_compute_rolling_std",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "8dc9d45d-8f16-44dc-b178-4513a3abc30e",
+                    "version": null,
+                    "name": "map_device_data_compute_rolling_std"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 590,
+          "yPos": 480,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "d71c4faf-f9f4-4750-a114-5679f7277c86",
+          "dependsOn": [
+            "6cae2b36-83d8-435c-824c-8726b96f9b9a",
+            "f4212ccc-887f-4d1e-ba3b-af5d79153be1",
+            "893c34d9-07c8-4ff6-a4cc-f466c2b5c4c5",
+            "e6d3475b-e0ad-459d-a5de-1d4080bc0214",
+            "c039eb45-7d81-4fd2-bd12-d08bcd62f409"
+          ],
+          "name": "map_device_data_final_features",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "map",
+                    "uuid": "b9a2408e-fcd3-411e-861a-e0f78639da3d",
+                    "version": null,
+                    "name": "map_device_data_final_features"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 990,
+          "yPos": 250,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "new stage",
+      "xPos": 240,
+      "yPos": 250,
+      "active": "Y",
+      "statusList": []
+    }
+  ],
+  "statusList": [],
+  "paramList": null
 }

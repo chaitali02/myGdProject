@@ -1,66 +1,66 @@
 {
-	"uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002671",
-	"version" : "1488801521",
-	"name" : "min",
-	"desc" : "Returns the minimum of the column in the group.",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-		}
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [
-		"DEV",
-		"1.0.1",
-		"DEMO"
-	],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"inputReq" : "Y",
-	"publicFlag" : "Y",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"returnType" : "DOUBLE",
-	"category" : "AGGREGATE",
-	"functionInfo" : [
-		{
-			"type" : "file",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "mysql",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "hive",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "impala",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "oracle",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"type" : "postgres",
-			"name" : "min",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"displyName" : "year"
+    "uuid" : "9e3e2cd8-02fb-11e7-93ae-92361f002671",
+    "version" : "1488801521",
+    "name" : "min",
+    "desc" : "Returns the minimum of the column in the group.",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+    "tags" : [ 
+        "DEV", 
+        "1.0.1", 
+        "DEMO"
+    ],
+    "active" : "Y",
+  "locked" : "N",
+    "published" : "N",
+    "inputReq" : "Y",
+   "publicFlag" : "Y",
+    "appInfo" : [ 
+       {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+    ],
+
+    "returnType":"DOUBLE",
+  "category" : "AGGREGATE",
+    "functionInfo" : [  
+        {
+            "type" : "file",
+            "name" : "min",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "mysql",
+            "name" : "min",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "hive",
+            "name" : "min",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "impala",
+            "name" : "min",
+            "paramInfoHolder" : []
+        }, 
+        {
+            "type" : "oracle",
+            "name" : "min",
+            "paramInfoHolder" : []
+        },
+        {
+            "type" : "postgres",
+            "name" : "min",
+            "paramInfoHolder" : []
+        }
+    ]
 }

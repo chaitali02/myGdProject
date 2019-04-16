@@ -1,60 +1,59 @@
 {
-	"uuid" : "b98cde09-1318-4f04-bc00-70a653118182",
-	"version" : "1542551915",
-	"name" : "random_classify_label",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:39.036Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		}
-	],
-	"inputReq" : "N",
-	"functionInfo" : [
-		{
-			"name" : "ROUND(RAND())",
-			"type" : "file",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"name" : "ROUND(RAND())",
-			"type" : "hive",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"name" : "ROUND(RAND())",
-			"type" : "impala",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"name" : "ROUND(RAND())",
-			"type" : "mysql",
-			"paramInfoHolder" : [ ]
-		},
-		{
-			"name" : "ROUND(RAND())",
-			"type" : "oracle",
-			"paramInfoHolder" : [ ]
-		}
-	],
-	"returnType" : "DOUBLE",
-	"category" : "math",
-	"publicFlag" : "Y",
-	"displyName" : "year"
+  "uuid": "b98cde09-1318-4f04-bc00-70a653118182",
+  "version": "1542551915",
+  "name": "random_classify_label",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Nov 18 09:38:35 EST 2018",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+   {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }
+  ],
+  "inputReq": "N",
+  "functionInfo": [
+    {
+      "name": "ROUND(RAND())",
+      "type": "file",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "ROUND(RAND())",
+      "type": "hive",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "ROUND(RAND())",
+      "type": "impala",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "ROUND(RAND())",
+      "type": "mysql",
+      "paramInfoHolder": []
+    },
+    {
+      "name": "ROUND(RAND())",
+      "type": "oracle",
+      "paramInfoHolder": []
+    }
+  ],
+  "returnType":"DOUBLE",
+  "category": "math",
+  "publicFlag" : "Y"
 }

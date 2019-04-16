@@ -1,70 +1,69 @@
 {
-	"uuid" : "b39bd4f5-dc42-4d1d-80a1-258c8aaa7234",
-	"version" : "1536444771",
-	"name" : "rcg_data_warehouse",
-	"desc" : "Recon Group for Data Warehouse",
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T09:14:45.749Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version" : "1464977196",
-				"name" : "Data Warehouse"
-			},
-			"value" : null
-		}
-	],
-	"ruleInfo" : [
-		{
-			"ref" : {
-				"type" : "recon",
-				"uuid" : "0e0cf3fa-2870-4c10-8890-c66eefe054c4",
-				"version" : null,
-				"name" : "recon_num_accounts"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "recon",
-				"uuid" : "0e0cf3fa-2870-4c10-8890-c66eefe054c3",
-				"version" : null,
-				"name" : "recon_transaction_total_amount"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "recon",
-				"uuid" : "741a44f3-debe-45e7-9282-8839c078a51e",
-				"version" : null,
-				"name" : "recon_num_customers"
-			},
-			"value" : null
-		},
-		{
-			"ref" : {
-				"type" : "recon",
-				"uuid" : "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
-				"version" : null,
-				"name" : "recon_account_balance"
-			},
-			"value" : null
-		}
-	],
-	"inParallel" : null,
-	"displyName" : "rcg_data_warehouse"
+  "uuid": "b39bd4f5-dc42-4d1d-80a1-258c8aaa7234",
+  "version": "1536444771",
+  "name": "rcg_data_warehouse",
+  "desc": "Recon Group for Data Warehouse",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sat Sep 08 18:12:51 EDT 2018",
+  "tags": [],
+  "active": "Y",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1464977196",
+        "name": "Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "ruleInfo": [
+    {
+      "ref": {
+        "type": "recon",
+        "uuid": "0e0cf3fa-2870-4c10-8890-c66eefe054c4",
+        "version": null,
+        "name": "recon_num_accounts"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "recon",
+        "uuid": "0e0cf3fa-2870-4c10-8890-c66eefe054c3",
+        "version": null,
+        "name": "recon_transaction_total_amount"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "recon",
+        "uuid": "741a44f3-debe-45e7-9282-8839c078a51e",
+        "version": null,
+        "name": "recon_num_customers"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "recon",
+        "uuid": "f6a1c44a-ae52-4d9c-bd09-4fa78bcabaab",
+        "version": null,
+        "name": "recon_account_balance"
+      },
+      "value": null
+    }
+  ],
+  "inParallel": null
 }

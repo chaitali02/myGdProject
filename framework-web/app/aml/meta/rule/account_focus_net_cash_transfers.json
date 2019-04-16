@@ -1,314 +1,313 @@
 {
-	"uuid" : "a5769558-d78e-11e8-9f8b-f2801f1b9fd1",
-	"version" : "1552857210",
-	"name" : "Account Focus - Net Cash Transfers",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-			"version" : "1464977196",
-			"name" : "ypalrecha"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-15T12:49:41.156Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-				"version" : "1521430822",
-				"name" : "Anti Money Laundering"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"expressionInfo" : null,
-	"filterInfo" : [
-		{
-			"display_seq" : "0",
-			"logicalOperator" : "",
-			"operator" : "=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 4,
-					"value" : null,
-					"attributeName" : "transaction_type_code",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "simple",
-						"uuid" : null,
-						"version" : null,
-						"name" : null
-					},
-					"attributeId" : null,
-					"value" : "CA",
-					"attributeName" : null,
-					"attributeType" : "string"
-				}
-			]
-		},
-		{
-			"display_seq" : "1",
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "005e4b59-c62d-4e50-9bad-00289273e3af",
-						"version" : null,
-						"name" : "fm_trans_count"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5",
-						"version" : null,
-						"name" : "paramlist_money_transfers"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "trans_count",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"display_seq" : "2",
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "cc9143af-e545-41df-9436-3e8c433141b8",
-						"version" : null,
-						"name" : "fm_trans_net_sum"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5",
-						"version" : null,
-						"name" : "paramlist_money_transfers"
-					},
-					"attributeId" : 1,
-					"value" : null,
-					"attributeName" : "trans_amount_usd",
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"display_seq" : "3",
-			"logicalOperator" : "AND",
-			"operator" : ">=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "formula",
-						"uuid" : "24670241-fcfc-41bc-9eb8-51505fc6fd7e",
-						"version" : null,
-						"name" : "fm_lookback_date_money_transfers"
-					},
-					"attributeId" : null,
-					"value" : null,
-					"attributeName" : null,
-					"attributeType" : null
-				}
-			]
-		},
-		{
-			"display_seq" : "4",
-			"logicalOperator" : "AND",
-			"operator" : "<=",
-			"operand" : [
-				{
-					"ref" : {
-						"type" : "datapod",
-						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-						"version" : null,
-						"name" : "fact_transaction_journal"
-					},
-					"attributeId" : 5,
-					"value" : null,
-					"attributeName" : "transaction_date",
-					"attributeType" : null
-				},
-				{
-					"ref" : {
-						"type" : "paramlist",
-						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-						"version" : null,
-						"name" : "paramlist_aml_app"
-					},
-					"attributeId" : 0,
-					"value" : null,
-					"attributeName" : "business_date",
-					"attributeType" : null
-				}
-			]
-		}
-	],
-	"debugMode" : false,
-	"source" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-			"version" : null,
-			"name" : "fact_transaction_journal"
-		},
-		"value" : null
-	},
-	"attributeInfo" : [
-		{
-			"attrSourceId" : "0",
-			"attrDisplaySeq" : "0",
-			"attrSourceName" : "rule_name",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "simple",
-					"uuid" : null,
-					"version" : null,
-					"name" : null
-				},
-				"value" : "Net Cash Transfers",
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "1",
-			"attrDisplaySeq" : "1",
-			"attrSourceName" : "customer_id",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-					"version" : null,
-					"name" : "fact_transaction_journal"
-				},
-				"value" : null,
-				"attrId" : "3",
-				"attrName" : "customer_id",
-				"attrType" : "string",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "2",
-			"attrDisplaySeq" : "2",
-			"attrSourceName" : "account_id",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "datapod",
-					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-					"version" : null,
-					"name" : "fact_transaction_journal"
-				},
-				"value" : null,
-				"attrId" : "2",
-				"attrName" : "account_id",
-				"attrType" : "string",
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "3",
-			"attrDisplaySeq" : "3",
-			"attrSourceName" : "trans_count",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "005e4b59-c62d-4e50-9bad-00289273e3af",
-					"version" : null,
-					"name" : "fm_trans_count"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null,
-				"function" : null
-			}
-		},
-		{
-			"attrSourceId" : "4",
-			"attrDisplaySeq" : "4",
-			"attrSourceName" : "trans_net_amount",
-			"function" : null,
-			"sourceAttr" : {
-				"ref" : {
-					"type" : "formula",
-					"uuid" : "cc9143af-e545-41df-9436-3e8c433141b8",
-					"version" : null,
-					"name" : "fm_trans_net_sum"
-				},
-				"value" : null,
-				"attrId" : null,
-				"attrName" : null,
-				"attrType" : null,
-				"attrUnitType" : null,
-				"function" : null
-			}
-		}
-	],
-	"persistFlag" : null,
-	"datasource" : null,
-	"paramList" : {
-		"ref" : {
-			"type" : "paramlist",
-			"uuid" : "09c86a69-59f7-44db-b088-e94c8df651b5",
-			"version" : null,
-			"name" : "paramlist_money_transfers"
-		},
-		"value" : null
-	},
-	"displyName" : "Rule2"
+  "uuid": "a5769558-d78e-11e8-9f8b-f2801f1b9fd1",
+  "version": "1552857210",
+  "name": "Account Focus - Net Cash Transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Mar 17 17:13:30 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "expressionInfo": null,
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 4,
+          "value": null,
+          "attributeName": "transaction_type_code",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "simple",
+            "uuid": null,
+            "version": null,
+            "name": null
+          },
+          "attributeId": null,
+          "value": "CA",
+          "attributeName": null,
+          "attributeType": "string"
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
+            "version": null,
+            "name": "fm_trans_count"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+            "version": null,
+            "name": "paramlist_money_transfers"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "trans_count",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "2",
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
+            "version": null,
+            "name": "fm_trans_net_sum"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+            "version": null,
+            "name": "paramlist_money_transfers"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_amount_usd",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "3",
+      "logicalOperator": "AND",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "24670241-fcfc-41bc-9eb8-51505fc6fd7e",
+            "version": null,
+            "name": "fm_lookback_date_money_transfers"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "4",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "debugMode": false,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": null,
+      "name": "fact_transaction_journal"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": "0",
+      "attrSourceName": "rule_name",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "simple",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "Net Cash Transfers",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": "1",
+      "attrSourceName": "customer_id",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "customer_id",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": "2",
+      "attrSourceName": "account_id",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+          "version": null,
+          "name": "fact_transaction_journal"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "account_id",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": "3",
+      "attrSourceName": "trans_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "005e4b59-c62d-4e50-9bad-00289273e3af",
+          "version": null,
+          "name": "fm_trans_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": "4",
+      "attrSourceName": "trans_net_amount",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "cc9143af-e545-41df-9436-3e8c433141b8",
+          "version": null,
+          "name": "fm_trans_net_sum"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "persistFlag": null,
+  "datasource": null,
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+      "version": null,
+      "name": "paramlist_money_transfers"
+    },
+    "value": null
+  }
 }

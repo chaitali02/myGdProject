@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2019-04-15T09:14:42.979Z"),
+	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -37,6 +37,5 @@
 	"path" : "/user/hive/warehouse/framework.db",
 	"subType" : null,
 	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict",
-	"sid" : null,
-	"displyName" : "hive_edw"
+	"sid" : null
 }
