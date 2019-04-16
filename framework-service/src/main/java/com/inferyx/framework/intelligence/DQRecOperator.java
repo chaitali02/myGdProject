@@ -201,6 +201,7 @@ public class DQRecOperator {
 		List<DQIntelligence> domainRecommendation = new ArrayList<>();
 		String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
 		long sampleTotalRows = rsHolder.getCountRows();
+		
 		//***************** applying regex for each domain vs each column of sample *****************//
 		if(attrDomainList != null && !attrDomainList.isEmpty()) {
 			for(AttributeDomain domain : attrDomainList) { //domain loop
@@ -402,65 +403,66 @@ public class DQRecOperator {
 	public boolean getDQCreationCheck(List<DataQual> latestDQList, CheckType checkType, String datapodUuid, String columnName) throws JsonProcessingException {
 		if(latestDQList != null && !latestDQList.isEmpty()) {
 			for(DataQual dq : latestDQList) {
-				if(dq.getDependsOn().getRef().getUuid().equals(datapodUuid)) {
-					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, null, MetaType.datapod.toString(), "N");
-					Object checkValue = checkCheckType(dq, checkType);
-					if(checkValue == null) {
-						return false;
-					} else {
-						switch(checkType) {
-						case DOMAIN: 
-							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+				try {
+					if(dq.getDependsOn().getRef().getUuid().equals(datapodUuid)) {
+						Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, null, MetaType.datapod.toString(), "N");
+						Object checkValue = checkCheckType(dq, checkType);
+						if(checkValue == null) {
+							return false;
+						} else {
+							switch(checkType) {
+							case DOMAIN: 								
 								if(dq.getDomainCheck() == null) {
 									return false;
 								} else {
 									return true;
 								}
-							} else {
-								return false;
-							}
-							
-						case NULL:
-							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
-								if(dq.getNullCheck() == null) {
-									return false;
+								
+							case NULL:
+								if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+									if(dq.getNullCheck() == null) {
+										return false;
+									} else {
+										return true;
+									}
 								} else {
-									return true;
-								}
-							} else {
-								return false;
-							}
-							
-						case RANGE:
-							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
-								if(dq.getRangeCheck() == null) {
 									return false;
-								} else {
-									return true;
 								}
-							} else {
-								return false;
-							}
-							
-						case VALUE:
-							if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
-								if(dq.getValueCheck() == null) {
+								
+							case RANGE:
+								if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+									if(dq.getRangeCheck() == null) {
+										return false;
+									} else {
+										return true;
+									}
+								} else {
 									return false;
-								} else {
-									return true;
 								}
-							} else {
+								
+							case VALUE:
+								if(datapod.getAttributeName(Integer.parseInt(dq.getAttribute().getAttrId())).equals(columnName)) {
+									if(dq.getValueCheck() == null) {
+										return false;
+									} else {
+										return true;
+									}
+								} else {
+									return false;
+								}
+								
+							case DUPLICATE:
 								return false;
+								
+							default: return false;
 							}
-							
-						case DUPLICATE:
-							return false;
-							
-						default: return false;
 						}
+					} else {
+						return false;
 					}
-				} else {
-					return false;
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
 				}
 			}
 		} else {
