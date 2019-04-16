@@ -1,6 +1,5 @@
 {
-    "_id" : ObjectId("5caef71bd02c773b6d2a7261"),
-    "regEx" : "^[-\\w]+(?:\\W+[-\\w]+){9,14}\\W*$",
+    "regEx" : "^[-\\\\w]+(?:\\\\W+[-\\\\w]+){9,14}\\\\W*$",
     "uuid" : "ed0ed4d5-6af9-4d7f-a956-64e3e6f38ecd",
     "version" : "1554970395",
     "name" : "Word_Limit",
