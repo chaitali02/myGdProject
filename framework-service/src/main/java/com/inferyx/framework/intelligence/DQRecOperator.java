@@ -226,7 +226,7 @@ public class DQRecOperator {
 			
 			tempTableList.add(domainTempTableName);
 			
-			//***************** calculating score for each column formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
+			//***************** calculating score for each column, formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
 			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
 			tempTableList.add(colScoreTempTable);
 			
@@ -242,11 +242,6 @@ public class DQRecOperator {
 						scoreCountBuilder.append("(COUNT(").append(colName).append(") / ").append(sampleTotalRows).append(") * 100 AS score_count").append(", ");
 						scoreCountBuilder.append("'").append(colName).append("'").append(" AS score_column");
 						
-//						if(i < dfColumns.length - 1) {
-//							scoreCountBuilder.append(", ");	
-//						}
-						
-
 						scoreCountBuilder.append(" FROM ").append(domainTempTableName);
 						scoreCountBuilder.append(" WHERE ").append(" domain_name = '").append(domain.getName()).append("' AND ").append(colName).append(" = 'Y' ");
 						scoreCountBuilder.append(" GROUP BY ").append("domain_name, domain_uuid, datapod_uuid");
