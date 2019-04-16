@@ -49,14 +49,6 @@
               ng-hide="isAdd" data-ng-click="enableEdit(modeldata.uuid,modeldata.version)">
                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
            </a>
-            <!-- <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-hide="isAdd" data-ng-click="enableEdit(modeldata.uuid,modeldata.version)">
-               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-           </a>
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"  ng-hide="isAdd" ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-              tooltip  data-ng-click="showview(modeldata.uuid,modeldata.version)">
-              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-            </a> -->
             <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip"
               data-placement="top" ng-show="isDependencyShow" ng-class="(showForm==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(modeldata.uuid,modeldata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -144,10 +136,18 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="modeldata.name" required>
+                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="modeldata.name" required ng-Change="onChangeName(modeldata.name)">
                       </div>
                     </div>
-
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Display Name
+                        <span class="required" aria-required="true"> * </span>
+                      </label>
+                      <div class="col-md-6">
+                        <input type="text" class="form-control" ng-disabled="{{mode}}"
+                          ng-model="modeldata.displayName" placeholder="" required="">
+                      </div>
+                    </div>
                     <div class="form-group" ng-show="modeldata.uuid">
                       <label class="col-md-3 control-label">Version</label>
                       <div class="col-md-6">

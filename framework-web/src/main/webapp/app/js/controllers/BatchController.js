@@ -89,6 +89,10 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   
   $scope.getLovByType();
 
+  $scope.onChangeName = function (data) {
+		$scope.batchDetail.displayName=data;
+  }
+  
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
@@ -558,6 +562,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.uuid = $scope.batchDetail.uuid;
     batchJson.id = $scope.batchDetail.id;
     batchJson.name = $scope.batchDetail.name;
+    batchJson.displayName = $scope.batchDetail.displayName;
     batchJson.desc = $scope.batchDetail.desc;
     batchJson.active = $scope.batchDetail.active;
     batchJson.locked = $scope.batchDetail.locked;

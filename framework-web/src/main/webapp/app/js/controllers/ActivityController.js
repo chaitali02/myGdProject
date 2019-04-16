@@ -53,7 +53,12 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
 		}
-    }
+	}
+	
+	$scope.onChangeName = function (data) {
+		$scope.activitydata.displayName=data;
+	}
+
 	/*Start showPage*/
 	$scope.showPage = function () {
 		if($scope.checkIsInrogess () ==false){

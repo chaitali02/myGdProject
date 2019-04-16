@@ -50,15 +50,7 @@
                             data-ng-click="enableEdit(simulateData.uuid,simulateData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="enableEdit(simulateData.uuid,simulateData.version)">
-                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                        </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(simulateData.uuid,simulateData.version)">
-                            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a> -->
+                        
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
                             data-placement="top" ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(simulateData.uuid,simulateData.version)">
@@ -145,9 +137,18 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.name" required>
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="simulateData.name" required ng-Change="onChangeName(simulateData.name)">
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Display Name
+                                              <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                              <input type="text" class="form-control" ng-disabled="{{mode}}"
+                                                ng-model="simulateData.displayName" placeholder="" required="">
+                                            </div>
+                                          </div>
 
                                         <div class="form-group" ng-show="simulateData.uuid">
                                             <label class="col-md-3 control-label">Version</label>
