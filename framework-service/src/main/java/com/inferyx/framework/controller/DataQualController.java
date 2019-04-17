@@ -189,18 +189,19 @@ public class DataQualController {
    	}
     
     @RequestMapping(value="/restart", method= RequestMethod.POST)
-   	public boolean restart(@RequestParam("uuid") String uuid, 
-   			@RequestParam("version") String version,
+   	public boolean restart(@RequestParam("uuid") String execUuid, 
+   			@RequestParam("version") String execVersion,
    			@RequestParam("type") String type,
    			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {   			
    			try {
    				RunMode runMode = Helper.getExecutionMode(mode);
    				if(type.equalsIgnoreCase(MetaType.dqExec.toString())){
-   	   				dataQualServiceImpl.restart(type,uuid,version, null, runMode);
-   	   			}
-   	   			else{
-   	   				dataQualGroupServiceImpl.restart(type,uuid,version, runMode);
+   	   				dataQualServiceImpl.restart(type, execUuid, execVersion, null, runMode);
+   	   			} else if(type.equalsIgnoreCase(MetaType.dqrecExec.toString())){
+   	   				dataQualServiceImpl.restartDqRec(type, execUuid, execVersion, null, runMode);
+   	   			} else{
+   	   				dataQualGroupServiceImpl.restart(type, execUuid, execVersion, runMode);
    	   			}
    			}catch (Exception e) {
    				e.printStackTrace();
@@ -284,9 +285,9 @@ public class DataQualController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception{
 		RunMode runMode = Helper.getExecutionMode(mode);
-		DQRecExec dqRecExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode);
+		DQRecExec dqRecExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode, samplePercent);
 		dqRecExec = (DQRecExec) dataQualServiceImpl.parseCustom(dqRecExec.getUuid(), dqRecExec.getVersion(), null, null, null, null, null, runMode);
-		return dqRecOperator.genRecommendation(dqRecExec, null, runMode, samplePercent);
+		return dqRecOperator.genRecommendation(dqRecExec, null, runMode);
 	}
 	
 	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)

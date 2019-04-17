@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
@@ -71,11 +72,9 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.intelligence.DQRecOperator;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.operator.DatasetOperator;
-import com.inferyx.framework.operator.FilterOperator;
-import com.inferyx.framework.operator.FilterOperator2;
-import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
 
@@ -101,7 +100,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 	@Autowired
 	private DatasetOperator datasetOperator; 
 	@Autowired
-	private FilterOperator2 filterOperator2 ;
+	private DQRecOperator dqRecOperator;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1091,7 +1090,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	public DQRecExec createCustom(String datapodUuid, String datapodVersion, ExecParams execParams,
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode, String samplePercent)
 			throws Exception {
 		try {
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
@@ -1106,6 +1105,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
 					Status.Stage.PENDING);
 			dqRecExec.setExecParams(execParams);
+			dqRecExec.setSamplePercent(samplePercent);
 			commonServiceImpl.save(MetaType.dqrecExec.toString(), dqRecExec);
 			return dqRecExec;
 		} catch (Exception e) {
@@ -1140,23 +1140,61 @@ public class DataQualServiceImpl extends RuleTemplate {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
 				dependsOnMI.getType().toString(), "N");
 		
-		List<DataQual> dqList = new ArrayList<>();
+		// ******************* optimizing intelligence list *******************//
+		List<DQIntelligence> optimizedDQIntelLIst = new CopyOnWriteArrayList<>();
 		for (DQIntelligence checkType : checkTypeList) {
-			try {
-				if(!dqList.isEmpty() 
-						&& checkType.getCheckType().equals(CheckType.DOMAIN)) {
-					
+			if(checkType.getCheckType().equals(CheckType.DOMAIN)) {
+				if(!optimizedDQIntelLIst.isEmpty()) {
+					for(DQIntelligence dqIntelligence : optimizedDQIntelLIst) {
+						if(dqIntelligence.getCheckType().equals(CheckType.DOMAIN)) {
+							if(dqIntelligence.getAttributeName().getAttrName().equalsIgnoreCase(checkType.getAttributeName().getAttrName())) {
+								List<MetaIdentifierHolder> checkValue = dqIntelligence.getCheckValue();
+								checkValue.addAll(checkType.getCheckValue());
+								dqIntelligence.setCheckValue(checkValue);
+								
+								break;
+							} else {
+								optimizedDQIntelLIst.add(checkType);
+							}
+						} 
+					}
 				} else {
-					
+					optimizedDQIntelLIst.add(checkType);
 				}
+			} else {
+				optimizedDQIntelLIst.add(checkType);
+			}
+		}
+		
+		// ******************* creating dq rules *******************//
+		for (DQIntelligence checkType : optimizedDQIntelLIst) {
+			try {
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
-				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
+				String attrName = checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
+				String name = "dq_" + datapod.getPrefix() + "_" + attrName;
 				dataQual.setName(name);
 				dataQual.setDisplayName(name);
 				dataQual.setLocked("N");
 				dataQual.setPublished("N");
 				dataQual.setPublicFlag("N");
+				if(checkType.getCheckType().equals(CheckType.DUPLICATE)) {
+					dataQual.setDesc("Duplication check.");
+				} else if(checkType.getCheckType().equals(CheckType.DOMAIN)) {
+					StringBuilder descBuilder = new StringBuilder();
+					int i = 0;
+					for(MetaIdentifierHolder valueCheck : checkType.getCheckValue()) {
+						descBuilder.append(valueCheck.getRef().getName());
+						if(i < checkType.getCheckValue().size() - 1) {
+							descBuilder.append(", ");
+						}
+						i++;
+					}
+					descBuilder.append(" checks.");
+					dataQual.setDesc(descBuilder.toString());
+				} else {
+					dataQual.setDesc(checkType.getCheckType()+" check.");
+				}
 				dataQual.setBaseEntity();
 
 				// ******************* setting dq specific properties *******************//
@@ -1172,22 +1210,13 @@ public class DataQualServiceImpl extends RuleTemplate {
 				}
 				dataQual = getCheckType(dataQual, checkType, datapod);
 				
-				dqList.add(dataQual);
-//				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+				// ******************* saving dq *******************//
+				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
 				checkType.setCreated(true);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 				checkType.setCreated(false);
-			}
-		}
-		
-		for(DataQual dataQual : dqList) {
-			try {
-				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
-			} catch (JSONException | ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		
@@ -1315,5 +1344,58 @@ public class DataQualServiceImpl extends RuleTemplate {
 				commonServiceImpl.getApp().getUuid());
 
 		return data;
+	}
+
+	/**
+	 * @param type
+	 * @param uuid
+	 * @param version
+	 * @param runMode
+	 * @throws Exception 
+	 */
+	public void restartDqRec(String type, String uuid, String version, ExecParams execParams, RunMode runMode) throws Exception {
+		DQRecExec dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.dqrecExec.toString());
+		try {
+			HashMap<String, String> otherParams = null;
+			if (execParams != null) {
+				otherParams = execParams.getOtherParams();
+			}
+			dqRecExec = (DQRecExec) parseCustom(uuid, version, null, null, otherParams, null, null, runMode);
+			dqRecOperator.genRecommendation(dqRecExec, execParams, runMode);
+		} catch (Exception e) {
+			synchronized (dqRecExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.FAILED);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getDependsOn().getRef().getUuid(),
+							dqRecExec.getDependsOn().getRef().getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+							(message != null) ? message : "Can not parse Data Quality Recommendation ...", dependsOn);
+					throw new Exception((message != null) ? message : "Can not parse Data Quality Recommendation ...");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getDependsOn().getRef().getUuid(),
+					dqRecExec.getDependsOn().getRef().getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not parse Data Quality Recommendation ...", dependsOn);
+			throw new Exception((message != null) ? message : "Can not parse Data Quality Recommendation ...");
+		}
 	}
 }
