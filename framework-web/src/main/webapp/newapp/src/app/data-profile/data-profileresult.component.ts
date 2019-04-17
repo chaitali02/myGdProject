@@ -180,19 +180,21 @@ export class DataProfileresultComponent {
   }
 
   showMainPage() {
+    debugger
     this.isHomeEnable = false;
     this.showKnowledgeGraph = false;
-    if (this._type == this.metaType.PROFILEEXEC) {
+    if (this._type == this.metaType.PROFILEEXEC.toLowerCase()) {
       setTimeout(() => {
         this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name
         this.d_tableRenderComponent.renderTable(this.params);
-        this.downloadUuid = this.params.uuid;
-        this.downloadVersion = this.params.version;
-        this.downloadType = this.params.type;
+        // this.downloadUuid = this.params.uuid;
+        // this.downloadVersion = this.params.version;
+        // this.downloadType = this.params.type;
       }, 1000);
     }
-    this.isResultTable = true
-
+    // else {
+    //   this.isResultTable = true
+    // }
   }
 
   showDagGraph(uuid, version, graphFlag) {
@@ -205,10 +207,12 @@ export class DataProfileresultComponent {
       }, 1000);
     }
     else {
-      if (this._type == this.metaType.PROFILEEXEC) {
+      if (this._type == this.metaType.PROFILEEXEC.toLowerCase()) {
         this.showMainPage();
       }
-      this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      else {
+        this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      }
     }
   }
 
@@ -238,7 +242,7 @@ export class DataProfileresultComponent {
   }
 
   onSuccessrestart(uuid, version, response) {
-    this.showDagGraph(uuid,version, false)
+    this.showDagGraph(uuid, version, false)
   }
   cancelRestartDialogBox() {
     this.restartDialogBox = false;
