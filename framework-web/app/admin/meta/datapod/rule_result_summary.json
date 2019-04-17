@@ -29,11 +29,9 @@
 	"datasource": {
 		"ref": {
 			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version": null,
-			"name": "file_data"
-		},
-		"value": null
+			"uuid": "4f65d730-866c-417d-9305-472cd82599db",
+			"version": "1553031028"
+		}
 	},
 	"cache": "Y",
 	"attributes": [
@@ -94,8 +92,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 5,		
-			"displaySeq":5,
+			"attributeId": 5,
+			"displaySeq": 5,
 			"name": "rule_version",
 			"type": "integer",
 			"desc": "rule_version",
@@ -192,6 +190,6 @@
 			"attrUnitType": null
 		}
 	],
-	"prefix":"uee",
+	"prefix": "uee",
 	"displayName" : "rule_result_summary"
 }

@@ -3,6 +3,7 @@ DataQualityModule = angular.module('DataQualityModule');
 DataQualityModule.controller("DqRecommenderSearchController", function ($state, $filter, $location, $http, dagMetaDataService, $rootScope, $scope , CommonService, RecommenderService) {
 	
 	$scope.searchForm = {};
+	$scope.samplePercent=25;
 	$scope.tz = localStorage.serverTz;
     var matches = $scope.tz.match(/\b(\w)/g);
     $scope.timezone = matches.join('');
@@ -236,6 +237,7 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
 		$scope.getAllLatestDatapod();
 		$scope.selectedDatapod=null;
 		$scope.samplePercent=null;
+		$scope.samplePercent=25;
 		$('#searchAttr').modal({
 			backdrop: 'static',
 			keyboard: false

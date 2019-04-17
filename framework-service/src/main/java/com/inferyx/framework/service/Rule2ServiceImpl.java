@@ -669,26 +669,30 @@ public class Rule2ServiceImpl extends RuleTemplate {
 							ref.setType(MetaType.paramset);
 							paramSetHolder.setRef(ref);
 							execParams.setCurrParamSet(paramSetHolder);
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);		
 						}
+					}
+						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);		
+
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
 						ruleExecMetaList.add(ruleExecInfo);
 						ruleExec = null;
-					}
+					
 				} else if(execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
 					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 						if(ruleExec == null) {
 							execParams.setParamListHolder(paramListHolder);
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);
 						}
+					}
+						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);
+
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 						ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
 						ruleExecMetaList.add(ruleExecInfo);
 						ruleExec = null;
-					}
+					
 				} else {
 					if(ruleExec == null)
 						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);			
