@@ -8,39 +8,59 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
-                        (click)="showMainPage()">
-                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
-                    </a>
-                   
-                    <!-- <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
-                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="isResultTable == true">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a> -->
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" [ngClass]="isResultTable == true?'notcurrentpage':'currentpage'">
-                        <i class="fa fa-download" area-hidden="true"></i>
-                    </a>
-                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data- (click)="showDagGraph()">
-                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
-                    </a>
-
-                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a title="Close" (click)="goBack()" style="height:14px;">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top"
+                            [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'" tooltip (click)="showMainPage()">
+                            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isgraphShow" class="left-marginpage" style="color:white;" href="javascript:;" title="Restart Recon Group"
+                            data-placement="top" tooltip (click)="reGroupExecute()" [ngClass]="restartStatus==true?'notcurrentpage':'currentpage'">
+                            <i class="fa fa-repeat" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" *ngIf="isResultTable == true" style="color:white;" href="javascript:;"
+                            title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
+                            [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'">
+                            <i class="fa fa-download" area-hidden="true"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies"
+                            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                            data- (click)="showDagGraph(_uuid,_version, true)">
+                            <i class="fa fa-sitemap" style="margin:2px auto;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable==false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid,_version, false)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a *ngIf="isHomeEnable!=false" class="left-marginpage" title="Refresh" data-toggle="tooltip"
+                            data-placement="top" tooltip (click)="showDagGraph(_uuid,_version, true)">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                    </span>
+                    <span class="wrapcurrentpage">
+                        <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
+                    </span>
                 </div>
             </div>
             <div class="portlet-body">
-                <div *ngIf="isgraphShow && !showGraph">
-                    <app-jointjs-group [graphParms]="params" (downloadShow)="downloadShow($event)"></app-jointjs-group>
+                <div *ngIf="isgraphShow && !showKnowledgeGraph">
+                    <app-jointjs-group [graphParms]="params" (downloadShow)="downloadShow($event)" (jointJSRunStatus)="receiveJointJSRunStatus($event)"></app-jointjs-group>
                 </div>
-                <div *ngIf="istableShow && !showGraph">
+                <div *ngIf="istableShow && !showKnowledgeGraph">
                     <app-resulttable [tableParms]="tableparms"></app-resulttable>
                 </div>
-                <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                <div class="form-body graph-body" *ngIf="showKnowledgeGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
                     <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                     <div class="spinner" id="graphloader">
                         <div class="bounce1"></div>
@@ -56,33 +76,62 @@
         </div><!-- END SAMPLE TABLE PORTLET-->
     </div>
 </div>
-<p-dialog header="Download" [(visible)]="isDownloadModel" [modal]="true" [responsive]="true" [minWidth]="450"
-    [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'min-height':'212px'}">
-    <div class="modal-body" *ngIf="isDownloadModel">
-        <form class="form-horizontal" novalidate="novalidate" name="myform1">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Rows</label>
-                        <div class="col-md-8">
-                            <input type="number" min="1" class="form-control" name="rows" [(ngModel)]="download.rows"
-                                max="100000">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Format</label>
-                        <div class="col-md-8">
-                            <select class="form-control" [(ngModel)]="download.selectFormat" name="selectFormate">
-                                <option *ngFor="let r of download.format" [value]="r">{{r}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+
+<p-dialog class="dialog-titlebar" header="Confirm" [(visible)]="restartDialogBox" [modal]="true" [responsive]="true"
+    [width]="350" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+    <form class="form-horizontal" name="myform" novalidate="novalidate">
+        <div class="form-group">
+            <label class="control-label col-md-6 col-sm-6 col-xs-12" style="text-align: left; margin-bottom: -5px;">
+                Restart Recon Group?</label>
+        </div>
+    </form>
+    <p-footer>
+        <div>
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+                <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a> -->
+                <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
+                    (click)="cancelRestartDialogBox()">
+                <input type="button" class="btn btn-success" value="Ok" name="ok" style="border-radius: 4px;" (click)="submitRestartDialogBox()">
             </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn dark btn-outline" (click)="close()">Close</button>
-        <button type="button" class="btn green" (click)="downloadProfileResult()">Submit</button>
-    </div>
+        </div>
+    </p-footer>
+</p-dialog>
+
+
+<p-dialog class="dialog-titlebar" header="Download" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true"
+    [width]="500" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+    <form class="form-horizontal" novalidate="novalidate" name="myform">
+        <!-- <div class="modal-body" *ngIf="isDownloadModel"> -->
+        <!-- <div class="row"> -->
+        <!-- <div class="col-md-12"> -->
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Rows</label>
+            <div class="col-md-7 col-sm-6 col-xs-12">
+                <input type="number" min="1" class="form-control" name="rows" [(ngModel)]="download.rows" [disabled]="mode =='true'"
+                    max="100" required>
+            </div>
+        </div>
+        <div class="form-group" style="padding-top : 10px">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <select class="form-control" [(ngModel)]="download.selectFormat" name="selectFormate">
+                    <option *ngFor="let r of download.format" [value]="r">{{r}}</option>
+                </select>
+            </div>
+        </div>
+        <!-- </div> -->
+        <!-- </div> -->
+    </form>
+    <!-- </div> -->
+    <p-footer>
+        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+            <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px; margin-right:2%"
+                (click)="cancelDialogBox()">
+            <input type="button" class="btn btn-success" value="Submit" name="submit" style="border-radius: 4px;"
+                (click)="submitDialogBox(i)">
+            <!-- <button type="button" class="btn dark btn-outline" (click)="cancelDialogBox()">Close</button>
+        <button type="button" class="btn green" (click)="downloadProfileResult()">Submit</button> -->
+        </div>
+
+    </p-footer>
 </p-dialog>

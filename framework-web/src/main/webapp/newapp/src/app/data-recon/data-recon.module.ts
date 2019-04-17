@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 // import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
-import { CheckboxModule} from 'primeng/primeng';
+import { CheckboxModule, ChipsModule} from 'primeng/primeng';
 
 import { ResultModule } from '../shared/module/result.module';
 import { ProjectSharedModule } from '../shared/module/shared.module';
@@ -22,12 +22,12 @@ import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-recon-routing.module'
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
-        // UiSwitchModule,
         TagInputModule,
         AngularMultiSelectModule,
         CheckboxModule,
@@ -35,7 +35,16 @@ import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
         ResultModule,
         ProjectSharedModule,
         DialogModule,
-        DragDropModule
+        DragDropModule,
+        ChipsModule,
+        UiSwitchModule.forRoot({
+            size: 'small',
+            color: '#15C5D5',
+            switchColor: '#FFFFF',
+            defaultBoColor: '#ccc',
+            // checkedLabel: 'Yes',
+            //uncheckedLabel: 'No'
+        })
     ],
     declarations: [
         DataReconComponent,
