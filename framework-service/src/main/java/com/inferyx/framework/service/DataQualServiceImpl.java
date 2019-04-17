@@ -1140,14 +1140,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
 				dependsOnMI.getType().toString(), "N");
 		
-//		List<DataQual> dqList = new ArrayList<>();
+		List<DataQual> dqList = new ArrayList<>();
 		for (DQIntelligence checkType : checkTypeList) {
 			try {
-//				if(!dqList.isEmpty()) {
-//					
-//				} else {
-//					
-//				}
+				if(!dqList.isEmpty() 
+						&& checkType.getCheckType().equals(CheckType.DOMAIN)) {
+					
+				} else {
+					
+				}
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
 				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
@@ -1170,13 +1171,23 @@ public class DataQualServiceImpl extends RuleTemplate {
 					dataQual.setAttribute(attrRefHolder);
 				}
 				dataQual = getCheckType(dataQual, checkType, datapod);
-
-				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+				
+				dqList.add(dataQual);
+//				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
 				checkType.setCreated(true);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 				checkType.setCreated(false);
+			}
+		}
+		
+		for(DataQual dataQual : dqList) {
+			try {
+				commonServiceImpl.save(MetaType.dq.toString(), dataQual);
+			} catch (JSONException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
