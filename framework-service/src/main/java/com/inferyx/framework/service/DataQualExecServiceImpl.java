@@ -278,11 +278,10 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	
-	/*************************Unused*************************/
-	/*public void PAUSE (String uuid, String version) {
+	/**********************Unused***********************/
+	public void PAUSE (String uuid, String version) {
 		PAUSE(uuid, version, MetaType.dqExec);
-	}*/
+	}
 	
  	/**
 	 * Kill meta thread if RUNNING
@@ -290,20 +289,20 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param version
 	 */
 	/**********************Unused***********************/
-	  public void kill (String uuid, String version) { 
-		  super.kill(uuid, version, MetaType.dqExec); }
-	 
+	public void kill (String uuid, String version) {
+		super.kill(uuid, version, MetaType.dqExec);
+	}
+
 	
 	/**
 	 * RESUME DQ Execution
 	 * @param uuid
 	 * @param version
 	 */
-	
-	/*******************************Unused**************************/
-	/*public void RESUME (String uuid, String version) {
+	/**********************Unused***********************/
+	public void RESUME (String uuid, String version) {
 		super.RESUME(uuid, version, MetaType.dqExec);
-	}*/
+	}
 
 	  /**
 		 * Kill meta thread if RUNNING

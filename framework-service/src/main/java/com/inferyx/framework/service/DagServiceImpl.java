@@ -25,6 +25,7 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet.META;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -205,6 +206,8 @@ public class DagServiceImpl {
 			throws Exception {
 		Dag dag = null;
 		DagExec dagExec = null;
+		if(execParams!=null)
+			execParams=commonServiceImpl.resolveExecParams(execParams);
 		if (StringUtils.isBlank(uuid)) {
 			logger.info("No DAG UUID. Aborting submitDAG.");
 			throw new Exception("No DAG UUID. Aborting submitDAG.");			
@@ -1212,6 +1215,15 @@ public class DagServiceImpl {
 		for (ParamListHolder paramHolder : parentParamHolderList) {
 			matchFound = Boolean.FALSE;
 			for (ParamListHolder childParamHolder : childParamHolderList) {
+			/*	if(childParamHolder.getParamName()==null) {
+					try {
+					ParamList paramList=(ParamList)	commonServiceImpl.getOneByUuidAndVersion(childParamHolder.getRef().getUuid(), childParamHolder.getRef().getVersion(), MetaType.paramlist.toString());
+					childParamHolder.setParamName(paramList.getParams().get(Integer.parseInt(childParamHolder.getParamId())).getParamName());
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}*/
 				if (childParamHolder.getParamName().equals(paramHolder.getParamName())) {
 					matchFound = Boolean.TRUE;
 					break;

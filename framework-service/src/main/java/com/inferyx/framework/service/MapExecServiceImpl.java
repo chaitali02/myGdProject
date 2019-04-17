@@ -11,17 +11,17 @@
 package com.inferyx.framework.service;
 
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
@@ -60,7 +60,10 @@ public class MapExecServiceImpl {
 	 * @param version
 	 * @throws JsonProcessingException 
 	 */
-	public void kill (String uuid, String version) throws JsonProcessingException  {
+	
+	/*****************************Unused
+	 * @throws com.fasterxml.jackson.core.JsonProcessingException *************************/
+	public void kill (String uuid, String version) throws  com.fasterxml.jackson.core.JsonProcessingException {
 		MetaIdentifier mapExecMI = new MetaIdentifier(MetaType.mapExec, uuid, version);
 //		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecMI);
 		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString(), "N");
@@ -71,7 +74,7 @@ public class MapExecServiceImpl {
 		
 		try {
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.TERMINATING);
-			if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+			if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date(0)))) {
 				logger.info(" Status is not TERMINATING. So aborting ... ");
 				return;
 			}

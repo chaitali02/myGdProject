@@ -89,7 +89,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	 * @param version
 	 */
 	/*************************Unused****************************/
-	/*public void kill (String uuid, String version) {
+	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.dqgroupExec, MetaType.dqExec);
-	}*/	
+	}	
 }
