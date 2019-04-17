@@ -3,6 +3,7 @@ DataQualityModule = angular.module('DataQualityModule');
 DataQualityModule.controller("DqRecommenderSearchController", function ($state, $filter, $location, $http, dagMetaDataService, $rootScope, $scope , CommonService, RecommenderService) {
 	
 	$scope.searchForm = {};
+	$scope.samplePercent=25;
 	$scope.tz = localStorage.serverTz;
     var matches = $scope.tz.match(/\b(\w)/g);
     $scope.timezone = matches.join('');
@@ -50,8 +51,9 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
 		  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
 		  '    <i class="fa fa-angle-down"></i></button>',
 		  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-		  '    <li><a ng-click="grid.appScope.getExec(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-		 // '    <li><a ng-click="grid.appScope.getDetail(row.entity)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>  Export</a></li>',
+		  '    <li><a ng-disabled="[\'COMPLETED\',\'ABORTED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.getExec(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+		  '    <li><a ng-disabled="[\'RUNNING\',\'RESUME\',\'STARTING\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
+		  '    <li><a   ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
 		  '    </ul>',
 		  '  </div>',
 		  '</div>'
@@ -236,6 +238,7 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
 		$scope.getAllLatestDatapod();
 		$scope.selectedDatapod=null;
 		$scope.samplePercent=null;
+		$scope.samplePercent=25;
 		$('#searchAttr').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -266,8 +269,8 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
     $scope.setStatus = function (row, status) {
         $scope.execDetail=row;
         $scope.execDetail.setStatus=status;
-        $scope.msg =status;
-        
+        $scope.msg ="Kill";
+		$scope.exectype="Recommender"
         $('#confModal').modal({
           backdrop: 'static',
           keyboard: false
@@ -277,39 +280,28 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
     
     $scope.okSetStatus=function(){
         var api = false;
-        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-        var api = false;
-        switch (type) {
-            case 'trainExec':
-                api = 'model/train';
-                break;
-            case 'predictExec':
-                api = 'model/predict';
-                break;
-            case 'simulateExec':
-                api = 'model/simulate';
-                break;
-
-        }
+		var type = dagMetaDataService.elementDefs["dqrecexec"].execType;
+		var api = false;
+		api="dataqual/setStatus"
         if (!api) {
             return
         }
         notify.type = 'success',
         notify.title = 'Success',
-        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+        notify.content = " Recommender Killed Successfully"
         $scope.$emit('notify', notify);
         $('#confModal').modal('hide');
         var url = $location.absUrl().split("app")[0];
-        //$http.put(url + '' + api + '/kill?uuid=' + row.uuid + '&version=' + row.version + '&type=' +type + '&status=' + status).then(function (response) {
-        $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
-
-            console.log(response);
+        $http.put(url + api + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
+			console.log(response);
+			$scope.getBaseEntityStatusByCriteria(false);
         });
     }
 
     $scope.restartExec = function (row, status) {
         $scope.execDetail=row;
-        $scope.msg ="Restart";
+		$scope.msg ="Restart";
+		$scope.exectype="Recommender"
         if(row.runMode =="BATCH"){
             notify.type = 'info',
             notify.title = 'Info',
@@ -323,31 +315,21 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
         });  
     }
     $scope.okRestart=function(){
-        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-        var api = false;
-        switch (type) {
-            case 'trainExec':
-                api = 'model/train';
-                break;
-            case 'predictExec':
-                api = 'model/predict';
-                break;
-            case 'simulateExec':
-                api = 'model/simulate';
-                break;
-
-        }
+        var type = dagMetaDataService.elementDefs["dqrecexec"].execType;
+		var api = false;
+		api="dataqual/restart";
         if (!api) {
             return
         }
         notify.type = 'success',
         notify.title = 'Success',
-        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+        notify.content = "Recommender Restarted Successfully"
         $scope.$emit('notify', notify);
         $('#confModal').modal('hide');
         var url = $location.absUrl().split("app")[0];
-        $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
-            //console.log(response);
+        $http.post(url + '' + api +'?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
+			//console.log(response);
+			$scope.getBaseEntityStatusByCriteria(false);
 
         });
     }
@@ -356,7 +338,7 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
         if (action == "Restart") {
           $scope.okRestart();
         }
-        if(action == "Killed"){
+        if(action == "Kill"){
             $scope.okSetStatus()
         }
     }

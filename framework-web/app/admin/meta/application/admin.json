@@ -33,7 +33,7 @@
   "dataSource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
       "version": null,
       "name": "hive"
     },
