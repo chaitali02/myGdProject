@@ -282,6 +282,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.dqExec);
 	}
+
 	
 	/**
 	 * RESUME DQ Execution
