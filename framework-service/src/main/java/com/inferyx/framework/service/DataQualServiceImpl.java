@@ -1139,8 +1139,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		MetaIdentifier dependsOnMI = dqRecExec.getDependsOn().getRef();
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
 				dependsOnMI.getType().toString(), "N");
+		
+//		List<DataQual> dqList = new ArrayList<>();
 		for (DQIntelligence checkType : checkTypeList) {
 			try {
+//				if(!dqList.isEmpty()) {
+//					
+//				} else {
+//					
+//				}
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
 				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
