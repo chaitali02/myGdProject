@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document(collection = "dqrecexec")
-public class DQRecExec extends BaseExec {
+public class DQRecExec extends BaseRuleExec {
 	private List<DQIntelligence> intelligenceResult;
 	private String samplePercent;
 
