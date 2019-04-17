@@ -35,10 +35,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
@@ -72,7 +72,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.intelligence.DQRecOperator;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -100,7 +100,9 @@ public class DataQualServiceImpl extends RuleTemplate {
 	@Autowired
 	private DatasetOperator datasetOperator; 
 	@Autowired
-	private DQRecOperator dqRecOperator;
+	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private SessionHelper sessionHelper;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1345,7 +1347,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 				otherParams = execParams.getOtherParams();
 			}
 			dqRecExec = (DQRecExec) parseCustom(uuid, version, null, null, otherParams, null, null, runMode);
-			dqRecOperator.genRecommendation(dqRecExec, execParams, runMode);
+			genRecommendation(dqRecExec, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (dqRecExec.getUuid()) {
 				try {
@@ -1380,5 +1382,39 @@ public class DataQualServiceImpl extends RuleTemplate {
 					(message != null) ? message : "Can not parse Data Quality Recommendation ...", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Data Quality Recommendation ...");
 		}
+	}
+	
+	public DQRecExec genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode) throws Exception {
+		try {
+			RunDQRecServiceImpl runDQRecServiceImpl = new RunDQRecServiceImpl();
+			runDQRecServiceImpl.setCommonServiceImpl(commonServiceImpl);
+			runDQRecServiceImpl.setMetadataServiceImpl(metadataServiceImpl);
+			runDQRecServiceImpl.setSparkExecutor(sparkExecutor);
+			runDQRecServiceImpl.setExecFactory(execFactory);
+			runDQRecServiceImpl.setDqRecExec(dqRecExec);
+			runDQRecServiceImpl.setExecParams(execParams);
+			runDQRecServiceImpl.setRunMode(runMode);
+			runDQRecServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+			runDQRecServiceImpl.setName(MetaType.dqrecExec+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion());
+			
+			runDQRecServiceImpl.call();
+			
+			dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(dqRecExec.getUuid(), dqRecExec.getVersion(), MetaType.dqrecExec.toString(), "N");
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.FAILED);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getUuid(), dqRecExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Data Quality recommendation execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Data Quality recommendation execution FAILED.");
+		}
+		
+		return dqRecExec;
 	}
 }

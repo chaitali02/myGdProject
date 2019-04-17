@@ -11,7 +11,9 @@
 package com.inferyx.framework.service;
 
 
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
@@ -19,13 +21,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Status;
 
 
 @Service
@@ -56,9 +60,7 @@ public class MapExecServiceImpl {
 	 * @param version
 	 * @throws JsonProcessingException 
 	 */
-	
-	/*****************************Unused*************************/
-	/*public void kill (String uuid, String version) throws JsonProcessingException {
+	public void kill (String uuid, String version) throws JsonProcessingException  {
 		MetaIdentifier mapExecMI = new MetaIdentifier(MetaType.mapExec, uuid, version);
 //		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecMI);
 		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString(), "N");
@@ -82,7 +84,7 @@ public class MapExecServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}		*/	
+	}			
 
 	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws Exception {
 
