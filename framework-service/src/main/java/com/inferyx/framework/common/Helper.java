@@ -412,6 +412,8 @@ public class Helper {
 			return "Rule2ServiceImpl";
 		case rule2Exec:
 			return "Rule2ExecServiceImpl";
+		case dqrecExec:
+			return "DataQualExecServiceImpl";
 		default:
 			return null;
 		}
