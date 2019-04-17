@@ -748,7 +748,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	 */
 	
 	/***************************Unused*****************************/
-	/*public Status restart(BaseExec baseExec) throws Exception {
+	public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.ingestExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -756,7 +756,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}*/
+	}
 	
 	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws Exception {
 		IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.ingestExec.toString());
