@@ -443,7 +443,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 	 */
 	
 	/**********************Unused**********************/
-	/*public Status restart(BaseExec baseExec) throws Exception {
+	//Please don't comment this method.This is used by reflection api
+	public Status restart(BaseExec baseExec) throws Exception {
 		try {
 			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profileExec);
 		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
@@ -451,7 +452,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			e.printStackTrace();
 			throw new Exception(e);
 		}
-	}*/
+	}
 
 
 	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)

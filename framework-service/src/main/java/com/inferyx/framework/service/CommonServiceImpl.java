@@ -2110,7 +2110,7 @@ public class CommonServiceImpl<T> {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
+	public ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		List<ParamSetHolder> paramSetHolder = execParams.getParamInfo();
 		if (paramListInfo != null)
