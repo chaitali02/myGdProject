@@ -130,7 +130,8 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
+                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                          Name
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-6">
@@ -516,10 +517,10 @@
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
-                                      {{data.rhsAttribute|json}}<p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="attributeId" required #rhsAttribute="ngModel" [dropdownIcon]="caretdown">
-                                      </p-dropdown>{{attributesArray|json}}
+                                      </p-dropdown>
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'dataset' && data.rhsAttribute != null">
