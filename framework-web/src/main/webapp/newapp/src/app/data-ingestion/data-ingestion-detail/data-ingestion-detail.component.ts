@@ -36,7 +36,7 @@ export class DataIngestionDetailComponent implements OnInit {
   dropIndex: any;
   dragIndex: any;
   showGraph: boolean;
-  isHomeEnable: boolean;
+  //isHomeEnable: boolean;
   isNullArray: { 'value': string; 'label': string; }[];
   dialogAttributeName: any;
   dialogAttriNameArray: any[];
@@ -160,7 +160,6 @@ export class DataIngestionDetailComponent implements OnInit {
 
     this.showGraph = false;
     this.showForm = true;
-    this.isHomeEnable = false;
 
     this.breadcrumbDataFrom = [{
       "caption": "Data Ingestion",
@@ -1873,14 +1872,11 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   showMainPage() {
-    this.isHomeEnable = false
-    // this._location.back();
     this.showGraph = false;
     this.showForm = true;
   }
 
   showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
     this.showGraph = true;
     this.showForm = false
     this.isGraphInprogess = true;
