@@ -21,6 +21,7 @@ import { JointjsService} from '../shared/components/jointjs/jointjsservice';
 import { routing1} from './business-rules-routing.module';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
+import { RelationService } from '../data-preparation/relation/relation.service';
 
 @NgModule({
     imports: [
@@ -54,7 +55,8 @@ import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
     providers: [
         RuleService,
         CommonService,
-        JointjsService
+        JointjsService,
+        RelationService
     ],
 
 })

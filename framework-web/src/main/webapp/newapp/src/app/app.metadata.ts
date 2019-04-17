@@ -163,7 +163,7 @@ export class AppMetadata {
         resultState: '',
         //state: 'createrulesgroup',
         moduleState: 'businessRules',
-        moduleCaption: 'Businness Rule',
+        moduleCaption: 'Business Rule',
         class: 'fa fa-cogs'
       },
       'rule': {
@@ -179,7 +179,7 @@ export class AppMetadata {
         listState: 'viewrule',
         detailState: 'rule',
         moduleState: 'businessRules',
-        moduleCaption: 'Businness Rule',
+        moduleCaption: 'Business Rule',
         resultState: '',
         //state: 'createrules',
         class: 'fa fa-cogs'

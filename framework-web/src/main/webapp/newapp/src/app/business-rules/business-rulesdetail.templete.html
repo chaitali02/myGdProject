@@ -130,7 +130,8 @@
                       </div>
 
                       <div class="form-group">
-                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
+                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                          Name
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-6">
@@ -281,6 +282,7 @@
                           <div class="bounce3"></div>
                         </div>
                       </div>
+                      <!-- *ngIf="!isFilterInprogess" -->
                       <div class="portlet light bordered" *ngIf="!isFilterInprogess">
                         <div class="portlet-title">
                           <div class="caption">
@@ -348,6 +350,7 @@
                             <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()"
                               [disabled]="mode == 'true' || source == null"></button>
                           </div>
+                          
                           <br>
                           <div class="form-body" style="padding-top:30px;">
                             <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
@@ -400,12 +403,32 @@
                                         placeholder="--Select--" required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
                                       </p-dropdown>
                                     </div>
-                                    <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                    <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" 
+                                      [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
                                       </p-dropdown>
                                     </div>
+                                    <!-- <div *ngIf="data.lhsType == 'relation'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
+                                      </p-dropdown>
+                                    </div>
+                                    <div *ngIf="data.lhsType == 'dataset'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
+                                      </p-dropdown>
+                                    </div>
+                                    <div *ngIf="data.lhsType == 'rule'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
+                                        [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel" [dropdownIcon]="caretdown">
+                                      </p-dropdown>
+                                    </div> -->
+                                    
                                   </td>
                                   <td>
                                     <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}"
@@ -478,11 +501,11 @@
 
                                     <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                                       <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1{{i}}"
-                                        style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
+                                        style="width:45%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
                                         #rhsAttribute1="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute1'+i]?.invalid)}">
-                                      {{"-"}}
+                                      {{"  -  "}}
                                       <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2{{i}}"
-                                        style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
+                                        style="width:45%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
                                         #rhsAttribute2="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute2'+i]?.invalid)}">
                                     </div>
 
@@ -516,7 +539,7 @@
                                     <div *ngIf="data.rhsType == 'paramlist'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
-                                        placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel" [dropdownIcon]="caretdown">
+                                        placeholder="--Select--" dataKey="label" required #rhsAttribute="ngModel" [dropdownIcon]="caretdown">
                                       </p-dropdown>
                                     </div>
 
@@ -530,7 +553,7 @@
 
                                     <p-dialog class="dialog-titlebar" header="Search Attribute" [(visible)]="displayDialogBox"
                                       [modal]="true" [responsive]="true" [width]="430" [resizable]="true"
-                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','border': '1px solid','padding': '10px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
                                       <!-- [baseZIndex]="1000" -->
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>

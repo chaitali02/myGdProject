@@ -1,3 +1,4 @@
+import { AppHelper } from './../app.helper';
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
@@ -12,12 +13,24 @@ import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, debounceTime } from 'rxjs/operators';
+import { FilterInfoIO } from '../metadata/domainIO/domain.filterInfoIO';
+import { MetaType } from '../metadata/enums/metaType';
+import { BaseEntity } from '../metadata/domain/domain.baseEntity';
+import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
+import { AttributeIO } from '../metadata/domainIO/domain.attributeIO';
+import { Recon } from '../metadata/domain/domain.recon';
+import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
+import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
+import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
+import { FilterInfo } from '../metadata/domain/domain.filterInfo';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
 @Component({
   selector: 'app-data-recon',
   templateUrl: './data-recondetail.template.html',
 })
 export class DataReconDetailComponent {
-  showGraph: boolean;
   isHomeEnable: boolean;
   dropIndex: any;
   dragIndex: any;
@@ -58,13 +71,13 @@ export class DataReconDetailComponent {
   allTargetAtrribute: any[];
   target: string;
   selectTargetAtrribute: DependsOn;
-  selectTargetType: DependsOn;
-  selectTargetFunction: DependsOn;
+  selectTargetType: any;
+  selectTargetFunction: any;
   selectSourceAtrribute: DependsOn;
   allSourceFunction: any[];
   allSourceAtrribute: any[];
-  selectSoueceFunction: DependsOn;
-  selectSourceType: DependsOn;
+  selectSoueceFunction: any;
+  selectSourceType: any;
   IsProgerssShow: string;
   checkboxModelexecution: boolean;
   logicalOperators: { 'value': string; 'label': string; }[];
@@ -109,11 +122,49 @@ export class DataReconDetailComponent {
   IsSelectDataType: any
   IsSelectSoureceAttr: any
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataReconService: DataReconService) {
-    
-    this.showGraph = false;
+  showForm: boolean = true;
+  isGraphInprogess: boolean;
+  showDivGraph: boolean;
+  // isGraphError: boolean;
+  isversionEnable: boolean;
+  isAdd: boolean;
+  isEdit: boolean = false;
+  // profiledata: any;
+  isEditError: boolean = false;
+  isEditInprogess: boolean = false;
+  metaType = MetaType;
+  moveTo: number;
+  moveToEnable: boolean;
+  count: any[];
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
+  txtQueryChangedTargetFilter: Subject<string> = new Subject<string>();
+  // rowIndex: any;
+  topDisabled: boolean;
+  bottomDisabled: boolean;
+  active: any;
+  locked: any;
+  published: any;
+  caretdown = 'fa fa-caret-down';
+  datasetNotEmpty: boolean = true;
+  datasetNotEmptyTarget: boolean = true;
+  rowIndex: any;
+  rowIndexTarget: any;
+
+
+  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
+    private _commonService: CommonService, private _dataReconService: DataReconService, private appHelper: AppHelper) {
+
     this.isHomeEnable = false;
     this.recondata = {};
+    this.active = true;
+    this.locked = false;
+    this.published = false;
+    this.isEditInprogess = false;
+    this.isEditError = false;
+
     this.displayDialogBox = false;
     this.displayDialogBoxTarget = false;
     this.dialogAttributeName = {};
@@ -131,27 +182,27 @@ export class DataReconDetailComponent {
     this.selectdatefromate = "";
     this.dataqualitycompare = null;
     this.sourceTableArray = null;
-    this.recondata["active"] = true
-    this.breadcrumbDataFrom = [{
-      "caption": "Data Recon",
-      "routeurl": "/app/list/recon"
-    },
-    {
-      "caption": "Rule",
-      "routeurl": "/app/list/recon"
-    },
-    {
-      "caption": "",
-      "routeurl": null
-    }
-    ]
+    this.active = true;
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "Data Recon",
+        "routeurl": "/app/list/recon"
+      },
+      {
+        "caption": "Rule",
+        "routeurl": "/app/list/recon"
+      },
+      {
+        "caption": "",
+        "routeurl": null
+      }]
     this.operators = [
+      { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': '<', 'label': 'LESS THAN(<)' },
       { 'value': '>', 'label': 'GREATER THAN(>)' },
       { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
       { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
-      { 'value': '=', 'label': 'EQUAL TO(=)' },
-      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': 'BETWEEN', 'label': 'BETWEEN' },
       { 'value': 'LIKE', 'label': 'LIKE' },
       { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
@@ -193,11 +244,12 @@ export class DataReconDetailComponent {
     this.isNullArray = [
       { 'value': 'NULL', 'label': 'NULL' },
       { 'value': 'NOT NULL', 'label': 'NOT NULL' }
-    ]
+    ];
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       this.getFunctionByCategory();
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
@@ -208,14 +260,101 @@ export class DataReconDetailComponent {
       }
       this.getAllVersionByUuid();
     });
+
+
+    this.moveToEnable = false;
+    this.count = [];
+    this.txtQueryChangedFilter
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        console.log(parseInt(index) - 1);
+        for (const i in this.filterTableArray) {
+          if (this.filterTableArray[i].hasOwnProperty("selected"))
+            this.filterTableArray[i].selected = false;
+        }
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.resetTableTopBottom
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.checkSelectedTarget(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.txtQueryChangedTargetFilter
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        console.log(parseInt(index) - 1);
+        for (const i in this.targetFilterTableArray) {
+          if (this.targetFilterTableArray[i].hasOwnProperty("selected"))
+            this.targetFilterTableArray[i].selected = false;
+        }
+        this.moveTo = null;
+        this.checkSelectedTarget(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
+
   }
 
-  showDagGraph(uuid, version) {
+  ngOnInit() {
+    this.setMode(this.mode);
+  }
+
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/recon/createreconerule', uuid, version, 'false']);
+    this.isEdit = true;
+  }
+
+  showview(uuid, version) {
+    this.router.navigate(['app/recon/createreconerule', uuid, version, 'true']);
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showDivGraph = false;
+    this.showForm = true;
+  }
+
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
-    this.showGraph = true;
+    this.showDivGraph = true;
+    this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
     }, 1000);
+  }
+
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.recondata.name;
   }
 
   public goBack() {
@@ -263,216 +402,251 @@ export class DataReconDetailComponent {
   //   });
   // }
   getAllLatestSource() {
-    this._commonService.getAllLatest(this.source).subscribe(
-      response => { this.OnSuccesgetAllLatestSource(response) },
-      error => console.log('Error :: ' + error)
-    )
+    this.getAllLatest(this.source, "source");
+    // this._commonService.getAllLatest(this.source).subscribe(
+    //   response => { this.onSuccesgetAllLatestSource(response) },
+    //   error => console.log('Error :: ' + error)
+    // )
   }
-  OnSuccesgetAllLatestSource(response1) {
-    let temp = []
-    if (this.mode == undefined) {
-      let dependOnTemp: DependsOn = new DependsOn();
-      dependOnTemp.label = response1[0]["name"];
-      dependOnTemp.uuid = response1[0]["uuid"];
-      this.sourcedata = dependOnTemp
-    }
-    for (const n in response1) {
-      let allname = {};
-      allname["label"] = response1[n]['name'];
-      allname["value"] = {};
-      allname["value"]["label"] = response1[n]['name'];
-      allname["value"]["uuid"] = response1[n]['uuid'];
-      temp[n] = allname;
-    }
-    this.allNames = temp
-    if (this.mode !== undefined) {
-      this.getAllAttributeBySource();
-      // this.getAllAttributeByTarget();
-    }
-    // if(this.mode != undefined  && this.IsSelectSoureceAttr) {
-    //   this.allRefIntegrity=this.allNames;
-    //   this.changeRefIntegrity();
 
-    // }
-  }
   getAllLatestTarget() {
-    this._commonService.getAllLatest(this.target).subscribe(
-      response => { this.OnSuccesgetAllLatestTarget(response) },
-      error => console.log('Error :: ' + error)
-    )
+    this.getAllLatest(this.target, "target");
+    // this._commonService.getAllLatest(this.target).subscribe(
+    //   response => { this.onSuccesgetAllLatestTarget(response) },
+    //   error => console.log('Error :: ' + error)
+    // )
   }
-  OnSuccesgetAllLatestTarget(response1) {
+  getAllLatest(sourceOrTarget, type) {
+
+    this._commonService.getAllLatest(sourceOrTarget).subscribe(
+      response => {
+        if (type == "source") {
+          this.onSuccesgetAllLatestSource(response);
+        }
+        else if (type == "target") {
+          this.onSuccesgetAllLatestTarget(response);
+        }
+      },
+      error => console.log('Error :: ' + error)
+    );
+
+  }
+  onSuccesgetAllLatestSource(response1: BaseEntity[]) {
     let temp = []
     if (this.mode == undefined) {
       let dependOnTemp: DependsOn = new DependsOn();
-      dependOnTemp.label = response1[0]["name"];
-      dependOnTemp.uuid = response1[0]["uuid"];
+      dependOnTemp.label = response1[0].name;
+      dependOnTemp.uuid = response1[0].uuid;
       this.sourcedata = dependOnTemp
     }
     for (const n in response1) {
-      let allname = {};
-      allname["label"] = response1[n]['name'];
-      allname["value"] = {};
-      allname["value"]["label"] = response1[n]['name'];
-      allname["value"]["uuid"] = response1[n]['uuid'];
+      let allname = new DropDownIO();
+      response1.sort((a, b) => a.name.localeCompare(b.name.toString()));
+      allname.label = response1[n].name;
+      allname.value = { label: "", uuid: "" };
+      allname.value.label = response1[n].name;
+      allname.value.uuid = response1[n].uuid;
       temp[n] = allname;
     }
-    this.allNamesTarget = temp
-    if (this.mode !== undefined) {
+    this.allNames = temp;
 
-      this.getAllAttributeByTarget();
+    if (this.mode == undefined) {
+      setTimeout(() => {
+        this.selectSourceType = this.allNames[0].value;
+        this.getAllAttributeBySource();
+      }, 1000);
+    }
+    if (this.mode !== undefined) {
+      setTimeout(() => {
+        this.getAllAttributeBySource();
+      }, 1000);
+    }
+  }
+  onSuccesgetAllLatestTarget(response1: BaseEntity[]) {
+    let temp = []
+    if (this.mode == undefined) {
+      let dependOnTemp: DependsOn = new DependsOn();
+      dependOnTemp.label = response1[0].name;
+      dependOnTemp.uuid = response1[0].uuid;
+      this.sourcedata = dependOnTemp
+    }
+    for (const n in response1) {
+      let allname = new DropDownIO();
+      response1.sort((a, b) => a.name.localeCompare(b.name.toString()));
+      allname.label = response1[n].name;
+      allname.value = { label: "", uuid: "" };
+      allname.value.label = response1[n].name;
+      allname.value.uuid = response1[n].uuid;
+      temp[n] = allname;
+    }
+    this.allNamesTarget = temp; 
+    if (this.mode == undefined) {
+      setTimeout(() => {
+        this.selectTargetType = this.allNamesTarget[0].value;
+        this.getAllAttributeByTarget();
+      }, 1000);
+    }
+    if (this.mode !== undefined) {
+      setTimeout(() => {
+        this.getAllAttributeByTarget();
+      }, 1000);
     }
 
   }
   getAllAttributeBySource() {
     this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source).subscribe(
-      response => { this.OnSuccesgetAllAttributeBySource(response) },
+      response => { this.onSuccesgetAllAttributeBySource(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllAttributeBySource(response) {
+  onSuccesgetAllAttributeBySource(response) {
     let temp = [];
     let attribute = []
     let count = 1
-    let allname = {};
-    allname["label"] = '-select-';
-    allname["value"] = null
+    let allname = new AttributeIO();
+    allname.label = '-select-';
+    allname.value = null
     for (const n in response) {
-      let allname = {};
-      allname["label"] = response[n]['name'];
-      allname["value"] = {};
-      allname["value"]["label"] = response[n]['name'];
-      allname["value"]["u_Id"] = response[n]['id'];
-      allname["value"]["uuid"] = response[n]['uuid'];
-      allname["value"]["attrId"] = response[n]['attributeId'];
+      let allname = new AttributeIO();
+      allname.label = response[n].name;
+      allname.value = {};
+      allname.value.label = response[n].name;
+      allname.value.u_Id = response[n].id;
+      allname.value.uuid = response[n].uuid;
+      allname.value.attrId = response[n].attributeId;
       temp[n] = allname
-      attribute[n] = allname
-
-      //count=count+1;
+      attribute[n] = allname;
     }
-    this.allSourceAtrribute = temp
-    // this.lhsdatapodattributefilter=attribute
-    // this.allAttribute.splice(0, 0, allname);
-    // this.lhsdatapodattributefilter.splice(0,1);
+    this.allSourceAtrribute = temp; 
+    if (this.mode == undefined) {
+      this.selectSourceAtrribute = this.allSourceAtrribute[0];
+    }
   }
   getAllAttributeByTarget() {
     this._commonService.getAllAttributeBySource(this.selectTargetType.uuid, this.target).subscribe(
-      response => { this.OnSuccesgetAllAttributeByTarget(response) },
+      response => { this.onSuccesgetAllAttributeByTarget(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllAttributeByTarget(response) {
+  onSuccesgetAllAttributeByTarget(response) {
     let temp = [];
     let attribute = []
     let count = 1
-    let allname = {};
-    allname["label"] = '-select-';
-    allname["value"] = null
+    let allname = new AttributeIO();
+    allname.label = '-select-';
+    allname.value = null
     for (const n in response) {
-      let allname = {};
-      allname["label"] = response[n]['name'];
-      allname["value"] = {};
-      allname["value"]["label"] = response[n]['name'];
-      allname["value"]["u_Id"] = response[n]['id'];
-      allname["value"]["uuid"] = response[n]['uuid'];
-      allname["value"]["attrId"] = response[n]['attributeId'];
+      let allname = new AttributeIO();
+      allname.label = response[n].name;
+      allname.value = {};
+      allname.value.label = response[n].name;
+      allname.value.u_Id = response[n].id;
+      allname.value.uuid = response[n].uuid;
+      allname.value.attrId = response[n].attributeId;
       temp[n] = allname
-      attribute[n] = allname
-
-      //count=count+1;
+      attribute[n] = allname;
     }
-    this.allTargetAtrribute = temp
-    // this.lhsdatapodattributefilter=attribute
-    // this.allAttribute.splice(0, 0, allname);
-    // this.lhsdatapodattributefilter.splice(0,1);
+    this.allTargetAtrribute = temp; 
+
+    if (this.mode == undefined) {
+      this.selectTargetAtrribute = this.allTargetAtrribute[0].value;
+    }
   }
   getFunctionByCategory() {
     this._dataReconService.getFunctionByCategory("function").subscribe(
-      response => { this.OnSuccesgetFunctionByCategory(response) },
+      response => { this.onSuccesgetFunctionByCategory(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetFunctionByCategory(response) {
+  onSuccesgetFunctionByCategory(response) {
     let temp = [];
     let attribute = []
     let count = 1
-    let allname = {};
-    allname["label"] = '-select-';
-    allname["value"] = null
+    let allname = new AttributeIO();
+    // allname.label = '-select-';
+    // allname.value = null
     for (const n in response) {
-      let allname = {};
-      allname["label"] = response[n]['name'];
-      allname["value"] = {};
-      allname["value"]["label"] = response[n]['name'];
-      allname["value"]["u_Id"] = response[n]['id'];
-      allname["value"]["uuid"] = response[n]['uuid'];
-      allname["value"]["attrId"] = response[n]['attributeId'];
-      temp[n] = allname
-      attribute[n] = allname
-
-      //count=count+1;
+      let allname = new AttributeIO();
+      allname.label = response[n].name;
+      allname.value = {};
+      allname.value.label = response[n].name;
+      allname.value.u_Id = response[n].id;
+      allname.value.uuid = response[n].uuid;
+      allname.value.attrId = response[n].attributeId;
+      temp[n] = allname;
+      attribute[n] = allname;
     }
-    this.allSourceFunction = temp
-    // this.lhsdatapodattributefilter=attribute
-    // this.allAttribute.splice(0, 0, allname);
-    // this.lhsdatapodattributefilter.splice(0,1);
+    this.allSourceFunction = temp;
+    this.selectSoueceFunction = this.allSourceFunction[0].value;
+    this.selectTargetFunction = this.allSourceFunction[0].value;
   }
   getOneByUuidAndVersion(id, version) {
-    this._dataReconService.getOneByUuidAndVersion(id, version, 'recon')
+    this.isEditInprogess = true;
+    this.isEditError = false;
+    this._dataReconService.getOneByUuidAndVersion(id, version, this.metaType.RECON)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
-        error => console.log("Error :: " + error));
+        error => {
+          console.log("Error :: " + error)
+          this.isEditError = true;
+        });
   }
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.recondata.name
-    this.recondata = response.recondata;
-    this.dataqualitycompare = response.recondata;
-    console.log(response.filterInfo);
-    this.sourceTableArray = response.filterInfo
-    this.createdBy = response.recondata.createdBy.ref.name
-    this.recondata.published = response.recondata["published"] == 'Y' ? true : false
-    this.recondata.locked = response.recondata["locked"] == 'Y' ? true : false
-    this.recondata.active = response.recondata["active"] == 'Y' ? true : false
-    this.recondata.sourceDistinct = response.recondata["sourceDistinct"] == 'Y' ? true : false
-    this.recondata.targetDistinct = response.recondata["targetDistinct"] == 'Y' ? true : false
-    this.tags = response.recondata['tags'];
-    const version: Version = new Version();
+    this.recondata = response.recon;
+    this.breadcrumbDataFrom[2].caption = this.recondata.name
     this.uuid = response.uuid;
-    version.label = response.recondata['version'];
-    version.uuid = response.recondata['uuid'];
+
+    this.dataqualitycompare = response.recon;
+
+    const version: Version = new Version();
+    version.label = this.recondata.version;
+    version.uuid = this.recondata.uuid;
     this.selectedVersion = version
+
+    // this.createdBy = this.recondata.createdBy.ref.name
+    this.published = this.appHelper.convertStringToBoolean(this.recondata.published);
+    this.locked = this.appHelper.convertStringToBoolean(this.recondata.locked);
+    this.active = this.appHelper.convertStringToBoolean(this.recondata.active);
+    this.recondata.sourceDistinct = this.appHelper.convertStringToBoolean(this.recondata.sourceDistinct);
+    this.recondata.targetDistinct = this.appHelper.convertStringToBoolean(this.recondata.targetDistinct);
+    // this.tags = this.recondata['tags'];
+
+    this.sourceTableArray = response.filterInfo;
+
     let dependOnTemp: DependsOn = new DependsOn();
-    dependOnTemp.label = response.recondata["sourceAttr"]["ref"]["name"];
-    dependOnTemp.uuid = response.recondata["sourceAttr"]["ref"]["uuid"];
-    //this.sourcedata=dependOnTemp;
+    dependOnTemp.label = this.recondata.sourceAttr.ref.name;
+    dependOnTemp.uuid = this.recondata.sourceAttr.ref.uuid;
     this.selectSourceType = dependOnTemp;
+
     let dependOn: DependsOn = new DependsOn();
-    dependOn.label = response.recondata["sourceFunc"]["ref"]["name"];
-    dependOn.uuid = response.recondata["sourceFunc"]["ref"]["uuid"];
-    //this.sourcedata=dependOnTemp;
+    dependOn.label = this.recondata.sourceFunc.ref.name;
+    dependOn.uuid = this.recondata.sourceFunc.ref.uuid;
     this.selectSoueceFunction = dependOn;
+
     let sourceAttr: DependsOn = new DependsOn();
-    sourceAttr.label = response.recondata["sourceAttr"]["attrName"];
-    sourceAttr["attrId"] = response.recondata["sourceAttr"]["attrId"];
-    //this.sourcedata=dependOnTemp;
+    sourceAttr.label = this.recondata.sourceAttr.attrName;
+    sourceAttr.attrId = this.recondata.sourceAttr.attrId;
     this.selectSourceAtrribute = sourceAttr;
+
     let target: DependsOn = new DependsOn();
-    target.label = response.recondata["targetAttr"]["ref"]["name"];
-    target.uuid = response.recondata["targetAttr"]["ref"]["uuid"];
-    //this.sourcedata=dependOnTemp;
+    target.label = this.recondata.targetAttr.ref.name;
+    target.uuid = this.recondata.targetAttr.ref.uuid;
     this.selectTargetType = target;
+
     let targetFun: DependsOn = new DependsOn();
-    targetFun.label = response.recondata["targetFunc"]["ref"]["name"];
-    targetFun.uuid = response.recondata["targetFunc"]["ref"]["uuid"];
-    //this.sourcedata=dependOnTemp;
+    targetFun.label = this.recondata.targetFunc.ref.name;
+    targetFun.uuid = this.recondata.targetFunc.ref.uuid;
     this.selectTargetFunction = targetFun;
+
     let targetAttr: DependsOn = new DependsOn();
-    targetAttr.label = response.recondata["targetAttr"]["attrName"];
-    targetAttr["attrId"] = response.recondata["targetAttr"]["attrId"];
-    this.source = response.recondata["sourceAttr"]["ref"]["type"];
-    this.target = response.recondata["targetAttr"]["ref"]["type"];
+    targetAttr.label = this.recondata.targetAttr.attrName;
+    targetAttr.attrId = this.recondata.targetAttr.attrId;
+
+    this.source = this.recondata.sourceAttr.ref.type;
+    this.target = this.recondata.targetAttr.ref.type;
+
     //this.sourcedata=dependOnTemp;
     // this.getAllVersionByUuid();
     this.getAllLatestSource();
@@ -480,187 +654,219 @@ export class DataReconDetailComponent {
     this.selectTargetAtrribute = targetAttr;
 
     //this.selectTargetType=this.reconruledata.targetAttr.ref.type; 
-    // if (response.recondata["sourceFilter"]) {
-    //   this.sourceTableArray = response.recondata["sourceFilter"]
+    // if (this.recondata["sourceFilter"]) {
+    //   this.sourceTableArray = this.recondata["sourceFilter"]
     // }
     // else{
     //   this.sourceTableArray=[]
     // }
-    // if (response.recondata["targetFilter"]) {
-    //   this.targettableArray = response.recondata["targetFilter"]
+    // if (this.recondata["targetFilter"]) {
+    //   this.targettableArray = this.recondata["targetFilter"]
     // }
     // else {
 
     // }
 
-    this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
-      .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
 
-    this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
-      .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+    this.getAllAttributeBySourcerhs();
+    // this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+    //   .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+    //     error => console.log("Error ::", error))
 
-    this._commonService.getFunctionByCriteria("", "N", "function")
-      .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+    this.getFormulaByType();
+    // this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+    //   .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+    //     error => console.log("Error ::", error))
 
-    this._commonService.getParamByApp("", "application")
-      .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+    this.getFunctionByCriteria();
+    // this._commonService.getFunctionByCriteria("", "N", "function")
+    //   .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+    //     error => console.log("Error ::", error));
+
+    this.getParamByApp();
 
     this.filterTableArray = response.filterTableArray
     this.targetFilterTableArray = response.targetFilterTableArray
+    this.isEditInprogess = false;
   }
 
   onChangeRhsType(index) {
-    this.filterTableArray[index]["rhsAttribute"] = null;
+    this.filterTableArray[index].rhsAttribute = null;
 
-    if (this.filterTableArray[index]["rhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+    if (this.filterTableArray[index].rhsType == this.metaType.FORMULA) {
+      this.getFormulaByType();
+      // this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+    else if (this.filterTableArray[index].rhsType == this.metaType.DATAPOD) {
+      this.getAllAttributeBySourcerhs();
+      // this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'function') {
-      this._commonService.getFunctionByCriteria("", "N", "function")
-        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-          error => console.log("Error ::", error))
+    else if (this.filterTableArray[index].rhsType == this.metaType.FUNCTION) {
+      this.getFunctionByCriteria();
+      // this._commonService.getFunctionByCriteria("", "N", "function")
+      //   .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'paramlist') {
-      this._commonService.getParamByApp("", "application")
-        .subscribe(response => { this.onSuccessgetParamByApp(response) },
-          error => console.log("Error ::", error))
+    else if (this.filterTableArray[index].rhsType == this.metaType.PARAMLIST) {
+      this.getParamByApp();
+      // this._commonService.getParamByApp("", "application")
+      //   .subscribe(response => { this.onSuccessgetParamByApp(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'dataset') {
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    else if (this.filterTableArray[index].rhsType == this.metaType.DATASET) {
+      this.datasetNotEmpty = false;
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.filterTableArray[index].rhsAttribute = rhsAttribute
     }
     else {
-      this.filterTableArray[index]["rhsAttribute"] = null;
+      this.filterTableArray[index].rhsAttribute = null;
     }
   }
 
   onChangeLhsType(index) {
-    this.filterTableArray[index]["lhsAttribute"] = null;
-    if (this.filterTableArray[index]["lhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+    this.filterTableArray[index].lhsAttribute = null;
+    if (this.filterTableArray[index].lhsType == this.metaType.FORMULA) {
+      this.getFormulaByType();
+      // this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+      //     error => console.log("Error ::", error))
     }
 
-    else if (this.filterTableArray[index]["lhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+    else if (this.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
+      this.getAllAttributeBySourcerhs();
+      // this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+      //     error => console.log("Error ::", error))
     }
     else {
-      this.filterTableArray[index]["lhsAttribute"] = null;
+      this.filterTableArray[index].lhsAttribute = null;
     }
   }
 
   onChangeRhsTypeTarget(index) {
-    this.targetFilterTableArray[index]["rhsAttribute"] = null;
+    this.targetFilterTableArray[index].rhsAttribute = null;
 
-    if (this.targetFilterTableArray[index]["rhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+    if (this.targetFilterTableArray[index].rhsType == this.metaType.FORMULA) {
+      this.getFormulaByType();
+      // this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.targetFilterTableArray[index]["rhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+    else if (this.targetFilterTableArray[index].rhsType == this.metaType.DATAPOD) {
+      this.getAllAttributeBySourcerhs();
+      // this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.targetFilterTableArray[index]["rhsType"] == 'function') {
-      this._commonService.getFunctionByCriteria("", "N", "function")
-        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-          error => console.log("Error ::", error))
+    else if (this.targetFilterTableArray[index].rhsType == this.metaType.FUNCTION) {
+      this.getFunctionByCriteria();
+      // this._commonService.getFunctionByCriteria("", "N", "function")
+      //   .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.targetFilterTableArray[index]["rhsType"] == 'paramlist') {
-      this._commonService.getParamByApp("", "application")
-        .subscribe(response => { this.onSuccessgetParamByApp(response) },
-          error => console.log("Error ::", error))
+    else if (this.targetFilterTableArray[index].rhsType == this.metaType.PARAMLIST) {
+      this.getParamByApp();
+      // this._commonService.getParamByApp("", "application")
+      //   .subscribe(response => { this.onSuccessgetParamByApp(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.targetFilterTableArray[index]["rhsType"] == 'dataset') {
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.targetFilterTableArray[index]["rhsAttribute"] = rhsAttribute;
+    else if (this.targetFilterTableArray[index].rhsType == this.metaType.DATASET) {
+      this.datasetNotEmptyTarget = false;
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.targetFilterTableArray[index].rhsAttribute = rhsAttribute;
     }
     else {
-      this.targetFilterTableArray[index]["rhsAttribute"] = null;
+      this.targetFilterTableArray[index].rhsAttribute = null;
     }
   }
 
   onChangeLhsTypeTarget(index) {
-    this.targetFilterTableArray[index]["lhsAttribute"] = null;
-    if (this.targetFilterTableArray[index]["lhsType"] == 'formula') {
-      this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+    this.targetFilterTableArray[index].lhsAttribute = null;
+    if (this.targetFilterTableArray[index].lhsType == this.metaType.FORMULA) {
+      this.getFormulaByType();
+      // this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+      //     error => console.log("Error ::", error))
     }
-    else if (this.targetFilterTableArray[index]["lhsType"] == 'datapod') {
-      this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+    else if (this.targetFilterTableArray[index].lhsType == this.metaType.DATAPOD) {
+      this.getAllAttributeBySourcerhs();
+      // this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+      //   .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+      //     error => console.log("Error ::", error))
     }
     else {
-      this.targetFilterTableArray[index]["lhsAttribute"] = null;
+      this.targetFilterTableArray[index].lhsAttribute = null;
     }
   }
 
-  onSuccessgetFormulaByType(response) {
-    let FormulaObj = {};
+
+  getFormulaByType() {
+    if (this.selectSourceType) {
+      this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetFormulaByType(response) },
+          error => console.log("Error ::", error));
+    }
+  }
+  onSuccessgetFormulaByType(response: BaseEntity[]) {
+    let FormulaObj = new DropDownIO();
     let temp = [];
     for (const i in response) {
-      FormulaObj["label"] = response[i].name;
-      FormulaObj["value"] = {};
-      FormulaObj["value"]["label"] = response[i].name;
-      FormulaObj["value"]["uuid"] = response[i].uuid;
+      FormulaObj.label = response[i].name;
+      FormulaObj.value = { label: "", uuid: "" };
+      FormulaObj.value.label = response[i].name;
+      FormulaObj.value.uuid = response[i].uuid;
       temp[i] = FormulaObj;
     }
     this.FormulaArray = temp
   }
 
+  getAllAttributeBySourcerhs() {
+    if (this.selectSourceType) {
+      this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+          error => console.log("Error ::", error));
+    }
+  }
   onSuccessgetAllAttributeBySource(response) {
     let temp1 = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].dname;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].dname;
-      attributeObj["value"]["attributeId"] = response[i].attributeId;
-      attributeObj["value"]["id"] = response[i].uuid + "_" + response[i].attributeId;
+      let attributeObj = new AttributeIO();
+      attributeObj.label = response[i].dname;
+      attributeObj.value = {};
+      attributeObj.value.uuid = response[i].uuid;
+      attributeObj.value.label = response[i].dname;
+      attributeObj.value.attributeId = response[i].attributeId;
+      attributeObj.value.id = response[i].uuid + "_" + response[i].attributeId;
       temp1[i] = attributeObj
       this.attributesArray = temp1;
     }
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('recon', this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.RECON, this.id)
       .subscribe(
         response => {
-          this.OnSuccesgetAllVersionByUuid(response)
+          this.onSuccesgetAllVersionByUuid(response)
         },
         error => console.log("Error :: " + error));
   }
-  OnSuccesgetAllVersionByUuid(response) {
+  onSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { label: "", uuid: "" };
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
       this.VersionList[i] = ver;
     }
   }
@@ -668,8 +874,8 @@ export class DataReconDetailComponent {
     this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
 
-  OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "recon", "execute").subscribe(
+  onSucessGetOneById(response) {
+    this._commonService.execute(response.uuid, response.version, this.metaType.RECON, "execute").subscribe(
       response => {
         this.showMassage('Recon Rule Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
@@ -686,13 +892,7 @@ export class DataReconDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/recon/createreconerule', uuid, version, 'false']);
-  }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/recon/createreconerule', uuid, version, 'true']);
-  }
 
   getAllAttributeBySourceDrop(defaultValue, index, type) {
     this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source).subscribe(
@@ -716,11 +916,11 @@ export class DataReconDetailComponent {
   OnSuccesgetAllAttributeBySourceDrop(response2, defaultValue, index, type) {
     let temp = []
     for (const n in response2) {
-      let allname1 = {};
-      allname1["label"] = response2[n]['dname'];
-      allname1["value"] = {};
-      allname1["value"]["label"] = response2[n]['dname'];
-      allname1["value"]["id"] = response2[n]['id'];
+      let allname1 = new AttributeIO();
+      allname1.label = response2[n].dname;
+      allname1.value = { label: "", id: "" };
+      allname1.value.label = response2[n].dname;
+      allname1.value.id = response2[n].id;
       temp[n] = allname1;
     }
     this.allAttribute = temp;
@@ -737,7 +937,7 @@ export class DataReconDetailComponent {
 
   }
   getAllFormula(defaultValue, index, type) {
-    this._commonService.getFormulaByType(this.selectSourceType.uuid, "formula").subscribe(
+    this._commonService.getFormulaByType(this.selectSourceType.uuid, this.metaType.FORMULA).subscribe(
       response => { this.onSuccessgetAllFormula(response, defaultValue, index, type) },
       error => console.log('Error :: ' + error)
     )
@@ -745,9 +945,9 @@ export class DataReconDetailComponent {
   onSuccessgetAllFormula(response, defaultValue, index, type) {
     let temp = []
     if (response[0]) {
-      let sourceformula = {};
-      sourceformula["label"] = response[0].name;
-      sourceformula["uuid"] = response[0].uuid;
+      let sourceformula = new AttributeIO();
+      sourceformula.label = response[0].name;
+      sourceformula.uuid = response[0].uuid;
       if (type == 'lhs') {
         this.sourceTableArray[index].lhsformula = sourceformula;
       } else {
@@ -756,11 +956,11 @@ export class DataReconDetailComponent {
       }
     }
     for (const n in response) {
-      let allname1 = {};
-      allname1["label"] = response[n]['name'];
-      allname1["value"] = {};
-      allname1["value"]["label"] = response[n]['name'];
-      allname1["value"]["uuid"] = response[n]['uuid'];
+      let allname1 = new AttributeIO();
+      allname1.label = response[n].name;
+      allname1.value = {};
+      allname1.value.label = response[n].name;
+      allname1.value.uuid = response[n].uuid;
       temp[n] = allname1;
     }
     this.allFormula = temp
@@ -768,19 +968,19 @@ export class DataReconDetailComponent {
 
   getAllAttributeBySourceTarget(defaultValue, index, type) {
     this._commonService.getAllAttributeBySource(this.selectTargetType.uuid, this.target).subscribe(
-      response => { this.OnSuccesgetAllAttributeBySourceTarget(response, defaultValue, index, type) },
+      response => { this.onSuccesgetAllAttributeBySourceTarget(response, defaultValue, index, type) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllAttributeBySourceTarget(response2, defaultValue, index, type) {
+  onSuccesgetAllAttributeBySourceTarget(response2, defaultValue, index, type) {
     //   
     let temp = []
     for (const n in response2) {
-      let allname1 = {};
-      allname1["label"] = response2[n]['dname'];
-      allname1["value"] = {};
-      allname1["value"]["label"] = response2[n]['dname'];
-      allname1["value"]["id"] = response2[n]['id'];
+      let allname1 = new AttributeIO();
+      allname1.label = response2[n].dname;
+      allname1.value = {};
+      allname1.value.label = response2[n].dname;
+      allname1.value.id = response2[n].id;
       temp[n] = allname1;
     }
     this.allAttributeTarget = temp;
@@ -797,17 +997,17 @@ export class DataReconDetailComponent {
 
   }
   getAllFormulaTarget(defaultValue, index, type) {
-    this._commonService.getFormulaByType(this.selectTargetType.uuid, "formula").subscribe(
+    this._commonService.getFormulaByType(this.selectTargetType.uuid, this.metaType.FORMULA).subscribe(
       response => { this.onSuccessgetAllFormulaTarget(response, defaultValue, index, type) },
       error => console.log('Error :: ' + error)
     )
   }
-  onSuccessgetAllFormulaTarget(response, defaultValue, index, type) {
+  onSuccessgetAllFormulaTarget(response: BaseEntity[], defaultValue, index, type) {
     let temp = []
     if (response[0]) {
-      let sourceformula = {};
-      sourceformula["label"] = response[0].name;
-      sourceformula["uuid"] = response[0].uuid;
+      let sourceformula = new AttributeIO();
+      sourceformula.label = response[0].name;
+      sourceformula.uuid = response[0].uuid;
       if (type == 'lhs') {
         this.targettableArray[index].lhsformula = sourceformula;
       } else {
@@ -815,11 +1015,11 @@ export class DataReconDetailComponent {
       }
     }
     for (const n in response) {
-      let allname1 = {};
-      allname1["label"] = response[n]['name'];
-      allname1["value"] = {};
-      allname1["value"]["label"] = response[n]['name'];
-      allname1["value"]["uuid"] = response[n]['uuid'];
+      let allname1 = new AttributeIO();
+      allname1.label = response[n].name;
+      allname1.value = {};
+      allname1.value.label = response[n].name;
+      allname1.value.uuid = response[n].uuid;
       temp[n] = allname1;
     }
     this.allFormulaTarget = temp
@@ -838,18 +1038,23 @@ export class DataReconDetailComponent {
   // }
 
   addRow() {
-    if (this.filterTableArray == null) {
+    var filertable = new FilterInfoIO;
+    if (this.filterTableArray == null || this.filterTableArray.length == 0) {
       this.filterTableArray = [];
+      filertable.logicalOperator = '';
     }
-    var len = this.filterTableArray.length + 1
-    var filertable = {};
-    filertable["logicalOperator"] = ""
-    filertable["lhsType"] = "integer"
-    filertable["lhsAttribute"] = ""
-    filertable["operator"] = ""
-    filertable["rhsType"] = "integer"
-    filertable["rhsAttribute"] = ""
+    else {
+      filertable.logicalOperator = this.logicalOperators[1].label;
+    }
+    // var len = this.filterTableArray.length + 1
+    filertable.lhsType = "string";
+    filertable.lhsAttribute = null;
+    filertable.operator = this.operators[0].value;
+    filertable.rhsType = "string"
+    filertable.rhsAttribute = null;
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
+    this.count = [];
+    this.checkSelected(false, this.filterTableArray.length - 1);
   }
   removeRow() {
     let newDataList = [];
@@ -862,8 +1067,12 @@ export class DataReconDetailComponent {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
+
+    this.count = [];
+    this.checkSelected(false, null);
     this.filterTableArray = newDataList;
   }
+
   checkAllFilterRow() {
     if (!this.selectedAllFitlerRow) {
       this.selectedAllFitlerRow = true;
@@ -877,18 +1086,22 @@ export class DataReconDetailComponent {
   }
 
   addRowTarget() {
-    if (this.targetFilterTableArray == null) {
+    var filertable = new FilterInfoIO;
+    if (this.targetFilterTableArray == null || this.targetFilterTableArray.length == 0) {
       this.targetFilterTableArray = [];
+      filertable.logicalOperator = ""
     }
-    var len = this.targetFilterTableArray.length + 1
-    var filertable = {};
-    filertable["logicalOperator"] = ""
-    filertable["lhsType"] = "integer"
-    filertable["lhsAttribute"] = ""
-    filertable["operator"] = ""
-    filertable["rhsType"] = "integer"
-    filertable["rhsAttribute"] = ""
+    else {
+      filertable.logicalOperator = this.logicalOperators[1].label;
+    }
+    filertable.lhsType = "string"
+    filertable.lhsAttribute = null
+    filertable.operator = this.operators[0].value;
+    filertable.rhsType = "string"
+    filertable.rhsAttribute = null;
     this.targetFilterTableArray.splice(this.targetFilterTableArray.length, 0, filertable);
+    this.count = [];
+    this.checkSelectedTarget(false, this.targetFilterTableArray.length - 1);
   }
   removeRowTarget() {
     let newDataList = [];
@@ -901,8 +1114,12 @@ export class DataReconDetailComponent {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
+
+    this.count = [];
+    this.checkSelectedTarget(false, null);
     this.targetFilterTableArray = newDataList;
   }
+
   checkAllFilterRowTarget() {
     if (!this.selectedAllFitlerRow1) {
       this.selectedAllFitlerRow1 = true;
@@ -915,27 +1132,38 @@ export class DataReconDetailComponent {
     });
   }
 
+  getFunctionByCriteria() {
+    this._commonService.getFunctionByCriteria("", "N", this.metaType.FUNCTION)
+      .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+        error => console.log("Error ::", error));
+  }
   onSuccessgetFunctionByCriteria(response) {
     let temp = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].name;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].name;
+      let attributeObj = new AttributeIO();
+      attributeObj.label = response[i].name;
+      attributeObj.value = {};
+      attributeObj.value.uuid = response[i].uuid;
+      attributeObj.value.label = response[i].name;
       temp[i] = attributeObj
     }
     this.functionArray = temp;
   }
+
+  getParamByApp() {
+    this._commonService.getParamByApp("", this.metaType.APPLICATION)
+      .subscribe(response => { this.onSuccessgetParamByApp(response) },
+        error => console.log("Error ::", error))
+  }
   onSuccessgetParamByApp(response) {
     let temp = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = "app." + response[i].paramName;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].ref.uuid;
-      attributeObj["value"]["attributeId"] = response[i].paramId;
-      attributeObj["value"]["label"] = "app." + response[i].paramName;
+      let attributeObj = new AttributeIO();
+      attributeObj.label = "app." + response[i].paramName;
+      attributeObj.value = {};
+      attributeObj.value.uuid = response[i].ref.uuid;
+      attributeObj.value.attributeId = response[i].paramId;
+      attributeObj.value.label = "app." + response[i].paramName;
       temp[i] = attributeObj
     }
     this.paramlistArray = temp;
@@ -944,12 +1172,13 @@ export class DataReconDetailComponent {
   onChangeOperator(index) {
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
-      this.filterTableArray[index].rhsType = 'dataset';
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+      this.filterTableArray[index].rhsType = this.metaType.DATASET;
+      this.datasetNotEmpty = false;
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.filterTableArray[index].rhsAttribute = rhsAttribute
     }
     else if (this.filterTableArray[index].operator == 'IS') {
       this.filterTableArray[index].rhsType = 'string';
@@ -969,18 +1198,19 @@ export class DataReconDetailComponent {
   onChangeOperatorTarget(index) {
     this.targetFilterTableArray[index].rhsAttribute = null;
     if (this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS') {
-      this.targetFilterTableArray[index].rhsType = 'dataset';
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.targetFilterTableArray[index]["rhsAttribute"] = rhsAttribute
+      this.targetFilterTableArray[index].rhsType = this.metaType.DATASET;
+      this.datasetNotEmptyTarget = false;
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.targetFilterTableArray[index].rhsAttribute = rhsAttribute
     }
     else if (this.targetFilterTableArray[index].operator == 'IS') {
       this.targetFilterTableArray[index].rhsType = 'string';
     }
     else {
-      this.filterTableArray[index].rhsType = 'integer';
+      this.targetFilterTableArray[index].rhsType = 'integer';
     }
     // this.filterTableArray[index].rhsAttribute = null;
     // if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
@@ -991,55 +1221,91 @@ export class DataReconDetailComponent {
     // }	
   }
 
-  searchOption(index) {
+  searchOption(data, index) {
+    this.rowIndex = index;
     this.displayDialogBox = true;
-    this._commonService.getAllLatest("dataset")
-      .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
-        error => console.log("Error ::", error))
+    if (!data.uuid) {
+      this.dialogSelectName = "";
+      this.dialogAttributeName = "";
+      this._commonService.getAllLatest(this.metaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
+          error => console.log("Error ::", error))
+    }
+    else {
+      this._commonService.getAllLatest(MetaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
+          error => console.log("Error ::", error));
+    }
   }
 
-  onSuccessgetAllLatestDialogBox(response) {
+  onSuccessgetAllLatestDialogBox(response, data) {
     this.dialogAttriArray = [];
     let temp = [];
     for (const i in response) {
-      let dialogAttriObj = {};
-      dialogAttriObj["label"] = response[i].name;
-      dialogAttriObj["value"] = {};
-      dialogAttriObj["value"]["label"] = response[i].name;
-      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      let dialogAttriObj = new DropDownIO();
+      dialogAttriObj.label = response[i].name;
+      dialogAttriObj.value = { label: "", uuid: "" };
+      dialogAttriObj.value.label = response[i].name;
+      dialogAttriObj.value.uuid = response[i].uuid;
       temp[i] = dialogAttriObj;
+
+      if (data.uuid && data.uuid == response[i].uuid) {
+        this.dialogSelectName = data;
+        this._commonService.getAttributesByDataset(MetaType.DATASET, data.uuid)
+          .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, data) },
+            error => console.log("Error ::", error));
+      }
     }
     this.dialogAttriArray = temp
     console.log(JSON.stringify(this.dialogAttriArray));
   }
-
-  onChangeDialogAttribute() {
-    this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
-      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
-        error => console.log("Error ::", error))
-  }
-
-  onSuccessgetAttributesByDatasetDialogBox(response) {
+  onSuccessgetAttributesByDatasetDialogBox(response, data) {
     this.dialogAttriNameArray = [];
     for (const i in response) {
-      let dialogAttriNameObj = {};
-      dialogAttriNameObj["label"] = response[i].attrName;
-      dialogAttriNameObj["value"] = {};
-      dialogAttriNameObj["value"]["label"] = response[i].attrName;
-      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
-      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = {};
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
 
+      console.log(response[i].attrId);
+      if (data) {
+        if (data.attributeId.toString()) {
+          if (data.attributeId.toString() == response[i].attrId) {
+            this.dialogAttributeName = dialogAttriNameObj.value;
+          }
+        }
+      }
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+  onChangeDialogAttribute(dialogSelectDatasetName) {
+    this._commonService.getAttributesByDataset(this.metaType.DATASET, dialogSelectDatasetName.uuid)
+      .subscribe(response => { this.onSuccessgetAttributesByDatasetChangeDialogAttr(response) },
+        error => console.log("Error ::", error))
+  }
+  onSuccessgetAttributesByDatasetChangeDialogAttr(response) {
+    this.dialogAttriNameArray = [];
+    for (const i in response) {
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = { label: "", attributeId: "", uuid: "" };
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
       this.dialogAttriNameArray[i] = dialogAttriNameObj;
     }
   }
 
   submitDialogBox(index) {
     this.displayDialogBox = false;
-    let rhsattribute = {}
-    rhsattribute["label"] = this.dialogAttributeName.label;
-    rhsattribute["uuid"] = this.dialogAttributeName.uuid;
-    rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+    let rhsattribute = new AttributeIO();
+    rhsattribute.label = this.dialogAttributeName.label;
+    rhsattribute.uuid = this.dialogAttributeName.uuid;
+    rhsattribute.attributeId = this.dialogAttributeName.attributeId;
     this.filterTableArray[index].rhsAttribute = rhsattribute;
+    this.datasetNotEmpty = true;
   }
 
   cancelDialogBox() {
@@ -1047,370 +1313,415 @@ export class DataReconDetailComponent {
   }
 
 
-  searchOptionTarget(index) {
+  searchOptionTarget(data, index) {
+    this.rowIndexTarget = index;
     this.displayDialogBoxTarget = true;
-    this._commonService.getAllLatest("dataset")
-      .subscribe(response => { this.onSuccessgetAllLatestDialogBoxTarget(response) },
-        error => console.log("Error ::", error))
+    if (!data.uuid) {
+      this.dialogSelectNameTarget = "";
+      this.dialogAttributeNameTarget = "";
+      this._commonService.getAllLatest(this.metaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBoxTarget(response, data) },
+          error => console.log("Error ::", error))
+
+    } else {
+      this._commonService.getAllLatest(MetaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBoxTarget(response, data) },
+          error => console.log("Error ::", error));
+    }
   }
 
-  onSuccessgetAllLatestDialogBoxTarget(response) {
+  onSuccessgetAllLatestDialogBoxTarget(response, data) {
     this.dialogAttriArrayTarget = [];
     let temp = [];
     for (const i in response) {
-      let dialogAttriObj = {};
-      dialogAttriObj["label"] = response[i].name;
-      dialogAttriObj["value"] = {};
-      dialogAttriObj["value"]["label"] = response[i].name;
-      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+      let dialogAttriObj = new AttributeIO();
+      dialogAttriObj.label = response[i].name;
+      dialogAttriObj.value = {}
+      dialogAttriObj.value.label = response[i].name;
+      dialogAttriObj.value.uuid = response[i].uuid;
       temp[i] = dialogAttriObj;
+
+      if (data.uuid && data.uuid == response[i].uuid) {
+        this.dialogSelectNameTarget = data;
+        this._commonService.getAttributesByDataset(MetaType.DATASET, data.uuid)
+          .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBoxTarget(response, data) },
+            error => console.log("Error ::", error));
+      }
     }
     this.dialogAttriArrayTarget = temp
     console.log(JSON.stringify(this.dialogAttriArrayTarget));
   }
 
-  onChangeDialogTargetAttribute() {
-    this._commonService.getAttributesByDataset("dataset", this.dialogSelectNameTarget.uuid)
-      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBoxTarget(response) },
-        error => console.log("Error ::", error))
-  }
-
-  onSuccessgetAttributesByDatasetDialogBoxTarget(response) {
+  onSuccessgetAttributesByDatasetDialogBoxTarget(response, data) {
     this.dialogAttriNameArrayTarget = [];
     for (const i in response) {
-      let dialogAttriNameObj = {};
-      dialogAttriNameObj["label"] = response[i].attrName;
-      dialogAttriNameObj["value"] = {};
-      dialogAttriNameObj["value"]["label"] = response[i].attrName;
-      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
-      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = {};
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
 
+      if (data) {
+        if (data.attributeId.toString()) {
+          if (data.attributeId.toString() == response[i].attrId) {
+            this.dialogAttributeNameTarget = dialogAttriNameObj.value;
+          }
+        }
+      }
       this.dialogAttriNameArrayTarget[i] = dialogAttriNameObj;
     }
   }
 
+  onChangeDialogTargetAttribute(dialogSelectDatasetNameTarget) {
+    this._commonService.getAttributesByDataset(this.metaType.DATASET, dialogSelectDatasetNameTarget.uuid)
+      .subscribe(response => { this.onSuccessgetAttributesByDatasetChangeDialogAttrTarget(response) },
+        error => console.log("Error ::", error))
+  }
+
+  onSuccessgetAttributesByDatasetChangeDialogAttrTarget(response) {
+    this.dialogAttriNameArrayTarget = [];
+    for (const i in response) {
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = { label: "", attributeId: "", uuid: "" };
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
+      this.dialogAttriNameArrayTarget[i] = dialogAttriNameObj;
+    }
+  }
+
+
   submitDialogBoxTarget(index) {
     this.displayDialogBoxTarget = false;
-    let rhsattribute = {}
-    rhsattribute["label"] = this.dialogAttributeNameTarget.label;
-    rhsattribute["uuid"] = this.dialogAttributeNameTarget.uuid;
-    rhsattribute["attributeId"] = this.dialogAttributeNameTarget.attributeId;
+    let rhsattribute = new AttributeIO();
+    rhsattribute.label = this.dialogAttributeNameTarget.label;
+    rhsattribute.uuid = this.dialogAttributeNameTarget.uuid;
+    rhsattribute.attributeId = this.dialogAttributeNameTarget.attributeId;
     this.targetFilterTableArray[index].rhsAttribute = rhsattribute;
+    this.datasetNotEmptyTarget = true;
   }
 
   cancelDialogBoxTarget() {
     this.displayDialogBoxTarget = false;
   }
 
-  submit() {
+  submitRecon() {
     this.isSubmitEnable = true;
     this.isSubmit = "true"
-    let dqJson = {};
-    dqJson["uuid"] = this.recondata.uuid;
-    dqJson["name"] = this.recondata.name;
-    dqJson["desc"] = this.recondata.desc;
-    let tagArray = [];
-    if (this.recondata.tags != null) {
-      for (var counttag = 0; counttag < this.recondata.tags.length; counttag++) {
-        tagArray[counttag] = this.recondata.tags[counttag];
-      }
-    }
-    dqJson["tags"] = tagArray;
-    dqJson["active"] = this.recondata.active == true ? 'Y' : "N"
-    dqJson["published"] = this.recondata.published == true ? 'Y' : "N"
-    dqJson["locked"] = this.recondata.locked == true ? 'Y' : "N"
-    dqJson["sourceDistinct"] = this.recondata.sourceDistinct == true ? 'Y' : "N"
-    dqJson["targetDistinct"] = this.recondata.targetDistinct == true ? 'Y' : "N"
+    let reconJson = new Recon();
+    reconJson.uuid = this.recondata.uuid;
+    reconJson.name = this.recondata.name;
+    reconJson.desc = this.recondata.desc;
+    reconJson.tags = this.recondata.tags;
+    // let tagArray = [];
+    // if (this.recondata.tags != null) {
+    //   for (var counttag = 0; counttag < this.recondata.tags.length; counttag++) {
+    //     tagArray[counttag] = this.recondata.tags[counttag];
+    //   }
+    // }
+    // reconJson["tags"] = tagArray;
+    reconJson.active = this.appHelper.convertBooleanToString(this.recondata.active);
+    reconJson.published = this.appHelper.convertBooleanToString(this.recondata.published == true);
+    reconJson.locked = this.appHelper.convertBooleanToString(this.recondata.locked == true);
+    reconJson.sourceDistinct = this.appHelper.convertBooleanToString(this.recondata.sourceDistinct);
+    reconJson.targetDistinct = this.appHelper.convertBooleanToString(this.recondata.targetDistinct);
 
-    var sourceattribute = {}
-    var ref = {}
-    //sourceattribute["attrName"]=this.selectSourceAtrribute["attrName"]
-    sourceattribute["attrId"] = this.selectSourceAtrribute["attrId"]
-    ref["name"] = this.selectSourceType["name"]
-    ref["type"] = this.source
-    ref["uuid"] = this.selectSourceType["uuid"]
-    sourceattribute["ref"] = ref
-    dqJson["sourceAttr"] = sourceattribute
-    var targetattribute = {}
-    var ref = {}
+    var sourceAttr = new AttributeRefHolder();
+    var ref = new MetaIdentifier();
+    //sourceAttr["attrName"]=this.selectSourceAtrribute["attrName"]
+    sourceAttr.attrId = this.selectSourceAtrribute.attrId;
+    ref.name = this.selectSourceType.name;
+    ref.type = this.source;
+    ref.uuid = this.selectSourceType.uuid
+    sourceAttr.ref = ref
+    reconJson.sourceAttr = sourceAttr;
+
+    var targetattribute = new AttributeRefHolder();
+    var ref = new MetaIdentifier();
     //targetattribute["attrName"]=this.selectTargetAtrribute["attrName"]
-    targetattribute["attrId"] = this.selectTargetAtrribute["attrId"]
-    ref["name"] = this.selectTargetType["name"]
-    ref["type"] = this.target
-    ref["uuid"] = this.selectTargetType["uuid"]
-    targetattribute["ref"] = ref
-    dqJson["targetAttr"] = targetattribute
-    var sourFunction = {}
-    var ref = {}
-    ref["name"] = this.selectSoueceFunction["name"]
-    ref["type"] = 'function'
-    ref["uuid"] = this.selectSoueceFunction["uuid"]
-    sourFunction["ref"] = ref
-    dqJson["sourceFunc"] = sourFunction
-    var targFunction = {}
-    var ref = {}
-    ref["name"] = this.selectTargetFunction["name"]
-    ref["type"] = 'function'
-    ref["uuid"] = this.selectTargetFunction["uuid"]
-    targFunction["ref"] = ref
-    dqJson["targetFunc"] = targFunction
+    targetattribute.attrId = this.selectTargetAtrribute.attrId;
+    ref.name = this.selectTargetType.name;
+    ref.type = this.target;
+    ref.uuid = this.selectTargetType.uuid;
+    targetattribute.ref = ref
+    reconJson.targetAttr = targetattribute
+
+    var sourFunction = new AttributeRefHolder();
+    var ref = new MetaIdentifier();
+    ref.name = this.selectSoueceFunction.name;
+    ref.type = this.metaType.FUNCTION;
+    ref.uuid = this.selectSoueceFunction.uuid;
+    sourFunction.ref = ref;
+    reconJson.sourceFunc = sourFunction;
+
+    var targFunction = new AttributeRefHolder();
+    var ref = new MetaIdentifier();
+    ref.name = this.selectTargetFunction.name;
+    ref.type = this.metaType.FUNCTION;
+    ref.uuid = this.selectTargetFunction.uuid;
+    targFunction.ref = ref
+    reconJson.targetFunc = targFunction;
 
 
     let filterInfoArray = [];
     if (this.filterTableArray != null) {
       for (let i = 0; i < this.filterTableArray.length; i++) {
-        let filterInfo = {};
-        filterInfo["logicalOperator"] = this.filterTableArray[i].logicalOperator;
-        filterInfo["operator"] = this.filterTableArray[i].operator;
-        filterInfo["operand"] = [];
+        let filterInfo = new FilterInfo();
+        filterInfo.display_seq = i;
+        filterInfo.logicalOperator = this.filterTableArray[i].logicalOperator;
+        filterInfo.operator = this.filterTableArray[i].operator;
+        filterInfo.operand = [];
         if (this.filterTableArray[i].lhsType == 'integer' || this.filterTableArray[i].lhsType == 'string') {
-          let operatorObj = {};
-          let ref = {};
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.filterTableArray[i].lhsAttribute;
-          operatorObj["attributeType"] = "string";
-          filterInfo["operand"][0] = operatorObj;
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier();
+          ref.type = this.metaType.SIMPLE;
+          operatorObj.ref = ref;
+          operatorObj.value = this.filterTableArray[i].lhsAttribute;
+          operatorObj.attributeType = "string";
+          filterInfo.operand[0] = operatorObj;
         }
-        else if (this.filterTableArray[i].lhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.filterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
-          filterInfo["operand"][0] = operatorObj;
+        else if (this.filterTableArray[i].lhsType == this.metaType.FORMULA) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FORMULA;
+          ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
+          operatorObj.ref = ref;
+          // operatorObj.attributeId = this.dataset.filterTableArray[i].lhsAttribute;
+          filterInfo.operand[0] = operatorObj;
         }
-        else if (this.filterTableArray[i].lhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.filterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.filterTableArray[i].lhsAttribute.attributeId;
-          filterInfo["operand"][0] = operatorObj;
+        else if (this.filterTableArray[i].lhsType == this.metaType.DATAPOD) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATAPOD;
+          ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.filterTableArray[i].lhsAttribute.attributeId;
+          filterInfo.operand[0] = operatorObj;
         }
         // else if (this.filterTableArray[i].lhsType == 'attribute' && this.selectedSourceType == 'FILE') {
-        //   let operatorObj = {};
-        //   let ref = {}
-        //   ref["type"] = "attribute";
-        //   operatorObj["ref"] = ref;
-        //   operatorObj["value"] = this.filterTableArray[i].lhsAttribute;
-        //   filterInfo["operand"][0] = operatorObj;
+        //   let operatorObj = new SourceAttr();
+        //   let ref = new MetaIdentifier()
+        //   ref.type = "attribute";
+        //   operatorObj.ref = ref;
+        //   operatorObj.value = this.filterTableArray[i].lhsAttribute;
+        //   filterInfo.operand[0] = operatorObj;
         // }
 
         if (this.filterTableArray[i].rhsType == 'integer' || this.filterTableArray[i].rhsType == 'string') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.filterTableArray[i].rhsAttribute;
-          operatorObj["attributeType"] = "string"
-          filterInfo["operand"][1] = operatorObj;
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.SIMPLE;
+          operatorObj.ref = ref;
+          operatorObj.value = this.filterTableArray[i].rhsAttribute;
+          operatorObj.attributeType = "string"
+          filterInfo.operand[1] = operatorObj;
 
           if (this.filterTableArray[i].rhsType == 'integer' && this.filterTableArray[i].operator == 'BETWEEN') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "simple";
-            operatorObj["ref"] = ref;
-            operatorObj["value"] = this.filterTableArray[i].rhsAttribute1 + "and" + this.filterTableArray[i].rhsAttribute2;
-            filterInfo["operand"][1] = operatorObj;
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier()
+            ref.type = this.metaType.SIMPLE;
+            operatorObj.ref = ref;
+            operatorObj.value = this.filterTableArray[i].rhsAttribute1 + "and" + this.filterTableArray[i].rhsAttribute2;
+            filterInfo.operand[1] = operatorObj;
           }
         }
-        else if (this.filterTableArray[i].rhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.filterTableArray[i].rhsType == this.metaType.FORMULA) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FORMULA;
+          ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          //operatorObj.attributeId = this.dataset.filterTableArray[i].rhsAttribute;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.filterTableArray[i].rhsType == 'function') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "function";
-          ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.filterTableArray[i].rhsType == this.metaType.FUNCTION) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FUNCTION;
+          ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          //operatorObj.attributeId = this.dataset.filterTableArray[i].rhsAttribute;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.filterTableArray[i].rhsType == 'paramlist') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "paramlist";
-          ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.filterTableArray[i].rhsType == this.metaType.PARAMLIST) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.PARAMLIST;
+          ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.filterTableArray[i].rhsType == 'dataset') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "dataset";
-          ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.filterTableArray[i].rhsType == this.metaType.DATASET) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATASET;
+          ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.filterTableArray[i].rhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.filterTableArray[i].rhsType == this.metaType.DATAPOD) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATAPOD;
+          ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
         // else if (this.filterTableArray[i].rhsType == 'datapod' && this.selectedSourceType == 'FILE') {
-        //   let operatorObj = {};
-        //   let ref = {}
-        //   ref["type"] = "attribute";
-        //   operatorObj["ref"] = ref;
-        //   operatorObj["value"] = this.filterTableArray[i].rhsAttribute;
-        //   filterInfo["operand"][1] = operatorObj;
+        //   let operatorObj = new SourceAttr();
+        //   let ref = new MetaIdentifier()
+        //   ref.type = "attribute";
+        //   operatorObj.ref = ref;
+        //   operatorObj.value = this.filterTableArray[i].rhsAttribute;
+        //   filterInfo.operand[1] = operatorObj;
         // }
         filterInfoArray[i] = filterInfo;
       }
-      dqJson["sourceFilter"] = filterInfoArray;
+      reconJson.sourceFilter = filterInfoArray;
     }
     else {
-      dqJson["sourceFilter"] = null;
+      reconJson.sourceFilter = null;
     }
 
     let targetFilterInfoArray = [];
     if (this.targetFilterTableArray != null) {
       for (let i = 0; i < this.targetFilterTableArray.length; i++) {
-        let filterInfo = {};
-        filterInfo["logicalOperator"] = this.targetFilterTableArray[i].logicalOperator;
-        filterInfo["operator"] = this.targetFilterTableArray[i].operator;
-        filterInfo["operand"] = [];
+        let filterInfo = new FilterInfo();
+        filterInfo.display_seq = i;
+        filterInfo.logicalOperator = this.targetFilterTableArray[i].logicalOperator;
+        filterInfo.operator = this.targetFilterTableArray[i].operator;
+        filterInfo.operand = [];
         if (this.targetFilterTableArray[i].lhsType == 'integer' || this.targetFilterTableArray[i].lhsType == 'string') {
-          let operatorObj = {};
-          let ref = {};
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.targetFilterTableArray[i].lhsAttribute;
-          operatorObj["attributeType"] = "string";
-          filterInfo["operand"][0] = operatorObj;
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier();
+          ref.type = this.metaType.SIMPLE;
+          operatorObj.ref = ref;
+          operatorObj.value = this.targetFilterTableArray[i].lhsAttribute;
+          operatorObj.attributeType = "string";
+          filterInfo.operand[0] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].lhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.targetFilterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
-          filterInfo["operand"][0] = operatorObj;
+        else if (this.targetFilterTableArray[i].lhsType == this.metaType.FORMULA) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FORMULA;
+          ref.uuid = this.targetFilterTableArray[i].lhsAttribute.uuid;
+          operatorObj.ref = ref;
+          // operatorObj.attributeId = this.dataset.filterTableArray[i].lhsAttribute;
+          filterInfo.operand[0] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].lhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.targetFilterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.targetFilterTableArray[i].lhsAttribute.attributeId;
-          filterInfo["operand"][0] = operatorObj;
+        else if (this.targetFilterTableArray[i].lhsType == this.metaType.DATAPOD) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATAPOD;
+          ref.uuid = this.targetFilterTableArray[i].lhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.targetFilterTableArray[i].lhsAttribute.attributeId;
+          filterInfo.operand[0] = operatorObj;
         }
         // else if (this.filterTableArray[i].lhsType == 'attribute' && this.selectedSourceType == 'FILE') {
-        //   let operatorObj = {};
-        //   let ref = {}
-        //   ref["type"] = "attribute";
-        //   operatorObj["ref"] = ref;
-        //   operatorObj["value"] = this.filterTableArray[i].lhsAttribute;
-        //   filterInfo["operand"][0] = operatorObj;
+        //   let operatorObj = new FilterInfo();
+        //   let ref = new MetaIdentifier()
+        //   ref.type = "attribute";
+        //   operatorObj.ref = ref;
+        //   operatorObj.value = this.filterTableArray[i].lhsAttribute;
+        //   filterInfo.operand[0] = operatorObj;
         // }
 
         if (this.targetFilterTableArray[i].rhsType == 'integer' || this.targetFilterTableArray[i].rhsType == 'string') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.targetFilterTableArray[i].rhsAttribute;
-          operatorObj["attributeType"] = "string"
-          filterInfo["operand"][1] = operatorObj;
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.SIMPLE;
+          operatorObj.ref = ref;
+          operatorObj.value = this.targetFilterTableArray[i].rhsAttribute;
+          operatorObj.attributeType = "string"
+          filterInfo.operand[1] = operatorObj;
 
           if (this.targetFilterTableArray[i].rhsType == 'integer' && this.targetFilterTableArray[i].operator == 'BETWEEN') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "simple";
-            operatorObj["ref"] = ref;
-            operatorObj["value"] = this.targetFilterTableArray[i].rhsAttribute1 + "and" + this.targetFilterTableArray[i].rhsAttribute2;
-            filterInfo["operand"][1] = operatorObj;
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier()
+            ref.type = this.metaType.SIMPLE;
+            operatorObj.ref = ref;
+            operatorObj.value = this.targetFilterTableArray[i].rhsAttribute1 + "and" + this.targetFilterTableArray[i].rhsAttribute2;
+            filterInfo.operand[1] = operatorObj;
           }
         }
-        else if (this.targetFilterTableArray[i].rhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.targetFilterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.targetFilterTableArray[i].rhsType == this.metaType.FORMULA) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FORMULA;
+          ref.uuid = this.targetFilterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          //operatorObj.attributeId = this.dataset.filterTableArray[i].rhsAttribute;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].rhsType == 'function') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "function";
-          ref["uuid"] = this.targetFilterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.targetFilterTableArray[i].rhsType == this.metaType.FUNCTION) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.FUNCTION;
+          ref.uuid = this.targetFilterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          //operatorObj.attributeId = this.dataset.filterTableArray[i].rhsAttribute;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].rhsType == 'paramlist') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "paramlist";
-          ref["uuid"] = this.targetFilterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.targetFilterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.targetFilterTableArray[i].rhsType == this.metaType.PARAMLIST) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.PARAMLIST;
+          ref.uuid = this.targetFilterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.targetFilterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].rhsType == 'dataset') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "dataset";
-          ref["uuid"] = this.targetFilterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.targetFilterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.targetFilterTableArray[i].rhsType == this.metaType.DATASET) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATASET;
+          ref.uuid = this.targetFilterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.targetFilterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
-        else if (this.targetFilterTableArray[i].rhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.targetFilterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.targetFilterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
+        else if (this.targetFilterTableArray[i].rhsType == this.metaType.DATAPOD) {
+          let operatorObj = new SourceAttr();
+          let ref = new MetaIdentifier()
+          ref.type = this.metaType.DATAPOD;
+          ref.uuid = this.targetFilterTableArray[i].rhsAttribute.uuid;
+          operatorObj.ref = ref;
+          operatorObj.attributeId = this.targetFilterTableArray[i].rhsAttribute.attributeId;
+          filterInfo.operand[1] = operatorObj;
         }
         // else if (this.filterTableArray[i].rhsType == 'datapod' && this.selectedSourceType == 'FILE') {
-        //   let operatorObj = {};
-        //   let ref = {}
-        //   ref["type"] = "attribute";
-        //   operatorObj["ref"] = ref;
-        //   operatorObj["value"] = this.filterTableArray[i].rhsAttribute;
-        //   filterInfo["operand"][1] = operatorObj;
+        //   let operatorObj = new FilterInfo();
+        //   let ref = new MetaIdentifier()
+        //   ref.type = "attribute";
+        //   operatorObj.ref = ref;
+        //   operatorObj.value = this.filterTableArray[i].rhsAttribute;
+        //   filterInfo.operand[1] = operatorObj;
         // }
         targetFilterInfoArray[i] = filterInfo;
       }
-      dqJson["targetFilter"] = targetFilterInfoArray;
+      reconJson["targetFilter"] = targetFilterInfoArray;
     }
     else {
-      dqJson["targetFilter"] = null;
+      reconJson["targetFilter"] = null;
     }
 
-    console.log(JSON.stringify(dqJson))
-    this._commonService.submit("recon", dqJson, 'N').subscribe(
-      response => { this.OnSuccessubmit(response) },
+    console.log(JSON.stringify(reconJson))
+    this._commonService.submit(this.metaType.RECON, reconJson, 'N').subscribe(
+      response => { this.onSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccessubmit(response) {
+  onSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById("recon", response).subscribe(
+      this._commonService.getOneById(this.metaType.RECON, response).subscribe(
         response => {
-          this.OnSucessGetOneById(response);
+          this.onSucessGetOneById(response);
           this.goBack()
         },
         error => console.log('Error :: ' + error)
@@ -1491,10 +1802,195 @@ export class DataReconDetailComponent {
     this.targetFilterTableArray[index - 1] = rowTempIndex;
     this.iSSubmitEnable = true
   }
-  showMainPage() {
-    this.isHomeEnable = false
-    // this._location.back();
-    this.showGraph = false;
+
+  updateArray(new_index, range, event) {
+    for (let i = 0; i < this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected) {
+
+        if (new_index < 0) {
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index >= this.filterTableArray.length) {
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index == null) { }
+        else {
+          let old_index = i;
+          this.array_move(this.filterTableArray, old_index, new_index);
+          if (range) {
+
+            if (new_index == 0 || new_index == 1) {
+              this.filterTableArray[0].logicalOperator = "";
+              if (!this.filterTableArray[1].logicalOperator) {
+                this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
+            }
+            if (new_index == this.filterTableArray.length - 1) {
+              this.filterTableArray[0].logicalOperator = "";
+              if (this.filterTableArray[new_index].logicalOperator == "") {
+                this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
+            }
+            this.txtQueryChangedFilter.next(new_index);
+          }
+          else if (new_index == 0 || new_index == 1) {
+            this.filterTableArray[0].logicalOperator = "";
+            if (!this.filterTableArray[1].logicalOperator) {
+              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          else if (new_index == this.filterTableArray.length - 1) {
+            this.filterTableArray[0].logicalOperator = "";
+            if (this.filterTableArray[new_index].logicalOperator == "") {
+              this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          break;
+        }
+      }
+    }
   }
+
+  array_move(arr, old_index, new_index) {
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+  }
+
+  checkSelected(flag: any, index: any) {
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else
+      this.count.pop();
+
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.filterTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+
+    }
+  }
+
+  updateArrayTarget(new_index, range, event) {
+    for (let i = 0; i < this.targetFilterTableArray.length; i++) {
+      if (this.targetFilterTableArray[i].selected) {
+
+        if (new_index < 0) {
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index >= this.targetFilterTableArray.length) {
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index == null) { }
+        else {
+          let old_index = i;
+          this.array_move(this.targetFilterTableArray, old_index, new_index);
+          if (range) {
+
+            if (new_index == 0 || new_index == 1) {
+              this.targetFilterTableArray[0].logicalOperator = "";
+              if (!this.targetFilterTableArray[1].logicalOperator) {
+                this.targetFilterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelectedTarget(false, null);
+            }
+            if (new_index == this.targetFilterTableArray.length - 1) {
+              this.targetFilterTableArray[0].logicalOperator = "";
+              if (this.targetFilterTableArray[new_index].logicalOperator == "") {
+                this.targetFilterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelectedTarget(false, null);
+            }
+            this.txtQueryChangedTargetFilter.next(new_index);
+          }
+          else if (new_index == 0 || new_index == 1) {
+            this.targetFilterTableArray[0].logicalOperator = "";
+            if (!this.targetFilterTableArray[1].logicalOperator) {
+              this.targetFilterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.targetFilterTableArray[new_index].selected = "";
+            this.checkSelectedTarget(false, null);
+          }
+          else if (new_index == this.targetFilterTableArray.length - 1) {
+            this.targetFilterTableArray[0].logicalOperator = "";
+            if (this.targetFilterTableArray[new_index].logicalOperator == "") {
+              this.targetFilterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.targetFilterTableArray[new_index].selected = "";
+            this.checkSelectedTarget(false, null);
+          }
+          break;
+        }
+      }
+    }
+  }
+
+
+  checkSelectedTarget(flag: any, index: any) {
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else
+      this.count.pop();
+
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.targetFilterTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
+    this.txtQueryChangedTargetFilter.unsubscribe();
+  }
+
 }
 

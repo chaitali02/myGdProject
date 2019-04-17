@@ -1,3 +1,4 @@
+import { MetaType } from './../metadata/enums/metaType';
 
 import { Component, Input, OnInit, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
@@ -55,6 +56,9 @@ export class BusinessRulesResultComponent {
   msgs: Message[] = [];
   restartShow: any;
   restartStatus: any;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
+  metaType = MetaType;
 
 
   constructor(private http: Http, private _config: AppConfig, private _location: Location,
@@ -191,20 +195,22 @@ export class BusinessRulesResultComponent {
   }
 
   showMainPage() {
-    this.showHome = true
+    // this.showHome = true
     this.isHomeEnable = false
     // this._location.back();
     this.showKnowledgeGraph = false;
-    this.showGraph = false;
-    this.istableShow = true;
-    this.isResultTable = true;
-    setTimeout(() => {
-      this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
-      this.d_tableRenderComponent.renderTable(this.params);
-      this.downloadUuid = this.params.uuid;
-      this.downloadVersion = this.params.version;
-      this.downloadType = this.params.type;
-    }, 1000);
+    // this.showGraph = false;
+    // this.istableShow = true;
+    // this.isResultTable = true;
+    if (this._type == this.metaType.RULEEXEC.toLowerCase()) {
+      setTimeout(() => {
+        this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+        this.d_tableRenderComponent.renderTable(this.params);
+        // this.downloadUuid = this.params.uuid;
+        // this.downloadVersion = this.params.version;
+        // this.downloadType = this.params.type;
+      }, 1000);
+    }
   }
 
   showDagGraph(uuid, version, graphFlag) {
@@ -214,13 +220,17 @@ export class BusinessRulesResultComponent {
       this.isResultTable = false;
       setTimeout(() => {
         this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+        this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+        this.isGraphError = this.d_KnowledgeGraphComponent.isError;
       }, 1000);
     }
     else {
-      if (this._type == 'ruleexec') {
+      if (this._type == this.metaType.RULEEXEC.toLowerCase()) {
         this.showMainPage();
       }
-      this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      else {
+        this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      }
     }
   }
 
@@ -249,7 +259,7 @@ export class BusinessRulesResultComponent {
         error => console.log("Error :: " + error)
       );
     this.restartShow = false;
-    this.restartDialogBox = false;    
+    this.restartDialogBox = false;
   }
 
   cancelRestartDialogBox() {

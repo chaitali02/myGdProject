@@ -63,7 +63,7 @@
 }
 .selected-list .c-list .c-token .c-label{
   color: #585858 !important;
-  padding: 1% 2% 1% 0%;
+  /* padding: 1% 2% 1% 0%; */
   font-size: inherit;
 }
 .selected-list .c-list .c-token .c-remove svg{

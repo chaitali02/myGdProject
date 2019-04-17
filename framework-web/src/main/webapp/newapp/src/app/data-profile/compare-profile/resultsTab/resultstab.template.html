@@ -1,239 +1,240 @@
 <div class="dqcomparepage">
-        <p-growl [(value)]="msgs"></p-growl>
-        <!--    
+    <p-growl [(value)]="msgs"></p-growl>
+    <!--    
         <div data-ng-controller="DataQualityCompareController">
             <br> -->
-        <div class="row" style="padding-top: 10px">
-            <div class="col-md-12">
-                <div class="portlet box green">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <i class="icon-magnifier"></i>Search Criteria</div>
-                        <div class="tools">
-                            <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshSearchCriteria()"
-                                data-original-title="" title="">
-                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                            </a>
-                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
-                        </div>
+    <div class="row" style="padding-top: 10px">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-magnifier"></i>Search Criteria</div>
+                    <div class="tools">
+                        <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshSearchCriteria()"
+                            data-original-title="" title="">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a class="left-marginpage" href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
                     </div>
-                    <!--End portlet-title -->
-                    <div class="portlet-body">
-                        <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitSearchCriteria()"
-                            #myNewForm="ngForm">
-    
-                            <div class="row" style="padding-top:10px">
-                                <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
-                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-    
-                                        
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Datapod</label>
-                                            <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                                <p-dropdown [options]="allNameDatapod" [(ngModel)]="searchForm.selectedDatapodName"
-                                                    name="selectedDatapodName" [style]="{'width':'100%','padding':'3px'}"
-                                                    [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
-                                                    (onChange)="onChangeDatapod(searchForm.selectedDatapodName)">
-                                                </p-dropdown>
-                                            </div>
+                </div>
+                <!--End portlet-title -->
+                <div class="portlet-body">
+                    <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitSearchCriteria()"
+                        #myNewForm="ngForm">
+
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Datapod</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                                            <p-dropdown [options]="allNameDatapod" [(ngModel)]="searchForm.selectedDatapodName"
+                                                name="selectedDatapodName" [style]="{'width':'100%','padding':'3px'}"
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                (onChange)="onChangeDatapod(searchForm.selectedDatapodName)" [dropdownIcon]="caretdown">
+                                            </p-dropdown>
                                         </div>
-                                        
                                     </div>
-    
-                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 ">Start Date</label>
-                                            <div class="col-md-9 col-sm-9 col-xs-9  col-lg-7">
+                                </div>
+
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 ">Start Date</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-9  col-lg-7">
+                                            <div class="pcalender-border">
+                                                    <!-- hourFormat="12" -->
                                                 <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate"
-                                                    name="startDate" [showTime]="true" [utc]="true" hourFormat="12"
+                                                    inputStyleClass="form-control" name="startDate" [showTime]="true" [utc]="true" 
                                                     [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(startDate)"
-                                                    [showIcon]="true">
+                                                    [showIcon]="true" icon="fa fa-calendar">
                                                 </p-calendar>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-    
-                            <div class="row">
-                                <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
-                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-    
-                                        
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12" style="padding-left:5%;padding-right:0%;">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Attribute</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                                            <p-dropdown [options]="allNameAttribute" [(ngModel)]="searchForm.selectedAttributeName"
+                                                name="selectedAttributeName" [style]="{'width':'100%','padding':'3px'}"
+                                                [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
+                                                (onChange)="onAttributeNameChange()" [dropdownIcon]="caretdown">
+                                            </p-dropdown>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">End Date</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
+                                            <div class="pcalender-border">
+                                                    <!-- hourFormat="12" -->
+                                                <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
+                                                inputStyleClass="form-control"name="endDate" [showTime]="true" [utc]="true" 
+                                                    [disabled]="mode == 'true'" [showIcon]="true" (onSelect)="onUpdateEndDate()"
+                                                    icon="fa fa-calendar">
+                                                </p-calendar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12" style="padding-left:5%;padding-right:0%;">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
+                                        <div class="col-md-9 col-sm-9 col-xs-6">
+                                            <input type="submit" class="btn btn-success" value="Search" name="submit" style="border-radius: 4px;"
+                                                [disabled]="isSubmitDisable" />
+                                            <div class="spinner" style="float:right; padding-top:2%" *ngIf="isInProgress">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--End portlet-body -->
+            </div>
+            <!--End portlet box green -->
+        </div>
+        <!--End Col-md-12-->
+    </div>
+    <!--End row-->
+
+    <div class="row" style="padding-top: 10px">
+        <div class="col-md-12">
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class=""></i>Compare Results
+                    </div>
+                    <div class="tools">
+                        <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshCompareResult()"
+                            data-original-title="" title="">
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a class="left-marginpage" href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="row form-horizontal" style="padding-top:10px">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-right: 3%; border-right: 1px solid #d4d4d4;">
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">Attribute</label>
-                                            <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                                <p-dropdown [options]="allNameAttribute" [(ngModel)]="searchForm.selectedAttributeName"
-                                                    name="selectedAttributeName" [style]="{'width':'100%','padding':'3px'}"
-                                                    [filter]="true" [disabled]="mode == 'false'" placeholder="-Select-"
-                                                    (onChange)="onAttributeNameChange()">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Source</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
+                                                <p-dropdown [options]="allsource" [(ngModel)]="selectedSource" name="selectedSource"
+                                                    [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-" 
+                                                    [disabled]="mode == 'false'" (onChange)="onChangeSource(selectedSource)" [dropdownIcon]="caretdown">
                                                 </p-dropdown>
                                             </div>
                                         </div>
-                                        
                                     </div>
-    
-                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:300px;">
+                                        <div *ngIf="isSourceTableShow">
+                                            <div class="row" style="margin: 1% -7% 3% 45%;">
+                                                <i class="col-md-2 fa fa-search" style="margin: 3% -3% 0% 4%;"></i>
+                                                <input #gb type="text" pInputText placeholder="Search">
+                                            </div>
+                                            <div class="row">
+                                                <p-dataTable [value]="colsSourcedata" #dt exportFilename="data"
+                                                    selectionMode="multiple" [metaKeySelection]="false" [scrollable]="true"
+                                                    scrollHeight="440px" [resizableColumns]="true" [globalFilter]="gb"
+                                                    [sortMode]="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                                                    [rowsPerPageOptions]="[5,10,20]">
+                                                    <p-column *ngFor="let col of colsSource" [field]="col.field"
+                                                        [header]="col.header" [sortable]="true" [style]="{'width':'100px'}"></p-column>
+                                                </p-dataTable>
+                                            </div>
+                                        </div>
+
+                                        <div class="centercontent" style="padding-top: 5%" *ngIf="sourceShowProgress">
+                                            <div class="spinner centercontent">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                        </div>
+                                        <div class="centercontent" style="color:blue;" *ngIf="isSourceDataError">{{sourceDataMessage}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-left: 3%;">
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3">End Date</label>
-                                            <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                                <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
-                                                    name="endDate" [showTime]="true" [utc]="true" hourFormat="12"
-                                                    [disabled]="mode == 'true'" [showIcon]="true" (onSelect)="onUpdateEndDate()">
-                                                </p-calendar>
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Target</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
+                                                <p-dropdown [options]="alltarget" [(ngModel)]="selectedTarget" name="selectedTarget"
+                                                    [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-" 
+                                                    [disabled]="mode == 'false'" (onChange)="onChangeTarget(selectedTarget)" [dropdownIcon]="caretdown">
+                                                </p-dropdown>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <div class="row">
-                                <div class="col-md-12" style="padding-left:5%;padding-right:0%;">
-                                    <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
-                                            <div class="col-md-9 col-sm-9 col-xs-6">
-                                                <input type="submit" class="btn btn-success" value="Search" name="submit"
-                                                    [disabled]="isSubmitDisable" />
-                                                <div class="spinner" style="float:right; padding-top:2%" *ngIf="isInProgress">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:200px;">
+                                        <div *ngIf="isTargetTableShow">
+                                            <div class="row" style="margin: 1% -7% 3% 45%;">
+                                                <i class="col-md-2 fa fa-search" style="margin: 3% -3% 0% 4%;"></i>
+                                                <input #gb1 type="text" pInputText placeholder="Search">
+                                            </div>
+                                            <div class="row">
+                                                <p-dataTable [value]="colsTargetdata" #dt exportFilename="data"
+                                                    selectionMode="multiple" [metaKeySelection]="false" [scrollable]="true"
+                                                    [resizableColumns]="true" scrollHeight="440px" [globalFilter]="gb1"
+                                                    [sortMode]="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                                                    [rowsPerPageOptions]="[5,10,20]">
+                                                    <p-column *ngFor="let col of colsTarget" [field]="col.field"
+                                                        [header]="col.header" [sortable]="true" [style]="{'width':'100px'}"></p-column>
+                                                </p-dataTable>
                                             </div>
                                         </div>
+                                        <div class="centercontent" style="padding-top: 5%" *ngIf="targetShowProgress">
+                                            <div class="spinner centercontent">
+                                                <div class="bounce1"></div>
+                                                <div class="bounce2"></div>
+                                                <div class="bounce3"></div>
+                                            </div>
+                                        </div>
+                                        <div class="centercontent" style="color:blue;" *ngIf="isTargetDataError">{{targetDataMessage}}</div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                    <!--End portlet-body -->
                 </div>
-                <!--End portlet box green -->
+                <!--End portlet-body -->
             </div>
-            <!--End Col-md-12-->
+            <!--End portlet box green -->
         </div>
-        <!--End row-->
-    
-        <div class="row" style="padding-top: 10px">
-            <div class="col-md-12">
-                <div class="portlet box green">
-                    <div class="portlet-title">
-                        <div class="caption">
-                            <i class=""></i>Compare Results
-                        </div>
-                        <div class="tools">
-                            <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refreshCompareResult()"
-                                data-original-title="" title="">
-                                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                            </a>
-                            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
-                        </div>
-                    </div>
-    
-                    <div class="portlet-body">
-                        <div class="row form-horizontal" style="padding-top:10px">
-                            <div class="col-md-12 col-lg-12">
-                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-right: 3%; border-right: 1px solid #d4d4d4;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Source</label>
-                                                <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
-                                                    <p-dropdown [options]="allsource" [(ngModel)]="selectedSource" name="selectedSource"
-                                                        [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                                        placeholder="-Select-" [disabled]="mode == 'false'" (onChange)="onChangeSource(selectedSource)">
-                                                    </p-dropdown>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-    
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:300px;">
-                                            <div *ngIf="isSourceTableShow">
-                                                <div class="row" style="margin-top: 1%; margin-right: -9%; margin-left: 54%;margin-bottom: 3%;">
-                                                    <i class="col-md-2 fa fa-search" style="margin-top: 2%;"></i>
-                                                    <input #gb type="text" pInputText placeholder="Search">
-                                                </div>
-                                                <div class="row">
-                                                    <p-dataTable [value]="colsSourcedata" #dt exportFilename="data"
-                                                        selectionMode="multiple" [metaKeySelection]="false" [scrollable]="true"
-                                                        scrollHeight="440px" [resizableColumns]="true" [globalFilter]="gb"
-                                                        [sortMode]="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
-                                                        [rowsPerPageOptions]="[5,10,20]">
-                                                        <p-column *ngFor="let col of colsSource" [field]="col.field"
-                                                            [header]="col.header" [sortable]="true" [style]="{'width':'100px'}"></p-column>
-                                                    </p-dataTable>
-                                                </div>
-                                            </div>
-    
-                                            <div class="centercontent" style="padding-top: 5%" *ngIf="sourceShowProgress">
-                                                <div class="spinner centercontent">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </div>
-                                            </div>
-                                            <div class="centercontent" style="color:blue;" *ngIf="isSourceDataError">{{sourceDataMessage}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6" style="padding-left: 3%;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-2 col-sm-2 col-xs-2 col-lg-2" style="text-align:start">Target</label>
-                                                <div class="col-md-7 col-sm-7 col-xs-6 col-lg-7">
-                                                    <p-dropdown [options]="alltarget" [(ngModel)]="selectedTarget" name="selectedTarget"
-                                                        [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                                                        placeholder="-Select-" [disabled]="mode == 'false'" (onChange)="onChangeTarget(selectedTarget)">
-                                                    </p-dropdown>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-    
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12" style="min-height:200px;">
-                                            <div *ngIf="isTargetTableShow">
-                                                <div class="row" style="margin-top: 1%; margin-right: -9%; margin-left: 54%;margin-bottom: 3%;">
-                                                    <i class="col-md-2 fa fa-search" style="margin-top: 2%;"></i>
-                                                    <input #gb1 type="text" pInputText placeholder="Search">
-                                                </div>
-                                                <div class="row">
-                                                    <p-dataTable [value]="colsTargetdata" #dt exportFilename="data"
-                                                        selectionMode="multiple" [metaKeySelection]="false" [scrollable]="true"
-                                                        [resizableColumns]="true" scrollHeight="440px" [globalFilter]="gb1"
-                                                        [sortMode]="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
-                                                        [rowsPerPageOptions]="[5,10,20]">
-                                                        <p-column *ngFor="let col of colsTarget" [field]="col.field"
-                                                            [header]="col.header" [sortable]="true" [style]="{'width':'100px'}"></p-column>
-                                                    </p-dataTable>
-                                                </div>
-                                            </div>
-                                            <div class="centercontent" style="padding-top: 5%" *ngIf="targetShowProgress">
-                                                <div class="spinner centercontent">
-                                                    <div class="bounce1"></div>
-                                                    <div class="bounce2"></div>
-                                                    <div class="bounce3"></div>
-                                                </div>
-                                            </div>
-                                            <div class="centercontent" style="color:blue;" *ngIf="isTargetDataError">{{targetDataMessage}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--End portlet-body -->
-                </div>
-                <!--End portlet box green -->
-            </div>
-            <!--End Col-md-12-->
-        </div>
-        <!--End row-->
-        <!-- </div> -->
-        <!--End data-ng-controller-->
+        <!--End Col-md-12-->
     </div>
-    <!--End dqcomparepage-->
+    <!--End row-->
+    <!-- </div> -->
+    <!--End data-ng-controller-->
+</div>
+<!--End dqcomparepage-->

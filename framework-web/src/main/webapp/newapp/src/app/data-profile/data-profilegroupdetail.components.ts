@@ -260,9 +260,10 @@ export class DataProfileGroupDetailComponent {
     profilegroupJson.name = this.profilegroupdata.name
     profilegroupJson.desc = this.profilegroupdata.desc
     profilegroupJson.tags = this.profilegroupdata.tags;
-    profilegroupJson.active = this.appHelper.convertBooleanToString(this.profilegroupdata.active);
-    profilegroupJson.published = this.appHelper.convertBooleanToString(this.profilegroupdata.published);
-    profilegroupJson.locked = this.appHelper.convertBooleanToString(this.profilegroupdata.locked);
+
+    profilegroupJson.active = this.appHelper.convertBooleanToString(this.active);
+    profilegroupJson.published = this.appHelper.convertBooleanToString(this.published);
+    profilegroupJson.locked = this.appHelper.convertBooleanToString(this.locked);
 
     let ruleInfo = [new MetaIdentifierHolder];
     for (let i = 0; i < this.selectedItems.length; i++) {

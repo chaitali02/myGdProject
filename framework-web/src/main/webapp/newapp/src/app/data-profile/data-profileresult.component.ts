@@ -135,18 +135,18 @@ export class DataProfileresultComponent {
     }
   }
   public goBack() {
-    // this.isResultTable = false
-    // if (this.istableShow == true) {
+    this.isResultTable = false
+    if (this.istableShow == true) {
       this._location.back();
-    // }
-    // else {
-    //   if (this.d_JointjsGroupComponent.IsGraphShow == true) {
-    //     this._location.back();
-    //   }
-    //   else {
-    //     this.d_JointjsGroupComponent.IsGraphShow = true;
-    //   }
-    // }
+    }
+    else {
+      if (this.d_JointjsGroupComponent.IsGraphShow == true) {
+        this._location.back();
+      }
+      else {
+        this.d_JointjsGroupComponent.IsGraphShow = true;
+      }
+    }
   }
   opendownloadResult() {
     if (this.isHomeEnable == false) {
@@ -180,39 +180,44 @@ export class DataProfileresultComponent {
   }
 
   showMainPage() {
+    debugger
     this.isHomeEnable = false;
     this.showKnowledgeGraph = false;
-    if (this._type == this.metaType.PROFILEEXEC) {
+    if (this._type == this.metaType.PROFILEEXEC.toLowerCase()) {
       setTimeout(() => {
         this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name
         this.d_tableRenderComponent.renderTable(this.params);
-        this.downloadUuid = this.params.uuid;
-        this.downloadVersion = this.params.version;
-        this.downloadType = this.params.type;
+        // this.downloadUuid = this.params.uuid;
+        // this.downloadVersion = this.params.version;
+        // this.downloadType = this.params.type;
       }, 1000);
     }
-    this.isResultTable = true
-
+    // else {
+    //   this.isResultTable = true
+    // }
   }
 
   showDagGraph(uuid, version, graphFlag) {
     if (graphFlag) {
       this.isHomeEnable = true;
       this.showKnowledgeGraph = true;
+      this.isResultTable = false;
       setTimeout(() => {
         this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
       }, 1000);
     }
     else {
-      if (this._type == this.metaType.PROFILEEXEC) {
+      if (this._type == this.metaType.PROFILEEXEC.toLowerCase()) {
         this.showMainPage();
       }
-      this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      else {
+        this.d_JointjsGroupComponent.generateGroupGraph(this.params);
+      }
     }
   }
 
   downloadShow(param: any) {
-    this.isResultTable = true;;
+    this.isResultTable = true;
     console.log(param)
     this.downloadUuid = param.uuid;
     this.downloadVersion = param.version;
@@ -237,7 +242,7 @@ export class DataProfileresultComponent {
   }
 
   onSuccessrestart(uuid, version, response) {
-    this.showDagGraph(uuid,version, false)
+    this.showDagGraph(uuid, version, false)
   }
   cancelRestartDialogBox() {
     this.restartDialogBox = false;

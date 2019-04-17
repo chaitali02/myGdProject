@@ -72,7 +72,7 @@ export class DataProfileDetailComponent {
   dropdownList: any = [];
   source: any;
   selectedVersion: Version;
-  versionList: Array<DropDownIO>;
+  versionList:  SelectItem[] = [];
   allNames: SelectItem[] = [];
   createdBy: any;
   mode: any;
@@ -183,13 +183,13 @@ export class DataProfileDetailComponent {
       { 'value': 'formula', 'label': 'formula' }
     ];
     this.rhsTypeArray = [
-      { 'value': 'string', 'label': 'string' },
-      { 'value': 'integer', 'label': 'integer' },
       { 'value': 'datapod', 'label': 'attribute' },
-      { 'value': 'formula', 'label': 'formula' },
       { 'value': 'dataset', 'label': 'dataset' },
+      { 'value': 'formula', 'label': 'formula' },
+      { 'value': 'function', 'label': 'function' },
+      { 'value': 'integer', 'label': 'integer' },
       { 'value': 'paramlist', 'label': 'paramlist' },
-      { 'value': 'function', 'label': 'function' }
+      { 'value': 'string', 'label': 'string' }
     ];
     this.datatype = [
       { 'value': '', 'label': '' },
@@ -388,9 +388,9 @@ export class DataProfileDetailComponent {
     version.uuid = this.profiledata.uuid;
     this.selectedVersion = version;
 
-    this.active == this.appHelper.convertStringToBoolean(this.profiledata.active);
-    this.locked == this.appHelper.convertStringToBoolean(this.profiledata.locked);
-    this.published == this.appHelper.convertStringToBoolean(this.profiledata.published);
+    this.active = this.appHelper.convertStringToBoolean(this.profiledata.active);
+    this.locked = this.appHelper.convertStringToBoolean(this.profiledata.locked);
+    this.published = this.appHelper.convertStringToBoolean(this.profiledata.published);
 
     let dependOnTemp: DependsOnIO = new DependsOnIO();
     dependOnTemp.label = this.profiledata.dependsOn.ref.name;
@@ -624,13 +624,22 @@ export class DataProfileDetailComponent {
     this._commonService.getAllVersionByUuid(this.metaType.PROFILE, this.id)
       .subscribe(
         response => {
-          this.OnSuccesgetAllVersionByUuid(response)
+          this.onSuccesgetAllVersionByUuid(response)
         },
         error => console.log("Error :: " + error));
   }
-  OnSuccesgetAllVersionByUuid(response: BaseEntity[]) {
+  onSuccesgetAllVersionByUuid(response) {
+    // for (const i in response) {
+    //   this.versionList = new DropDownIO;
+    //   let ver = new DropDownIO();
+    //   ver.label = response[i].version;
+    //   ver.value = { label: "", uuid: "" };
+    //   ver.value.label = response[i].version;
+    //   ver.value.uuid = response[i].uuid;
+    //   this.versionList[i] = ver;
+    // }
+
     for (const i in response) {
-      this.versionList = [new DropDownIO];
       let ver = new DropDownIO();
       ver.label = response[i].version;
       ver.value = { label: "", uuid: "" };
@@ -715,7 +724,7 @@ export class DataProfileDetailComponent {
     }
     filertable.lhsType = "string";
     filertable.lhsAttribute = null;
-    filertable.operator = this.operators[0].label;
+    filertable.operator = this.operators[0].value;
     filertable.rhsType = "string"
     filertable.rhsAttribute = null
     this.profiledata.filterTableArray.splice(this.profiledata.filterTableArray.length, 0, filertable);

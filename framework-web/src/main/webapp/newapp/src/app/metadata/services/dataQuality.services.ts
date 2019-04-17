@@ -132,7 +132,7 @@ export class DataQualityService {
           let dataQualityIO = new DataQualityIO();
           dataQualityIO.dataQuality = response;
           let filterInfoIOArray = [new FilterInfoIO];
-          if (response.filterInfo) {debugger
+          if (response.filterInfo) {
             for (let k = 0; k < response.filterInfo.length; k++) {
               let filterInfoIO = new FilterInfoIO();
               filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator;
