@@ -1,7 +1,5 @@
 drop view if exists dq_result_dashboard;
-CREATE VIEW dq_result_dashboard
-AS
-select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,attribute_value,rowkey_name,
+CREATE VIEW dq_result_dashboard AS select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,attribute_value,rowkey_name,
 rowkey_value, 'NULL' as check_type,CASE WHEN null_check_pass = 'Y' THEN 'PASS' ELSE 'FAIL' END as check_pass,'COMPLETENESS' as dimension,version from dq_result_detail where null_check_pass IN ('Y','N')
 union all
 select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,attribute_value,rowkey_name,

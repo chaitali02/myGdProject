@@ -1,18 +1,19 @@
 {
-  "uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec09c",
-  "version": "1555072596",
-  "name": "fm_completeness_score_file",
+  "uuid": "f175128f-a777-4495-903d-4d6667a63641",
+  "version": "1555401340",
+  "name": "fm_accuracy_score_db",
+  "displayName": null,
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
       "version": "1464977196",
-      "name": "ypalrecha"
+      "name": "admin"
     },
     "value": null
   },
-  "createdOn": "Fri Apr 12 18:06:36 IST 2019",
+  "createdOn": "Tue Apr 16 13:25:40 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -21,14 +22,14 @@
     {
       "ref": {
         "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1548315769",
-        "name": "Enterprise Data Warehouse"
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
       },
       "value": null
     }
   ],
-  "publicFlag": "Y",
+  "publicFlag": "N",
   "dependsOn": {
     "ref": {
       "type": "datapod",
@@ -39,7 +40,7 @@
     "value": null
   },
   "formulaInfo": [
-        {
+    {
       "ref": {
         "type": "function",
         "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
@@ -51,7 +52,6 @@
       "attributeName": null,
       "attributeType": null
     },
-     
     {
       "ref": {
         "type": "simple",
@@ -71,60 +71,12 @@
         "version": null,
         "name": "dq_result_summary"
       },
-      "attributeId": 18,
+      "attributeId": 45,
       "value": null,
-      "attributeName": "null_score",
+      "attributeName": "domain_score",
       "attributeType": null
     },
     {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "+",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
-        "version": null,
-        "name": "dq_result_summary"
-      },
-      "attributeId": 48,
-      "value": null,
-      "attributeName": "blankspace_score",
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "/",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "2",
-      "attributeName": null,
-      "attributeType": null
-    },
-     {
       "ref": {
         "type": "simple",
         "uuid": null,

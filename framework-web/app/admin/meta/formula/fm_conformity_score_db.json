@@ -1,7 +1,7 @@
 {
-  "uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec09c",
-  "version": "1555072596",
-  "name": "fm_completeness_score_file",
+  "uuid": "1c5f4355-1c5a-4f10-95ba-09834e2ca0b1",
+  "version": "1555073460",
+  "name": "fm_conformity_score_db",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Apr 12 18:06:36 IST 2019",
+  "createdOn": "Fri Apr 12 18:21:00 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,7 +32,7 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
       "version": null,
       "name": "dq_result_summary"
     },
@@ -50,9 +50,19 @@
       "value": null,
       "attributeName": null,
       "attributeType": null
+    }, {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
     },
-     
-    {
+     {
       "ref": {
         "type": "simple",
         "uuid": null,
@@ -67,13 +77,13 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
         "version": null,
         "name": "dq_result_summary"
       },
-      "attributeId": 18,
+      "attributeId": 24,
       "value": null,
-      "attributeName": "null_score",
+      "attributeName": "range_score",
       "attributeType": null
     },
     {
@@ -91,13 +101,73 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
         "version": null,
         "name": "dq_result_summary"
       },
-      "attributeId": 48,
+      "attributeId": 27,
       "value": null,
-      "attributeName": "blankspace_score",
+      "attributeName": "datatype_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "+",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_result_summary"
+      },
+      "attributeId": 30,
+      "value": null,
+      "attributeName": "format_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "+",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_result_summary"
+      },
+      "attributeId": 33,
+      "value": null,
+      "attributeName": "length_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
       "attributeType": null
     },
     {
@@ -120,7 +190,7 @@
         "name": null
       },
       "attributeId": null,
-      "value": "2",
+      "value": "4",
       "attributeName": null,
       "attributeType": null
     },

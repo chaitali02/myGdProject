@@ -1,0 +1,56 @@
+{
+  "uuid": "3447eecd-3f90-4203-9c5f-3bd0237211c0",
+  "version": "1555426070",
+  "name": "dq_sample",
+  "displayName": "dq_sample",
+  "desc": "Creating datastore for dq_sample",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Apr 16 20:17:50 IST 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "c4aaa050-bef0-467d-bb26-708f1a6bc108",
+      "version": "1555426069",
+      "name": "dq_sample"
+    },
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "c175b817-2f0a-4c73-8516-683d4ff88239",
+      "version": "1555426069",
+      "name": "dq_sample"
+    },
+    "value": null
+  },
+  "location": "/c4aaa050-bef0-467d-bb26-708f1a6bc108/1555426069/1555426069",
+  "persistMode": "DISK_ONLY",
+  "dimInfo": null,
+  "numRows": 6,
+  "runMode": "BATCH"
+}

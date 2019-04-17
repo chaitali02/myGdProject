@@ -350,9 +350,9 @@
 	"createdBy": {
 		"ref": {
 			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
 			"version": "1464977196",
-			"name": "ypalrecha"
+			"name": "admin"
 		}
 	},
 	"createdOn": ISODate("2018-12-11T19:40:15.000Z"),

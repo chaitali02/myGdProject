@@ -61,6 +61,7 @@ import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
@@ -72,6 +73,9 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.FilterOperator;
+import com.inferyx.framework.operator.FilterOperator2;
+import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
 
@@ -96,6 +100,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	private DownloadServiceImpl downloadServiceImpl;
 	@Autowired
 	private DatasetOperator datasetOperator; 
+	@Autowired
+	private FilterOperator2 filterOperator2 ;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1133,8 +1139,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		MetaIdentifier dependsOnMI = dqRecExec.getDependsOn().getRef();
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
 				dependsOnMI.getType().toString(), "N");
+		
+//		List<DataQual> dqList = new ArrayList<>();
 		for (DQIntelligence checkType : checkTypeList) {
 			try {
+//				if(!dqList.isEmpty()) {
+//					
+//				} else {
+//					
+//				}
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
 				String name = "dq_" + datapod.getPrefix() + "_" + checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
@@ -1227,45 +1240,65 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 	
-	public List<Map<String, Object>> getDataQualStat(String period) throws Exception {
+	public List<Map<String, Object>> getDqStats(String datapodUuid, String datapodVersion, String period)
+			throws Exception {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> data = new ArrayList<>();
+		List<ParamListHolder> holders = new ArrayList<>();
+		String datasetUuid = null;
 		Map<String, String> paramValMap = new HashMap<String, String>();
 		StringBuilder outerSqlBulider = new StringBuilder();
+		StringBuilder groupByBulider = new StringBuilder();
+		groupByBulider.append("group by  custom_score, accuracy_score , timeliness_score");
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString(), "N");
+		Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ExecParams execParams = new ExecParams();
+		if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
+			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
+		else
+			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
 
-		String datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
 		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
 
-		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), new ExecParams(), RunMode.ONLINE,
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
+		paramValMap.put("numDays", period);
+		ParamListHolder paramListHolder = new ParamListHolder();
+
+		paramListHolder.setParamId("1");
+		paramListHolder.setParamName("numDays");
+		paramListHolder.setParamType("integer");
+		paramListHolder
+				.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), period));
+
+		if (period.equalsIgnoreCase("all")) {
+			dataset.setFilterInfo(null);
+		} else {
+			// execParams.setParamListHolder(paramListHolder);
+			holders.add(paramListHolder);
+			execParams.setParamListInfo(holders);
+		}
+
+		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
 				paramValMap);
 
-		if(datasource.getType().equalsIgnoreCase("File")) {
-		period = "unix_timestamp(date_format(cast(date_sub(current_date, " + period
-				+ ") as String) , \"EEE MMM dd HH:mm:ss z yyyy\"),\"EEE MMM dd HH:mm:ss z yyyy\")";
-		
-		sql = sql.replace("(dq_result_summary.rule_exec_time",
-				"(unix_timestamp(dq_result_summary.rule_exec_time,\"EEE MMM dd HH:mm:ss z yyyy\")");
-		
-		}
-		else if(datasource.getType().equalsIgnoreCase("mysql")) 
-		{
-			period = "unix_timestamp(date_format(cast(date_sub(current_date, " + period
-					+ ") as String) , \"EEE MMM dd HH:mm:ss z yyyy\"),\"EEE MMM dd HH:mm:ss z yyyy\")";
-			
-			sql = sql.replace("(dq_result_summary.rule_exec_time",
-					"(unix_timestamp(dq_result_summary.rule_exec_time,\"EEE MMM dd HH:mm:ss z yyyy\")");
-		}
-	
-		
-		sql = sql.replace("'$LookBackDate'", period);
-		
+		//String tableName = commonServiceImpl.getTableNameBySource(dataset, RunMode.ONLINE);
+
+		String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid()
+				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";
+
+		sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
+	//	sql = sql.replace(" LIMIT 1", groupByBulider + " LIMIT 1");
+		/*
+		 * if (!period.equalsIgnoreCase("all")) sql = sql.replace("30", period);
+		 */
+
 		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
 				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)
 				.append(" ds_dq_result_summary");
 
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
 
 		data = exec.executeAndFetchByDatasource(outerSqlBulider.toString(), dsDatasource,
 				commonServiceImpl.getApp().getUuid());

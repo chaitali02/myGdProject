@@ -149,7 +149,7 @@ public class ProfileOperator {
 		
 //		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
 		
-		String currentDate = Helper.getCurrentDateByFormat();
+		String currentDate = commonServiceImpl.getCurrentTimeStampByFormat();
 		switch(execContext) {
 		case HIVE : 
 			return "SELECT \'"

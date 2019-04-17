@@ -1,7 +1,7 @@
 {
-  "uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec09c",
+  "uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec091",
   "version": "1555072596",
-  "name": "fm_completeness_score_file",
+  "name": "fm_completeness_score_db",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -32,7 +32,7 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
       "version": null,
       "name": "dq_result_summary"
     },
@@ -51,7 +51,18 @@
       "attributeName": null,
       "attributeType": null
     },
-     
+     {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
     {
       "ref": {
         "type": "simple",
@@ -67,7 +78,7 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
         "version": null,
         "name": "dq_result_summary"
       },
@@ -91,13 +102,25 @@
     {
       "ref": {
         "type": "datapod",
-        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
         "version": null,
         "name": "dq_result_summary"
       },
       "attributeId": 48,
       "value": null,
       "attributeName": "blankspace_score",
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": ")",
+      "attributeName": null,
       "attributeType": null
     },
     {

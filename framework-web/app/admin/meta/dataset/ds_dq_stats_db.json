@@ -1,0 +1,217 @@
+{
+	"uuid": "49aad5dc-1f2d-4e15-8a2b-fdbeae2159eb",
+	"version": "1555074398",
+	"name": "ds_dq_stats_db",
+	"desc": "",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
+		},
+		"value": null
+	},
+	"createdOn": "Mon Apr 15 13:29:02 IST 2019",
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",  
+	  "publicFlag" : "Y",
+	
+	"appInfo": [
+			{
+				"ref": {
+					"type": "application",
+					"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+				}
+			}
+		],
+	"publicFlag": "Y",
+	"dependsOn": {
+		"ref": {
+			"type": "datapod",
+			"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+			"version": null,
+			"name": "dq_result_summary"
+		},
+		"value": null
+	},
+	"filterInfo": [
+		{
+			"display_seq": "0",
+			"logicalOperator": "",
+			"operator": ">=",
+			"operand": [
+				{
+					"ref": {
+						"type": "datapod",
+						"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+						"version": null,
+						"name": "dq_result_summary"
+					},
+					"attributeId": 2,
+					"value": null,
+					"attributeName": "rule_exec_time",
+					"attributeType": null
+				},
+				{
+					"ref": {
+						"type": "formula",
+						"uuid": "ebaf51cd-0052-41c7-974d-0e2cbf7c5081",
+						"version": null,
+						"name": "fm_dq_stats_db"
+					},
+					"attributeId": null,
+					"value": null,
+					"attributeName": null,
+					"attributeType": null
+				}
+			]
+		}
+	],
+	"attributeInfo": [
+		{
+			"attrSourceId": "63",
+			"attrDisplaySeq": "0",
+			"attrSourceName": "completeness_score",
+			"function": null,
+			"sourceAttr": {
+				"ref": {
+					"type": "formula",
+					"uuid": "58d7dbb6-fe90-47d4-ac57-fdacb0dec091",
+					"version": null,
+					"name": "fm_completeness_score"
+				},
+				"value": null,
+				"attrId": null,
+				"attrName": null,
+				"attrType": null,
+				"attrUnitType": null,
+				"function": null
+			}
+		},
+		{
+			"attrSourceId": "64",
+			"attrDisplaySeq": "1",
+			"attrSourceName": "consistency_score",
+			"function": null,
+			"sourceAttr": {
+				"ref": {
+					"type": "formula",
+					"uuid": "4bd81d9c-1871-4359-a17b-5c7a53de30b1",
+					"version": null,
+					"name": "fm_consistency_score"
+				},
+				"value": null,
+				"attrId": null,
+				"attrName": null,
+				"attrType": null,
+				"attrUnitType": null,
+				"function": null
+			}
+		},
+		{
+			"attrSourceId": "65",
+			"attrDisplaySeq": "2",
+			"attrSourceName": "conformity_score",
+			"function": null,
+			"sourceAttr": {
+				"ref": {
+					"type": "formula",
+					"uuid": "1c5f4355-1c5a-4f10-95ba-09834e2ca0b1",
+					"version": null,
+					"name": "fm_conformity_score"
+				},
+				"value": null,
+				"attrId": null,
+				"attrName": null,
+				"attrType": null,
+				"attrUnitType": null,
+				"function": null
+			}
+		},
+		{
+			"attrSourceId": "66",
+			"attrDisplaySeq": "3",
+			"attrSourceName": "integrity_score",
+			"function": null,
+			"sourceAttr": {
+				"ref": {
+					"type": "formula",
+					"uuid": "7dc17f5d-b5c7-4f10-bf70-b1292e052c71",
+					"version": null,
+					"name": "fm_integrity_score"
+				},
+				"value": null,
+				"attrId": null,
+				"attrName": null,
+				"attrType": null,
+				"attrUnitType": null,
+				"function": null
+			}
+		},
+    {
+      "attrSourceId": "67",
+      "attrDisplaySeq": "4",
+      "attrSourceName": "custom_score",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "16a26371-b685-44c6-b7b0-1ef93a4b3951",
+          "version": null,
+          "name": "fm_custom_score_file"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "68",
+      "attrDisplaySeq": "5",
+      "attrSourceName": "accuracy_score",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "f175128f-a777-4495-903d-4d6667a63641",
+          "version": null,
+          "name": "fm_accuracy_score_file"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "69",
+      "attrDisplaySeq": "6",
+      "attrSourceName": "timeliness_score",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "9c413212-1d6d-48cd-84d7-49a3a17417b1",
+          "version": null,
+          "name": "fm_timeliness_score_file"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+	],
+	"groupBy": null,
+	"limit": 1
+}

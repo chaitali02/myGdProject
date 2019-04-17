@@ -1,0 +1,44 @@
+{
+   "params" : [ 
+        {
+            "paramId" : "0",
+            "paramName" : "numDays",
+            "paramType" : "integer",
+            "paramDispName" : "numDays",
+            "paramDesc" : "numDays",
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "30"
+            }
+        }
+    ],
+    "paramListType" : "application",
+    "templateFlg" : "Y",
+    "uuid" : "dc3e0cc9-8954-4285-bcea-9bc140592c67",
+    "version" : "1555404278",
+    "name" : "paramlist_Administration",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-04-16T08:44:38.000Z"),
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "version" : "1464977196"
+            }
+        }
+    ],
+    "publicFlag" : "Y"
+}
