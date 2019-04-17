@@ -1,3 +1,4 @@
+import { MetaType } from './../metadata/enums/metaType';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -55,10 +56,11 @@ export class DataQualityResultComponent {
   restartDialogBox: boolean;
   msgs: Message[] = [];
   restartStatus: any;
+  metatype = MetaType;
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute,
     private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService, private _dataQualityService: DataQualityService,
-    private _commonListService: CommonListService ) {
+    private _commonListService: CommonListService) {
 
     this.graphParams = new GraphParamIO();
     this.baseUrl = _config.getBaseUrl();
@@ -187,18 +189,22 @@ export class DataQualityResultComponent {
   showMainPage() {
     this.isHomeEnable = false;
     this.showKnowledgeGraph = false;
-    if (this._type == 'dqexec') {
+    this.isResultTable = true;
+    if (this._type == this.metatype.DQEXEC.toLowerCase()) {
       setTimeout(() => {
         this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
         this.d_tableRenderComponent.renderTable(this.graphParams);
       }, 1000);
     }
+    // else {
+    // }
   }
 
   showDagGraph(uuid, version, graphFlag) {
     if (graphFlag) {
       this.isHomeEnable = true;
       this.showKnowledgeGraph = true;
+      this.isResultTable = false;
       setTimeout(() => {
         this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
         this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
@@ -206,10 +212,12 @@ export class DataQualityResultComponent {
       }, 1000);
     }
     else {
-      if (this._type == 'dqexec') {
+      if (this._type == this.metatype.DQEXEC.toLowerCase()) {
         this.showMainPage();
       }
-      this.d_JointjsGroupComponent.generateGroupGraph(this.graphParams);
+      else {
+        this.d_JointjsGroupComponent.generateGroupGraph(this.graphParams);
+      }
     }
   }
 
@@ -249,7 +257,7 @@ export class DataQualityResultComponent {
     this.restartDialogBox = false;
   }
 
-  receiveJointJSRunStatus(status) {debugger
+  receiveJointJSRunStatus(status) {
     this.restartStatus = status
     console.log(this.restartStatus);
   }

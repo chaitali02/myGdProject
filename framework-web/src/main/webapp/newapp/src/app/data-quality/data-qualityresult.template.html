@@ -31,8 +31,8 @@
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a> -->
                     <span class="wrapcurrentpage">
-                        <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download"
-                            data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" *ngIf="isResultTable == true"
+                        <a class="left-marginpage" *ngIf="isResultTable == true" style="color:white;" href="javascript:;" title="Download"
+                            data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" 
                             [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'">
                             <i class="fa fa-download" area-hidden="true"></i>
                         </a>

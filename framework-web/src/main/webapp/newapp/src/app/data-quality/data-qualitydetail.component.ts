@@ -582,7 +582,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
       dialogAttriNameObj.value.attributeId = response[i].attrId;
       dialogAttriNameObj.value.uuid = response[i].ref.uuid;
 
-      console.log(response[i].attrId);
+      // console.log(response[i].attrId);
       if (data) {
         if (data.attributeId.toString()) {
           if (data.attributeId.toString() == response[i].attrId) {

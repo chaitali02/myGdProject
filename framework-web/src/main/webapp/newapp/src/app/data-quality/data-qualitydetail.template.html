@@ -222,7 +222,7 @@
                   <!--Start Tab2-->
                   <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
 
-                    <form class="form-horizontal" name="myNewForm2" novalidate="novalidate" (ngSubmit)="(myNewForm2.form.valid && datasetNotEmpty) && countContinue()"
+                    <form class="form-horizontal" name="myNewForm2" novalidate="novalidate" (ngSubmit)="((mode || myNewForm2.form.valid) && datasetNotEmpty) && countContinue()"
                       #myNewForm2="ngForm">
 
                       <div class="form-group">
@@ -442,7 +442,7 @@
                                   <td>
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [disabled]="mode == 'true'" *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
-                                      placeholder="-enter integer value-" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                      placeholder="-enter integer value-" #rhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
 
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [disabled]="mode == 'true'" *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator != 'IS'"
@@ -473,7 +473,7 @@
                                         required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}" /> -->
                                     </div>
                                     <div *ngIf="data.rhsType == 'dataset' && data.rhsAttribute != null">
-                                      <div *ngIf="data.rhsAttribute != null">
+                                      <!-- <div *ngIf="data.rhsAttribute != null"> -->
                                         <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
                                           name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block"
                                           #rhsAttributeReq="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && ( data.rhsAttribute.label === '')}">
@@ -481,7 +481,7 @@
                                           [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}" -->
                                         <i class="fa fa-search" (click)="searchOption(data.rhsAttribute, i)" style="width:10%;display:inline-block;padding-left: 7%;"
                                           pTooltip="Search"></i>
-                                      </div>
+                                      <!-- </div> -->
                                     </div>
                                     <div *ngIf="data.rhsType == 'function'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                       <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
@@ -498,7 +498,7 @@
 
                                     <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
                                       [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
-                                      <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                      <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px','border':'none'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" required #rhsAttribute="ngModel" [dropdownIcon]="caretdown">
                                       </p-dropdown>
