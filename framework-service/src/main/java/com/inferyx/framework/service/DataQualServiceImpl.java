@@ -1247,62 +1247,45 @@ public class DataQualServiceImpl extends RuleTemplate {
 		List<ParamListHolder> holders = new ArrayList<>();
 		String datasetUuid = null;
 		Map<String, String> paramValMap = new HashMap<String, String>();
-		StringBuilder outerSqlBulider = new StringBuilder();
-		StringBuilder groupByBulider = new StringBuilder();
-		groupByBulider.append("group by  custom_score, accuracy_score , timeliness_score");
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
-				MetaType.datapod.toString(), "N");
-		Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ExecParams execParams = new ExecParams();
-		if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
-			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
-		else
-			datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
 
-		DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString(), "N");
+		if (metadataServiceImpl.getAllDQByDatapod(datapodUuid).size() > 0) {
+			Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			ExecParams execParams = new ExecParams();
+			if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString())) datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
+			else datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
 
-		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
-		paramValMap.put("numDays", period);
-		ParamListHolder paramListHolder = new ParamListHolder();
+			DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
 
-		paramListHolder.setParamId("1");
-		paramListHolder.setParamName("numDays");
-		paramListHolder.setParamType("integer");
-		paramListHolder
-				.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), period));
+			Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
+			paramValMap.put("numDays", period);
+			ParamListHolder paramListHolder = new ParamListHolder();
 
-		if (period.equalsIgnoreCase("all")) {
-			dataset.setFilterInfo(null);
-		} else {
-			// execParams.setParamListHolder(paramListHolder);
-			holders.add(paramListHolder);
-			execParams.setParamListInfo(holders);
+			paramListHolder.setParamId("1");
+			paramListHolder.setParamName("numDays");
+			paramListHolder.setParamType("integer");
+			paramListHolder.setParamValue(new MetaIdentifierHolder(new MetaIdentifier(MetaType.simple, null, null), period));
+
+			if (period.equalsIgnoreCase("all")) {
+				dataset.setFilterInfo(null);
+			} else {
+				holders.add(paramListHolder);
+				execParams.setParamListInfo(holders);
+			}
+
+			String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
+					paramValMap);
+
+			String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid() + "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";
+
+			sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
+
+
+			IExecutor exec = execFactory.getExecutor(datasource.getType());
+
+			data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());
 		}
-
-		String sql = datasetOperator.generateSql(dataset, null, null, new HashSet<>(), execParams, RunMode.ONLINE,
-				paramValMap);
-
-		//String tableName = commonServiceImpl.getTableNameBySource(dataset, RunMode.ONLINE);
-
-		String replaceFilter = " AND (dq_result_summary.datapod_uuid='" + datapod.getUuid()
-				+ "') AND (dq_result_summary.datapod_version='" + datapod.getVersion() + "')";
-
-		sql = sql.replace("WHERE (1=1)", "WHERE (1=1)" + replaceFilter);
-	//	sql = sql.replace(" LIMIT 1", groupByBulider + " LIMIT 1");
-		/*
-		 * if (!period.equalsIgnoreCase("all")) sql = sql.replace("30", period);
-		 */
-
-		outerSqlBulider.append(ConstantsUtil.SELECT).append(" * ").append(ConstantsUtil.FROM)
-				.append(ConstantsUtil.BRACKET_OPEN).append(sql).append(ConstantsUtil.BRACKET_CLOSE)
-				.append(" ds_dq_result_summary");
-
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-
-		data = exec.executeAndFetchByDatasource(outerSqlBulider.toString(), dsDatasource,
-				commonServiceImpl.getApp().getUuid());
-
 		return data;
 	}
 }
