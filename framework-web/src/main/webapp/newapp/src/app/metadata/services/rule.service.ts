@@ -325,7 +325,6 @@ export class RuleService {
                   rhsAttri1.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
                   rhsAttri1.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
                   filterInfo.rhsAttribute = rhsAttri1;
-                    debugger
                   if (response.source.ref.type == MetaTypeEnum.MetaType.RELATION) {
                     ruleIO.isRelationExists = true;
                   }
