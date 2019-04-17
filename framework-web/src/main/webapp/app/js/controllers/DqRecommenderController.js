@@ -53,7 +53,7 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
 		  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
 		  '    <li><a ng-disabled="[\'COMPLETED\',\'ABORTED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.getExec(row.entity,\'view\')"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
 		  '    <li><a ng-disabled="[\'RUNNING\',\'RESUME\',\'STARTING\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
-		  '    <li><a   ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
+		  '    <li><a  ng-disabled="[\'KILLED\',\'FAILED\',\'ABORTED\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
 		  '    </ul>',
 		  '  </div>',
 		  '</div>'
@@ -292,7 +292,7 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
         $scope.$emit('notify', notify);
         $('#confModal').modal('hide');
         var url = $location.absUrl().split("app")[0];
-        $http.put(url + api + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
+        $http.put(url + api +"?uuid="+$scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
 			console.log(response);
 			$scope.getBaseEntityStatusByCriteria(false);
         });
