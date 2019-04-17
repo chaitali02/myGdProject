@@ -1,125 +1,126 @@
 {
-	"debugMode": false,
-	"source": {
-		"ref": {
-			"type": "dataset",
-			"uuid": "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+	"debugMode" : false,
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
 		}
 	},
-	 "attributeInfo" : [ 
-        {
-            "attrSourceId" : "0",
-            "attrSourceName" : "account_id",
-            "sourceAttr" : {
-                "attrId" : "0",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "1",
-            "attrSourceName" : "yyyy_mm",
-            "sourceAttr" : {
-                "attrId" : "1",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "2",
-            "attrSourceName" : "attribute4",
-            "sourceAttr" : {
-                "attrId" : "2",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "3",
-            "attrSourceName" : "attribute5",
-            "sourceAttr" : {
-                "attrId" : "3",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "4",
-            "attrSourceName" : "attribute6",
-            "sourceAttr" : {
-                "attrId" : "4",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "5",
-            "attrSourceName" : "attribute7",
-            "sourceAttr" : {
-                "attrId" : "5",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "6",
-            "attrSourceName" : "attribute8",
-            "sourceAttr" : {
-                "attrId" : "6",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "7",
-            "attrSourceName" : "load_id",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
-                }
-            }
-        }
-    ],
-	"uuid": "424decc0-f29d-4dbd-ae74-476335ca6f8f",
-	"version": "1491485346",
-	"name": "rule_fact_account_summary_monthly",
-	"desc": "rules on aggregation datasets to be mapped into datapods",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrSourceName" : "account_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrSourceName" : "yyyy_mm",
+			"sourceAttr" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrSourceName" : "attribute4",
+			"sourceAttr" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrSourceName" : "attribute5",
+			"sourceAttr" : {
+				"attrId" : "3",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrSourceName" : "attribute6",
+			"sourceAttr" : {
+				"attrId" : "4",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrSourceName" : "attribute7",
+			"sourceAttr" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrSourceName" : "attribute8",
+			"sourceAttr" : {
+				"attrId" : "6",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "67a62ae3-4867-4de9-b144-3c8f6cb72ede"
+				}
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrSourceName" : "load_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+				}
+			}
+		}
+	],
+	"uuid" : "424decc0-f29d-4dbd-ae74-476335ca6f8f",
+	"version" : "1491485346",
+	"name" : "rule_fact_account_summary_monthly",
+	"desc" : "rules on aggregation datasets to be mapped into datapods",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:18.452Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "rule_fact_account_summary_monthly"
 }

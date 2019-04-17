@@ -1,60 +1,60 @@
 {
-  "uuid": "4e0d5928-39c7-4e0c-aa98-0d32ad2c1518",
-  "version": "1519980439",
-  "name": "Naive Bayes Classifier",
-  "desc": "Naive Bayes Classifier Algorithm",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  	"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"uuid" : "4e0d5928-39c7-4e0c-aa98-0d32ad2c1518",
+	"version" : "1519980439",
+	"name" : "Naive Bayes Classifier",
+	"desc" : "Naive Bayes Classifier Algorithm",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.633Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-  "type": "CLASSIFICATION",
-  "libraryType": "SPARKML",
-  "trainClass": "org.apache.spark.ml.classification.NaiveBayes",
-  "modelClass": "org.apache.spark.ml.classification.NaiveBayesModel",
-  "labelRequired": "Y",
-  "returnType": null,
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
-      "version": null,
-      "name": "paramlist_naivebayes_classifier"
-    },
-    "value": null
-  },
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
-        }
-    },
-  "savePmml" : "N",
-	"summaryMethods" : [  
+	"type" : "CLASSIFICATION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.classification.NaiveBayes",
+	"modelClass" : "org.apache.spark.ml.classification.NaiveBayesModel",
+	"labelRequired" : "Y",
+	"returnType" : null,
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
+			"version" : null,
+			"name" : "paramlist_naivebayes_classifier"
+		},
+		"value" : null
+	},
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "e3dd3eaf-4420-49c0-a36c-46f76b455a1a"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "45f293c8-ea4b-482c-838e-69ed4b19bc9a"
+		}
+	},
+	"savePmml" : "N",
+	"summaryMethods" : [
 		"getSmoothing",
 		"numClasses",
 		"numFeatures",
@@ -63,5 +63,6 @@
 		"getProbabilityCol",
 		"getPredictionCol",
 		"getModelType"
-	    ]
+	],
+	"displayName" : "Naive Bayes Classifier"
 }

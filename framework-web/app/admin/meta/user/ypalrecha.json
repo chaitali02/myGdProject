@@ -1,123 +1,124 @@
 {
-    "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-    "version" : "1464977196",
-    "name" : "ypalrecha",
-    "desc" : "User info for yp26273 ",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-        }
-    },
-    "createdOn" : ISODate("2018-12-18T06:48:30.830Z"),
-    "tags" : [ 
-        "DEMO"
-    ],
-    "active" : "Y",
-    "locked" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "firstName" : "Yogesh",
-    "middleName" : "T",
-    "lastName" : "Palrecha",
-    "emailId" : "ypalrecha@inferyx.com",
-    "password" : "rZBmzIPOWS+VVzThV5TV3g==",
-    "groupInfo" : [ 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
-            }
-        },
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd6z"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a7yo1"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcyo2"
-            }
-        }
-    ],
-    "defaultGroup" : {
-        "ref" : {
-            "type" : "group",
-            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
-        }
-    },
-    "orgInfo" : {
-        "ref" : {
-            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-            "type" : "organization"
-        }
-    }
+	"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+	"version" : "1464977196",
+	"name" : "ypalrecha",
+	"desc" : "User info for yp26273 ",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:19.107Z"),
+	"tags" : [
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"firstName" : "Yogesh",
+	"middleName" : "T",
+	"lastName" : "Palrecha",
+	"emailId" : "ypalrecha@inferyx.com",
+	"password" : "rZBmzIPOWS+VVzThV5TV3g==",
+	"groupInfo" : [
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcd6z"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a7yo1"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "group",
+				"uuid" : "74f8e00c-6661-4d11-8ed2-c6edd0ddcyo2"
+			}
+		}
+	],
+	"defaultGroup" : {
+		"ref" : {
+			"type" : "group",
+			"uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c1"
+		}
+	},
+	"orgInfo" : {
+		"ref" : {
+			"uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+			"type" : "organization"
+		}
+	},
+	"displayName" : "ypalrecha"
 }

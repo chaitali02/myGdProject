@@ -57,7 +57,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2018-11-19T02:27:43Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:16.216Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -71,5 +71,6 @@
 				"name" : "Anti Money Laundering"
 			}
 		}
-	]
+	],
+	"displayName" : "fm_lookback_date_money_transfers"
 }

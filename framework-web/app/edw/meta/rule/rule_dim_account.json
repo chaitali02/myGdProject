@@ -1,277 +1,278 @@
 {
-	"debugMode": false,
-	"source": {
-		"ref": {
-			"type": "relation",
-			"uuid": "7a8cb69d-8c88-49f0-885d-5a16fcdadecd"
+	"debugMode" : false,
+	"source" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "7a8cb69d-8c88-49f0-885d-5a16fcdadecd"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrSourceId": "0",
-			"attrSourceName": "account_id",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "d265ac19-4fd0-42d9-8f1b-c704918dad78"
+			"attrSourceId" : "0",
+			"attrSourceName" : "account_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78"
 				}
 			}
 		},
 		{
-			"attrSourceId": "1",
-			"attrSourceName": "src_account_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "1",
+			"attrSourceName" : "src_account_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "2",
-			"attrSourceName": "account_type_code",
-			"sourceAttr": {
-				"attrId": "1",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+			"attrSourceId" : "2",
+			"attrSourceName" : "account_type_code",
+			"sourceAttr" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 				}
 			}
 		},
 		{
-			"attrSourceId": "3",
-			"attrSourceName": "account_status_code",
-			"sourceAttr": {
-				"attrId": "1",
-				"ref": {
-					"type": "datapod",
-					"uuid": "2996b01d-cbc8-4ac7-8aff-1e887204101b"
+			"attrSourceId" : "3",
+			"attrSourceName" : "account_status_code",
+			"sourceAttr" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
 				}
 			}
 		},
 		{
-			"attrSourceId": "4",
-			"attrSourceName": "product_type_code",
-			"sourceAttr": {
-				"attrId": "1",
-				"ref": {
-					"type": "datapod",
-					"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
+			"attrSourceId" : "4",
+			"attrSourceName" : "product_type_code",
+			"sourceAttr" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d"
 				}
 			}
 		},
 		{
-			"attrSourceId": "5",
-			"attrSourceName": "pin_number",
-			"sourceAttr": {
-				"attrId": "5",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "5",
+			"attrSourceName" : "pin_number",
+			"sourceAttr" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "6",
-			"attrSourceName": "nationality",
-			"sourceAttr": {
-				"attrId": "6",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "6",
+			"attrSourceName" : "nationality",
+			"sourceAttr" : {
+				"attrId" : "6",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "7",
-			"attrSourceName": "primary_iden_doc",
-			"sourceAttr": {
-				"attrId": "7",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "7",
+			"attrSourceName" : "primary_iden_doc",
+			"sourceAttr" : {
+				"attrId" : "7",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "8",
-			"attrSourceName": "primary_iden_doc_id",
-			"sourceAttr": {
-				"attrId": "8",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "8",
+			"attrSourceName" : "primary_iden_doc_id",
+			"sourceAttr" : {
+				"attrId" : "8",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "9",
-			"attrSourceName": "secondary_iden_doc",
-			"sourceAttr": {
-				"attrId": "9",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "9",
+			"attrSourceName" : "secondary_iden_doc",
+			"sourceAttr" : {
+				"attrId" : "9",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "10",
-			"attrSourceName": "secondary_iden_doc_id",
-			"sourceAttr": {
-				"attrId": "10",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "10",
+			"attrSourceName" : "secondary_iden_doc_id",
+			"sourceAttr" : {
+				"attrId" : "10",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "11",
-			"attrSourceName": "account_open_date",
-			"sourceAttr": {
-				"attrId": "11",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "11",
+			"attrSourceName" : "account_open_date",
+			"sourceAttr" : {
+				"attrId" : "11",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "12",
-			"attrSourceName": "account_number",
-			"sourceAttr": {
-				"attrId": "12",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "12",
+			"attrSourceName" : "account_number",
+			"sourceAttr" : {
+				"attrId" : "12",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "13",
-			"attrSourceName": "opening_balance",
-			"sourceAttr": {
-				"attrId": "13",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "13",
+			"attrSourceName" : "opening_balance",
+			"sourceAttr" : {
+				"attrId" : "13",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "14",
-			"attrSourceName": "current_balance",
-			"sourceAttr": {
-				"attrId": "14",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "14",
+			"attrSourceName" : "current_balance",
+			"sourceAttr" : {
+				"attrId" : "14",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "15",
-			"attrSourceName": "overdue_balance",
-			"sourceAttr": {
-				"attrId": "15",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "15",
+			"attrSourceName" : "overdue_balance",
+			"sourceAttr" : {
+				"attrId" : "15",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "16",
-			"attrSourceName": "overdue_date",
-			"sourceAttr": {
-				"attrId": "16",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "16",
+			"attrSourceName" : "overdue_date",
+			"sourceAttr" : {
+				"attrId" : "16",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "17",
-			"attrSourceName": "currency_code",
-			"sourceAttr": {
-				"attrId": "17",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "17",
+			"attrSourceName" : "currency_code",
+			"sourceAttr" : {
+				"attrId" : "17",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "18",
-			"attrSourceName": "interest_type",
-			"sourceAttr": {
-				"attrId": "18",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "18",
+			"attrSourceName" : "interest_type",
+			"sourceAttr" : {
+				"attrId" : "18",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "19",
-			"attrSourceName": "interest_rate",
-			"sourceAttr": {
-				"attrId": "19",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+			"attrSourceId" : "19",
+			"attrSourceName" : "interest_rate",
+			"sourceAttr" : {
+				"attrId" : "19",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 				}
 			}
 		},
 		{
-			"attrSourceId": "20",
-			"attrSourceName": "load_date",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "9e3de26e-02fb-11e7-93ae-92361f002671"
+			"attrSourceId" : "20",
+			"attrSourceName" : "load_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
 				}
 			}
-		}, 
-        {
-            "attrSourceId" : "21",
-            "attrSourceName" : "load_id",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
-                }
-            }
-        }
+		},
+		{
+			"attrSourceId" : "21",
+			"attrSourceName" : "load_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+				}
+			}
+		}
 	],
-	"uuid": "42c2a260-5f2d-47c2-a184-2ace0ae82312",
-	"version": "1490410260",
-	"name": "rule_dim_account",
-	"desc": "rule for mapping transformation from source relation to target datapod",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "42c2a260-5f2d-47c2-a184-2ace0ae82312",
+	"version" : "1490410260",
+	"name" : "rule_dim_account",
+	"desc" : "rule for mapping transformation from source relation to target datapod",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:18.452Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "rule_dim_account"
 }

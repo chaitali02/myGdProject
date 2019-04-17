@@ -1,57 +1,58 @@
 {
-  "uuid": "45f293c8-ea4b-482c-838e-69ed4b19bc9a",
-  "version": "1530958619",
-  "name": "paramlist_naive_bayes_classifier_wh",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
-  },
-  "createdOn": "Sat Jul 07 15:46:59 IST 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
- 	"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "smoothing",
-      "paramType": "list",
-   	  "paramDispName" : "Smoothing",
-       "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "0.3, 1.0, 2.5"
-      }
-    },
-    {
-      "paramId": "1",
-      "paramName": "numFolds",
-      "paramType": "integer",
-   	  "paramDispName" : "Num Folds",
-       "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "3"
-      }
-    }
-  ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+	"uuid" : "45f293c8-ea4b-482c-838e-69ed4b19bc9a",
+	"version" : "1530958619",
+	"name" : "paramlist_naive_bayes_classifier_wh",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "smoothing",
+			"paramType" : "list",
+			"paramDispName" : "Smoothing",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "0.3, 1.0, 2.5"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "numFolds",
+			"paramType" : "integer",
+			"paramDispName" : "Num Folds",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "3"
+			}
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"displayName" : "paramlist_naive_bayes_classifier_wh"
 }

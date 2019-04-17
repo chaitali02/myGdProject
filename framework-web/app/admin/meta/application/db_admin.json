@@ -50,5 +50,6 @@
     },
     "value": null
   },
-  "applicationType": "APPADMIN"
+  "applicationType": "APPADMIN",
+	"displayName" : "Deutsche Admin"
 }

@@ -1,63 +1,64 @@
 {
-  "uuid": "b4f2873f-3f2b-4b2f-be5a-f30e604e89df",
-  "version": "1537856528",
-  "name": "account_f2f_parquet_parquet",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
-      }
-    }
-  ],
-  "type": "FILE-FILE",
-  "sourceDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
-    }
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "simple"
-    },
-    "value": "account"
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-    }
-  },
-  "targetDetail": {
-     "ref" : {
-            "type" : "simple"
-        },
-        "value" : "account_parquet"
-  },
-  "filterInfo": null,
-  "runParams": null,
-  "sourceFormat": "PARQUET",
-  "targetFormat": "PARQUET",
-   "sourceExtn":"PARQUET",
-  "targetExtn":"PARQUET",
-   "sourceHeader" : "N",
-   "targetHeader" : "N",
-  "saveMode" : "OVERWRITE",
-  "ignoreCase" : "N",
-  "incrAttr": null
+	"uuid" : "b4f2873f-3f2b-4b2f-be5a-f30e604e89df",
+	"version" : "1537856528",
+	"name" : "account_f2f_parquet_parquet",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.528Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"type" : "FILE-FILE",
+	"sourceDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+		}
+	},
+	"sourceDetail" : {
+		"ref" : {
+			"type" : "simple"
+		},
+		"value" : "account"
+	},
+	"targetDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"targetDetail" : {
+		"ref" : {
+			"type" : "simple"
+		},
+		"value" : "account_parquet"
+	},
+	"filterInfo" : null,
+	"runParams" : null,
+	"sourceFormat" : "PARQUET",
+	"targetFormat" : "PARQUET",
+	"sourceExtn" : "PARQUET",
+	"targetExtn" : "PARQUET",
+	"sourceHeader" : "N",
+	"targetHeader" : "N",
+	"saveMode" : "OVERWRITE",
+	"ignoreCase" : "N",
+	"incrAttr" : null,
+	"displayName" : "account_f2f_parquet_parquet"
 }

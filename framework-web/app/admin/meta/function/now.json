@@ -43,5 +43,6 @@
     }
   ],
   "category": "DATE",
-  "returnType": "DATE"
+  "returnType": "DATE",
+	"displayName" : "now"
 }

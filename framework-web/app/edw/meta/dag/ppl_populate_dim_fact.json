@@ -1,166 +1,178 @@
 {
-	"uuid": "6dd713ed-3ea9-4940-8c36-8b872c7576e2",
-	"name": "ppl_populate_dim_fact",
-	"version": "1460270907",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "6dd713ed-3ea9-4940-8c36-8b872c7576e2",
+	"name" : "ppl_populate_dim_fact",
+	"version" : "1460270907",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
 	],
-	"tags": [
+	"tags" : [
 		"A",
 		"B"
 	],
-	"desc": "Populate warehouse dimensions and fact tables",
-	 "xPos" : 10.0,
-    "yPos" : 370.0,
+	"desc" : "Populate warehouse dimensions and fact tables",
+	"xPos" : 10,
+	"yPos" : 370,
 	"templateFlg" : "N",
-	"stages": [
+	"stages" : [
 		{
-			"stageId": "675b1e14-e3d1-4dbe-b73c-5404fbbec142",
-			"xPos" : 360.0,
-            "yPos" : 370.0,
-			"dependsOn": [],
-			"name": "Populate dimensions,fact and aggregated facts",
-			"tasks": [
+			"stageId" : "675b1e14-e3d1-4dbe-b73c-5404fbbec142",
+			"xPos" : 360,
+			"yPos" : 370,
+			"dependsOn" : [ ],
+			"name" : "Populate dimensions,fact and aggregated facts",
+			"tasks" : [
 				{
-					"taskId": "3df63c48-3128-4326-b9bc-9d7f86561419",
-					"xPos": 690,
-					"yPos": 230,
-					"dependsOn": [],
-					"name": "Load dim_bank",
-					"operators": [
+					"taskId" : "3df63c48-3128-4326-b9bc-9d7f86561419",
+					"xPos" : 690,
+					"yPos" : 230,
+					"dependsOn" : [ ],
+					"name" : "Load dim_bank",
+					"operators" : [
 						{
-							"operatorId": "1c2da27a-e503-44bb-8b6f-afbafb076ff5",
-							"dependsOn": [],
-							"operatorInfo": [{
-								"ref": {
-									"type": "map",
-									"uuid": "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a"
+							"operatorId" : "1c2da27a-e503-44bb-8b6f-afbafb076ff5",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "6d882685-a114-4e67-9782-0083641af660",
-					"xPos": 690,
-					"yPos": 310,
-					"dependsOn": [],
-					"name": "Load dim_branch",
-					"operators": [
+					"taskId" : "6d882685-a114-4e67-9782-0083641af660",
+					"xPos" : 690,
+					"yPos" : 310,
+					"dependsOn" : [ ],
+					"name" : "Load dim_branch",
+					"operators" : [
 						{
-							"operatorId": "9f749052-7793-45ac-995b-0b29ecb878b6",
-							"dependsOn": [],
-							"operatorInfo": [{
-								"ref": {
-									"type": "map",
-									"uuid": "d2cc6181-9104-4f2d-b220-2cd29a69dabe"
+							"operatorId" : "9f749052-7793-45ac-995b-0b29ecb878b6",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "d2cc6181-9104-4f2d-b220-2cd29a69dabe"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "1b574d03-536f-4963-aacf-8232d007a42a",
-					"xPos": 690,
-					"yPos": 400,
-					"dependsOn": [],
-					"name": "Load dim_address",
-					"operators": [
+					"taskId" : "1b574d03-536f-4963-aacf-8232d007a42a",
+					"xPos" : 690,
+					"yPos" : 400,
+					"dependsOn" : [ ],
+					"name" : "Load dim_address",
+					"operators" : [
 						{
-							"operatorId": "bff81265-e41a-46bd-9cc4-0f4d94b93fc4",
-							"dependsOn": [],
-							"operatorInfo":[ {
-								"ref": {
-									"type": "map",
-									"uuid": "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db"
+							"operatorId" : "bff81265-e41a-46bd-9cc4-0f4d94b93fc4",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "d6289102-d114-409f-9053-6da5f7fef251",
-					"xPos": 690,
-					"yPos": 150,
-					"dependsOn": [],
-					"name": "Load dim_account",
-					"operators": [
+					"taskId" : "d6289102-d114-409f-9053-6da5f7fef251",
+					"xPos" : 690,
+					"yPos" : 150,
+					"dependsOn" : [ ],
+					"name" : "Load dim_account",
+					"operators" : [
 						{
-							"operatorId": "c4fe6ad2-4ba9-43f0-801a-771a2042f6db",
-							"dependsOn": [],
-							"operatorInfo": [{
-								"ref": {
-									"type": "map",
-									"uuid": "ec398401-8495-419f-bde7-76db137f3088"
+							"operatorId" : "c4fe6ad2-4ba9-43f0-801a-771a2042f6db",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "ec398401-8495-419f-bde7-76db137f3088"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "5cf7a534-abe5-469b-aa8b-ccc3928f35b6",
-					"xPos": 690,
-					"yPos": 560,
-					"dependsOn": [],
-					"name": "Load dim_customer",
-					"operators": [
+					"taskId" : "5cf7a534-abe5-469b-aa8b-ccc3928f35b6",
+					"xPos" : 690,
+					"yPos" : 560,
+					"dependsOn" : [ ],
+					"name" : "Load dim_customer",
+					"operators" : [
 						{
-							"operatorId": "c5bf83f3-6a23-48cc-9339-e33852315073",
-							"dependsOn": [],
-							"operatorInfo":[ {
-								"ref": {
-									"type": "map",
-									"uuid": "bfef7565-e873-42ba-9e60-482751a24003"
+							"operatorId" : "c5bf83f3-6a23-48cc-9339-e33852315073",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "bfef7565-e873-42ba-9e60-482751a24003"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "0d8f88f3-bae9-4234-8339-6c4dff63064d",
-					"xPos": 690,
-					"yPos": 480,
-					"dependsOn": [],
-					"name": "Load dim_transaction_type",
-					"operators": [
+					"taskId" : "0d8f88f3-bae9-4234-8339-6c4dff63064d",
+					"xPos" : 690,
+					"yPos" : 480,
+					"dependsOn" : [ ],
+					"name" : "Load dim_transaction_type",
+					"operators" : [
 						{
-							"operatorId": "2c405f90-5242-44c8-8cb9-b7ef36d635ef",
-							"dependsOn": [],
-							"operatorInfo":[ {
-								"ref": {
-									"type": "map",
-									"uuid": "4f875b10-9534-4f9d-b9e5-b4cae8e7bf0d"
+							"operatorId" : "2c405f90-5242-44c8-8cb9-b7ef36d635ef",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "4f875b10-9534-4f9d-b9e5-b4cae8e7bf0d"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "9176cd3a-dcfc-4bf1-9cfb-edb1b0688d91",
-					"xPos": 1040,
-					"yPos": 370,
-					"dependsOn": [
+					"taskId" : "9176cd3a-dcfc-4bf1-9cfb-edb1b0688d91",
+					"xPos" : 1040,
+					"yPos" : 370,
+					"dependsOn" : [
 						"3df63c48-3128-4326-b9bc-9d7f86561419",
 						"6d882685-a114-4e67-9782-0083641af660",
 						"1b574d03-536f-4963-aacf-8232d007a42a",
@@ -168,66 +180,73 @@
 						"5cf7a534-abe5-469b-aa8b-ccc3928f35b6",
 						"0d8f88f3-bae9-4234-8339-6c4dff63064d"
 					],
-					"name": "Load fact_transaction",
-					"operators": [
+					"name" : "Load fact_transaction",
+					"operators" : [
 						{
-							"operatorId": "4e25fce7-ca25-4df9-9461-a9d2e5de7ecf",
-							"dependsOn": [],
-							"operatorInfo":[ {
-								"ref": {
-									"type": "map",
-									"uuid": "850eec61-2047-4d94-aab1-6117d7f84bd6"
+							"operatorId" : "4e25fce7-ca25-4df9-9461-a9d2e5de7ecf",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "850eec61-2047-4d94-aab1-6117d7f84bd6"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "1aa7c5dc-9064-434e-bf06-453a087bdf1a",
-					"xPos": 1210,
-					"yPos": 320,
-					"dependsOn": [
+					"taskId" : "1aa7c5dc-9064-434e-bf06-453a087bdf1a",
+					"xPos" : 1210,
+					"yPos" : 320,
+					"dependsOn" : [
 						"9176cd3a-dcfc-4bf1-9cfb-edb1b0688d91"
 					],
-					"name": "Load fact_account_summary_monthly",
-					"operators": [
+					"name" : "Load fact_account_summary_monthly",
+					"operators" : [
 						{
-							"operatorId": "5a775295-b0aa-4d6f-914a-7aa875029243",
-							"dependsOn": [],
-							"operatorInfo":[ {
-								"ref": {
-									"type": "map",
-									"uuid": "ada38baf-1be2-4579-94b4-4b7722c50622"
+							"operatorId" : "5a775295-b0aa-4d6f-914a-7aa875029243",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "ada38baf-1be2-4579-94b4-4b7722c50622"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				},
 				{
-					"taskId": "467b6e80-4e39-441c-8bfb-67a1c12b996c",
-					"xPos": 1210,
-					"yPos": 450,
-					"dependsOn": [
+					"taskId" : "467b6e80-4e39-441c-8bfb-67a1c12b996c",
+					"xPos" : 1210,
+					"yPos" : 450,
+					"dependsOn" : [
 						"9176cd3a-dcfc-4bf1-9cfb-edb1b0688d91"
 					],
-					"name": "Load fact_customer_summary_monthly",
-					"operators": [
+					"name" : "Load fact_customer_summary_monthly",
+					"operators" : [
 						{
-							"operatorId": "6611cdf8-d1fc-4a9c-9211-4afd9b1f78b9",
-							"dependsOn": [],
-							"operatorInfo": [{
-								"ref": {
-									"type": "map",
-									"uuid": "a89f5339-0c89-43a2-8898-b279764f6a19"
+							"operatorId" : "6611cdf8-d1fc-4a9c-9211-4afd9b1f78b9",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "a89f5339-0c89-43a2-8898-b279764f6a19"
+									}
 								}
-							}],
-							"filterInfo": []
+							],
+							"filterInfo" : [ ]
 						}
 					]
 				}
 			]
 		}
-	]
+	],
+	"displayName" : "ppl_populate_dim_fact"
 }

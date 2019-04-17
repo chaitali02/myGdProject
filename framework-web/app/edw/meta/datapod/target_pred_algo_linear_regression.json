@@ -1,68 +1,69 @@
 {
-  "id": "5b0289c32750525081481674",
-  "uuid": "b3bdb5ad-5128-4ca4-9a00-5c8d13cb953e",
-  "version": "1526892995",
-  "name": "target_pred_algo_linear_regression",
-  "desc": "Saves the result of prediction which is of the type algorithm Linear Regression.",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
-  },
-  "createdOn": "Mon May 21 14:26:35 IST 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
-      }
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-    }
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "label",
-      "type": "double",
-      "desc": "label",
-      "key": "",
-      "partition": "N",
-      "dispName": "label",
-      "active": "Y"
-    },
-    {
-      "attributeId": 1,
-      "name": "features",
-      "type": "vector",
-      "desc": "features",
-      "key": "",
-      "partition": "N",
-      "dispName": "features",
-      "active": "Y"
-    },
-    {
-      "attributeId": 2,
-      "name": "prediction",
-      "type": "double",
-      "desc": "prediction",
-      "key": "",
-      "partition": "N",
-      "dispName": "prediction",
-      "active": "Y"
-    }
-  ],
-      "prefix" : "rep"
+	"id" : "5b0289c32750525081481674",
+	"uuid" : "b3bdb5ad-5128-4ca4-9a00-5c8d13cb953e",
+	"version" : "1526892995",
+	"name" : "target_pred_algo_linear_regression",
+	"desc" : "Saves the result of prediction which is of the type algorithm Linear Regression.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "label",
+			"type" : "double",
+			"desc" : "label",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "label",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 1,
+			"name" : "features",
+			"type" : "vector",
+			"desc" : "features",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "features",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 2,
+			"name" : "prediction",
+			"type" : "double",
+			"desc" : "prediction",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "prediction",
+			"active" : "Y"
+		}
+	],
+	"prefix" : "rep",
+	"displayName" : "target_pred_algo_linear_regression"
 }

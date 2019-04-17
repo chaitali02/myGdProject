@@ -251,5 +251,6 @@
       "precision": null
     }
   ],
-  "prefix": "dsm"
+  "prefix": "dsm",
+	"displayName" : "dq_sample"
 }

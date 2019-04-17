@@ -212,5 +212,6 @@
         }
       ]
     }
-  ]
+  ],
+	"displayName" : "Incoming Cross Border Wire Transfers"
 }

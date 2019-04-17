@@ -1,61 +1,62 @@
 {
-  "uuid": "dd7b4a9d-b6f9-424e-9c4a-ff81e732ce11",
-  "version": "1534047451",
-  "name": "paramlist_ecocap_sep_2018",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Aug 12 00:17:31 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "reporting_date",
-      "paramType": "string",
-      "paramDispName" : "Reporting Date",
-      "paramDesc" : "",
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "09/30/2018"
-      },
-      "paramRef": null
-    }
-  ],
-  "paramListType": "dag",
-  "templateFlg": "N",
-  "templateInfo": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
-      "version": null,
-      "name": "paramlist_ecocap_pipelines"
-    },
-    "value": null
-  }
+	"uuid" : "dd7b4a9d-b6f9-424e-9c4a-ff81e732ce11",
+	"version" : "1534047451",
+	"name" : "paramlist_ecocap_sep_2018",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "reporting_date",
+			"paramType" : "string",
+			"paramDispName" : "Reporting Date",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "09/30/2018"
+			},
+			"paramRef" : null
+		}
+	],
+	"paramListType" : "dag",
+	"templateFlg" : "N",
+	"templateInfo" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "47e29bae-dfb3-450e-88d0-e8c462b32d3d",
+			"version" : null,
+			"name" : "paramlist_ecocap_pipelines"
+		},
+		"value" : null
+	},
+	"displayName" : "paramlist_ecocap_sep_2018"
 }

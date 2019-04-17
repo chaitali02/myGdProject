@@ -1,55 +1,56 @@
 {
-  "uuid": "1e8389ab-4c4c-4e3f-8df1-b51596de46d0",
-  "version": "1553031043",
-  "name": "equity_orders",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:30:43 EDT 2019",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "metaId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": "1552238970",
-      "name": null
-    },
-    "value": null
-  },
-  "execId": {
-    "ref": {
-      "type": "loadExec",
-      "uuid": "70bb02ea-9822-4799-b322-5e2f5120a48d",
-      "version": "1553031043",
-      "name": "equity_orders"
-    },
-    "value": null
-  },
-  "location": null,
-  "persistMode": "DISK_ONLY",
-  "dimInfo": null,
-  "numRows": 1000,
-  "runMode": null
+	"uuid" : "1e8389ab-4c4c-4e3f-8df1-b51596de46d0",
+	"version" : "1553031043",
+	"name" : "equity_orders",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : "1552238970",
+			"name" : null
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "70bb02ea-9822-4799-b322-5e2f5120a48d",
+			"version" : "1553031043",
+			"name" : "equity_orders"
+		},
+		"value" : null
+	},
+	"location" : null,
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 1000,
+	"runMode" : null,
+	"displayName" : "equity_orders"
 }

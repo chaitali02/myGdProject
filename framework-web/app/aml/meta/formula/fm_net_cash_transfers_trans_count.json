@@ -12,7 +12,7 @@
 		},
 		"value" : null
 	},
-	"createdOn" : ISODate("2018-11-14T16:12:29.796Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:16.216Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -363,5 +363,6 @@
 			"attributeType" : null
 		}
 	],
-	"formulaType" : "aggr"
+	"formulaType" : "aggr",
+	"displayName" : "fm_net_cash_transfers_trans_count"
 }

@@ -236,7 +236,7 @@ public class BaseEntity {
 		}else {
 			temp=displayName;
 		}
-		return temp;
+		return displayName;
 	}
 
 	public void setDisplayName(String displayName) {

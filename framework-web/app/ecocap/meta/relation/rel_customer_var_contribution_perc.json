@@ -1,87 +1,88 @@
 {
-  "uuid": "08973879-0ed8-4130-a636-196b35c69243",
-  "version": "1534011592",
-  "name": "rel_customer_var_contribution_perc",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 14:19:52 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "fbf2c224-128c-471e-bfb8-7abbbdeb539e",
-      "version": null,
-      "name": "ds_customer_var_contribution_topn"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
-          "version": null,
-          "name": "portfolio_loss_aggr_es"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "fbf2c224-128c-471e-bfb8-7abbbdeb539e",
-                "version": null,
-                "name": "ds_customer_var_contribution_topn"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "df53dc10-db85-4d17-b868-e1a88c9fd87d",
-                "version": null,
-                "name": "portfolio_loss_aggr_es"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "08973879-0ed8-4130-a636-196b35c69243",
+	"version" : "1534011592",
+	"name" : "rel_customer_var_contribution_perc",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "fbf2c224-128c-471e-bfb8-7abbbdeb539e",
+			"version" : null,
+			"name" : "ds_customer_var_contribution_topn"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+					"version" : null,
+					"name" : "portfolio_loss_aggr_es"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "fbf2c224-128c-471e-bfb8-7abbbdeb539e",
+								"version" : null,
+								"name" : "ds_customer_var_contribution_topn"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "df53dc10-db85-4d17-b868-e1a88c9fd87d",
+								"version" : null,
+								"name" : "portfolio_loss_aggr_es"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_customer_var_contribution_perc"
 }

@@ -1,28 +1,28 @@
 {
-    "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d752",
-    "version" : "1552160296",
-    "name" : "SSN",
-    "desc" : "Social Security Number",
-    "active" : "Y",
-    "appInfo" : [ 
-       {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2019-03-09T19:34:32.912Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "publicFlag" :"Y",
-    "regEx" : "^(\\\\d{3}-?[0-9]{2}-?\\\\d{4}|XXX-XX-XXXX)$"
+	"uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d752",
+	"version" : "1552160296",
+	"name" : "SSN",
+	"desc" : "Social Security Number",
+	"active" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.650Z"),
+	"tags" : [ ],
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"regEx" : "^(\\\\d{3}-?[0-9]{2}-?\\\\d{4}|XXX-XX-XXXX)$",
+	"displayName" : "SSN"
 }

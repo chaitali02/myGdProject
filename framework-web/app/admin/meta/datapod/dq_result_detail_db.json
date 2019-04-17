@@ -530,5 +530,6 @@
 			"Precision": 0
 		}
 	],
-	"prefix": "eut"
+	"prefix": "eut",
+	"displayName" : "dp_result_summary"
 }

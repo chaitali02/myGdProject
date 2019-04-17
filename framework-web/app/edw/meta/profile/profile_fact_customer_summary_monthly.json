@@ -1,86 +1,87 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "4",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "4",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "5",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "5",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		},
 		{
-			"attrId": "6",
-			"ref": {
-				"type": "datapod",
-				"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			"attrId" : "6",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 			}
 		}
 	],
-	"uuid": "9916c6de-c644-4341-be61-b410ab888ecb",
-	"version": "1491911914",
-	"name": "profile_fact_customer_summary_monthly",
-	"desc": "Data profiling to see statistical check results on dw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "9916c6de-c644-4341-be61-b410ab888ecb",
+	"version" : "1491911914",
+	"name" : "profile_fact_customer_summary_monthly",
+	"desc" : "Data profiling to see statistical check results on dw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_fact_customer_summary_monthly"
 }

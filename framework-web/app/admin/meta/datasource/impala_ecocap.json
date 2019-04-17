@@ -31,5 +31,6 @@
 	"password" : "",
 	"path" : "/user/hive/warehouse/ecocap.db",
 	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict",
-	"sid" : null
+	"sid" : null,
+	"displayName" : "impala_ecocap"
 }

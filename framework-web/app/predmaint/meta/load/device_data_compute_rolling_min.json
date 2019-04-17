@@ -1,42 +1,43 @@
 {
-    "header" : "Y",
-    "append" : "Y",
-    "source" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-        },
-        "value" : "file:///user/hive/warehouse/framework/upload/device_data_compute_rolling_min.csv"
-    },
-    "target" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
-            "version" : "1549630008"
-        }
-    },
-    "uuid" : "15af9225-c381-464e-a1ea-cc8abaa27e52",
-    "version" : "1549952534",
-    "name" : "device_data_compute_rolling_min",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-02-12T06:22:14.000Z"),
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153"
-            }
-        }
-    ]
+	"header" : "Y",
+	"append" : "Y",
+	"source" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		},
+		"value" : "file:///user/hive/warehouse/framework/upload/device_data_compute_rolling_min.csv"
+	},
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
+			"version" : "1549630008"
+		}
+	},
+	"uuid" : "15af9225-c381-464e-a1ea-cc8abaa27e52",
+	"version" : "1549952534",
+	"name" : "device_data_compute_rolling_min",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.674Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153"
+			}
+		}
+	],
+	"displayName" : "device_data_compute_rolling_min"
 }

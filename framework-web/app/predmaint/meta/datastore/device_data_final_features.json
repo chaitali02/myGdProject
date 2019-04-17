@@ -1,55 +1,56 @@
 {
-  "uuid": "68049aa7-56e2-4c5b-a7c3-0b8e2836fbb3",
-  "version": "1550092110",
-  "name": "device_data_final_features",
-  "desc": "Creating datastore for device_data_final_features",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Feb 13 16:08:30 EST 2019",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "metaId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-      "version": "1550092096",
-      "name": "device_data_final_features"
-    },
-    "value": null
-  },
-  "execId": {
-    "ref": {
-      "type": "loadExec",
-      "uuid": "965f8314-84bb-4f04-b4e2-743e3578020f",
-      "version": "1550092096",
-      "name": "device_data_final_features"
-    },
-    "value": null
-  },
-  "location": "/fc55b32a-7612-460d-a01c-99a2690d9fdf/1550092096/1550092096",
-  "persistMode": "DISK_ONLY",
-  "dimInfo": null,
-  "numRows": 4392,
-  "runMode": "BATCH"
+	"uuid" : "68049aa7-56e2-4c5b-a7c3-0b8e2836fbb3",
+	"version" : "1550092110",
+	"name" : "device_data_final_features",
+	"desc" : "Creating datastore for device_data_final_features",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+			"version" : "1550092096",
+			"name" : "device_data_final_features"
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "965f8314-84bb-4f04-b4e2-743e3578020f",
+			"version" : "1550092096",
+			"name" : "device_data_final_features"
+		},
+		"value" : null
+	},
+	"location" : "/fc55b32a-7612-460d-a01c-99a2690d9fdf/1550092096/1550092096",
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 4392,
+	"runMode" : "BATCH",
+	"displayName" : "device_data_final_features"
 }

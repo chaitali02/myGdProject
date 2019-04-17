@@ -1,0 +1,916 @@
+{
+	"xPos" : 0,
+	"yPos" : 290,
+	"templateFlg" : "N",
+	"stages" : [
+		{
+			"stageId" : "badb8b88-6d04-4507-9539-6859af309656",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "27b6b04c-783e-46f1-9ef9-1eb6e50e4f04",
+					"dependsOn" : [ ],
+					"name" : "Profile Raw Data",
+					"operators" : [
+						{
+							"operatorId" : "86dd9656-fd58-420a-8c86-ab97d3745cf4",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "profilegroup",
+										"uuid" : "1503714e-1ecd-45db-b9f6-835fb4e70a56",
+										"name" : "profile_group_raw"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 510,
+					"yPos" : 290,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "0e320610-b2c4-43b4-bae3-21fd7b5c3bbd",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on account",
+					"operators" : [
+						{
+							"operatorId" : "57a0a42f-553a-4d06-8f54-d125af15047e",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "ea2eb904-f4d1-4365-ab9e-a8b0825408de",
+										"name" : "dqg_account"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 640,
+					"yPos" : 20,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "22d20dea-50dd-4bf2-b893-fd1d432b0bc7",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on account_status_type",
+					"operators" : [
+						{
+							"operatorId" : "46ec9f3e-d7ed-45d2-8fa4-8034a8770706",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "80c39cc7-f2a8-40ee-953f-b6586da5783b",
+										"name" : "dqg_account_status_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 800,
+					"yPos" : 30,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "31f24e9d-8080-4b2e-be7a-93915287fbb4",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on account_type",
+					"operators" : [
+						{
+							"operatorId" : "d2284a0c-ca2e-4a85-b64f-0b37ea254dff",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "0c9c2d41-26cf-4e7f-a884-eeffee82814d",
+										"name" : "dqg_account_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 960,
+					"yPos" : 30,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "193dfc04-ffb3-446d-a008-d705b577a361",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on address",
+					"operators" : [
+						{
+							"operatorId" : "4f316e2d-735c-4170-887b-ef5296b07282",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "f1f7cee1-081e-44fa-8e44-fbb37c12ebdc",
+										"name" : "dqg_address"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1070,
+					"yPos" : 80,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "02a398bc-7bf4-4ab4-be32-a16cb814b60e",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on bank",
+					"operators" : [
+						{
+							"operatorId" : "9d13b288-984e-4297-b7a9-1694e5032e40",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c",
+										"name" : "dqg_bank"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1150,
+					"yPos" : 180,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "32a65e41-3a99-41c6-9d1e-530ea0703cae",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on branch",
+					"operators" : [
+						{
+							"operatorId" : "d4bd677b-fdd2-4f5d-a649-db555a592cff",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "c18b766e-77fe-4319-b6c5-8cb61bd56d18",
+										"name" : "dqg_branch"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1190,
+					"yPos" : 300,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "121f09ff-deff-4e7e-973b-741eb521e8f7",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on branch_type",
+					"operators" : [
+						{
+							"operatorId" : "7c84335b-7044-445e-8d32-0f759f368f9e",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261",
+										"name" : "dqg_branch_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1130,
+					"yPos" : 400,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "add2e427-a439-49bc-863b-552783fc2049",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on customer",
+					"operators" : [
+						{
+							"operatorId" : "66ed42f2-80bc-4abd-87ea-ddec2abfba8b",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "853c0149-f51a-413e-9e5f-a0dd6860a296",
+										"name" : "dqg_customer"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1030,
+					"yPos" : 480,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "3133d328-956b-4724-9d5c-c417be446cf2",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on product type",
+					"operators" : [
+						{
+							"operatorId" : "773078b4-ce67-47a1-975b-deaa9407eba8",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "6eb56e2c-03e3-4434-8557-29b7cbeeb6aa",
+										"name" : "dqg_product_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 930,
+					"yPos" : 550,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "2d0866b6-3ac7-486e-a38d-d40e0025d10b",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on transaction",
+					"operators" : [
+						{
+							"operatorId" : "2f0239dc-5002-46e3-986a-07bee211c0f0",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "72eeaf8e-da21-41dd-bb11-3381f15a526c",
+										"name" : "dqg_transaction"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 770,
+					"yPos" : 580,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "cca46aea-0fbe-4be4-9c87-f1704b935c3d",
+					"dependsOn" : [
+						"27b6b04c-783e-46f1-9ef9-1eb6e50e4f04"
+					],
+					"name" : "DQ on transaction_type",
+					"operators" : [
+						{
+							"operatorId" : "bd4c118c-b458-4f3d-b438-13423a1ef008",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "9028015c-049a-4845-8e0e-d245f5b6a1d0",
+										"name" : "dqg_transaction_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 610,
+					"yPos" : 580,
+					"status" : [ ]
+				}
+			],
+			"name" : "DQ on source tables",
+			"xPos" : 290,
+			"yPos" : 290,
+			"status" : [ ]
+		},
+		{
+			"stageId" : "c9aa7367-0144-4c2d-b9f5-7744698332f6",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "8b9cadc7-b0bc-48c1-ac24-0acb620a9ba3",
+					"dependsOn" : [ ],
+					"name" : "Load dim_bank",
+					"operators" : [
+						{
+							"operatorId" : "850862df-d23f-46fa-b72e-3714c5746797",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "6356a9f8-f5c5-454b-9cbe-0d6ecc452b1a",
+										"name" : "map_dim_bank"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1110,
+					"yPos" : 630,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d",
+					"dependsOn" : [ ],
+					"name" : "Load dim_branch",
+					"operators" : [
+						{
+							"operatorId" : "ad54c05f-8202-49b2-837d-419520e011f8",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "d2cc6181-9104-4f2d-b220-2cd29a69dabe",
+										"name" : "map_dim_branch"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1220,
+					"yPos" : 760,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "6b395672-4c09-4233-9507-efd0982c99d8",
+					"dependsOn" : [ ],
+					"name" : "Load dim_address",
+					"operators" : [
+						{
+							"operatorId" : "f7ae6c19-23e1-442e-b30a-09dcc2f6bf5b",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "f06e9f5d-3b8b-4daf-9900-a9b641cbb5db",
+										"name" : "map_dim_address"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1330,
+					"yPos" : 870,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "16d318aa-000f-4e72-9bf4-e05ab5bc5437",
+					"dependsOn" : [ ],
+					"name" : "Load dim_account",
+					"operators" : [
+						{
+							"operatorId" : "766e2522-a5cd-4d3f-9de5-8a16a275dd3e",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "ec398401-8495-419f-bde7-76db137f3088",
+										"name" : "map_dim_account"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1340,
+					"yPos" : 1100,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "3c7deda6-7b49-43f3-ba0d-8016f75feb47",
+					"dependsOn" : [ ],
+					"name" : "Load dim_customer",
+					"operators" : [
+						{
+							"operatorId" : "c107ca06-8359-4751-a9a8-65c3cb68c036",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "bfef7565-e873-42ba-9e60-482751a24003",
+										"name" : "map_dim_customer"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1200,
+					"yPos" : 1280,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "d1d63565-eb62-4126-a8dc-587daffa3377",
+					"dependsOn" : [ ],
+					"name" : "Load dim_transaction_type",
+					"operators" : [
+						{
+							"operatorId" : "b69961af-abe8-440e-8914-63feb4e450f6",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "4f875b10-9534-4f9d-b9e5-b4cae8e7bf0d",
+										"name" : "map_dim_transaction_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1110,
+					"yPos" : 1420,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "fb6dd42a-7556-48be-a92e-f9966a3b9bd8",
+					"dependsOn" : [
+						"8b9cadc7-b0bc-48c1-ac24-0acb620a9ba3",
+						"c26af5a4-0838-4bef-beb8-512426951e5d",
+						"6b395672-4c09-4233-9507-efd0982c99d8",
+						"16d318aa-000f-4e72-9bf4-e05ab5bc5437",
+						"3c7deda6-7b49-43f3-ba0d-8016f75feb47",
+						"d1d63565-eb62-4126-a8dc-587daffa3377"
+					],
+					"name" : "Load fact_transaction",
+					"operators" : [
+						{
+							"operatorId" : "a44340b1-da5f-4e61-a28b-3c816086d9ce",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "850eec61-2047-4d94-aab1-6117d7f84bd6",
+										"name" : "map_fact_transaction"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1650,
+					"yPos" : 960,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d1",
+					"dependsOn" : [
+						"8b9cadc7-b0bc-48c1-ac24-0acb620a9ba3"
+					],
+					"name" : "DQ on dim_bank",
+					"operators" : [
+						{
+							"operatorId" : "4d639901-677f-4b2b-9a68-9beacbbae86b",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "f2d79ecf-f357-444b-8e85-4221cd9ffe33",
+										"name" : "dqg_dim_bank"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1440,
+					"yPos" : 430,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d2",
+					"dependsOn" : [
+						"c26af5a4-0838-4bef-beb8-512426951e5d"
+					],
+					"name" : "DQ on dim_branch",
+					"operators" : [
+						{
+							"operatorId" : "1d2997f2-923b-447d-9968-d813f84f44a0",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "e3e5d90a-0d07-4894-98b0-dab7d5407fb5",
+										"name" : "dqg_dim_branch"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1590,
+					"yPos" : 510,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d0",
+					"dependsOn" : [
+						"6b395672-4c09-4233-9507-efd0982c99d8"
+					],
+					"name" : "DQ on dim_address",
+					"operators" : [
+						{
+							"operatorId" : "b999d84f-ea8a-45bd-b4bd-2a58963ca60c",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "a33f238a-f542-4f40-b2b8-d7c1290b1480",
+										"name" : "dqg_dim_address"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1690,
+					"yPos" : 650,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "5780e275-cf2c-45a1-a345-a880d936d154",
+					"dependsOn" : [
+						"16d318aa-000f-4e72-9bf4-e05ab5bc5437"
+					],
+					"name" : "DQ on dim_account",
+					"operators" : [
+						{
+							"operatorId" : "bad6fb9f-2638-4fbc-a01d-1777651a04cb",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "05f1acf0-ad0b-4f21-954d-d8a380dc42c6",
+										"name" : "dqg_dim_account"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1640,
+					"yPos" : 1250,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d3",
+					"dependsOn" : [
+						"3c7deda6-7b49-43f3-ba0d-8016f75feb47"
+					],
+					"name" : "DQ on dim_customer",
+					"operators" : [
+						{
+							"operatorId" : "99822c88-e5d3-404d-9012-0ade235343df",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "38b50dc4-3f2b-48d3-b5ba-e1ea6718a692",
+										"name" : "dqg_dim_customer"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1540,
+					"yPos" : 1420,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d4",
+					"dependsOn" : [
+						"d1d63565-eb62-4126-a8dc-587daffa3377"
+					],
+					"name" : "DQ on dim_transaction_type",
+					"operators" : [
+						{
+							"operatorId" : "598a8eb4-ef68-465a-bd78-d122ba247312",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "328e0a75-9614-4000-a2cd-2d23fceaa66c",
+										"name" : "dqg_dim_transaction_type"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1430,
+					"yPos" : 1580,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "d55a590c-c382-4e5b-bd22-e689f085f0c0",
+					"dependsOn" : [
+						"fb6dd42a-7556-48be-a92e-f9966a3b9bd8"
+					],
+					"name" : "Load fact_account_summary_monthly",
+					"operators" : [
+						{
+							"operatorId" : "4d61b99e-ce4a-4da4-8eba-cbfd79d7e99d",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "ada38baf-1be2-4579-94b4-4b7722c50622",
+										"name" : "map_fact_account_summary_monthly"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1850,
+					"yPos" : 850,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "46e41d46-3ed9-449b-b4c7-cf8a6d273ac9",
+					"dependsOn" : [
+						"fb6dd42a-7556-48be-a92e-f9966a3b9bd8"
+					],
+					"name" : "Load fact_customer_summary_monthly",
+					"operators" : [
+						{
+							"operatorId" : "37ab344b-21ff-4e06-baf2-3dc43b6ec763",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "a89f5339-0c89-43a2-8898-b279764f6a19",
+										"name" : "map_fact_customer_summary_monthly"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1860,
+					"yPos" : 1100,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d5",
+					"dependsOn" : [
+						"fb6dd42a-7556-48be-a92e-f9966a3b9bd8"
+					],
+					"name" : "DQ on fact_transaction",
+					"operators" : [
+						{
+							"operatorId" : "2db5b086-cc0b-47ca-9085-8f13f6334def",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "9a13ee57-22f0-48d4-a0c6-914e1e39183b",
+										"name" : "dqg_fact_transaction"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 2030,
+					"yPos" : 960,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d6",
+					"dependsOn" : [
+						"d55a590c-c382-4e5b-bd22-e689f085f0c0"
+					],
+					"name" : "DQ on fact_account_summary_monthly",
+					"operators" : [
+						{
+							"operatorId" : "3129cdb4-fca6-4398-ae99-48ccebb83585",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "b4d36eea-0b28-4b87-bbf5-a511c101b6c7",
+										"name" : "dqg_fact_account_summary_monthly"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 2030,
+					"yPos" : 730,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "c26af5a4-0838-4bef-beb8-512426951e5d7",
+					"dependsOn" : [
+						"46e41d46-3ed9-449b-b4c7-cf8a6d273ac9"
+					],
+					"name" : "DQ on fact_customer_summary_monthly",
+					"operators" : [
+						{
+							"operatorId" : "6aecf9ab-66e1-4f7a-8dc6-56b5b79a6702",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "c9b8b6f0-4262-4e77-bc09-2e4d66292428",
+										"name" : "dqg_fact_customer_summary_monthly"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 2030,
+					"yPos" : 1200,
+					"status" : [ ]
+				},
+				{
+					"taskId" : "1e2b3995-b882-428e-a45e-3c64f8801953",
+					"dependsOn" : [
+						"c26af5a4-0838-4bef-beb8-512426951e5d6",
+						"c26af5a4-0838-4bef-beb8-512426951e5d5",
+						"c26af5a4-0838-4bef-beb8-512426951e5d7"
+					],
+					"name" : "Profile Datawarehouse",
+					"operators" : [
+						{
+							"operatorId" : "c254c2e6-ef6b-4fa9-b74b-90853e6e0d5d",
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "profilegroup",
+										"uuid" : "635a0b24-4fdc-4280-b2ec-aa8d482e83bf",
+										"name" : "profile_group_dw"
+									}
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 2250,
+					"yPos" : 950,
+					"status" : [ ]
+				}
+			],
+			"name" : "Populate Datawarehouse, Perform DQ and DP",
+			"xPos" : 890,
+			"yPos" : 940,
+			"status" : [ ]
+		}
+	],
+	"status" : [ ],
+	"uuid" : "3005dde7-21aa-4277-afef-e5be129cc932",
+	"version" : "1495407801",
+	"name" : "ppl_populate_warehouse",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [
+		"DEV",
+		"0.1.0"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displayName" : "ppl_populate_warehouse"
+}

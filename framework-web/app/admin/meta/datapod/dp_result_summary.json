@@ -368,5 +368,6 @@
 			}
 		}
 	],
-	"prefix":"drs"
+	"prefix":"drs",
+	"displayName" : "dp_result_summary"
 }

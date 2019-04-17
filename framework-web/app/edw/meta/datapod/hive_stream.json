@@ -1,98 +1,99 @@
 {
-    "datasource" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
-        }
-    },
-    "cache" : "Y",
-    "attributes" : [ 
-        {
-            "attributeId" : 0,
-            "name" : "key",
-            "type" : "integer",
-            "desc" : "key",
-            "key" : "0",
-            "partition" : "N",
-            "dispName" : "key",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 1,
-            "name" : "value",
-            "type" : "integer",
-            "desc" : "value",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "value",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 2,
-            "name" : "topic",
-            "type" : "string",
-            "desc" : "topic",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "topic",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 3,
-            "name" : "partition",
-            "type" : "string",
-            "desc" : "partition",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "partition",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 4,
-            "name" : "offset",
-            "type" : "string",
-            "desc" : "offset",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "offset",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 5,
-            "name" : "timestamp",
-            "type" : "string",
-            "desc" : "timestamp",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "timestamp",
-            "active" : "Y"
-        }
-    ],
-    "uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f",
-    "version" : "1540909628",
-    "name" : "hive_stream",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-30T14:27:08.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196",
-                "name" : "Data Warehouse"
-            }
-        }
-    ],
-      "prefix" : "hvs"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "key",
+			"type" : "integer",
+			"desc" : "key",
+			"key" : "0",
+			"partition" : "N",
+			"dispName" : "key",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 1,
+			"name" : "value",
+			"type" : "integer",
+			"desc" : "value",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "value",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 2,
+			"name" : "topic",
+			"type" : "string",
+			"desc" : "topic",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "topic",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 3,
+			"name" : "partition",
+			"type" : "string",
+			"desc" : "partition",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "partition",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 4,
+			"name" : "offset",
+			"type" : "string",
+			"desc" : "offset",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "offset",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 5,
+			"name" : "timestamp",
+			"type" : "string",
+			"desc" : "timestamp",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "timestamp",
+			"active" : "Y"
+		}
+	],
+	"uuid" : "aa25bf06-0efc-4ba9-b7ad-9790a2a39d2f",
+	"version" : "1540909628",
+	"name" : "hive_stream",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			}
+		}
+	],
+	"prefix" : "hvs",
+	"displayName" : "hive_stream"
 }

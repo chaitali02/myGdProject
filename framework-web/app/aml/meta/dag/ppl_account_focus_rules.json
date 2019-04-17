@@ -1,218 +1,231 @@
 {
-  "uuid": "36474a78-9118-4fc1-bb3d-037144ed4279",
-  "version": "1542669693",
-  "name": "ppl_account_focus_rules",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 18:21:33 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 130,
-  "yPos": 330,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "fbc5ff46-0bd5-47d0-8619-0fc9fc3641af",
-          "dependsOn": [],
-          "name": "Account Focus - Cross Border Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "0e500891-fb2a-41eb-afbc-df0b97efda38",
-                    "version": null,
-                    "name": "Account Focus - Cross Border Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 500,
-          "yPos": 70,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "f5f23b9c-bc4d-4090-b9a7-715c5d4d0ba8",
-          "dependsOn": [],
-          "name": "Account Focus - High Risk Geo Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "4eebcf49-8b33-4fc4-b83c-ae0712c01d4f",
-                    "version": null,
-                    "name": "Account Focus - High Risk Geo Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 650,
-          "yPos": 150,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "7bcbeb4b-03e8-4cf6-94d9-fab71ad83614",
-          "dependsOn": [],
-          "name": "Account Focus - Transaction Velocity",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "aede84c6-f317-476f-ad98-b7113ecbfd01",
-                    "version": null,
-                    "name": "Account Focus - Transaction Velocity"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 750,
-          "yPos": 270,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "8eef10ae-78ed-41fb-88ac-ccbe293868e6",
-          "dependsOn": [],
-          "name": "Account Focus - Money Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "48c05f9d-2c0b-4637-af16-e2d64bcb4f7d",
-                    "version": null,
-                    "name": "Account Focus - Money Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 750,
-          "yPos": 380,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "57d97e87-1b89-4892-b81f-1d63a3f71f5d",
-          "dependsOn": [],
-          "name": "Account Focus - Round Amount Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "c5374d4a-15ce-4368-bdd9-ef5173b9a35f",
-                    "version": null,
-                    "name": "Account Focus - Round Amount Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 480,
-          "yPos": 560,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "8894ecc3-a806-46e0-afcb-491efdbc129b",
-          "dependsOn": [],
-          "name": "Account Focus - Check Sequencing",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "3d25b41a-e469-452f-ba47-2656b0971ae3",
-                    "version": null,
-                    "name": "Account Focus - Check Sequencing"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 640,
-          "yPos": 480,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos": 310,
-      "yPos": 330,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "36474a78-9118-4fc1-bb3d-037144ed4279",
+	"version" : "1542669693",
+	"name" : "ppl_account_focus_rules",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 130,
+	"yPos" : 330,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "fbc5ff46-0bd5-47d0-8619-0fc9fc3641af",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - Cross Border Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "0e500891-fb2a-41eb-afbc-df0b97efda38",
+										"version" : null,
+										"name" : "Account Focus - Cross Border Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 500,
+					"yPos" : 70,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "f5f23b9c-bc4d-4090-b9a7-715c5d4d0ba8",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - High Risk Geo Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "4eebcf49-8b33-4fc4-b83c-ae0712c01d4f",
+										"version" : null,
+										"name" : "Account Focus - High Risk Geo Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 650,
+					"yPos" : 150,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "7bcbeb4b-03e8-4cf6-94d9-fab71ad83614",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - Transaction Velocity",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "aede84c6-f317-476f-ad98-b7113ecbfd01",
+										"version" : null,
+										"name" : "Account Focus - Transaction Velocity"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 750,
+					"yPos" : 270,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "8eef10ae-78ed-41fb-88ac-ccbe293868e6",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - Money Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "48c05f9d-2c0b-4637-af16-e2d64bcb4f7d",
+										"version" : null,
+										"name" : "Account Focus - Money Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 750,
+					"yPos" : 380,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "57d97e87-1b89-4892-b81f-1d63a3f71f5d",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - Round Amount Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "c5374d4a-15ce-4368-bdd9-ef5173b9a35f",
+										"version" : null,
+										"name" : "Account Focus - Round Amount Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 480,
+					"yPos" : 560,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "8894ecc3-a806-46e0-afcb-491efdbc129b",
+					"dependsOn" : [ ],
+					"name" : "Account Focus - Check Sequencing",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "3d25b41a-e469-452f-ba47-2656b0971ae3",
+										"version" : null,
+										"name" : "Account Focus - Check Sequencing"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 640,
+					"yPos" : 480,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 310,
+			"yPos" : 330,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displayName" : "ppl_account_focus_rules"
 }

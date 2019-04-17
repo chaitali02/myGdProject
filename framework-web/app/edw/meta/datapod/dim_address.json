@@ -1,172 +1,173 @@
 {
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"cache": "Y",
-	"published": "N",
-	"attributes": [
+	"cache" : "Y",
+	"published" : "N",
+	"attributes" : [
 		{
-			"attributeId": 0,
-			"name": "address_id",
-			"type": "string",
-			"desc": "address_id",
-			"dispName": "address_id",
-			"key": 0,
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 0,
+			"name" : "address_id",
+			"type" : "string",
+			"desc" : "address_id",
+			"dispName" : "address_id",
+			"key" : 0,
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 1,
-			"name": "src_address_id",
-			"type": "string",
-			"desc": "src_address_id",
-			"dispName": "src_address_id",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 1,
+			"name" : "src_address_id",
+			"type" : "string",
+			"desc" : "src_address_id",
+			"dispName" : "src_address_id",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 2,
-			"name": "address_line1",
-			"type": "string",
-			"desc": "address_line1",
-			"dispName": "address_line1",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 2,
+			"name" : "address_line1",
+			"type" : "string",
+			"desc" : "address_line1",
+			"dispName" : "address_line1",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 3,
-			"name": "address_line2",
-			"type": "string",
-			"desc": "address_line2",
-			"dispName": "address_line2",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 3,
+			"name" : "address_line2",
+			"type" : "string",
+			"desc" : "address_line2",
+			"dispName" : "address_line2",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 4,
-			"name": "address_line3",
-			"type": "string",
-			"desc": "address_line3",
-			"dispName": "address_line3",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 4,
+			"name" : "address_line3",
+			"type" : "string",
+			"desc" : "address_line3",
+			"dispName" : "address_line3",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 5,
-			"name": "city",
-			"type": "string",
-			"desc": "city",
-			"dispName": "city",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 5,
+			"name" : "city",
+			"type" : "string",
+			"desc" : "city",
+			"dispName" : "city",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 6,
-			"name": "county",
-			"type": "string",
-			"desc": "county",
-			"dispName": "county",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 6,
+			"name" : "county",
+			"type" : "string",
+			"desc" : "county",
+			"dispName" : "county",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 7,
-			"name": "state",
-			"type": "string",
-			"desc": "state",
-			"dispName": "state",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 7,
+			"name" : "state",
+			"type" : "string",
+			"desc" : "state",
+			"dispName" : "state",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 8,
-			"name": "zipcode",
-			"type": "string",
-			"desc": "zipcode",
-			"dispName": "zipcode",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 8,
+			"name" : "zipcode",
+			"type" : "string",
+			"desc" : "zipcode",
+			"dispName" : "zipcode",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 9,
-			"name": "country",
-			"type": "string",
-			"desc": "country",
-			"dispName": "country",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 9,
+			"name" : "country",
+			"type" : "string",
+			"desc" : "country",
+			"dispName" : "country",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 10,
-			"name": "latitude",
-			"type": "string",
-			"desc": "latitude",
-			"dispName": "latitude",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 10,
+			"name" : "latitude",
+			"type" : "string",
+			"desc" : "latitude",
+			"dispName" : "latitude",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 11,
-			"name": "longtitude",
-			"type": "string",
-			"desc": "longtitude",
-			"dispName": "longtitude",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 11,
+			"name" : "longtitude",
+			"type" : "string",
+			"desc" : "longtitude",
+			"dispName" : "longtitude",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 12,
-			"name": "load_date",
-			"type": "string",
-			"desc": "load_date",
-			"dispName": "load_date",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 12,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"dispName" : "load_date",
+			"partition" : "Y",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 13,
-			"name": "load_id",
-			"type": "Integer",
-			"desc": "load_id",
-			"dispName": "load_id",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 13,
+			"name" : "load_id",
+			"type" : "Integer",
+			"desc" : "load_id",
+			"dispName" : "load_id",
+			"partition" : "Y",
+			"active" : "Y"
 		}
 	],
-	"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
-	"version": "1488623831",
-	"name": "dim_address",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725",
+	"version" : "1488623831",
+	"name" : "dim_address",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"appInfo": [
+	"locked" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
-		}	
+		}
 	],
-      "prefix" : "dmd"
+	"prefix" : "dmd",
+	"displayName" : "dim_address"
 }

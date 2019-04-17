@@ -192,5 +192,6 @@
 			"attrUnitType": null
 		}
 	],
-	"prefix":"uee"
+	"prefix":"uee",
+	"displayName" : "rule_result_summary"
 }

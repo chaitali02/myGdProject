@@ -1,73 +1,74 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
-        }
-    },
-    "formulaInfo" : [ 
-        {
-            "ref" : {
-                "type" : "function",
-                "uuid" : "9d44b8e9-b806-4340-ae32-4bf457cdb88c"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "("
-        }, 
-        {
-            "ref" : {
-                "type" : "datapod",
-                "uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
-            },
-            "attributeId" : 72
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ","
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : "0"
-        }, 
-        {
-            "ref" : {
-                "type" : "simple"
-            },
-            "value" : ")"
-        }
-    ],
-    "formulaType" : "simple",
-    "uuid" : "0e672cf6-5caf-47c5-9fa2-ab1697017172",
-    "version" : "1545403405",
-    "name" : "fm_device_data_fillna_warning_2_17",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-12-21T14:43:25.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9d44b8e9-b806-4340-ae32-4bf457cdb88c"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyz"
+			},
+			"attributeId" : 72
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ","
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "0e672cf6-5caf-47c5-9fa2-ab1697017172",
+	"version" : "1545403405",
+	"name" : "fm_device_data_fillna_warning_2_17",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displayName" : "fm_device_data_fillna_warning_2_17"
 }

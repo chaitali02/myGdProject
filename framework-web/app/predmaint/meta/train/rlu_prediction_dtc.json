@@ -1,2118 +1,2119 @@
 {
-  "uuid": "0fe1b1d3-ac2b-4009-b410-3ced654bd520",
-  "version": "1550092913",
-  "name": "RLU Prediction - DTC",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Feb 13 16:21:53 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1521430822",
-        "name": "Dept Of Transportation"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "model",
-      "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-      "version": null,
-      "name": "RLU Prediction - DTC"
-    },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-      "version": null,
-      "name": "device_data_final_features"
-    },
-    "value": null
-  },
-  "featureAttrMap": [
-    {
-      "featureMapId": "0",
-      "featureDisplaySeq": "0",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "1",
-        "featureName": "usage_count_1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": "usage_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "1",
-      "featureDisplaySeq": "1",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "2",
-        "featureName": "usage_count_2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": "usage_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "2",
-      "featureDisplaySeq": "2",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "3",
-        "featureName": "problem_type_1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "24",
-        "attrName": "problem_type_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "3",
-      "featureDisplaySeq": "3",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "4",
-        "featureName": "problem_type_2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "25",
-        "attrName": "problem_type_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "4",
-      "featureDisplaySeq": "4",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "5",
-        "featureName": "problem_type_3",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "26",
-        "attrName": "problem_type_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "5",
-      "featureDisplaySeq": "5",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "6",
-        "featureName": "problem_type_4",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": "problem_type_4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "6",
-      "featureDisplaySeq": "6",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "7",
-        "featureName": "error_count_1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": "error_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "7",
-      "featureDisplaySeq": "7",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "8",
-        "featureName": "error_count_2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "error_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "8",
-      "featureDisplaySeq": "8",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "9",
-        "featureName": "error_count_3",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "error_count_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "9",
-      "featureDisplaySeq": "9",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "10",
-        "featureName": "error_count_4",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "error_count_4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "10",
-      "featureDisplaySeq": "10",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "11",
-        "featureName": "error_count_5",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "error_count_5",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "11",
-      "featureDisplaySeq": "11",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "12",
-        "featureName": "error_count_6",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "error_count_6",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "12",
-      "featureDisplaySeq": "12",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "13",
-        "featureName": "error_count_7",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "error_count_7",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "13",
-      "featureDisplaySeq": "13",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "14",
-        "featureName": "error_count_8",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "error_count_8",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "14",
-      "featureDisplaySeq": "14",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "15",
-        "featureName": "date_month",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "date_month",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "15",
-      "featureDisplaySeq": "15",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "16",
-        "featureName": "date_week",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "date_week",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "16",
-      "featureDisplaySeq": "16",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "17",
-        "featureName": "date_day",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "date_day",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "17",
-      "featureDisplaySeq": "17",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "18",
-        "featureName": "warn_type1_total",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "warn_type1_total",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "18",
-      "featureDisplaySeq": "18",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "19",
-        "featureName": "warn_type2_total",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "warn_type2_total",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "19",
-      "featureDisplaySeq": "19",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "20",
-        "featureName": "fault_code_type_1_count",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "fault_code_type_1_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "20",
-      "featureDisplaySeq": "20",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "21",
-        "featureName": "fault_code_type_2_count",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "fault_code_type_2_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "21",
-      "featureDisplaySeq": "21",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "22",
-        "featureName": "fault_code_type_3_count",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "fault_code_type_3_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "22",
-      "featureDisplaySeq": "22",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "23",
-        "featureName": "fault_code_type_4_count",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "fault_code_type_4_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "23",
-      "featureDisplaySeq": "23",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "24",
-        "featureName": "problem_type_1_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "problem_type_1_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "24",
-      "featureDisplaySeq": "24",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "25",
-        "featureName": "problem_type_2_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "problem_type_2_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "25",
-      "featureDisplaySeq": "25",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "26",
-        "featureName": "problem_type_3_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "problem_type_3_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "26",
-      "featureDisplaySeq": "26",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "27",
-        "featureName": "problem_type_4_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "problem_type_4_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "27",
-      "featureDisplaySeq": "27",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "28",
-        "featureName": "fault_code_type_1_count_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "fault_code_type_1_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "28",
-      "featureDisplaySeq": "28",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "29",
-        "featureName": "fault_code_type_2_count_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "fault_code_type_2_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "29",
-      "featureDisplaySeq": "29",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "30",
-        "featureName": "fault_code_type_3_count_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "fault_code_type_3_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "30",
-      "featureDisplaySeq": "30",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "31",
-        "featureName": "fault_code_type_4_count_per_usage1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "fault_code_type_4_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "31",
-      "featureDisplaySeq": "31",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "32",
-        "featureName": "problem_type_1_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "problem_type_1_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "32",
-      "featureDisplaySeq": "32",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "33",
-        "featureName": "problem_type_2_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "problem_type_2_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "33",
-      "featureDisplaySeq": "33",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "34",
-        "featureName": "problem_type_3_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "problem_type_3_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "34",
-      "featureDisplaySeq": "34",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "35",
-        "featureName": "problem_type_4_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "problem_type_4_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "35",
-      "featureDisplaySeq": "35",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "36",
-        "featureName": "fault_code_type_1_count_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "fault_code_type_1_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "36",
-      "featureDisplaySeq": "36",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "37",
-        "featureName": "fault_code_type_2_count_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "fault_code_type_2_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "37",
-      "featureDisplaySeq": "37",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "38",
-        "featureName": "fault_code_type_3_count_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "fault_code_type_3_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "38",
-      "featureDisplaySeq": "38",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "39",
-        "featureName": "fault_code_type_4_count_per_usage2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": "fault_code_type_4_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "39",
-      "featureDisplaySeq": "39",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "40",
-        "featureName": "problem_type_1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": "problem_type_1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "40",
-      "featureDisplaySeq": "40",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "41",
-        "featureName": "problem_type_2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": "problem_type_2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "41",
-      "featureDisplaySeq": "41",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "42",
-        "featureName": "problem_type_3_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "48",
-        "attrName": "problem_type_3_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "42",
-      "featureDisplaySeq": "42",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "43",
-        "featureName": "problem_type_4_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": "problem_type_4_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "43",
-      "featureDisplaySeq": "43",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "44",
-        "featureName": "problem_type_1_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": "problem_type_1_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "44",
-      "featureDisplaySeq": "44",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "45",
-        "featureName": "problem_type_2_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": "problem_type_2_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "45",
-      "featureDisplaySeq": "45",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "46",
-        "featureName": "problem_type_3_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": "problem_type_3_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "46",
-      "featureDisplaySeq": "46",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "47",
-        "featureName": "problem_type_4_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": "problem_type_4_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "47",
-      "featureDisplaySeq": "47",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "48",
-        "featureName": "problem_type_1_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": "problem_type_1_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "48",
-      "featureDisplaySeq": "48",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "49",
-        "featureName": "problem_type_2_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "55",
-        "attrName": "problem_type_2_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "49",
-      "featureDisplaySeq": "49",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "50",
-        "featureName": "problem_type_3_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "56",
-        "attrName": "problem_type_3_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "50",
-      "featureDisplaySeq": "50",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "51",
-        "featureName": "problem_type_4_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "57",
-        "attrName": "problem_type_4_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "51",
-      "featureDisplaySeq": "51",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "52",
-        "featureName": "fault_code_type_1_count_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "58",
-        "attrName": "fault_code_type_1_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "52",
-      "featureDisplaySeq": "52",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "53",
-        "featureName": "fault_code_type_2_count_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "59",
-        "attrName": "fault_code_type_2_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "53",
-      "featureDisplaySeq": "53",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "54",
-        "featureName": "fault_code_type_3_count_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "60",
-        "attrName": "fault_code_type_3_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "54",
-      "featureDisplaySeq": "54",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "55",
-        "featureName": "fault_code_type_4_count_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "61",
-        "attrName": "fault_code_type_4_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "55",
-      "featureDisplaySeq": "55",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "56",
-        "featureName": "fault_code_type_1_count_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "62",
-        "attrName": "fault_code_type_1_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "56",
-      "featureDisplaySeq": "56",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "57",
-        "featureName": "fault_code_type_2_count_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "63",
-        "attrName": "fault_code_type_2_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "57",
-      "featureDisplaySeq": "57",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "58",
-        "featureName": "fault_code_type_3_count_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "64",
-        "attrName": "fault_code_type_3_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "58",
-      "featureDisplaySeq": "58",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "59",
-        "featureName": "fault_code_type_4_count_per_usage1_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "65",
-        "attrName": "fault_code_type_4_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "59",
-      "featureDisplaySeq": "59",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "60",
-        "featureName": "fault_code_type_1_count_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "66",
-        "attrName": "fault_code_type_1_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "60",
-      "featureDisplaySeq": "60",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "61",
-        "featureName": "fault_code_type_2_count_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "67",
-        "attrName": "fault_code_type_2_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "61",
-      "featureDisplaySeq": "61",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "62",
-        "featureName": "fault_code_type_3_count_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "68",
-        "attrName": "fault_code_type_3_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "62",
-      "featureDisplaySeq": "62",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "63",
-        "featureName": "fault_code_type_4_count_per_usage2_category",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "69",
-        "attrName": "fault_code_type_4_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "63",
-      "featureDisplaySeq": "63",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "64",
-        "featureName": "cat1",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "cat1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "64",
-      "featureDisplaySeq": "64",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "65",
-        "featureName": "cat2",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "cat2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "65",
-      "featureDisplaySeq": "65",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "66",
-        "featureName": "cat3",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "cat3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "66",
-      "featureDisplaySeq": "66",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "67",
-        "featureName": "cat4",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "cat4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "67",
-      "featureDisplaySeq": "67",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "68",
-        "featureName": "warning_features",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "70",
-        "attrName": "warning_features",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "featureMapId": "68",
-      "featureDisplaySeq": "68",
-      "feature": {
-        "ref": {
-          "type": "model",
-          "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-          "version": null,
-          "name": "RLU Prediction - DTC"
-        },
-        "value": null,
-        "featureId": "69",
-        "featureName": "summary_features",
-        "featureDefaultValue": 0
-      },
-      "attribute": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "71",
-        "attrName": "summary_features",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    }
-  ],
-  "trainPercent": 80,
-  "valPercent": 20,
-  "labelInfo": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-      "version": null,
-      "name": "device_data_final_features"
-    },
-    "value": null,
-    "attrId": "28",
-    "attrName": "problemreported",
-    "attrType": null,
-    "attrUnitType": null
-  },
-  "useHyperParams": "N",
-  "featureImportance": null,
-  "rowIdentifier": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "value": null,
-      "attrId": "0",
-      "attrName": "deviceid",
-      "attrType": null,
-      "attrUnitType": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "value": null,
-      "attrId": "1",
-      "attrName": "date",
-      "attrType": null,
-      "attrUnitType": null
-    }
-  ],
-  "includeFeatures": "Y",
-  "saveTrainingSet": "Y",
-  "trainLocation": {
-    "ref": {
-      "type": "file",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": null
-  },
-  "testLocation": {
-    "ref": {
-      "type": "file",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": null
-  }
+	"uuid" : "0fe1b1d3-ac2b-4009-b410-3ced654bd520",
+	"version" : "1550092913",
+	"name" : "RLU Prediction - DTC",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:19.030Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822",
+				"name" : "Dept Of Transportation"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+			"version" : null,
+			"name" : "RLU Prediction - DTC"
+		},
+		"value" : null
+	},
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+			"version" : null,
+			"name" : "device_data_final_features"
+		},
+		"value" : null
+	},
+	"featureAttrMap" : [
+		{
+			"featureMapId" : "0",
+			"featureDisplaySeq" : "0",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "1",
+				"featureName" : "usage_count_1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "29",
+				"attrName" : "usage_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "1",
+			"featureDisplaySeq" : "1",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "2",
+				"featureName" : "usage_count_2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "30",
+				"attrName" : "usage_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "2",
+			"featureDisplaySeq" : "2",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "3",
+				"featureName" : "problem_type_1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "24",
+				"attrName" : "problem_type_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "3",
+			"featureDisplaySeq" : "3",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "4",
+				"featureName" : "problem_type_2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "25",
+				"attrName" : "problem_type_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "4",
+			"featureDisplaySeq" : "4",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "5",
+				"featureName" : "problem_type_3",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "26",
+				"attrName" : "problem_type_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "5",
+			"featureDisplaySeq" : "5",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "6",
+				"featureName" : "problem_type_4",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "27",
+				"attrName" : "problem_type_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "6",
+			"featureDisplaySeq" : "6",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "7",
+				"featureName" : "error_count_1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "31",
+				"attrName" : "error_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "7",
+			"featureDisplaySeq" : "7",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "8",
+				"featureName" : "error_count_2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "32",
+				"attrName" : "error_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "8",
+			"featureDisplaySeq" : "8",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "9",
+				"featureName" : "error_count_3",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "33",
+				"attrName" : "error_count_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "9",
+			"featureDisplaySeq" : "9",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "10",
+				"featureName" : "error_count_4",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "34",
+				"attrName" : "error_count_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "10",
+			"featureDisplaySeq" : "10",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "11",
+				"featureName" : "error_count_5",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "35",
+				"attrName" : "error_count_5",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "11",
+			"featureDisplaySeq" : "11",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "12",
+				"featureName" : "error_count_6",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "36",
+				"attrName" : "error_count_6",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "12",
+			"featureDisplaySeq" : "12",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "13",
+				"featureName" : "error_count_7",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "37",
+				"attrName" : "error_count_7",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "13",
+			"featureDisplaySeq" : "13",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "14",
+				"featureName" : "error_count_8",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "38",
+				"attrName" : "error_count_8",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "14",
+			"featureDisplaySeq" : "14",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "15",
+				"featureName" : "date_month",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "39",
+				"attrName" : "date_month",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "15",
+			"featureDisplaySeq" : "15",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "16",
+				"featureName" : "date_week",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "40",
+				"attrName" : "date_week",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "16",
+			"featureDisplaySeq" : "16",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "17",
+				"featureName" : "date_day",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "41",
+				"attrName" : "date_day",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "17",
+			"featureDisplaySeq" : "17",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "18",
+				"featureName" : "warn_type1_total",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "warn_type1_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "18",
+			"featureDisplaySeq" : "18",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "19",
+				"featureName" : "warn_type2_total",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "warn_type2_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "19",
+			"featureDisplaySeq" : "19",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "20",
+				"featureName" : "fault_code_type_1_count",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "fault_code_type_1_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "20",
+			"featureDisplaySeq" : "20",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "21",
+				"featureName" : "fault_code_type_2_count",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "fault_code_type_2_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "21",
+			"featureDisplaySeq" : "21",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "22",
+				"featureName" : "fault_code_type_3_count",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "fault_code_type_3_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "22",
+			"featureDisplaySeq" : "22",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "23",
+				"featureName" : "fault_code_type_4_count",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "fault_code_type_4_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "23",
+			"featureDisplaySeq" : "23",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "24",
+				"featureName" : "problem_type_1_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "problem_type_1_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "24",
+			"featureDisplaySeq" : "24",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "25",
+				"featureName" : "problem_type_2_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "problem_type_2_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "25",
+			"featureDisplaySeq" : "25",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "26",
+				"featureName" : "problem_type_3_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "problem_type_3_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "26",
+			"featureDisplaySeq" : "26",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "27",
+				"featureName" : "problem_type_4_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "problem_type_4_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "27",
+			"featureDisplaySeq" : "27",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "28",
+				"featureName" : "fault_code_type_1_count_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "fault_code_type_1_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "28",
+			"featureDisplaySeq" : "28",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "29",
+				"featureName" : "fault_code_type_2_count_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "fault_code_type_2_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "29",
+			"featureDisplaySeq" : "29",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "30",
+				"featureName" : "fault_code_type_3_count_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "fault_code_type_3_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "30",
+			"featureDisplaySeq" : "30",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "31",
+				"featureName" : "fault_code_type_4_count_per_usage1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "fault_code_type_4_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "31",
+			"featureDisplaySeq" : "31",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "32",
+				"featureName" : "problem_type_1_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "problem_type_1_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "32",
+			"featureDisplaySeq" : "32",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "33",
+				"featureName" : "problem_type_2_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "problem_type_2_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "33",
+			"featureDisplaySeq" : "33",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "34",
+				"featureName" : "problem_type_3_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "problem_type_3_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "34",
+			"featureDisplaySeq" : "34",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "35",
+				"featureName" : "problem_type_4_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "problem_type_4_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "35",
+			"featureDisplaySeq" : "35",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "36",
+				"featureName" : "fault_code_type_1_count_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "fault_code_type_1_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "36",
+			"featureDisplaySeq" : "36",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "37",
+				"featureName" : "fault_code_type_2_count_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "fault_code_type_2_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "37",
+			"featureDisplaySeq" : "37",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "38",
+				"featureName" : "fault_code_type_3_count_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "fault_code_type_3_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "38",
+			"featureDisplaySeq" : "38",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "39",
+				"featureName" : "fault_code_type_4_count_per_usage2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "23",
+				"attrName" : "fault_code_type_4_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "39",
+			"featureDisplaySeq" : "39",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "40",
+				"featureName" : "problem_type_1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "46",
+				"attrName" : "problem_type_1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "40",
+			"featureDisplaySeq" : "40",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "41",
+				"featureName" : "problem_type_2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "47",
+				"attrName" : "problem_type_2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "41",
+			"featureDisplaySeq" : "41",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "42",
+				"featureName" : "problem_type_3_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "48",
+				"attrName" : "problem_type_3_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "42",
+			"featureDisplaySeq" : "42",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "43",
+				"featureName" : "problem_type_4_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "49",
+				"attrName" : "problem_type_4_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "43",
+			"featureDisplaySeq" : "43",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "44",
+				"featureName" : "problem_type_1_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "50",
+				"attrName" : "problem_type_1_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "44",
+			"featureDisplaySeq" : "44",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "45",
+				"featureName" : "problem_type_2_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "51",
+				"attrName" : "problem_type_2_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "45",
+			"featureDisplaySeq" : "45",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "46",
+				"featureName" : "problem_type_3_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "52",
+				"attrName" : "problem_type_3_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "46",
+			"featureDisplaySeq" : "46",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "47",
+				"featureName" : "problem_type_4_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "53",
+				"attrName" : "problem_type_4_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "47",
+			"featureDisplaySeq" : "47",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "48",
+				"featureName" : "problem_type_1_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "54",
+				"attrName" : "problem_type_1_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "48",
+			"featureDisplaySeq" : "48",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "49",
+				"featureName" : "problem_type_2_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "55",
+				"attrName" : "problem_type_2_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "49",
+			"featureDisplaySeq" : "49",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "50",
+				"featureName" : "problem_type_3_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "56",
+				"attrName" : "problem_type_3_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "50",
+			"featureDisplaySeq" : "50",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "51",
+				"featureName" : "problem_type_4_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "57",
+				"attrName" : "problem_type_4_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "51",
+			"featureDisplaySeq" : "51",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "52",
+				"featureName" : "fault_code_type_1_count_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "58",
+				"attrName" : "fault_code_type_1_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "52",
+			"featureDisplaySeq" : "52",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "53",
+				"featureName" : "fault_code_type_2_count_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "59",
+				"attrName" : "fault_code_type_2_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "53",
+			"featureDisplaySeq" : "53",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "54",
+				"featureName" : "fault_code_type_3_count_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "60",
+				"attrName" : "fault_code_type_3_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "54",
+			"featureDisplaySeq" : "54",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "55",
+				"featureName" : "fault_code_type_4_count_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "61",
+				"attrName" : "fault_code_type_4_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "55",
+			"featureDisplaySeq" : "55",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "56",
+				"featureName" : "fault_code_type_1_count_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "62",
+				"attrName" : "fault_code_type_1_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "56",
+			"featureDisplaySeq" : "56",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "57",
+				"featureName" : "fault_code_type_2_count_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "63",
+				"attrName" : "fault_code_type_2_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "57",
+			"featureDisplaySeq" : "57",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "58",
+				"featureName" : "fault_code_type_3_count_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "64",
+				"attrName" : "fault_code_type_3_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "58",
+			"featureDisplaySeq" : "58",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "59",
+				"featureName" : "fault_code_type_4_count_per_usage1_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "65",
+				"attrName" : "fault_code_type_4_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "59",
+			"featureDisplaySeq" : "59",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "60",
+				"featureName" : "fault_code_type_1_count_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "66",
+				"attrName" : "fault_code_type_1_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "60",
+			"featureDisplaySeq" : "60",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "61",
+				"featureName" : "fault_code_type_2_count_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "67",
+				"attrName" : "fault_code_type_2_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "61",
+			"featureDisplaySeq" : "61",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "62",
+				"featureName" : "fault_code_type_3_count_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "68",
+				"attrName" : "fault_code_type_3_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "62",
+			"featureDisplaySeq" : "62",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "63",
+				"featureName" : "fault_code_type_4_count_per_usage2_category",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "69",
+				"attrName" : "fault_code_type_4_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "63",
+			"featureDisplaySeq" : "63",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "64",
+				"featureName" : "cat1",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "42",
+				"attrName" : "cat1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "64",
+			"featureDisplaySeq" : "64",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "65",
+				"featureName" : "cat2",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "43",
+				"attrName" : "cat2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "65",
+			"featureDisplaySeq" : "65",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "66",
+				"featureName" : "cat3",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "cat3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "66",
+			"featureDisplaySeq" : "66",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "67",
+				"featureName" : "cat4",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "cat4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "67",
+			"featureDisplaySeq" : "67",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "68",
+				"featureName" : "warning_features",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "70",
+				"attrName" : "warning_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"featureMapId" : "68",
+			"featureDisplaySeq" : "68",
+			"feature" : {
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02",
+					"version" : null,
+					"name" : "RLU Prediction - DTC"
+				},
+				"value" : null,
+				"featureId" : "69",
+				"featureName" : "summary_features",
+				"featureDefaultValue" : 0
+			},
+			"attribute" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "71",
+				"attrName" : "summary_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		}
+	],
+	"trainPercent" : 80,
+	"valPercent" : 20,
+	"labelInfo" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+			"version" : null,
+			"name" : "device_data_final_features"
+		},
+		"value" : null,
+		"attrId" : "28",
+		"attrName" : "problemreported",
+		"attrType" : null,
+		"attrUnitType" : null
+	},
+	"useHyperParams" : "N",
+	"featureImportance" : null,
+	"rowIdentifier" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+				"version" : null,
+				"name" : "device_data_final_features"
+			},
+			"value" : null,
+			"attrId" : "0",
+			"attrName" : "deviceid",
+			"attrType" : null,
+			"attrUnitType" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+				"version" : null,
+				"name" : "device_data_final_features"
+			},
+			"value" : null,
+			"attrId" : "1",
+			"attrName" : "date",
+			"attrType" : null,
+			"attrUnitType" : null
+		}
+	],
+	"includeFeatures" : "Y",
+	"saveTrainingSet" : "Y",
+	"trainLocation" : {
+		"ref" : {
+			"type" : "file",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : null
+	},
+	"testLocation" : {
+		"ref" : {
+			"type" : "file",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : null
+	},
+	"displayName" : "RLU Prediction - DTC"
 }

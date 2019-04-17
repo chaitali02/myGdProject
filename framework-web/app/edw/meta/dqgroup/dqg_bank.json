@@ -1,74 +1,75 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "989dd9c6-e0b6-491e-8473-ca24c24ae61e",
-				"version": "1490111367"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "989dd9c6-e0b6-491e-8473-ca24c24ae61e",
+				"version" : "1490111367"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "fea1294d-34f8-41ba-a654-d71fb6a2d4fa",
-				"version": "1490078311"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "fea1294d-34f8-41ba-a654-d71fb6a2d4fa",
+				"version" : "1490078311"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "ba4f72d9-a12d-4a5c-931b-5d09a3dc290f",
-				"version": "1490078899"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "ba4f72d9-a12d-4a5c-931b-5d09a3dc290f",
+				"version" : "1490078899"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "55880238-a265-4b2b-aa87-589ca8763562",
-				"version": "1490078966"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "55880238-a265-4b2b-aa87-589ca8763562",
+				"version" : "1490078966"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "f9b73298-0c49-4e00-b700-8892384b0588",
-				"version": "1490079068"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "f9b73298-0c49-4e00-b700-8892384b0588",
+				"version" : "1490079068"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "e469f01f-359b-491b-9bac-4b6b432a88d8",
-				"version": "1490079191"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "e469f01f-359b-491b-9bac-4b6b432a88d8",
+				"version" : "1490079191"
 			}
 		}
 	],
-	"uuid": "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c",
-	"version": "1490114010",
-	"name": "dqg_bank",
-	"desc": "dq rule group for combination of all dq rules for table - bank",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "be1ee064-1699-4ddc-bdf8-b1aa46a9bd7c",
+	"version" : "1490114010",
+	"name" : "dqg_bank",
+	"desc" : "dq rule group for combination of all dq rules for table - bank",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_bank"
 }

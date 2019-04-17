@@ -498,5 +498,6 @@
         }
     ],
     "publicFlag" : "Y",
-	"prefix":"qeu"
+	"prefix":"qeu",
+	"displayName" : "dq_result_detail"
 }

@@ -1,61 +1,62 @@
 {
-  "uuid": "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
-  "version": "1549917300",
-  "name": "paramlist_pca_summary_features",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Feb 11 15:35:00 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "k",
-      "paramType": "integer",
-      "paramDispName": "k",
-      "paramDesc": null,
-      "paramValue": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "50"
-      },
-      "paramRef": null
-    }
-  ],
-  "paramListType": "model",
-  "templateFlg": "N",
-  "templateInfo": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "d3c52f77-92b7-480a-af3a-46764a02d6f0",
-      "version": null,
-      "name": "paramlist_pca_algorithm"
-    },
-    "value": null
-  }
+	"uuid" : "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
+	"version" : "1549917300",
+	"name" : "paramlist_pca_summary_features",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "k",
+			"paramType" : "integer",
+			"paramDispName" : "k",
+			"paramDesc" : null,
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "50"
+			},
+			"paramRef" : null
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "N",
+	"templateInfo" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "d3c52f77-92b7-480a-af3a-46764a02d6f0",
+			"version" : null,
+			"name" : "paramlist_pca_algorithm"
+		},
+		"value" : null
+	},
+	"displayName" : "paramlist_pca_summary_features"
 }

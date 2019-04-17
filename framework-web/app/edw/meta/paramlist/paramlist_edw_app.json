@@ -46,5 +46,6 @@
     ],
     "paramListType" : "application",
     "templateFlg" : "Y",
-    "templateInfo" : null
+    "templateInfo" : null,
+	"displayName" : "paramlist_edw_app"
 }

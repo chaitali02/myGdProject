@@ -1,65 +1,66 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "2305a647-8129-4f0c-9156-36b28410bd7c"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2305a647-8129-4f0c-9156-36b28410bd7c"
 			}
 		}
 	],
-	"uuid": "28070b4d-63e2-4a38-a286-04ce7b8918bd",
-	"version": "1491902397",
-	"name": "profile_branch_type",
-	"desc": "Data profiling to see statistical check results on raw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "28070b4d-63e2-4a38-a286-04ce7b8918bd",
+	"version" : "1491902397",
+	"name" : "profile_branch_type",
+	"desc" : "Data profiling to see statistical check results on raw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_branch_type"
 }

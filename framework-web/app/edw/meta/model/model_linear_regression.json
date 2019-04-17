@@ -1,70 +1,71 @@
 {
-  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-  "version": "1535748812",
-  "name": "model_linear_regression",
-  "desc": "LinearRegression Model",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "type": "SPARK",
-  "dependsOn": {
-    "ref": {
-      "type": "algorithm",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-      "version": null,
-      "name": "Linear Regression"
-    },
-    "value": null
-  },
-  "label": "account_type_id",
-  "features": [
-    {
-      "featureId": "0",
-      "name": "interest_rate",
-      "type": "double",
-      "desc": "interest_rate",
-      "minVal": 1,
-      "maxVal": 10
-    },
-    {
-      "featureId": "1",
-      "name": "account_type_id",
-      "type": "integer",
-      "desc": "account_type_id",
-      "minVal": 1,
-      "maxVal": 100
-    },
-    {
-      "featureId": "2",
-      "name": "account_status_id",
-      "type": "integer",
-      "desc": "account_status_id",
-      "minVal": 1,
-      "maxVal": 100
-    }
-  ],
-  "scriptName": null,
-  "customFlag": "N"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+	"version" : "1535748812",
+	"name" : "model_linear_regression",
+	"desc" : "LinearRegression Model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.171Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"type" : "SPARK",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "algorithm",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+			"version" : null,
+			"name" : "Linear Regression"
+		},
+		"value" : null
+	},
+	"label" : "account_type_id",
+	"features" : [
+		{
+			"featureId" : "0",
+			"name" : "interest_rate",
+			"type" : "double",
+			"desc" : "interest_rate",
+			"minVal" : 1,
+			"maxVal" : 10
+		},
+		{
+			"featureId" : "1",
+			"name" : "account_type_id",
+			"type" : "integer",
+			"desc" : "account_type_id",
+			"minVal" : 1,
+			"maxVal" : 100
+		},
+		{
+			"featureId" : "2",
+			"name" : "account_status_id",
+			"type" : "integer",
+			"desc" : "account_status_id",
+			"minVal" : 1,
+			"maxVal" : 100
+		}
+	],
+	"scriptName" : null,
+	"customFlag" : "N",
+	"displayName" : "model_linear_regression"
 }

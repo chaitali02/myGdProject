@@ -285,5 +285,6 @@
 				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
 		}
-	]
+	],
+	"displayName" : "rel_datawarehouse"
 }

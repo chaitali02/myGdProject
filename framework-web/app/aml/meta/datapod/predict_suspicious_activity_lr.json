@@ -1,71 +1,71 @@
 {
-  "uuid": "b54ff86b-c58e-460e-bb2f-e67bd94f5999",
-  "version": "1542651129",
-  "name": "predict_suspicious_activity_lr",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 13:12:09 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "file_data"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-  
-    {
-      "attributeId": 0,
-      "displaySeq": 0,
-      "name": "prediction",
-      "type": "double",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "prediction",
-      "active": "Y",
-      "length": null
-    },
-    {
-      "attributeId": 1,
-      "displaySeq": 1,
-      "name": "probability",
-      "type": "string",
-      "desc": null,
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "probability",
-      "active": "Y",
-      "length": null
-    }
-  ],
-  "prefix":"dcs"
+	"uuid" : "b54ff86b-c58e-460e-bb2f-e67bd94f5999",
+	"version" : "1542651129",
+	"name" : "predict_suspicious_activity_lr",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "file_data"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"displaySeq" : 0,
+			"name" : "prediction",
+			"type" : "double",
+			"desc" : null,
+			"expression" : null,
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "prediction",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 1,
+			"displaySeq" : 1,
+			"name" : "probability",
+			"type" : "string",
+			"desc" : null,
+			"expression" : null,
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "probability",
+			"active" : "Y",
+			"length" : null
+		}
+	],
+	"prefix" : "dcs",
+	"displayName" : "predict_suspicious_activity_lr"
 }

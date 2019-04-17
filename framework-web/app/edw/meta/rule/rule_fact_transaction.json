@@ -1,233 +1,234 @@
 {
-	"debugMode": false,
-	"source": {
-		"ref": {
-			"type": "relation",
-			"uuid": "a57e93e8-6e27-4a95-9fd7-6b56a8b40e06"
+	"debugMode" : false,
+	"source" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "a57e93e8-6e27-4a95-9fd7-6b56a8b40e06"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrSourceId": "0",
-			"attrSourceName": "transaction_id",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "d265ac19-4fd0-42d9-8f1b-c704918dad78"
+			"attrSourceId" : "0",
+			"attrSourceName" : "transaction_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78"
 				}
 			}
 		},
 		{
-			"attrSourceId": "1",
-			"attrSourceName": "src_transaction_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "1",
+			"attrSourceName" : "src_transaction_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "2",
-			"attrSourceName": "transaction_type_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+			"attrSourceId" : "2",
+			"attrSourceName" : "transaction_type_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
 				}
 			}
 		},
 		{
-			"attrSourceId": "3",
-			"attrSourceName": "trans_date_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+			"attrSourceId" : "3",
+			"attrSourceName" : "trans_date_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 				}
 			}
 		},
 		{
-			"attrSourceId": "4",
-			"attrSourceName": "bank_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
+			"attrSourceId" : "4",
+			"attrSourceName" : "bank_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "ea12caea-0eb1-4b48-ad78-c8d17db3233e"
 				}
 			}
 		},
 		{
-			"attrSourceId": "5",
-			"attrSourceName": "branch_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
+			"attrSourceId" : "5",
+			"attrSourceName" : "branch_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279"
 				}
 			}
 		},
 		{
-			"attrSourceId": "6",
-			"attrSourceName": "customer_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrSourceId" : "6",
+			"attrSourceName" : "customer_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 				}
 			}
 		},
 		{
-			"attrSourceId": "7",
-			"attrSourceName": "address_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			"attrSourceId" : "7",
+			"attrSourceName" : "address_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 				}
 			}
 		},
 		{
-			"attrSourceId": "8",
-			"attrSourceName": "account_id",
-			"sourceAttr": {
-				"attrId": "0",
-				"ref": {
-					"type": "datapod",
-					"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrSourceId" : "8",
+			"attrSourceName" : "account_id",
+			"sourceAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 				}
 			}
 		},
 		{
-			"attrSourceId": "9",
-			"attrSourceName": "from_account",
-			"sourceAttr": {
-				"attrId": "4",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "9",
+			"attrSourceName" : "from_account",
+			"sourceAttr" : {
+				"attrId" : "4",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "10",
-			"attrSourceName": "to_account",
-			"sourceAttr": {
-				"attrId": "5",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "10",
+			"attrSourceName" : "to_account",
+			"sourceAttr" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "11",
-			"attrSourceName": "amount_base_curr",
-			"sourceAttr": {
-				"attrId": "6",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "11",
+			"attrSourceName" : "amount_base_curr",
+			"sourceAttr" : {
+				"attrId" : "6",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "12",
-			"attrSourceName": "amount_usd",
-			"sourceAttr": {
-				"attrId": "7",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "12",
+			"attrSourceName" : "amount_usd",
+			"sourceAttr" : {
+				"attrId" : "7",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "13",
-			"attrSourceName": "currency_code",
-			"sourceAttr": {
-				"attrId": "8",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "13",
+			"attrSourceName" : "currency_code",
+			"sourceAttr" : {
+				"attrId" : "8",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "14",
-			"attrSourceName": "currency_rate",
-			"sourceAttr": {
-				"attrId": "9",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "14",
+			"attrSourceName" : "currency_rate",
+			"sourceAttr" : {
+				"attrId" : "9",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "15",
-			"attrSourceName": "notes",
-			"sourceAttr": {
-				"attrId": "10",
-				"ref": {
-					"type": "datapod",
-					"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+			"attrSourceId" : "15",
+			"attrSourceName" : "notes",
+			"sourceAttr" : {
+				"attrId" : "10",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
 				}
 			}
 		},
 		{
-			"attrSourceId": "16",
-			"attrSourceName": "load_date",
-			"sourceAttr": {
-				"ref": {
-					"type": "function",
-					"uuid": "9e3de26e-02fb-11e7-93ae-92361f002671"
+			"attrSourceId" : "16",
+			"attrSourceName" : "load_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671"
 				}
 			}
 		},
-        {
-            "attrSourceId" : "17",
-            "attrSourceName" : "load_id",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
-                }
-            }
-        }
+		{
+			"attrSourceId" : "17",
+			"attrSourceName" : "load_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671"
+				}
+			}
+		}
 	],
-	"uuid": "12a2a192-1884-495b-9c80-d3543dbe4a56",
-	"version": "1490409822",
-	"name": "rule_fact_transaction",
-	"desc": "rule for mapping transformation from source relation to target datapod",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "12a2a192-1884-495b-9c80-d3543dbe4a56",
+	"version" : "1490409822",
+	"name" : "rule_fact_transaction",
+	"desc" : "rule for mapping transformation from source relation to target datapod",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:18.452Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "rule_fact_transaction"
 }

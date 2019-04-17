@@ -1,1209 +1,1210 @@
 {
-  "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
-  "version": "1551973943",
-  "name": "ds_account_summary_yearly",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Mar 07 21:22:23 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": null,
-      "name": "fact_transaction_journal"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "display_seq": "0",
-      "logicalOperator": "",
-      "operator": ">=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 5,
-          "value": null,
-          "attributeName": "transaction_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "formula",
-            "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed58",
-            "version": null,
-            "name": "fm_lookback_yearly"
-          },
-          "attributeId": null,
-          "value": null,
-          "attributeName": null,
-          "attributeType": null
-        }
-      ]
-    },
-    {
-      "display_seq": "1",
-      "logicalOperator": "AND",
-      "operator": "<=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version": null,
-            "name": "fact_transaction_journal"
-          },
-          "attributeId": 5,
-          "value": null,
-          "attributeName": "transaction_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-            "version": null,
-            "name": "paramlist_aml_app"
-          },
-          "attributeId": 0,
-          "value": null,
-          "attributeName": "business_date",
-          "attributeType": null
-        }
-      ]
-    }
-  ],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq": "0",
-      "attrSourceName": "customer_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "customer_id",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq": "1",
-      "attrSourceName": "account_id",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-          "version": null,
-          "name": "fact_transaction_journal"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "account_id",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq": "2",
-      "attrSourceName": "trans_start_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed58",
-          "version": null,
-          "name": "fm_lookback_yearly"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq": "3",
-      "attrSourceName": "trans_end_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-          "version": null,
-          "name": "paramlist_aml_app"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "business_date",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq": "4",
-      "attrSourceName": "year_num",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "ee5e16b6-fb29-4a8b-bd7a-1093fc2d4bd8",
-          "version": null,
-          "name": "fm_year_num"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq": "5",
-      "attrSourceName": "in_wire_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "171b6d64-26ae-4070-bae7-adda75569617",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq": "6",
-      "attrSourceName": "in_wire_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "a1a06227-380d-4b03-a582-0fa03cc411be",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq": "7",
-      "attrSourceName": "out_wire_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "6ac0117f-5e1f-4ae1-9758-957d598a7ea0",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "8",
-      "attrDisplaySeq": "8",
-      "attrSourceName": "out_wire_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "b3e43993-35a3-4f24-8bb8-2877efd42eaa",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "9",
-      "attrDisplaySeq": "9",
-      "attrSourceName": "net_wire_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "f5076aa7-1b14-4901-afb7-b33a6d9ece01",
-          "version": null,
-          "name": "fm_net_wire_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "10",
-      "attrDisplaySeq": "10",
-      "attrSourceName": "net_wire_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "954927a0-5fb3-4580-9d00-9bb1240fde4a",
-          "version": null,
-          "name": "fm_net_wire_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "11",
-      "attrDisplaySeq": "11",
-      "attrSourceName": "in_cash_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "8f939862-8e3c-4b39-b056-725ce2aa5bff",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "12",
-      "attrDisplaySeq": "12",
-      "attrSourceName": "in_cash_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "7ff4ebe8-a776-4616-a5e6-473195a56dc3",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "13",
-      "attrDisplaySeq": "13",
-      "attrSourceName": "out_cash_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "fd0994cb-f4e1-4ed3-be4e-edf49030c9f9",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "14",
-      "attrDisplaySeq": "14",
-      "attrSourceName": "out_cash_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "82c2ca92-26ee-4718-a9d5-60b744b71c90",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "15",
-      "attrDisplaySeq": "15",
-      "attrSourceName": "net_cash_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "517cf20d-c772-4e6d-a57d-88cf2b1644d4",
-          "version": null,
-          "name": "fm_net_cash_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "16",
-      "attrDisplaySeq": "16",
-      "attrSourceName": "net_cash_transfers_trans_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "32708be5-2ff9-41cb-afca-a067e6d66336",
-          "version": null,
-          "name": "fm_net_cash_transfers_trans_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "17",
-      "attrDisplaySeq": "17",
-      "attrSourceName": "all_wire_transfers_round_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "4067d7ab-77df-40b2-9322-533fda0f6f9d",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "18",
-      "attrDisplaySeq": "18",
-      "attrSourceName": "all_cash_transfers_round_amount_usd",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e80ccb14-4f0f-4e6c-87d3-b0579f955318",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "19",
-      "attrDisplaySeq": "19",
-      "attrSourceName": "all_cash_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3df62344-23bd-434c-bb95-1207c3673e85",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "20",
-      "attrDisplaySeq": "20",
-      "attrSourceName": "all_wire_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "fa36737b-f3ca-4ae9-8a77-9e079c013a99",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "21",
-      "attrDisplaySeq": "21",
-      "attrSourceName": "all_cash_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "eea6eac9-0ffa-4a78-9008-e465d2d67089",
-          "version": null,
-          "name": "fm_all_cash_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "22",
-      "attrDisplaySeq": "22",
-      "attrSourceName": "all_wire_transfers_trans_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "0a642e00-3023-48a9-a8e7-2523561c71f7",
-          "version": null,
-          "name": "fm_all_wire_transfers_trans_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "23",
-      "attrDisplaySeq": "23",
-      "attrSourceName": "in_cash_transfers_trans_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "c7960e2a-2b42-429f-97f7-14be324a6bde",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "24",
-      "attrDisplaySeq": "24",
-      "attrSourceName": "out_wire_transfers_trans_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "ed8e70a6-a67c-474b-92e1-5092b07c65a2",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "25",
-      "attrDisplaySeq": "25",
-      "attrSourceName": "all_wire_transfers_round_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "4ebce653-41b7-4d2a-a151-76919dec0e7c",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "26",
-      "attrDisplaySeq": "26",
-      "attrSourceName": "all_cash_transfers_round_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "add761c1-5656-4895-9192-d41025e36d56",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "27",
-      "attrDisplaySeq": "27",
-      "attrSourceName": "in_wire_transfers_trans_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "a4e6c76a-54ac-4798-8531-102919889132",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "28",
-      "attrDisplaySeq": "28",
-      "attrSourceName": "out_cash_transfers_trans_amount_min",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "3b8197a6-88e5-4e39-8ebc-b2fe48d4ac99",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_amount_min"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "29",
-      "attrDisplaySeq": "29",
-      "attrSourceName": "all_cash_transfers_round_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "1450606b-6891-4f50-86fd-7fb6524dac19",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "30",
-      "attrDisplaySeq": "30",
-      "attrSourceName": "all_wire_transfers_round_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e36a7a4a-eb88-460e-a9fd-f3192eba86a9",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "31",
-      "attrDisplaySeq": "31",
-      "attrSourceName": "in_wire_transfers_trans_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "ad2ab0a4-504d-40ae-8edd-d8317a98256a",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "32",
-      "attrDisplaySeq": "32",
-      "attrSourceName": "in_cash_transfers_trans_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "537d5cc6-6f30-439a-9dd4-70a8ddeab0e8",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "33",
-      "attrDisplaySeq": "33",
-      "attrSourceName": "out_wire_transfers_trans_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "0cba500d-e203-4edd-85e5-f5fd40c6e0d7",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "34",
-      "attrDisplaySeq": "34",
-      "attrSourceName": "out_cash_transfers_trans_amount_max",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "5a89097e-4323-4eb8-86b9-fe9e6cfe4873",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_amount_max"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "35",
-      "attrDisplaySeq": "35",
-      "attrSourceName": "all_wire_transfers_round_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "57dd756a-58db-41db-af62-ad8363876718",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "36",
-      "attrDisplaySeq": "36",
-      "attrSourceName": "all_cash_transfers_round_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "7a8e69bc-a0a3-4d16-adef-9185ebe1be54",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "37",
-      "attrDisplaySeq": "37",
-      "attrSourceName": "in_wire_transfers_trans_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "c1775c43-afdc-4056-95eb-f38ac9f87de2",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "38",
-      "attrDisplaySeq": "38",
-      "attrSourceName": "in_cash_transfers_trans_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "1925f25c-5e33-448a-b8f9-611eb80dad81",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "39",
-      "attrDisplaySeq": "39",
-      "attrSourceName": "out_wire_transfers_trans_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "43cbef91-30fa-40ee-a786-c722b05e82fc",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "40",
-      "attrDisplaySeq": "40",
-      "attrSourceName": "out_cash_transfers_trans_amount_avg",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e27ef283-ed0c-43fa-96b7-6051d807c396",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_amount_avg"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "41",
-      "attrDisplaySeq": "41",
-      "attrSourceName": "all_cash_transfers_round_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "98a253a3-ea12-4bf1-83ef-77200db95fc6",
-          "version": null,
-          "name": "fm_all_cash_transfers_round_amount_stddev_NaN"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "42",
-      "attrDisplaySeq": "42",
-      "attrSourceName": "in_cash_transfers_trans_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "8e515135-2baf-4168-b9ea-18b814d017c2",
-          "version": null,
-          "name": "fm_in_cash_transfers_trans_amount_stddev"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "43",
-      "attrDisplaySeq": "43",
-      "attrSourceName": "out_cash_transfers_trans_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "7afdd3ae-bc17-4267-9a85-9e152cde9c92",
-          "version": null,
-          "name": "fm_out_cash_transfers_trans_amount_stddev"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "44",
-      "attrDisplaySeq": "44",
-      "attrSourceName": "all_wire_transfers_round_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "d62d872b-8ff9-4cad-b334-4a1706c4772c",
-          "version": null,
-          "name": "fm_all_wire_transfers_round_amount_stddev_NaN"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "45",
-      "attrDisplaySeq": "45",
-      "attrSourceName": "in_wire_transfers_trans_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "f2f0c561-62f9-4da5-a29f-16aa20cb35e7",
-          "version": null,
-          "name": "fm_in_wire_transfers_trans_amount_stddev"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "46",
-      "attrDisplaySeq": "46",
-      "attrSourceName": "out_wire_transfers_trans_amount_stddev",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "1ab027c3-33ef-431c-a5ff-37af12d50f9f",
-          "version": null,
-          "name": "fm_out_wire_transfers_trans_amount_stddev"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "47",
-      "attrDisplaySeq": "47",
-      "attrSourceName": "in_cash_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "8d955082-2d02-4caf-949a-68113698650e",
-          "version": null,
-          "name": "fm_in_cash_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "48",
-      "attrDisplaySeq": "48",
-      "attrSourceName": "in_wire_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "42c8cf4c-d693-444c-9128-6a9de6bb0414",
-          "version": null,
-          "name": "fm_in_wire_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "49",
-      "attrDisplaySeq": "49",
-      "attrSourceName": "out_wire_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "a8875c19-b461-4f0f-b251-61b4e0acfcf5",
-          "version": null,
-          "name": "fm_out_wire_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "50",
-      "attrDisplaySeq": "50",
-      "attrSourceName": "out_cash_transfers_round_amount_count",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "c22b692c-2dbe-4d19-a40c-f711aabb3b2c",
-          "version": null,
-          "name": "fm_out_cash_transfers_round_amount_count"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "51",
-      "attrDisplaySeq": "51",
-      "attrSourceName": "out_cash_transfers_round_amount_sum",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e494ee4d-4740-4230-9cb8-ad075464ebed",
-          "version": null,
-          "name": "fm_out_cash_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "52",
-      "attrDisplaySeq": "52",
-      "attrSourceName": "out_wire_transfers_round_amount_sum",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "b76fd35f-d38b-4641-b5e8-693a9f24a2d1",
-          "version": null,
-          "name": "fm_out_wire_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "53",
-      "attrDisplaySeq": "53",
-      "attrSourceName": "in_wire_transfers_round_amount_sum",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "f29a3b6f-13f0-41f9-aca5-d76eb8d7e54e",
-          "version": null,
-          "name": "fm_in_wire_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "54",
-      "attrDisplaySeq": "54",
-      "attrSourceName": "in_cash_transfers_round_amount_sum",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "68ff5799-0386-4cb4-841a-9793a594f778",
-          "version": null,
-          "name": "fm_in_cash_transfers_round_amount_sum"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": -1
+	"uuid" : "e2098708-8785-4ce3-98b5-c1361c3529e6",
+	"version" : "1551973943",
+	"name" : "ds_account_summary_yearly",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.282Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+			"version" : null,
+			"name" : "fact_transaction_journal"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"display_seq" : "0",
+			"logicalOperator" : "",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+						"version" : null,
+						"name" : "fact_transaction_journal"
+					},
+					"attributeId" : 5,
+					"value" : null,
+					"attributeName" : "transaction_date",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "70665ca3-143c-4f4b-8a35-7a5abac8ed58",
+						"version" : null,
+						"name" : "fm_lookback_yearly"
+					},
+					"attributeId" : null,
+					"value" : null,
+					"attributeName" : null,
+					"attributeType" : null
+				}
+			]
+		},
+		{
+			"display_seq" : "1",
+			"logicalOperator" : "AND",
+			"operator" : "<=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+						"version" : null,
+						"name" : "fact_transaction_journal"
+					},
+					"attributeId" : 5,
+					"value" : null,
+					"attributeName" : "transaction_date",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+						"version" : null,
+						"name" : "paramlist_aml_app"
+					},
+					"attributeId" : 0,
+					"value" : null,
+					"attributeName" : "business_date",
+					"attributeType" : null
+				}
+			]
+		}
+	],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "customer_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "customer_id",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "account_id",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+					"version" : null,
+					"name" : "fact_transaction_journal"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "account_id",
+				"attrType" : "string",
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "trans_start_date",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "70665ca3-143c-4f4b-8a35-7a5abac8ed58",
+					"version" : null,
+					"name" : "fm_lookback_yearly"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "trans_end_date",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "paramlist",
+					"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+					"version" : null,
+					"name" : "paramlist_aml_app"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "business_date",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "year_num",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "ee5e16b6-fb29-4a8b-bd7a-1093fc2d4bd8",
+					"version" : null,
+					"name" : "fm_year_num"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "5",
+			"attrDisplaySeq" : "5",
+			"attrSourceName" : "in_wire_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "171b6d64-26ae-4070-bae7-adda75569617",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "6",
+			"attrDisplaySeq" : "6",
+			"attrSourceName" : "in_wire_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "a1a06227-380d-4b03-a582-0fa03cc411be",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "7",
+			"attrDisplaySeq" : "7",
+			"attrSourceName" : "out_wire_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "6ac0117f-5e1f-4ae1-9758-957d598a7ea0",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "8",
+			"attrDisplaySeq" : "8",
+			"attrSourceName" : "out_wire_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "b3e43993-35a3-4f24-8bb8-2877efd42eaa",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "9",
+			"attrDisplaySeq" : "9",
+			"attrSourceName" : "net_wire_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "f5076aa7-1b14-4901-afb7-b33a6d9ece01",
+					"version" : null,
+					"name" : "fm_net_wire_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "10",
+			"attrDisplaySeq" : "10",
+			"attrSourceName" : "net_wire_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "954927a0-5fb3-4580-9d00-9bb1240fde4a",
+					"version" : null,
+					"name" : "fm_net_wire_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "11",
+			"attrDisplaySeq" : "11",
+			"attrSourceName" : "in_cash_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "8f939862-8e3c-4b39-b056-725ce2aa5bff",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "12",
+			"attrDisplaySeq" : "12",
+			"attrSourceName" : "in_cash_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "7ff4ebe8-a776-4616-a5e6-473195a56dc3",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "13",
+			"attrDisplaySeq" : "13",
+			"attrSourceName" : "out_cash_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "fd0994cb-f4e1-4ed3-be4e-edf49030c9f9",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "14",
+			"attrDisplaySeq" : "14",
+			"attrSourceName" : "out_cash_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "82c2ca92-26ee-4718-a9d5-60b744b71c90",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "15",
+			"attrDisplaySeq" : "15",
+			"attrSourceName" : "net_cash_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "517cf20d-c772-4e6d-a57d-88cf2b1644d4",
+					"version" : null,
+					"name" : "fm_net_cash_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "16",
+			"attrDisplaySeq" : "16",
+			"attrSourceName" : "net_cash_transfers_trans_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "32708be5-2ff9-41cb-afca-a067e6d66336",
+					"version" : null,
+					"name" : "fm_net_cash_transfers_trans_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "17",
+			"attrDisplaySeq" : "17",
+			"attrSourceName" : "all_wire_transfers_round_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "4067d7ab-77df-40b2-9322-533fda0f6f9d",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "18",
+			"attrDisplaySeq" : "18",
+			"attrSourceName" : "all_cash_transfers_round_amount_usd",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e80ccb14-4f0f-4e6c-87d3-b0579f955318",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "19",
+			"attrDisplaySeq" : "19",
+			"attrSourceName" : "all_cash_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3df62344-23bd-434c-bb95-1207c3673e85",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "20",
+			"attrDisplaySeq" : "20",
+			"attrSourceName" : "all_wire_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "fa36737b-f3ca-4ae9-8a77-9e079c013a99",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "21",
+			"attrDisplaySeq" : "21",
+			"attrSourceName" : "all_cash_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "eea6eac9-0ffa-4a78-9008-e465d2d67089",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "22",
+			"attrDisplaySeq" : "22",
+			"attrSourceName" : "all_wire_transfers_trans_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "0a642e00-3023-48a9-a8e7-2523561c71f7",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_trans_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "23",
+			"attrDisplaySeq" : "23",
+			"attrSourceName" : "in_cash_transfers_trans_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "c7960e2a-2b42-429f-97f7-14be324a6bde",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "24",
+			"attrDisplaySeq" : "24",
+			"attrSourceName" : "out_wire_transfers_trans_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "ed8e70a6-a67c-474b-92e1-5092b07c65a2",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "25",
+			"attrDisplaySeq" : "25",
+			"attrSourceName" : "all_wire_transfers_round_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "4ebce653-41b7-4d2a-a151-76919dec0e7c",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "26",
+			"attrDisplaySeq" : "26",
+			"attrSourceName" : "all_cash_transfers_round_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "add761c1-5656-4895-9192-d41025e36d56",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "27",
+			"attrDisplaySeq" : "27",
+			"attrSourceName" : "in_wire_transfers_trans_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "a4e6c76a-54ac-4798-8531-102919889132",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "28",
+			"attrDisplaySeq" : "28",
+			"attrSourceName" : "out_cash_transfers_trans_amount_min",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "3b8197a6-88e5-4e39-8ebc-b2fe48d4ac99",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_amount_min"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "29",
+			"attrDisplaySeq" : "29",
+			"attrSourceName" : "all_cash_transfers_round_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "1450606b-6891-4f50-86fd-7fb6524dac19",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "30",
+			"attrDisplaySeq" : "30",
+			"attrSourceName" : "all_wire_transfers_round_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e36a7a4a-eb88-460e-a9fd-f3192eba86a9",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "31",
+			"attrDisplaySeq" : "31",
+			"attrSourceName" : "in_wire_transfers_trans_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "ad2ab0a4-504d-40ae-8edd-d8317a98256a",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "32",
+			"attrDisplaySeq" : "32",
+			"attrSourceName" : "in_cash_transfers_trans_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "537d5cc6-6f30-439a-9dd4-70a8ddeab0e8",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "33",
+			"attrDisplaySeq" : "33",
+			"attrSourceName" : "out_wire_transfers_trans_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "0cba500d-e203-4edd-85e5-f5fd40c6e0d7",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "34",
+			"attrDisplaySeq" : "34",
+			"attrSourceName" : "out_cash_transfers_trans_amount_max",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "5a89097e-4323-4eb8-86b9-fe9e6cfe4873",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_amount_max"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "35",
+			"attrDisplaySeq" : "35",
+			"attrSourceName" : "all_wire_transfers_round_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "57dd756a-58db-41db-af62-ad8363876718",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "36",
+			"attrDisplaySeq" : "36",
+			"attrSourceName" : "all_cash_transfers_round_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "7a8e69bc-a0a3-4d16-adef-9185ebe1be54",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "37",
+			"attrDisplaySeq" : "37",
+			"attrSourceName" : "in_wire_transfers_trans_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "c1775c43-afdc-4056-95eb-f38ac9f87de2",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "38",
+			"attrDisplaySeq" : "38",
+			"attrSourceName" : "in_cash_transfers_trans_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "1925f25c-5e33-448a-b8f9-611eb80dad81",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "39",
+			"attrDisplaySeq" : "39",
+			"attrSourceName" : "out_wire_transfers_trans_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "43cbef91-30fa-40ee-a786-c722b05e82fc",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "40",
+			"attrDisplaySeq" : "40",
+			"attrSourceName" : "out_cash_transfers_trans_amount_avg",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e27ef283-ed0c-43fa-96b7-6051d807c396",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_amount_avg"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "41",
+			"attrDisplaySeq" : "41",
+			"attrSourceName" : "all_cash_transfers_round_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "98a253a3-ea12-4bf1-83ef-77200db95fc6",
+					"version" : null,
+					"name" : "fm_all_cash_transfers_round_amount_stddev_NaN"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "42",
+			"attrDisplaySeq" : "42",
+			"attrSourceName" : "in_cash_transfers_trans_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "8e515135-2baf-4168-b9ea-18b814d017c2",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_trans_amount_stddev"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "43",
+			"attrDisplaySeq" : "43",
+			"attrSourceName" : "out_cash_transfers_trans_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "7afdd3ae-bc17-4267-9a85-9e152cde9c92",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_trans_amount_stddev"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "44",
+			"attrDisplaySeq" : "44",
+			"attrSourceName" : "all_wire_transfers_round_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "d62d872b-8ff9-4cad-b334-4a1706c4772c",
+					"version" : null,
+					"name" : "fm_all_wire_transfers_round_amount_stddev_NaN"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "45",
+			"attrDisplaySeq" : "45",
+			"attrSourceName" : "in_wire_transfers_trans_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "f2f0c561-62f9-4da5-a29f-16aa20cb35e7",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_trans_amount_stddev"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "46",
+			"attrDisplaySeq" : "46",
+			"attrSourceName" : "out_wire_transfers_trans_amount_stddev",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "1ab027c3-33ef-431c-a5ff-37af12d50f9f",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_trans_amount_stddev"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "47",
+			"attrDisplaySeq" : "47",
+			"attrSourceName" : "in_cash_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "8d955082-2d02-4caf-949a-68113698650e",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "48",
+			"attrDisplaySeq" : "48",
+			"attrSourceName" : "in_wire_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "42c8cf4c-d693-444c-9128-6a9de6bb0414",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "49",
+			"attrDisplaySeq" : "49",
+			"attrSourceName" : "out_wire_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "a8875c19-b461-4f0f-b251-61b4e0acfcf5",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "50",
+			"attrDisplaySeq" : "50",
+			"attrSourceName" : "out_cash_transfers_round_amount_count",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "c22b692c-2dbe-4d19-a40c-f711aabb3b2c",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_round_amount_count"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "51",
+			"attrDisplaySeq" : "51",
+			"attrSourceName" : "out_cash_transfers_round_amount_sum",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "e494ee4d-4740-4230-9cb8-ad075464ebed",
+					"version" : null,
+					"name" : "fm_out_cash_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "52",
+			"attrDisplaySeq" : "52",
+			"attrSourceName" : "out_wire_transfers_round_amount_sum",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "b76fd35f-d38b-4641-b5e8-693a9f24a2d1",
+					"version" : null,
+					"name" : "fm_out_wire_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "53",
+			"attrDisplaySeq" : "53",
+			"attrSourceName" : "in_wire_transfers_round_amount_sum",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "f29a3b6f-13f0-41f9-aca5-d76eb8d7e54e",
+					"version" : null,
+					"name" : "fm_in_wire_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrSourceId" : "54",
+			"attrDisplaySeq" : "54",
+			"attrSourceName" : "in_cash_transfers_round_amount_sum",
+			"function" : null,
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "68ff5799-0386-4cb4-841a-9793a594f778",
+					"version" : null,
+					"name" : "fm_in_cash_transfers_round_amount_sum"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : -1,
+	"displayName" : "ds_account_summary_yearly"
 }

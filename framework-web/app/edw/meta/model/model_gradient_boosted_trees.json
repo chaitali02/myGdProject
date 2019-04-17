@@ -1,81 +1,81 @@
 {
-
-    "type" : "SPARK",
-    "dependsOn" : {
-        "ref" : {
-            "type" : "algorithm",
-            "uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035"
-        }
-    },
-    "label" : "label",
-    "features" : [ 
-        {
-            "featureId" : "0",
-            "name" : "customer_id",
-            "type" : "integer",
-            "desc" : "customer_id",
-            "minVal" : 1,
-            "maxVal" : 100
-        }, 
-        {
-            "featureId" : "1",
-            "name" : "address_id",
-            "type" : "integer",
-            "desc" : "address_id",
-            "minVal" : 1,
-            "maxVal" : 100
-        }, 
-        {
-            "featureId" : "2",
-            "name" : "branch_id",
-            "type" : "integer",
-            "desc" : "branch_id",
-            "minVal" : 1,
-            "maxVal" : 100
-        }, 
-        {
-            "featureId" : "3",
-            "name" : "commute_distance_miles",
-            "type" : "integer",
-            "desc" : "commute_distance_miles",
-            "minVal" : 1,
-            "maxVal" : 100
-        }, 
-        {
-            "featureId" : "4",
-            "name" : "censor",
-            "type" : "integer",
-            "desc" : "censor",
-            "minVal" : 1,
-            "maxVal" : 100
-        }
-    ],
-    "customFlag" : "N",
-    "uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83",
-    "version" : "1540545862",
-    "name" : "model_gradient_boosted_trees",
-    "desc" : "Gradient_Boosted_Trees Model",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-26T09:24:22.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196",
-                "name" : "Data Warehouse"
-            }
-        }
-    ]
+	"type" : "SPARK",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "algorithm",
+			"uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035"
+		}
+	},
+	"label" : "label",
+	"features" : [
+		{
+			"featureId" : "0",
+			"name" : "customer_id",
+			"type" : "integer",
+			"desc" : "customer_id",
+			"minVal" : 1,
+			"maxVal" : 100
+		},
+		{
+			"featureId" : "1",
+			"name" : "address_id",
+			"type" : "integer",
+			"desc" : "address_id",
+			"minVal" : 1,
+			"maxVal" : 100
+		},
+		{
+			"featureId" : "2",
+			"name" : "branch_id",
+			"type" : "integer",
+			"desc" : "branch_id",
+			"minVal" : 1,
+			"maxVal" : 100
+		},
+		{
+			"featureId" : "3",
+			"name" : "commute_distance_miles",
+			"type" : "integer",
+			"desc" : "commute_distance_miles",
+			"minVal" : 1,
+			"maxVal" : 100
+		},
+		{
+			"featureId" : "4",
+			"name" : "censor",
+			"type" : "integer",
+			"desc" : "censor",
+			"minVal" : 1,
+			"maxVal" : 100
+		}
+	],
+	"customFlag" : "N",
+	"uuid" : "c3a55729-a72f-4cd0-905c-7330a8dafc83",
+	"version" : "1540545862",
+	"name" : "model_gradient_boosted_trees",
+	"desc" : "Gradient_Boosted_Trees Model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.171Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			}
+		}
+	],
+	"displayName" : "model_gradient_boosted_trees"
 }

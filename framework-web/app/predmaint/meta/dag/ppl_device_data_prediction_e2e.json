@@ -1,744 +1,765 @@
 {
-  "uuid": "dc0ff083-4e61-492c-b1d0-4050f6be9c99",
-  "version": "1550162091",
-  "name": "ppl_device_data_prediction_e2e",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Feb 14 11:34:51 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "xPos": 50,
-  "yPos": 210,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "60b968f7-9a29-4e57-bc4f-828fc6a19708",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "84147f56-5dd2-40ad-810d-aa04d50a8ba1",
-          "dependsOn": [],
-          "name": "ingest_device_data",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "ingest",
-                    "uuid": "c494341a-852a-43c0-8e37-97a17f508f48",
-                    "version": null,
-                    "name": "ingest_device_data"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 370,
-          "yPos": 110,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "Ingest Data",
-      "xPos": 220,
-      "yPos": 210,
-      "active": "Y",
-      "statusList": []
-    },
-    {
-      "stageId": "d1d64abd-78ca-4c8e-8f33-2bf348df8998",
-      "dependsOn": [
-        "60b968f7-9a29-4e57-bc4f-828fc6a19708"
-      ],
-      "tasks": [
-        {
-          "taskId": "6709a28c-1afe-4f29-b7da-e84f0ce2822d",
-          "dependsOn": [],
-          "name": "map_device_data_dedup",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "c3d44e2c-8fa0-423a-b0fe-623e1da7d353",
-                    "version": null,
-                    "name": "map_device_data_dedup"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 590,
-          "yPos": 210,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "d3503ac0-374b-411a-9e11-9216bf39d781",
-          "dependsOn": [
-            "6709a28c-1afe-4f29-b7da-e84f0ce2822d"
-          ],
-          "name": "map_device_data_fillna",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "c91f37b8-d7db-42b4-b785-05fd21003a42",
-                    "version": null,
-                    "name": "map_device_data_fillna"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 770,
-          "yPos": 210,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "153d227d-bc5c-46eb-9569-732286cbce29",
-          "dependsOn": [
-            "d3503ac0-374b-411a-9e11-9216bf39d781"
-          ],
-          "name": "map_device_data_categorical_features",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "07144e18-9ada-4499-ab2d-710305ceb952",
-                    "version": null,
-                    "name": "map_device_data_categorical_features"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 990,
-          "yPos": 210,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "4e563b36-3d0b-4353-b526-3b8f1bce0321",
-          "dependsOn": [
-            "153d227d-bc5c-46eb-9569-732286cbce29"
-          ],
-          "name": "map_device_data_compute_rolling_max",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "b4caf556-388a-43d1-933b-7304ada15ede",
-                    "version": null,
-                    "name": "map_device_data_compute_rolling_max"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1250,
-          "yPos": 30,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "81c43129-9220-43ea-a0b1-e62a6d9b945d",
-          "dependsOn": [
-            "153d227d-bc5c-46eb-9569-732286cbce29"
-          ],
-          "name": "map_device_data_compute_rolling_diff",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "1edf6289-7c33-41be-b335-728ac3c666e6",
-                    "version": null,
-                    "name": "map_device_data_compute_rolling_diff"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1250,
-          "yPos": 120,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "86c0cdc4-9fa3-4679-a16b-4051cb5c9c78",
-          "dependsOn": [
-            "153d227d-bc5c-46eb-9569-732286cbce29"
-          ],
-          "name": "map_device_data_compute_rolling_min",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "5ff1d4e3-950a-49c8-99bd-125022f631d2",
-                    "version": null,
-                    "name": "map_device_data_compute_rolling_min"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1250,
-          "yPos": 210,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "7e26f250-bb65-4eba-8aff-518a1aa41ae9",
-          "dependsOn": [
-            "153d227d-bc5c-46eb-9569-732286cbce29"
-          ],
-          "name": "map_device_data_compute_rolling_mean",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "dff434ce-763e-48f9-9e49-af454321763a",
-                    "version": null,
-                    "name": "map_device_data_compute_rolling_mean"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1250,
-          "yPos": 310,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "5b807a5c-ab70-4e9f-8ae4-b91904d0fb01",
-          "dependsOn": [
-            "153d227d-bc5c-46eb-9569-732286cbce29"
-          ],
-          "name": "map_device_data_compute_rolling_std",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "8dc9d45d-8f16-44dc-b178-4513a3abc30e",
-                    "version": null,
-                    "name": "map_device_data_compute_rolling_std"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1250,
-          "yPos": 400,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "4fa7e637-4cf1-4c73-8ef6-389850c02c32",
-          "dependsOn": [
-            "4e563b36-3d0b-4353-b526-3b8f1bce0321",
-            "81c43129-9220-43ea-a0b1-e62a6d9b945d",
-            "86c0cdc4-9fa3-4679-a16b-4051cb5c9c78",
-            "7e26f250-bb65-4eba-8aff-518a1aa41ae9",
-            "5b807a5c-ab70-4e9f-8ae4-b91904d0fb01"
-          ],
-          "name": "map_device_data_final_features",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "map",
-                    "uuid": "b9a2408e-fcd3-411e-861a-e0f78639da3d",
-                    "version": null,
-                    "name": "map_device_data_final_features"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 1540,
-          "yPos": 210,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "Calc Features",
-      "xPos": 440,
-      "yPos": 210,
-      "active": "Y",
-      "statusList": []
-    },
-    {
-      "stageId": "4bc5a89f-f339-4e8a-bf3f-16da48bedceb",
-      "dependsOn": [
-        "d1d64abd-78ca-4c8e-8f33-2bf348df8998"
-      ],
-      "tasks": [
-        {
-          "taskId": "2d7f2e33-3b7f-4e63-b2d8-046a63b2548d",
-          "dependsOn": [],
-          "name": "Device Data Warning Features - PCA",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "0f511905-befb-4513-be48-c8897b6d02be",
-                    "version": null,
-                    "name": "Device Data Warning Features - PCA"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 670,
-          "yPos": 550,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "eccfabab-1a3a-4ce7-9bdd-52603303d487",
-          "dependsOn": [],
-          "name": "Device Data Summary Features - PCA",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "70f7f016-2d9e-4dad-9347-b8c3add8a109",
-                    "version": null,
-                    "name": "Device Data Summary Features - PCA"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 650,
-          "yPos": 750,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "PCA",
-      "xPos": 500,
-      "yPos": 650,
-      "active": "Y",
-      "statusList": []
-    },
-    {
-      "stageId": "a4bed9d6-0c9c-4d4b-bb42-c9ddb87499f2",
-      "dependsOn": [
-        "4bc5a89f-f339-4e8a-bf3f-16da48bedceb"
-      ],
-      "tasks": [
-        {
-          "taskId": "994b640f-f70b-402b-bf57-0e3f9042bc08",
-          "dependsOn": [],
-          "name": "RLU Prediction - LR",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "7069a9b4-e489-4901-bfde-20985716b09e",
-                    "version": null,
-                    "name": "RLU Prediction - LR"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1030,
-          "yPos": 500,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "25de3f6d-cd46-478e-baa7-ae5d49687c11",
-          "dependsOn": [],
-          "name": "RLU Prediction - DTC",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "0fe1b1d3-ac2b-4009-b410-3ced654bd520",
-                    "version": null,
-                    "name": "RLU Prediction - DTC"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1160,
-          "yPos": 570,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "f8df2c9b-158a-4657-85d8-0cc0a12d048b",
-          "dependsOn": [],
-          "name": "RLU Prediction - GBT",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "7f019a46-2d40-4b91-b7be-3ce93f6c65b0",
-                    "version": null,
-                    "name": "RLU Prediction - GBT"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1150,
-          "yPos": 730,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "cc6fd822-34cf-478b-a8f6-4bcf02fb37ed",
-          "dependsOn": [],
-          "name": "RLU Prediction - ANN",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "train",
-                    "uuid": "eb905ce3-87e5-4c2e-b339-10a317658b08",
-                    "version": null,
-                    "name": "RLU Prediction - ANN"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {
-                "EXEC_PARAMS": {
-                  "refKeyList": null,
-                  "paramInfo": null,
-                  "filterInfo": null,
-                  "stageInfo": null,
-                  "currParamSet": null,
-                  "paramListHolder": null,
-                  "paramListInfo": [
-                    {
-                      "ref": {
-                        "type": "paramlist",
-                        "uuid": "a9884a61-3b96-48b0-930a-bc6afcddfce8",
-                        "version": null,
-                        "name": null
-                      },
-                      "value": null,
-                      "paramId": null,
-                      "paramName": null,
-                      "paramType": null,
-                      "paramDispName": null,
-                      "paramDesc": null,
-                      "paramValue": null,
-                      "attributeInfo": null
-                    }
-                  ],
-                  "internalVarMap": null,
-                  "otherParams": null,
-                  "executionContext": null,
-                  "graphFilter": null
-                }
-              }
-            }
-          ],
-          "xPos": 1020,
-          "yPos": 850,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "Model Training",
-      "xPos": 900,
-      "yPos": 650,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "dc0ff083-4e61-492c-b1d0-4050f6be9c99",
+	"version" : "1550162091",
+	"name" : "ppl_device_data_prediction_e2e",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"xPos" : 50,
+	"yPos" : 210,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "60b968f7-9a29-4e57-bc4f-828fc6a19708",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "84147f56-5dd2-40ad-810d-aa04d50a8ba1",
+					"dependsOn" : [ ],
+					"name" : "ingest_device_data",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "ingest",
+										"uuid" : "c494341a-852a-43c0-8e37-97a17f508f48",
+										"version" : null,
+										"name" : "ingest_device_data"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 370,
+					"yPos" : 110,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "Ingest Data",
+			"xPos" : 220,
+			"yPos" : 210,
+			"active" : "Y",
+			"statusList" : [ ]
+		},
+		{
+			"stageId" : "d1d64abd-78ca-4c8e-8f33-2bf348df8998",
+			"dependsOn" : [
+				"60b968f7-9a29-4e57-bc4f-828fc6a19708"
+			],
+			"tasks" : [
+				{
+					"taskId" : "6709a28c-1afe-4f29-b7da-e84f0ce2822d",
+					"dependsOn" : [ ],
+					"name" : "map_device_data_dedup",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "c3d44e2c-8fa0-423a-b0fe-623e1da7d353",
+										"version" : null,
+										"name" : "map_device_data_dedup"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 590,
+					"yPos" : 210,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "d3503ac0-374b-411a-9e11-9216bf39d781",
+					"dependsOn" : [
+						"6709a28c-1afe-4f29-b7da-e84f0ce2822d"
+					],
+					"name" : "map_device_data_fillna",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "c91f37b8-d7db-42b4-b785-05fd21003a42",
+										"version" : null,
+										"name" : "map_device_data_fillna"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 770,
+					"yPos" : 210,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "153d227d-bc5c-46eb-9569-732286cbce29",
+					"dependsOn" : [
+						"d3503ac0-374b-411a-9e11-9216bf39d781"
+					],
+					"name" : "map_device_data_categorical_features",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "07144e18-9ada-4499-ab2d-710305ceb952",
+										"version" : null,
+										"name" : "map_device_data_categorical_features"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 990,
+					"yPos" : 210,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "4e563b36-3d0b-4353-b526-3b8f1bce0321",
+					"dependsOn" : [
+						"153d227d-bc5c-46eb-9569-732286cbce29"
+					],
+					"name" : "map_device_data_compute_rolling_max",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "b4caf556-388a-43d1-933b-7304ada15ede",
+										"version" : null,
+										"name" : "map_device_data_compute_rolling_max"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1250,
+					"yPos" : 30,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "81c43129-9220-43ea-a0b1-e62a6d9b945d",
+					"dependsOn" : [
+						"153d227d-bc5c-46eb-9569-732286cbce29"
+					],
+					"name" : "map_device_data_compute_rolling_diff",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "1edf6289-7c33-41be-b335-728ac3c666e6",
+										"version" : null,
+										"name" : "map_device_data_compute_rolling_diff"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1250,
+					"yPos" : 120,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "86c0cdc4-9fa3-4679-a16b-4051cb5c9c78",
+					"dependsOn" : [
+						"153d227d-bc5c-46eb-9569-732286cbce29"
+					],
+					"name" : "map_device_data_compute_rolling_min",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "5ff1d4e3-950a-49c8-99bd-125022f631d2",
+										"version" : null,
+										"name" : "map_device_data_compute_rolling_min"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1250,
+					"yPos" : 210,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "7e26f250-bb65-4eba-8aff-518a1aa41ae9",
+					"dependsOn" : [
+						"153d227d-bc5c-46eb-9569-732286cbce29"
+					],
+					"name" : "map_device_data_compute_rolling_mean",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "dff434ce-763e-48f9-9e49-af454321763a",
+										"version" : null,
+										"name" : "map_device_data_compute_rolling_mean"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1250,
+					"yPos" : 310,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "5b807a5c-ab70-4e9f-8ae4-b91904d0fb01",
+					"dependsOn" : [
+						"153d227d-bc5c-46eb-9569-732286cbce29"
+					],
+					"name" : "map_device_data_compute_rolling_std",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "8dc9d45d-8f16-44dc-b178-4513a3abc30e",
+										"version" : null,
+										"name" : "map_device_data_compute_rolling_std"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1250,
+					"yPos" : 400,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "4fa7e637-4cf1-4c73-8ef6-389850c02c32",
+					"dependsOn" : [
+						"4e563b36-3d0b-4353-b526-3b8f1bce0321",
+						"81c43129-9220-43ea-a0b1-e62a6d9b945d",
+						"86c0cdc4-9fa3-4679-a16b-4051cb5c9c78",
+						"7e26f250-bb65-4eba-8aff-518a1aa41ae9",
+						"5b807a5c-ab70-4e9f-8ae4-b91904d0fb01"
+					],
+					"name" : "map_device_data_final_features",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "map",
+										"uuid" : "b9a2408e-fcd3-411e-861a-e0f78639da3d",
+										"version" : null,
+										"name" : "map_device_data_final_features"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 1540,
+					"yPos" : 210,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "Calc Features",
+			"xPos" : 440,
+			"yPos" : 210,
+			"active" : "Y",
+			"statusList" : [ ]
+		},
+		{
+			"stageId" : "4bc5a89f-f339-4e8a-bf3f-16da48bedceb",
+			"dependsOn" : [
+				"d1d64abd-78ca-4c8e-8f33-2bf348df8998"
+			],
+			"tasks" : [
+				{
+					"taskId" : "2d7f2e33-3b7f-4e63-b2d8-046a63b2548d",
+					"dependsOn" : [ ],
+					"name" : "Device Data Warning Features - PCA",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "0f511905-befb-4513-be48-c8897b6d02be",
+										"version" : null,
+										"name" : "Device Data Warning Features - PCA"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "28943e30-fcae-44f6-8cee-f9f5e5237ebd",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 670,
+					"yPos" : 550,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "eccfabab-1a3a-4ce7-9bdd-52603303d487",
+					"dependsOn" : [ ],
+					"name" : "Device Data Summary Features - PCA",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "70f7f016-2d9e-4dad-9347-b8c3add8a109",
+										"version" : null,
+										"name" : "Device Data Summary Features - PCA"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "6aaf8b91-16e7-428c-80dd-a6d759ff3ba5",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 650,
+					"yPos" : 750,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "PCA",
+			"xPos" : 500,
+			"yPos" : 650,
+			"active" : "Y",
+			"statusList" : [ ]
+		},
+		{
+			"stageId" : "a4bed9d6-0c9c-4d4b-bb42-c9ddb87499f2",
+			"dependsOn" : [
+				"4bc5a89f-f339-4e8a-bf3f-16da48bedceb"
+			],
+			"tasks" : [
+				{
+					"taskId" : "994b640f-f70b-402b-bf57-0e3f9042bc08",
+					"dependsOn" : [ ],
+					"name" : "RLU Prediction - LR",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "7069a9b4-e489-4901-bfde-20985716b09e",
+										"version" : null,
+										"name" : "RLU Prediction - LR"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a80",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1030,
+					"yPos" : 500,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "25de3f6d-cd46-478e-baa7-ae5d49687c11",
+					"dependsOn" : [ ],
+					"name" : "RLU Prediction - DTC",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "0fe1b1d3-ac2b-4009-b410-3ced654bd520",
+										"version" : null,
+										"name" : "RLU Prediction - DTC"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a84",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1160,
+					"yPos" : 570,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "f8df2c9b-158a-4657-85d8-0cc0a12d048b",
+					"dependsOn" : [ ],
+					"name" : "RLU Prediction - GBT",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "7f019a46-2d40-4b91-b7be-3ce93f6c65b0",
+										"version" : null,
+										"name" : "RLU Prediction - GBT"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1150,
+					"yPos" : 730,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "cc6fd822-34cf-478b-a8f6-4bcf02fb37ed",
+					"dependsOn" : [ ],
+					"name" : "RLU Prediction - ANN",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "eb905ce3-87e5-4c2e-b339-10a317658b08",
+										"version" : null,
+										"name" : "RLU Prediction - ANN"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								"EXEC_PARAMS" : {
+									"refKeyList" : null,
+									"paramInfo" : null,
+									"filterInfo" : null,
+									"stageInfo" : null,
+									"currParamSet" : null,
+									"paramListHolder" : null,
+									"paramListInfo" : [
+										{
+											"ref" : {
+												"type" : "paramlist",
+												"uuid" : "a9884a61-3b96-48b0-930a-bc6afcddfce8",
+												"version" : null,
+												"name" : null
+											},
+											"value" : null,
+											"paramId" : null,
+											"paramName" : null,
+											"paramType" : null,
+											"paramDispName" : null,
+											"paramDesc" : null,
+											"paramValue" : null,
+											"attributeInfo" : null
+										}
+									],
+									"internalVarMap" : null,
+									"otherParams" : null,
+									"executionContext" : null,
+									"graphFilter" : null
+								}
+							}
+						}
+					],
+					"xPos" : 1020,
+					"yPos" : 850,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "Model Training",
+			"xPos" : 900,
+			"yPos" : 650,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displayName" : "ppl_device_data_prediction_e2e"
 }

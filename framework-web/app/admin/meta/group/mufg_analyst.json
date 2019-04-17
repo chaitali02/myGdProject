@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5cb62453da75e91b2c59408e"),
     "roleId" : {
         "ref" : {
             "type" : "role",
@@ -37,5 +38,6 @@
                 "name" : "Administration"
             }
         }
-    ]
+    ],
+    "displayName" : "mufg_analyst"
 }

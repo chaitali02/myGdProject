@@ -1,88 +1,93 @@
 {
-    "xPos" : 30.0,
-    "yPos" : 250.0,
-    "templateFlg" : "N",
-    "stages" : [ 
-        {
-            "stageId" : "stage_0",
-            "dependsOn" : [],
-            "tasks" : [ 
-                {
-                    "taskId" : "3511ea46-28f0-47bf-9095-64d23e1f26e4",
-                    "dependsOn" : [],
-                    "name" : "Train Model",
-                    "operators" : [ 
-                        {
-                            "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "train",
-                                    "uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290",
-                                    "name" : "Train Fraud Detection Model (Datapod)"
-                                }
-                            }]
-                        }
-                    ],
-                    "xPos" : 470.0,
-                    "yPos" : 250.0,
-                    "active" : "Y",
-                    "statusList" : []
-                }, 
-                {
-                    "taskId" : "1d552add-47b4-49de-be81-ce1fad2b8c65",
-                    "dependsOn" : [ 
-                        "3511ea46-28f0-47bf-9095-64d23e1f26e4"
-                    ],
-                    "name" : "Predict Fraud Transactions",
-                    "operators" : [ 
-                        {
-                            "dependsOn" : [],
-                            "operatorInfo" : [{
-                                "ref" : {
-                                    "type" : "predict",
-                                    "uuid" : "32230ad8-775f-4eb7-a7ab-87bccfefd72e",
-                                    "name" : "Predict Fraud Detection Model (Datapod)"
-                                }
-                            }]
-                        }
-                    ],
-                    "xPos" : 660.0,
-                    "yPos" : 250.0,
-                    "active" : "Y",
-                    "statusList" : []
-                }
-            ],
-            "name" : "new stage",
-            "xPos" : 280.0,
-            "yPos" : 250.0,
-            "active" : "Y",
-            "statusList" : []
-        }
-    ],
-    "statusList" : [],
-    "uuid" : "5570ea7e-4c29-4fbe-bfc1-354738a34e2d",
-    "version" : "1528858600",
-    "name" : "ppl_cc_fraud_detection",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-06-13T02:56:40.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"xPos" : 30,
+	"yPos" : 250,
+	"templateFlg" : "N",
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "3511ea46-28f0-47bf-9095-64d23e1f26e4",
+					"dependsOn" : [ ],
+					"name" : "Train Model",
+					"operators" : [
+						{
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "train",
+										"uuid" : "282f45f3-f080-4eb7-b3cb-e64d033af290",
+										"name" : "Train Fraud Detection Model (Datapod)"
+									}
+								}
+							]
+						}
+					],
+					"xPos" : 470,
+					"yPos" : 250,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "1d552add-47b4-49de-be81-ce1fad2b8c65",
+					"dependsOn" : [
+						"3511ea46-28f0-47bf-9095-64d23e1f26e4"
+					],
+					"name" : "Predict Fraud Transactions",
+					"operators" : [
+						{
+							"dependsOn" : [ ],
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "predict",
+										"uuid" : "32230ad8-775f-4eb7-a7ab-87bccfefd72e",
+										"name" : "Predict Fraud Detection Model (Datapod)"
+									}
+								}
+							]
+						}
+					],
+					"xPos" : 660,
+					"yPos" : 250,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 280,
+			"yPos" : 250,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"uuid" : "5570ea7e-4c29-4fbe-bfc1-354738a34e2d",
+	"version" : "1528858600",
+	"name" : "ppl_cc_fraud_detection",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displayName" : "ppl_cc_fraud_detection"
 }

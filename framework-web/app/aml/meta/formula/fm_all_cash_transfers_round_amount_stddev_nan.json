@@ -1,0 +1,98 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f1000"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "3896e3b0-3815-4fb2-9c20-99863bb618c0"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "'NaN'"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ","
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ","
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "3896e3b0-3815-4fb2-9c20-99863bb618c0"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		}
+	],
+	"uuid" : "98a253a3-ea12-4bf1-83ef-77200db95fc6",
+	"version" : "1542667375",
+	"name" : "fm_all_cash_transfers_round_amount_stddev_NaN",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.216Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"formulaType" : "aggr",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	],
+	"displayName" : "fm_all_cash_transfers_round_amount_stddev_NaN"
+}

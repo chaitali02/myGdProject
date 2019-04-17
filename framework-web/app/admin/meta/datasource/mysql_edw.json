@@ -37,5 +37,6 @@
 	"path" : "",
 	"subType" : null,
 	"sessionParameters" : "",
-	"sid" : null
+	"sid" : null,
+	"displayName" : "mysql_edw"
 }
