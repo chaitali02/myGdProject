@@ -72,7 +72,7 @@ public class DQRecOperator {
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
 
-	public List<DQIntelligence> genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode, String samplePercent) throws Exception {
+	public List<DQIntelligence> genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
 			List<DQIntelligence> recommendationList = new ArrayList<>();
 			try {
@@ -103,9 +103,12 @@ public class DQRecOperator {
 			
 			List<DataQual> latestDQList = metadataServiceImpl.getAllDQByDatapod(sourceDp.getUuid());
 			
+			String samplePercent = dqRecExec.getSamplePercent();
 			if(StringUtils.isBlank(samplePercent)) {
 				samplePercent = commonServiceImpl.getConfigValue("framework.dataqual.sample.percent");
 			} 
+			
+			dqRecExec.setSamplePercent(samplePercent);
 			
 			//***************** gettting sample *****************//
 			Dataset<Row> sampleDf = null;
@@ -364,7 +367,9 @@ public class DQRecOperator {
 					List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
 					for(AttributeDomain attributeDomain : attrDomainList) {
 						if(attributeDomain.getUuid().equals(row.get(1).toString())) {
-							checkValueList.add(new MetaIdentifierHolder(attributeDomain.getRef(MetaType.domain), attributeDomain.getName()));
+							MetaIdentifier ref = attributeDomain.getRef(MetaType.domain);
+							ref.setName(attributeDomain.getName());
+							checkValueList.add(new MetaIdentifierHolder(ref, attributeDomain.getName()));
 							
 							break;
 						}

@@ -3428,8 +3428,13 @@ public class CommonServiceImpl<T> {
 	public void kill(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
+
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("kill", String.class, String.class).invoke(service, uuid, version);
+			if(type.equals(MetaType.dqrecExec)) {
+				(service).getClass().getMethod("kill", String.class, String.class, MetaType.class).invoke(service, uuid, version, type);
+			} else {
+				(service).getClass().getMethod("kill", String.class, String.class).invoke(service, uuid, version);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
