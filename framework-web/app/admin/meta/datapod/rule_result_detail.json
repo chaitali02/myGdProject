@@ -232,5 +232,6 @@
 			"attrUnitType": null
 		}
 	],
-	"prefix": "rlr"
+	"prefix": "rlr",
+	"displayName" : "rule_result_detail"
 }

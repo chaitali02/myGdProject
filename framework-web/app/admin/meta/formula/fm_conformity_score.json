@@ -184,5 +184,6 @@
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "aggr",
+	"displayName" : "fm_conformity_score_file"
 }

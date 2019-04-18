@@ -51,5 +51,6 @@
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 249,
-  "runMode": "BATCH"
+  "runMode": "BATCH",
+	"displayName" : "dim_country"
 }

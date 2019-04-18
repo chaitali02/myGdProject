@@ -1,121 +1,122 @@
 {
-  "uuid": "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
-  "version": "1533072108",
-  "name": "industry_factor_simulation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "iteration_id",
-      "type": "integer",
-      "desc": "iteration_id",
-      "key": "",
-      "partition": "N",
-      "dispName": "iteration_id",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 1,
-      "name": "factor1",
-      "type": "double",
-      "desc": "factor1",
-      "key": "",
-      "partition": "N",
-      "dispName": "factor1",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 2,
-      "name": "factor2",
-      "type": "double",
-      "desc": "factor2",
-      "key": "",
-      "partition": "N",
-      "dispName": "factor2",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 3,
-      "name": "factor3",
-      "type": "double",
-      "desc": "factor3",
-      "key": "",
-      "partition": "N",
-      "dispName": "factor3",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 4,
-      "name": "factor4",
-      "type": "double",
-      "desc": "factor4",
-      "key": "",
-      "partition": "N",
-      "dispName": "factor4",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 5,
-      "name": "reporting_date",
-      "type": "string",
-      "desc": "reporting_date",
-      "key": "",
-      "partition": "N",
-      "dispName": "reporting_date",
-      "active" : "Y",
-      "expr": null
-    },
-    {
-      "attributeId": 6,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active" : "Y",
-      "expr": null
-    }
-  ],
-	"prefix":"srf"
+	"uuid" : "67f5dc5a-46fc-41a7-b85c-a54474cbdfcf",
+	"version" : "1533072108",
+	"name" : "industry_factor_simulation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "File"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "iteration_id",
+			"type" : "integer",
+			"desc" : "iteration_id",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "iteration_id",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "factor1",
+			"type" : "double",
+			"desc" : "factor1",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "factor1",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "factor2",
+			"type" : "double",
+			"desc" : "factor2",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "factor2",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "factor3",
+			"type" : "double",
+			"desc" : "factor3",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "factor3",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "factor4",
+			"type" : "double",
+			"desc" : "factor4",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "factor4",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 5,
+			"name" : "reporting_date",
+			"type" : "string",
+			"desc" : "reporting_date",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "reporting_date",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 6,
+			"name" : "version",
+			"type" : "integer",
+			"desc" : "version",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"expr" : null
+		}
+	],
+	"prefix" : "srf",
+	"displayName" : "industry_factor_simulation"
 }

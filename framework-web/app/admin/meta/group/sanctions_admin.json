@@ -1,49 +1,51 @@
 {
-  "uuid": "986e84eb-03ab-46e1-82cc-83f48e6a7yo1",
-  "version": "1547486129",
-  "name": "sanctions_admin",
-  "desc": "Admin group for Sanctions application",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+    "_id" : ObjectId("5cb62454da75e91b2c5940a2"),
+    "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a7yo1",
+    "version" : "1547486129",
+    "name" : "sanctions_admin",
+    "desc" : "Admin group for Sanctions application",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        },
+        "value" : null
     },
-    "value": null
-  },
-  "createdOn": "Mon Jan 14 12:15:29 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-        "version": null,
-        "name": "Sanctions"
-      },
-      "value": null
-    }
-  ],
-  "roleId": {
-    "ref": {
-      "type": "role",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f87",
-      "version": null,
-      "name": "admin"
+    "createdOn" : "Mon Jan 14 12:15:29 EST 2019",
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+                "version" : null,
+                "name" : "Sanctions"
+            },
+            "value" : null
+        }
+    ],
+    "roleId" : {
+        "ref" : {
+            "type" : "role",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f87",
+            "version" : null,
+            "name" : "admin"
+        },
+        "value" : null
     },
-    "value": null
-  },
-  "appId": {
-    "ref": {
-      "type": "application",
-      "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-      "version": null,
-      "name": "Sanctions"
+    "appId" : {
+        "ref" : {
+            "type" : "application",
+            "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+            "version" : null,
+            "name" : "Sanctions"
+        },
+        "value" : null
     },
-    "value": null
-  }
+    "displayName" : "sanctions_admin"
 }

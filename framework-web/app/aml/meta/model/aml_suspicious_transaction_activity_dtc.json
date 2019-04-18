@@ -1,789 +1,790 @@
 {
-    "type" : "SPARK",
-    "dependsOn" : {
-        "ref" : {
-            "type" : "algorithm",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
-        }
-    },
-    "label" : "suspicious_ind",
-    "features" : [ 
-        {
-            "featureId" : "0",
-            "featureDisplaySeq" : "0",
-            "name" : "in_wire_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "1",
-            "featureDisplaySeq" : "1",
-            "name" : "in_wire_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "2",
-            "featureDisplaySeq" : "2",
-            "name" : "out_wire_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "3",
-            "featureDisplaySeq" : "3",
-            "name" : "out_wire_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "4",
-            "featureDisplaySeq" : "4",
-            "name" : "net_wire_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "5",
-            "featureDisplaySeq" : "5",
-            "name" : "net_wire_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "6",
-            "featureDisplaySeq" : "6",
-            "name" : "in_cash_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "7",
-            "featureDisplaySeq" : "7",
-            "name" : "in_cash_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "8",
-            "featureDisplaySeq" : "8",
-            "name" : "out_cash_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "9",
-            "featureDisplaySeq" : "9",
-            "name" : "out_cash_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "10",
-            "featureDisplaySeq" : "10",
-            "name" : "net_cash_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "11",
-            "featureDisplaySeq" : "11",
-            "name" : "net_cash_transfers_trans_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "12",
-            "featureDisplaySeq" : "12",
-            "name" : "all_wire_transfers_round_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "13",
-            "featureDisplaySeq" : "13",
-            "name" : "all_cash_transfers_round_amount_usd",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "14",
-            "featureDisplaySeq" : "14",
-            "name" : "all_cash_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "15",
-            "featureDisplaySeq" : "15",
-            "name" : "all_wire_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "16",
-            "featureDisplaySeq" : "16",
-            "name" : "all_cash_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "17",
-            "featureDisplaySeq" : "17",
-            "name" : "all_wire_transfers_trans_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "18",
-            "featureDisplaySeq" : "18",
-            "name" : "in_cash_transfers_trans_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "19",
-            "featureDisplaySeq" : "19",
-            "name" : "out_wire_transfers_trans_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "20",
-            "featureDisplaySeq" : "20",
-            "name" : "all_wire_transfers_round_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "21",
-            "featureDisplaySeq" : "21",
-            "name" : "all_cash_transfers_round_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "22",
-            "featureDisplaySeq" : "22",
-            "name" : "in_wire_transfers_trans_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "23",
-            "featureDisplaySeq" : "23",
-            "name" : "out_cash_transfers_trans_amount_min",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "24",
-            "featureDisplaySeq" : "24",
-            "name" : "all_cash_transfers_round_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "25",
-            "featureDisplaySeq" : "25",
-            "name" : "all_wire_transfers_round_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "26",
-            "featureDisplaySeq" : "26",
-            "name" : "in_wire_transfers_trans_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "27",
-            "featureDisplaySeq" : "27",
-            "name" : "in_cash_transfers_trans_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "28",
-            "featureDisplaySeq" : "28",
-            "name" : "out_wire_transfers_trans_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "29",
-            "featureDisplaySeq" : "29",
-            "name" : "out_cash_transfers_trans_amount_max",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "30",
-            "featureDisplaySeq" : "30",
-            "name" : "all_wire_transfers_round_amount_avg",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "31",
-            "featureDisplaySeq" : "31",
-            "name" : "all_cash_transfers_round_amount_avg",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "32",
-            "featureDisplaySeq" : "32",
-            "name" : "in_wire_transfers_trans_amount_avg",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "33",
-            "featureDisplaySeq" : "33",
-            "name" : "in_cash_transfers_trans_amount_avg",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "34",
-            "featureDisplaySeq" : "34",
-            "name" : "out_wire_transfers_trans_amount_avg",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "35",
-            "featureDisplaySeq" : "35",
-            "name" : "out_cash_transfers_trans_amount_avg",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "36",
-            "featureDisplaySeq" : "36",
-            "name" : "all_cash_transfers_round_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "37",
-            "featureDisplaySeq" : "37",
-            "name" : "in_cash_transfers_trans_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "38",
-            "featureDisplaySeq" : "38",
-            "name" : "out_cash_transfers_trans_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "39",
-            "featureDisplaySeq" : "39",
-            "name" : "all_wire_transfers_round_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "40",
-            "featureDisplaySeq" : "40",
-            "name" : "in_wire_transfers_trans_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "41",
-            "featureDisplaySeq" : "41",
-            "name" : "out_wire_transfers_trans_amount_stddev",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "42",
-            "featureDisplaySeq" : "42",
-            "name" : "in_cash_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "43",
-            "featureDisplaySeq" : "43",
-            "name" : "in_wire_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "44",
-            "featureDisplaySeq" : "44",
-            "name" : "out_wire_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "45",
-            "featureDisplaySeq" : "45",
-            "name" : "out_cash_transfers_round_amount_count",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "46",
-            "featureDisplaySeq" : "46",
-            "name" : "out_cash_transfers_round_amount_sum",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "47",
-            "featureDisplaySeq" : "47",
-            "name" : "out_wire_transfers_round_amount_sum",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "48",
-            "featureDisplaySeq" : "48",
-            "name" : "in_wire_transfers_round_amount_sum",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }, 
-        {
-            "featureId" : "49",
-            "featureDisplaySeq" : "49",
-            "name" : "in_cash_transfers_round_amount_sum",
-            "type" : "double",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "imputeMethod" : {
-                "ref" : {
-                    "type" : "function",
-                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
-                }
-            }
-        }
-    ],
-    "customFlag" : "N",
-    "uuid" : "5520fab0-3b6f-4ee1-86f5-2a1bb00fb3fe",
-    "version" : "1544521502",
-    "name" : "AML - Suspicious Transaction Activity - DTC",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-12-11T09:45:02.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822",
-                "name" : "Anti Money Laundering"
-            }
-        }
-    ]
+	"type" : "SPARK",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "algorithm",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+		}
+	},
+	"label" : "suspicious_ind",
+	"features" : [
+		{
+			"featureId" : "0",
+			"featureDisplaySeq" : "0",
+			"name" : "in_wire_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "1",
+			"featureDisplaySeq" : "1",
+			"name" : "in_wire_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "2",
+			"featureDisplaySeq" : "2",
+			"name" : "out_wire_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "3",
+			"featureDisplaySeq" : "3",
+			"name" : "out_wire_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "4",
+			"featureDisplaySeq" : "4",
+			"name" : "net_wire_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "5",
+			"featureDisplaySeq" : "5",
+			"name" : "net_wire_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "6",
+			"featureDisplaySeq" : "6",
+			"name" : "in_cash_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "7",
+			"featureDisplaySeq" : "7",
+			"name" : "in_cash_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "8",
+			"featureDisplaySeq" : "8",
+			"name" : "out_cash_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "9",
+			"featureDisplaySeq" : "9",
+			"name" : "out_cash_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "10",
+			"featureDisplaySeq" : "10",
+			"name" : "net_cash_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "11",
+			"featureDisplaySeq" : "11",
+			"name" : "net_cash_transfers_trans_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "12",
+			"featureDisplaySeq" : "12",
+			"name" : "all_wire_transfers_round_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "13",
+			"featureDisplaySeq" : "13",
+			"name" : "all_cash_transfers_round_amount_usd",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "14",
+			"featureDisplaySeq" : "14",
+			"name" : "all_cash_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "15",
+			"featureDisplaySeq" : "15",
+			"name" : "all_wire_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "16",
+			"featureDisplaySeq" : "16",
+			"name" : "all_cash_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "17",
+			"featureDisplaySeq" : "17",
+			"name" : "all_wire_transfers_trans_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "18",
+			"featureDisplaySeq" : "18",
+			"name" : "in_cash_transfers_trans_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "19",
+			"featureDisplaySeq" : "19",
+			"name" : "out_wire_transfers_trans_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "20",
+			"featureDisplaySeq" : "20",
+			"name" : "all_wire_transfers_round_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "21",
+			"featureDisplaySeq" : "21",
+			"name" : "all_cash_transfers_round_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "22",
+			"featureDisplaySeq" : "22",
+			"name" : "in_wire_transfers_trans_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "23",
+			"featureDisplaySeq" : "23",
+			"name" : "out_cash_transfers_trans_amount_min",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "24",
+			"featureDisplaySeq" : "24",
+			"name" : "all_cash_transfers_round_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "25",
+			"featureDisplaySeq" : "25",
+			"name" : "all_wire_transfers_round_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "26",
+			"featureDisplaySeq" : "26",
+			"name" : "in_wire_transfers_trans_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "27",
+			"featureDisplaySeq" : "27",
+			"name" : "in_cash_transfers_trans_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "28",
+			"featureDisplaySeq" : "28",
+			"name" : "out_wire_transfers_trans_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "29",
+			"featureDisplaySeq" : "29",
+			"name" : "out_cash_transfers_trans_amount_max",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "30",
+			"featureDisplaySeq" : "30",
+			"name" : "all_wire_transfers_round_amount_avg",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "31",
+			"featureDisplaySeq" : "31",
+			"name" : "all_cash_transfers_round_amount_avg",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "32",
+			"featureDisplaySeq" : "32",
+			"name" : "in_wire_transfers_trans_amount_avg",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "33",
+			"featureDisplaySeq" : "33",
+			"name" : "in_cash_transfers_trans_amount_avg",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "34",
+			"featureDisplaySeq" : "34",
+			"name" : "out_wire_transfers_trans_amount_avg",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "35",
+			"featureDisplaySeq" : "35",
+			"name" : "out_cash_transfers_trans_amount_avg",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "36",
+			"featureDisplaySeq" : "36",
+			"name" : "all_cash_transfers_round_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "37",
+			"featureDisplaySeq" : "37",
+			"name" : "in_cash_transfers_trans_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "38",
+			"featureDisplaySeq" : "38",
+			"name" : "out_cash_transfers_trans_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "39",
+			"featureDisplaySeq" : "39",
+			"name" : "all_wire_transfers_round_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "40",
+			"featureDisplaySeq" : "40",
+			"name" : "in_wire_transfers_trans_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "41",
+			"featureDisplaySeq" : "41",
+			"name" : "out_wire_transfers_trans_amount_stddev",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "42",
+			"featureDisplaySeq" : "42",
+			"name" : "in_cash_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "43",
+			"featureDisplaySeq" : "43",
+			"name" : "in_wire_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "44",
+			"featureDisplaySeq" : "44",
+			"name" : "out_wire_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "45",
+			"featureDisplaySeq" : "45",
+			"name" : "out_cash_transfers_round_amount_count",
+			"type" : "integer",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "46",
+			"featureDisplaySeq" : "46",
+			"name" : "out_cash_transfers_round_amount_sum",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "47",
+			"featureDisplaySeq" : "47",
+			"name" : "out_wire_transfers_round_amount_sum",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "48",
+			"featureDisplaySeq" : "48",
+			"name" : "in_wire_transfers_round_amount_sum",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		},
+		{
+			"featureId" : "49",
+			"featureDisplaySeq" : "49",
+			"name" : "in_cash_transfers_round_amount_sum",
+			"type" : "double",
+			"desc" : "",
+			"minVal" : 0,
+			"maxVal" : 0,
+			"imputeMethod" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+				}
+			}
+		}
+	],
+	"customFlag" : "N",
+	"uuid" : "5520fab0-3b6f-4ee1-86f5-2a1bb00fb3fe",
+	"version" : "1544521502",
+	"name" : "AML - Suspicious Transaction Activity - DTC",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.171Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	],
+	"displayName" : "AML - Suspicious Transaction Activity - DTC"
 }

@@ -1,57 +1,58 @@
 {
-    "inputReq" : "N",
-    "functionInfo" : [ 
-        {
-            "name" : "over",
-            "type" : "file",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "name" : "over",
-            "type" : "hive",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "name" : "over",
-            "type" : "impala",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "name" : "over",
-            "type" : "mysql",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "name" : "over",
-            "type" : "postgres",
-            "paramInfoHolder" : []
-        }
-    ],
-    "returnType":"STRING",
-  "category" : "WINDOW",
-    "uuid" : "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f",
-    "version" : "1547105966",
-    "name" : "over",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-01-10T07:39:26.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "publicFlag" : "Y",
-    "appInfo": [
+	"inputReq" : "N",
+	"functionInfo" : [
 		{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-	]
+			"name" : "over",
+			"type" : "file",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"name" : "over",
+			"type" : "hive",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"name" : "over",
+			"type" : "impala",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"name" : "over",
+			"type" : "mysql",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"name" : "over",
+			"type" : "postgres",
+			"paramInfoHolder" : [ ]
+		}
+	],
+	"returnType" : "STRING",
+	"category" : "WINDOW",
+	"uuid" : "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f",
+	"version" : "1547105966",
+	"name" : "over",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.308Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displayName" : "over"
 }

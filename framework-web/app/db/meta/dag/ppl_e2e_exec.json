@@ -1,171 +1,180 @@
 {
-  "uuid": "42b318a1-365d-4a89-9db4-fc2c13466df2",
-  "version": "1552424839",
-  "name": "ppl_e2e_exec",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 12 17:07:19 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "xPos": 30,
-  "yPos": 250,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "1cad082e-daf0-469d-bc3e-1de0823d1b7a",
-          "dependsOn": [],
-          "name": "ingest_load_data",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "ingestgroup",
-                    "uuid": "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
-                    "version": null,
-                    "name": "ingest_load_data"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 380,
-          "yPos": 250,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "9e5aa41c-7457-45a2-b8e2-6dbcb7df5534",
-          "dependsOn": [
-            "1cad082e-daf0-469d-bc3e-1de0823d1b7a"
-          ],
-          "name": "dqg_equity_executions",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "dqgroup",
-                    "uuid": "6a7b75df-9823-450f-b51f-ed6eae89968f",
-                    "version": null,
-                    "name": "dqg_equity_executions"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 570,
-          "yPos": 160,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "f0264b4f-5c65-465c-9f88-091a88c28edf",
-          "dependsOn": [
-            "1cad082e-daf0-469d-bc3e-1de0823d1b7a"
-          ],
-          "name": "dqg_equity_orders",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "dqgroup",
-                    "uuid": "750e09d5-d75c-43c0-9753-c799e7f5d723",
-                    "version": null,
-                    "name": "dqg_equity_orders"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 570,
-          "yPos": 340,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "9d8929cf-0e9b-43b5-bf16-b11c50c5c4bd",
-          "dependsOn": [
-            "9e5aa41c-7457-45a2-b8e2-6dbcb7df5534",
-            "f0264b4f-5c65-465c-9f88-091a88c28edf"
-          ],
-          "name": "Profile Equity Orders and Executions",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "profilegroup",
-                    "uuid": "84765e14-f759-4f29-bd71-388a529e9d75",
-                    "version": null,
-                    "name": "dpg_equity"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 760,
-          "yPos": 260,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "stage",
-      "xPos": 220,
-      "yPos": 250,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null,
-  "senderInfo": null
+	"uuid" : "42b318a1-365d-4a89-9db4-fc2c13466df2",
+	"version" : "1552424839",
+	"name" : "ppl_e2e_exec",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552236606",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"xPos" : 30,
+	"yPos" : 250,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "1cad082e-daf0-469d-bc3e-1de0823d1b7a",
+					"dependsOn" : [ ],
+					"name" : "ingest_load_data",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "ingestgroup",
+										"uuid" : "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
+										"version" : null,
+										"name" : "ingest_load_data"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 380,
+					"yPos" : 250,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "9e5aa41c-7457-45a2-b8e2-6dbcb7df5534",
+					"dependsOn" : [
+						"1cad082e-daf0-469d-bc3e-1de0823d1b7a"
+					],
+					"name" : "dqg_equity_executions",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "6a7b75df-9823-450f-b51f-ed6eae89968f",
+										"version" : null,
+										"name" : "dqg_equity_executions"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 570,
+					"yPos" : 160,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "f0264b4f-5c65-465c-9f88-091a88c28edf",
+					"dependsOn" : [
+						"1cad082e-daf0-469d-bc3e-1de0823d1b7a"
+					],
+					"name" : "dqg_equity_orders",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "dqgroup",
+										"uuid" : "750e09d5-d75c-43c0-9753-c799e7f5d723",
+										"version" : null,
+										"name" : "dqg_equity_orders"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 570,
+					"yPos" : 340,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "9d8929cf-0e9b-43b5-bf16-b11c50c5c4bd",
+					"dependsOn" : [
+						"9e5aa41c-7457-45a2-b8e2-6dbcb7df5534",
+						"f0264b4f-5c65-465c-9f88-091a88c28edf"
+					],
+					"name" : "Profile Equity Orders and Executions",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "profilegroup",
+										"uuid" : "84765e14-f759-4f29-bd71-388a529e9d75",
+										"version" : null,
+										"name" : "dpg_equity"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 760,
+					"yPos" : 260,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "stage",
+			"xPos" : 220,
+			"yPos" : 250,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"senderInfo" : null,
+	"displayName" : "ppl_e2e_exec"
 }

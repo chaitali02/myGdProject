@@ -42,5 +42,6 @@
             }
         }
     ],
-    "publicFlag" : "N"
+    "publicFlag" : "N",
+	"displayName" : "dp_result_summary"
 }

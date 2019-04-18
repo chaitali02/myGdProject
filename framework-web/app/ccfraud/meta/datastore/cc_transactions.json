@@ -1,45 +1,46 @@
 {
-    "metaId" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
-            "version" : "1528050858"
-        }
-    },
-    "execId" : {
-        "ref" : {
-            "type" : "loadExec",
-            "uuid" : "e18d610f-a171-49c5-aa7a-dca59ae3232e",
-            "version" : "1528050858"
-        }
-    },
-    "location" : "/311f9b56-474e-4119-8ce4-455a371c10d7/1528050858/1528050858",
-    "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(10000),
-    "runMode" : "BATCH",
-    "uuid" : "e59c0433-fe6d-440f-8694-077b565be94d",
-    "version" : "1528050862",
-    "name" : "cc_transactions",
-    "desc" : "Creating datastore for cc_transactions",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+			"version" : "1528050858"
+		}
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "e18d610f-a171-49c5-aa7a-dca59ae3232e",
+			"version" : "1528050858"
+		}
+	},
+	"location" : "/311f9b56-474e-4119-8ce4-455a371c10d7/1528050858/1528050858",
+	"persistMode" : "DISK_ONLY",
+	"numRows" : NumberLong(10000),
+	"runMode" : "BATCH",
+	"uuid" : "e59c0433-fe6d-440f-8694-077b565be94d",
+	"version" : "1528050862",
+	"name" : "cc_transactions",
+	"desc" : "Creating datastore for cc_transactions",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displayName" : "cc_transactions"
 }

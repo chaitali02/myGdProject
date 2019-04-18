@@ -1,39 +1,40 @@
 {
-    "startDate" : ISODate("2018-11-02T12:45:00.000Z"),
-    "endDate" : ISODate("2019-03-16T06:05:00.000Z"),
-    "nextRunTime" : ISODate("2019-02-02T12:45:00.000Z"),
-    "frequencyType" : "QUARTERLY",
-    "frequencyDetail" : [ 
-        "3"
-    ],
-    "dependsOn" : {
-        "ref" : {
-            "type" : "batch",
-            "uuid" : "fe374874-faf1-4a17-9c68-441fcbd535ce"
-        }
-    },
-    "uuid" : "3099c9c9-bc13-4150-82eb-aeb708e08344",
-    "version" : "1541162455",
-    "name" : "fact_transaction",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-11-02T12:40:59.000Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        }
-    ]
+	"startDate" : ISODate("2018-11-02T12:45:00Z"),
+	"endDate" : ISODate("2019-03-16T06:05:00Z"),
+	"nextRunTime" : ISODate("2019-02-02T12:45:00Z"),
+	"frequencyType" : "QUARTERLY",
+	"frequencyDetail" : [
+		"3"
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "batch",
+			"uuid" : "fe374874-faf1-4a17-9c68-441fcbd535ce"
+		}
+	},
+	"uuid" : "3099c9c9-bc13-4150-82eb-aeb708e08344",
+	"version" : "1541162455",
+	"name" : "fact_transaction",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.820Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displayName" : "fact_transaction"
 }

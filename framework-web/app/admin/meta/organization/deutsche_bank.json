@@ -1,43 +1,44 @@
 {
-  "uuid": "3386f49d-77b2-4743-bb5e-a011894ee89f",
-  "version": "1552236464",
-  "name": "Deutsche Bank",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Mar 10 12:47:44 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-        "version": "1464977196",
-        "name": "Administration"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "contact": [
-    {
-      "title": "Vice-President",
-      "name": "John Miller",
-      "phone": "848-111-9995",
-      "emailId": "jmiller@db.com"
-    }
-  ],
-  "phone": [],
-  "email": [],
-  "address": []
+	"uuid" : "3386f49d-77b2-4743-bb5e-a011894ee89f",
+	"version" : "1552236464",
+	"name" : "Deutsche Bank",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.397Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version" : "1464977196",
+				"name" : "Administration"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"contact" : [
+		{
+			"title" : "Vice-President",
+			"name" : "John Miller",
+			"phone" : "848-111-9995",
+			"emailId" : "jmiller@db.com"
+		}
+	],
+	"phone" : [ ],
+	"email" : [ ],
+	"address" : [ ],
+	"displayName" : "Deutsche Bank"
 }

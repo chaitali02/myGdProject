@@ -233,5 +233,6 @@
 		}
 	],
     "publicFlag" : "Y",
-  "prefix":"drs"
+  "prefix":"drs",
+	"displayName" : "dq_result_summary_dashboard"
 }

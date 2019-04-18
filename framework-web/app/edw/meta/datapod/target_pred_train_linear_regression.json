@@ -1,67 +1,68 @@
 {
-    "datasource" : {
-        "ref" : {
-            "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
-        }
-    },
-    "cache" : "Y",
-    "attributes" : [ 
-        {
-            "attributeId" : 0,
-            "name" : "label",
-            "type" : "integer",
-            "desc" : "label",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "label",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 1,
-            "name" : "features",
-            "type" : "string",
-            "desc" : "features",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "features",
-            "active" : "Y"
-        }, 
-        {
-            "attributeId" : 2,
-            "name" : "prediction",
-            "type" : "integer",
-            "desc" : "prediction",
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "prediction",
-            "active" : "Y"
-        }
-    ],
-    "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df0f",
-    "version" : "1535817666",
-    "name" : "target_pred_train_linear_regression",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-09-01T18:48:24.561Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-                "version" : "1464977196"
-            }
-        }
-    ],
-      "prefix" : "gtrd"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "label",
+			"type" : "integer",
+			"desc" : "label",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "label",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 1,
+			"name" : "features",
+			"type" : "string",
+			"desc" : "features",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "features",
+			"active" : "Y"
+		},
+		{
+			"attributeId" : 2,
+			"name" : "prediction",
+			"type" : "integer",
+			"desc" : "prediction",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "prediction",
+			"active" : "Y"
+		}
+	],
+	"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df0f",
+	"version" : "1535817666",
+	"name" : "target_pred_train_linear_regression",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"prefix" : "gtrd",
+	"displayName" : "target_pred_train_linear_regression"
 }

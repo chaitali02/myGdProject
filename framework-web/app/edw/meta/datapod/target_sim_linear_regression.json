@@ -1,100 +1,101 @@
 {
-  "id": "5b03cb682750521d2881ca83",
-  "uuid": "c6ee852a-412b-4bb5-8c8a-d66de53308ca",
-  "version": "1526975336",
-  "name": "target_sim_linear_regression",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "File"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "id",
-      "type": "integer",
-      "desc": "id",
-      "key": "",
-      "partition": "N",
-      "dispName": "id",
-      "active" : "Y",
-       "expr":   null
-    },
-    {
-      "attributeId": 1,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active" : "Y",
-       "expr":   null
-    },
-    {
-      "attributeId": 2,
-      "name": "interest_rate",
-      "type": "double",
-      "desc": "interest_rate",
-      "key": "",
-      "partition": "N",
-      "dispName": "interest_rate",
-      "active" : "Y",
-       "expr":   null
-    },
-    {
-      "attributeId": 3,
-      "name": "account_type_id",
-      "type": "double",
-      "desc": "account_type_id",
-      "key": "",
-      "partition": "N",
-      "dispName": "account_type_id",
-      "active" : "Y",
-       "expr":   null
-    },
-    {
-      "attributeId": 4,
-      "name": "account_status_id",
-      "type": "double",
-      "desc": "account_status_id",
-      "key": "",
-      "partition": "N",
-      "dispName": "account_status_id",
-      "active" : "Y",
-       "expr":   null
-    }
-  ],
-      "prefix" : "res"
+	"id" : "5b03cb682750521d2881ca83",
+	"uuid" : "c6ee852a-412b-4bb5-8c8a-d66de53308ca",
+	"version" : "1526975336",
+	"name" : "target_sim_linear_regression",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "File"
+		},
+		"value" : null
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "id",
+			"type" : "integer",
+			"desc" : "id",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "id",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "version",
+			"type" : "integer",
+			"desc" : "version",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "version",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "interest_rate",
+			"type" : "double",
+			"desc" : "interest_rate",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "interest_rate",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "account_type_id",
+			"type" : "double",
+			"desc" : "account_type_id",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "account_type_id",
+			"active" : "Y",
+			"expr" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "account_status_id",
+			"type" : "double",
+			"desc" : "account_status_id",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "account_status_id",
+			"active" : "Y",
+			"expr" : null
+		}
+	],
+	"prefix" : "res",
+	"displayName" : "target_sim_linear_regression"
 }

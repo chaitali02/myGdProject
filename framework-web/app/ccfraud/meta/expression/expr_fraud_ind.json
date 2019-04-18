@@ -1,97 +1,98 @@
 {
-  "uuid": "6a76b4b7-c802-4422-8239-cbc2cf9d2041",
-  "version": "1536870891",
-  "name": "expr_fraud_ind",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-        "version": "1521430822",
-        "name": "Fraud Analytics"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-      "version": null,
-      "name": "cc_transactions"
-    },
-    "value": null
-  },
-  "condition": null,
-  "match": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "Fraudulent",
-    "attrId": null,
-    "attrName": null,
-    "attrType": null
-  },
-  "noMatch": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "Non-Fraudulent",
-    "attrId": null,
-    "attrName": null,
-    "attrType": null
-  },
-  "expressionInfo": [
-    {
-      "logicalOperator": " ",
-      "operator": "=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-            "version": null,
-            "name": "cc_transactions"
-          },
-          "attributeId": 30,
-          "value": null,
-          "attributeName": "class",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "simple",
-            "uuid": null,
-            "version": null,
-            "name": null
-          },
-          "attributeId": null,
-          "value": "1",
-          "attributeName": null,
-          "attributeType": null
-        }
-      ]
-    }
-  ]
+	"uuid" : "6a76b4b7-c802-4422-8239-cbc2cf9d2041",
+	"version" : "1536870891",
+	"name" : "expr_fraud_ind",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.071Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822",
+				"name" : "Fraud Analytics"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+			"version" : null,
+			"name" : "cc_transactions"
+		},
+		"value" : null
+	},
+	"condition" : null,
+	"match" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "Fraudulent",
+		"attrId" : null,
+		"attrName" : null,
+		"attrType" : null
+	},
+	"noMatch" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "Non-Fraudulent",
+		"attrId" : null,
+		"attrName" : null,
+		"attrType" : null
+	},
+	"expressionInfo" : [
+		{
+			"logicalOperator" : " ",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+						"version" : null,
+						"name" : "cc_transactions"
+					},
+					"attributeId" : 30,
+					"value" : null,
+					"attributeName" : "class",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "simple",
+						"uuid" : null,
+						"version" : null,
+						"name" : null
+					},
+					"attributeId" : null,
+					"value" : "1",
+					"attributeName" : null,
+					"attributeType" : null
+				}
+			]
+		}
+	],
+	"displayName" : "expr_fraud_ind"
 }

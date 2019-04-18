@@ -557,5 +557,6 @@
 			],
 			"logicaloperand": null
 		}
-	]
+	],
+	"displayName" : "rel_fact_transaction"
 }

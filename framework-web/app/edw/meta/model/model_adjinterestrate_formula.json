@@ -1,0 +1,69 @@
+{
+	"uuid" : "4f746686-019f-47da-a744-b77acf1b2a99",
+	"version" : "1535749005",
+	"name" : "model_adjInterestRate_formula",
+	"desc" : "Adjusted Interest Rate formula model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.171Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"type" : "SPARK",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "formula",
+			"uuid" : "bf19dfce-cb2f-4f5d-9056-e5aba8d0db07",
+			"version" : null,
+			"name" : "formula_adjInterestRate"
+		},
+		"value" : null
+	},
+	"label" : "adjInterestRate",
+	"features" : [
+		{
+			"featureId" : "0",
+			"name" : "interestRate",
+			"type" : "double",
+			"desc" : "interestRate",
+			"minVal" : 1,
+			"maxVal" : 15,
+			"paramListInfo" : {
+				"ref" : {
+					"type" : "paramlist",
+					"uuid" : "57c548cb-e54d-419a-af1d-a95acab57210",
+					"version" : null,
+					"name" : null
+				},
+				"value" : null,
+				"paramId" : "0",
+				"paramName" : "interestRate",
+				"paramType" : null,
+				"paramValue" : null,
+				"attributeInfo" : null
+			}
+		}
+	],
+	"scriptName" : null,
+	"customFlag" : "N",
+	"displayName" : "model_adjInterestRate_formula"
+}

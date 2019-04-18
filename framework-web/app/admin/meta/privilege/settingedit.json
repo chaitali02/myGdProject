@@ -17,7 +17,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:17.683Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -29,5 +29,6 @@
 			}
 		}
 	],
-	"publicFlag" : "Y"
+	"publicFlag" : "Y",
+	"displayName" : "SettingEdit"
 }

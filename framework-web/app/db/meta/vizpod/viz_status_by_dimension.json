@@ -1,91 +1,92 @@
 {
-  "uuid": "b0a79a28-81fe-4725-9f85-3dcf35fb4111",
-  "version": "1554385052",
-  "name": "viz_status_by_dimension",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Apr 04 09:37:32 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
-      "version": null,
-      "name": "dq_result_summary_dashboard"
-    },
-    "value": null
-  },
-  "type": "bar-chart",
-  "limit": 0,
-  "keys": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
-        "version": null,
-        "name": "dq_result_summary_dashboard"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "dimension"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
-        "version": null,
-        "name": "dq_result_summary_dashboard"
-      },
-      "attributeId": 7,
-      "function": "SUM",
-      "value": null,
-      "attributeName": "check_pass_count"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
-        "version": null,
-        "name": "dq_result_summary_dashboard"
-      },
-      "attributeId": 8,
-      "function": "SUM",
-      "value": null,
-      "attributeName": "check_fail_count"
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null,
-  "colorPalette": null
+	"uuid" : "b0a79a28-81fe-4725-9f85-3dcf35fb4111",
+	"version" : "1554385052",
+	"name" : "viz_status_by_dimension",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:19.248Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fa366ab8-b775-4099-89ee-d48843f4cc90",
+			"version" : null,
+			"name" : "dq_result_summary_dashboard"
+		},
+		"value" : null
+	},
+	"type" : "bar-chart",
+	"limit" : 0,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fa366ab8-b775-4099-89ee-d48843f4cc90",
+				"version" : null,
+				"name" : "dq_result_summary_dashboard"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "dimension"
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [ ],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fa366ab8-b775-4099-89ee-d48843f4cc90",
+				"version" : null,
+				"name" : "dq_result_summary_dashboard"
+			},
+			"attributeId" : 7,
+			"function" : "SUM",
+			"value" : null,
+			"attributeName" : "check_pass_count"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "fa366ab8-b775-4099-89ee-d48843f4cc90",
+				"version" : null,
+				"name" : "dq_result_summary_dashboard"
+			},
+			"attributeId" : 8,
+			"function" : "SUM",
+			"value" : null,
+			"attributeName" : "check_fail_count"
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"colorPalette" : null,
+	"displayName" : "viz_status_by_dimension"
 }

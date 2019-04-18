@@ -1,218 +1,231 @@
 {
-  "uuid": "0baff233-54f8-4313-923b-c1c0e4542450",
-  "version": "1542669580",
-  "name": "ppl_customer_focus_rules",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 18:19:40 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "xPos": 130,
-  "yPos": 330,
-  "templateFlg": "N",
-  "templateInfo": null,
-  "stages": [
-    {
-      "stageId": "stage_0",
-      "dependsOn": [],
-      "tasks": [
-        {
-          "taskId": "fbc5ff46-0bd5-47d0-8619-0fc9fc3641af",
-          "dependsOn": [],
-          "name": "Customer Focus - Cross Border Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "c87db2f1-f1d7-4c4f-a877-c8179f920943",
-                    "version": null,
-                    "name": "Customer Focus - Cross Border Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 500,
-          "yPos": 70,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "f5f23b9c-bc4d-4090-b9a7-715c5d4d0ba8",
-          "dependsOn": [],
-          "name": "Customer Focus - High Risk Geo Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "7020f2ca-0f23-4c6a-81c9-b4afc3f39458",
-                    "version": null,
-                    "name": "Customer Focus - High Risk Geo Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 650,
-          "yPos": 150,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "7bcbeb4b-03e8-4cf6-94d9-fab71ad83614",
-          "dependsOn": [],
-          "name": "Customer Focus - Transaction Velocity",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "a6e36130-9f22-4b8c-b008-53f9a7cdb962",
-                    "version": null,
-                    "name": "Customer Focus - Transaction Velocity"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 750,
-          "yPos": 270,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "8eef10ae-78ed-41fb-88ac-ccbe293868e6",
-          "dependsOn": [],
-          "name": "Customer Focus - Money Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "75706aa5-0c82-4d4b-b9ff-d3959aa276ab",
-                    "version": null,
-                    "name": "Customer Focus - Money Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 750,
-          "yPos": 380,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "57d97e87-1b89-4892-b81f-1d63a3f71f5d",
-          "dependsOn": [],
-          "name": "Customer Focus - Round Amount Transfers",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "3dbdcb76-6266-4f96-80a0-30834df46e2f",
-                    "version": null,
-                    "name": "Customer Focus - Round Amount Transfers"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 480,
-          "yPos": 560,
-          "active": "Y",
-          "statusList": []
-        },
-        {
-          "taskId": "8894ecc3-a806-46e0-afcb-491efdbc129b",
-          "dependsOn": [],
-          "name": "Customer Focus - Check Sequencing",
-          "operators": [
-            {
-              "operatorId": null,
-              "dependsOn": [],
-              "operatorType": null,
-              "operatorInfo": [
-                {
-                  "ref": {
-                    "type": "rulegroup",
-                    "uuid": "02e47418-eb0a-423e-881b-f14317f14a7b",
-                    "version": null,
-                    "name": "Customer Focus - Check Sequencing"
-                  },
-                  "value": null
-                }
-              ],
-              "operatorParams": {}
-            }
-          ],
-          "xPos": 640,
-          "yPos": 480,
-          "active": "Y",
-          "statusList": []
-        }
-      ],
-      "name": "new stage",
-      "xPos": 310,
-      "yPos": 330,
-      "active": "Y",
-      "statusList": []
-    }
-  ],
-  "statusList": [],
-  "paramList": null
+	"uuid" : "0baff233-54f8-4313-923b-c1c0e4542450",
+	"version" : "1542669580",
+	"name" : "ppl_customer_focus_rules",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.983Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"xPos" : 130,
+	"yPos" : 330,
+	"templateFlg" : "N",
+	"templateInfo" : null,
+	"stages" : [
+		{
+			"stageId" : "stage_0",
+			"dependsOn" : [ ],
+			"tasks" : [
+				{
+					"taskId" : "fbc5ff46-0bd5-47d0-8619-0fc9fc3641af",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - Cross Border Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "c87db2f1-f1d7-4c4f-a877-c8179f920943",
+										"version" : null,
+										"name" : "Customer Focus - Cross Border Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 500,
+					"yPos" : 70,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "f5f23b9c-bc4d-4090-b9a7-715c5d4d0ba8",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - High Risk Geo Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "7020f2ca-0f23-4c6a-81c9-b4afc3f39458",
+										"version" : null,
+										"name" : "Customer Focus - High Risk Geo Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 650,
+					"yPos" : 150,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "7bcbeb4b-03e8-4cf6-94d9-fab71ad83614",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - Transaction Velocity",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "a6e36130-9f22-4b8c-b008-53f9a7cdb962",
+										"version" : null,
+										"name" : "Customer Focus - Transaction Velocity"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 750,
+					"yPos" : 270,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "8eef10ae-78ed-41fb-88ac-ccbe293868e6",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - Money Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "75706aa5-0c82-4d4b-b9ff-d3959aa276ab",
+										"version" : null,
+										"name" : "Customer Focus - Money Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 750,
+					"yPos" : 380,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "57d97e87-1b89-4892-b81f-1d63a3f71f5d",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - Round Amount Transfers",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "3dbdcb76-6266-4f96-80a0-30834df46e2f",
+										"version" : null,
+										"name" : "Customer Focus - Round Amount Transfers"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 480,
+					"yPos" : 560,
+					"active" : "Y",
+					"statusList" : [ ]
+				},
+				{
+					"taskId" : "8894ecc3-a806-46e0-afcb-491efdbc129b",
+					"dependsOn" : [ ],
+					"name" : "Customer Focus - Check Sequencing",
+					"operators" : [
+						{
+							"operatorId" : null,
+							"dependsOn" : [ ],
+							"operatorType" : null,
+							"operatorInfo" : [
+								{
+									"ref" : {
+										"type" : "rulegroup",
+										"uuid" : "02e47418-eb0a-423e-881b-f14317f14a7b",
+										"version" : null,
+										"name" : "Customer Focus - Check Sequencing"
+									},
+									"value" : null
+								}
+							],
+							"operatorParams" : {
+								
+							}
+						}
+					],
+					"xPos" : 640,
+					"yPos" : 480,
+					"active" : "Y",
+					"statusList" : [ ]
+				}
+			],
+			"name" : "new stage",
+			"xPos" : 310,
+			"yPos" : 330,
+			"active" : "Y",
+			"statusList" : [ ]
+		}
+	],
+	"statusList" : [ ],
+	"paramList" : null,
+	"displayName" : "ppl_customer_focus_rules"
 }

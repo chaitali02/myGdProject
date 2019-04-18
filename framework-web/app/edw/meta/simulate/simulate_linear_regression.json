@@ -1,105 +1,106 @@
 {
-  "id": "5afbd20d2750524ccbe5bfc3",
-  "uuid": "c1b110a1-2f16-46d6-9718-899cf92a03ad",
-  "version": "1526452749",
-  "name": "simulate_linear_regression",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed May 16 00:09:09 IST 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "model",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-      "version": null,
-      "name": "linear_regression_test"
-    },
-    "value": null
-  },
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "c6ee852a-412b-4bb5-8c8a-d66de53308ca",
-      "version": null,
-      "name": "target_sim_linear_regression"
-    },
-    "value": null
-  },
-  "numIterations": 1000,
-  "featureInfo": [
-    {
-      "ref": {
-        "type": "model",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-        "version": null,
-        "name": "linear_regression_test"
-      },
-      "value": null,
-      "featureId": "0",
-      "featureName": "interest_rate"
-    },
-    {
-      "ref": {
-        "type": "model",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-        "version": null,
-        "name": "linear_regression_test"
-      },
-      "value": null,
-      "featureId": "1",
-      "featureName": "account_type_id"
-    },
-    {
-      "ref": {
-        "type": "model",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
-        "version": null,
-        "name": "linear_regression_test"
-      },
-      "value": null,
-      "featureId": "2",
-      "featureName": "account_status_id"
-    }
-  ],
-  "distributionTypeInfo": {
-    "ref": {
-      "type": "distribution",
-      "uuid": "c5bfcdab-6435-4848-9214-6a878a865319",
-      "version": null,
-      "name": "uniform_real_distribution"
-    },
-    "value": null
-  },
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
-      "version": null,
-      "name": "paramlist_simulate"
-    },
-    "value": null
-  },
-  "type": "DEFAULT"
+	"id" : "5afbd20d2750524ccbe5bfc3",
+	"uuid" : "c1b110a1-2f16-46d6-9718-899cf92a03ad",
+	"version" : "1526452749",
+	"name" : "simulate_linear_regression",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.959Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+			"version" : null,
+			"name" : "linear_regression_test"
+		},
+		"value" : null
+	},
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "c6ee852a-412b-4bb5-8c8a-d66de53308ca",
+			"version" : null,
+			"name" : "target_sim_linear_regression"
+		},
+		"value" : null
+	},
+	"numIterations" : 1000,
+	"featureInfo" : [
+		{
+			"ref" : {
+				"type" : "model",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+				"version" : null,
+				"name" : "linear_regression_test"
+			},
+			"value" : null,
+			"featureId" : "0",
+			"featureName" : "interest_rate"
+		},
+		{
+			"ref" : {
+				"type" : "model",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+				"version" : null,
+				"name" : "linear_regression_test"
+			},
+			"value" : null,
+			"featureId" : "1",
+			"featureName" : "account_type_id"
+		},
+		{
+			"ref" : {
+				"type" : "model",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73456",
+				"version" : null,
+				"name" : "linear_regression_test"
+			},
+			"value" : null,
+			"featureId" : "2",
+			"featureName" : "account_status_id"
+		}
+	],
+	"distributionTypeInfo" : {
+		"ref" : {
+			"type" : "distribution",
+			"uuid" : "c5bfcdab-6435-4848-9214-6a878a865319",
+			"version" : null,
+			"name" : "uniform_real_distribution"
+		},
+		"value" : null
+	},
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "a57b072b-9829-4ddc-9c22-3c6550d8e6c4",
+			"version" : null,
+			"name" : "paramlist_simulate"
+		},
+		"value" : null
+	},
+	"type" : "DEFAULT",
+	"displayName" : "simulate_linear_regression"
 }

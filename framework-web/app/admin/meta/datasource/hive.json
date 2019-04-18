@@ -30,5 +30,6 @@
 	"username" : "inferyx",
 	"password" : "",
 	"path" : "/user/hive/warehouse/framework.db",
-	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
+	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict",
+	"displayName" : "hive"
 }

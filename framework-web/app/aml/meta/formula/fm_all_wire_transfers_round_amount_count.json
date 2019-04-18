@@ -135,7 +135,7 @@
 			"name" : "ypalrecha"
 		}
 	},
-	"createdOn" : ISODate("2018-11-16T22:51:28Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:16.216Z"),
 	"tags" : [ ],
 	"active" : "Y",
 	"locked" : "N",
@@ -149,5 +149,6 @@
 				"name" : "Anti Money Laundering"
 			}
 		}
-	]
+	],
+	"displayName" : "fm_all_wire_transfers_round_amount_count"
 }

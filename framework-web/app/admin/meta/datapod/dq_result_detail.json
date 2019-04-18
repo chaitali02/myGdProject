@@ -530,5 +530,7 @@
 			"Precision": 0
 		}
 	],
-	"prefix": "eut"
+	"prefix": "eut",
+ "displayName" : "dq_result_detail"
 }
+

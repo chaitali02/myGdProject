@@ -1,60 +1,61 @@
 {
-    "type" : "CLASSIFICATION",
-    "libraryType" : "SPARKML",
-    "trainClass" : "org.apache.spark.ml.classification.GBTClassifier",
-    "modelClass" : "org.apache.spark.ml.classification.GBTClassificationModel",
-    "summaryMethods" : [
-        "featureImportances", 
-        "getMaxIter", 
-        "getLossType", 
-        "getCacheNodeIds", 
-        "getCheckpointInterval", 
-        "getImpurity", 
-        "getMaxBins", 
-        "getMaxDepth", 
-        "getMaxMemoryInMB", 
-        "getMinInstancesPerNode", 
-        "getSeed", 
-        "getNumTrees"
-    ],
-    "labelRequired" : "Y",
-    "savePmml" : "Y",
-    "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "880a284d-6d61-4ed8-8f37-b9c284b3e0e5"
-        }
-    },
-    "uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035",
-    "version" : "1540549028",
-    "name" : "Gradient Boosted Trees",
-    "desc" : "Gradient Boosted Trees classification",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-26T10:17:08.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-	]
+	"type" : "CLASSIFICATION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.classification.GBTClassifier",
+	"modelClass" : "org.apache.spark.ml.classification.GBTClassificationModel",
+	"summaryMethods" : [
+		"featureImportances",
+		"getMaxIter",
+		"getLossType",
+		"getCacheNodeIds",
+		"getCheckpointInterval",
+		"getImpurity",
+		"getMaxBins",
+		"getMaxDepth",
+		"getMaxMemoryInMB",
+		"getMinInstancesPerNode",
+		"getSeed",
+		"getNumTrees"
+	],
+	"labelRequired" : "Y",
+	"savePmml" : "Y",
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "880a284d-6d61-4ed8-8f37-b9c284b3e0e5"
+		}
+	},
+	"uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035",
+	"version" : "1540549028",
+	"name" : "Gradient Boosted Trees",
+	"desc" : "Gradient Boosted Trees classification",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.633Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displayName" : "Gradient Boosted Trees"
 }

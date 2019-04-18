@@ -1,57 +1,58 @@
 {
-  "uuid": "7b894ae4-e9c4-46f1-ad8e-431beee90032",
-  "version": "1530949002",
-  "name": "paramlist_aft_survival_regression_wh",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
-  },
-  "createdOn": "Sat Jul 07 13:06:42 IST 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  	"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "aggregationDepth",
-      "paramType": "list",
-      "paramDispName" : "Aggregation Depth",
-      "paramDesc" : "",
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "2, 4, 6"
-      }
-    },
-    {
-      "paramId": "1",
-      "paramName": "numFolds",
-      "paramType": "integer",
-      "paramDispName" : "Num Folds",
-      "paramDesc" : "",
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "3"
-      }
-    }
-  ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+	"uuid" : "7b894ae4-e9c4-46f1-ad8e-431beee90032",
+	"version" : "1530949002",
+	"name" : "paramlist_aft_survival_regression_wh",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "aggregationDepth",
+			"paramType" : "list",
+			"paramDispName" : "Aggregation Depth",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "2, 4, 6"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "numFolds",
+			"paramType" : "integer",
+			"paramDispName" : "Num Folds",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "3"
+			}
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"displayName" : "paramlist_aft_survival_regression_wh"
 }

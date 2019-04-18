@@ -1,96 +1,97 @@
 {
-  "uuid": "53b44d5b-6571-4c46-af08-549b1445d056",
-  "version": "1531146610",
-  "name": "paramlist_lda_wh",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
-  },
-  "createdOn": "Mon Jul 09 20:00:10 IST 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  	"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "k",
-      "paramType": "list",
-      "paramDispName" : "K",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "10, 15, 20"
-      }
-    },
-    {
-      "paramId": "1",
-      "paramName": "learningDecay",
-      "paramType": "list",
-      "paramDispName" : "Learning Decay",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "0.5, 0.8, 1.0"
-      }
-    },
-    {
-      "paramId": "2",
-      "paramName": "Learning Offset",
-      "paramType": "list",
-      "paramDispName" : "Tol",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "1024.0, 1500.0, 950.0"
-      }
-    },
-    {
-      "paramId": "3",
-      "paramName": "seed",
-      "paramType": "list",
-      "paramDispName" : "Seed",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "1435876747, 1000, 100000"
-      }
-    },
-    {
-      "paramId": "4",
-      "paramName": "numFolds",
-      "paramType": "integer",
-      "paramDispName" : "Num Folds",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "3"
-      }
-    }
-  ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+	"uuid" : "53b44d5b-6571-4c46-af08-549b1445d056",
+	"version" : "1531146610",
+	"name" : "paramlist_lda_wh",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "k",
+			"paramType" : "list",
+			"paramDispName" : "K",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "10, 15, 20"
+			}
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "learningDecay",
+			"paramType" : "list",
+			"paramDispName" : "Learning Decay",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "0.5, 0.8, 1.0"
+			}
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "Learning Offset",
+			"paramType" : "list",
+			"paramDispName" : "Tol",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1024.0, 1500.0, 950.0"
+			}
+		},
+		{
+			"paramId" : "3",
+			"paramName" : "seed",
+			"paramType" : "list",
+			"paramDispName" : "Seed",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "1435876747, 1000, 100000"
+			}
+		},
+		{
+			"paramId" : "4",
+			"paramName" : "numFolds",
+			"paramType" : "integer",
+			"paramDispName" : "Num Folds",
+			"paramDesc" : "",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "3"
+			}
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"displayName" : "paramlist_lda_wh"
 }

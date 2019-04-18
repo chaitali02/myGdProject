@@ -1,82 +1,87 @@
 {
-  "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc004",
-  "version": "1553032671",
-  "name": "dq_equity_orders_rule5",
-  "desc": "Time in Force cannot be blank and must be one of the following - Day, GTC, GTD",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:57:51 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": null,
-  "attribute": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null,
-    "attrId": "47",
-    "attrName": "time_in_force",
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null
-  },
-  "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
-  "valueCheck": [
-    "GTD",
-    "GTC",
-    "DAY"
-  ],
-  "rangeCheck": {},
-  "dataTypeCheck": "",
-  "dateFormatCheck": null,
-  "customFormatCheck": null,
-  "lengthCheck": {},
-  "refIntegrityCheck": null,
-  "filterInfo": null,
-  "userInfo": null,
-  "thresholdInfo": {
-    "low": "25",
-    "medium": "50",
-    "high": "75",
-    "type": "PERCENTAGE"
-  },
-  "domainCheck": null,
-  "blankSpaceCheck": null,
-  "expressionCheck": null,
-  "caseCheck": null,
-  "abortCondition": null
+	"uuid" : "a3945b0a-aa86-4169-9128-a0fd580dc004",
+	"version" : "1553032671",
+	"name" : "dq_equity_orders_rule5",
+	"desc" : "Time in Force cannot be blank and must be one of the following - Day, GTC, GTD",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.720Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : null,
+	"attribute" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : null,
+			"name" : "equity_orders"
+		},
+		"value" : null,
+		"attrId" : "47",
+		"attrName" : "time_in_force",
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "80683e69-1f59-45ee-adc0-3f796f85071b",
+			"version" : null,
+			"name" : "equity_orders"
+		},
+		"value" : null
+	},
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [
+		"GTD",
+		"GTC",
+		"DAY"
+	],
+	"rangeCheck" : {
+		
+	},
+	"dataTypeCheck" : "",
+	"dateFormatCheck" : null,
+	"customFormatCheck" : null,
+	"lengthCheck" : {
+		
+	},
+	"refIntegrityCheck" : null,
+	"filterInfo" : null,
+	"userInfo" : null,
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	},
+	"domainCheck" : null,
+	"blankSpaceCheck" : null,
+	"expressionCheck" : null,
+	"caseCheck" : null,
+	"abortCondition" : null,
+	"displayName" : "dq_equity_orders_rule5"
 }

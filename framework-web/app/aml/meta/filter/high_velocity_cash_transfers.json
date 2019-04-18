@@ -1,114 +1,114 @@
 {
-
-    "dependsOn" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
-        }
-    },
-    "filterInfo" : [ 
-        {
-            "logicalOperator" : "",
-            "operator" : ">=",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "formula",
-                        "uuid" : "56334478-2fdb-4363-bbdd-a8661151577b"
-                    }
-                }, 
-                {
-                    "ref" : {
-                        "type" : "paramlist",
-                        "uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41"
-                    },
-                    "attributeId" : 0
-                }
-            ]
-        }, 
-        {
-            "logicalOperator" : "AND",
-            "operator" : ">=",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
-                    },
-                    "attributeId" : 5
-                }, 
-                {
-                    "ref" : {
-                        "type" : "formula",
-                        "uuid" : "87d4def4-0d88-4e3a-8771-0e2c836d65e2"
-                    }
-                }
-            ]
-        }, 
-        {
-            "logicalOperator" : "AND",
-            "operator" : "<",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
-                    },
-                    "attributeId" : 5
-                }, 
-                {
-                    "ref" : {
-                        "type" : "paramlist",
-                        "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
-                    },
-                    "attributeId" : 0
-                }
-            ]
-        }, 
-        {
-            "logicalOperator" : "AND",
-            "operator" : "=",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
-                    },
-                    "attributeId" : 4
-                }, 
-                {
-                    "ref" : {
-                        "type" : "simple"
-                    },
-                    "value" : "CA",
-                    "attributeType" : "string"
-                }
-            ]
-        }
-    ],
-    "uuid" : "8b99e3f1-abvp-43d1-981b-4b08c878b12c",
-    "version" : "1540374309",
-    "name" : "High Velocity Cash Transfers",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-24T09:40:36.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+		}
+	},
+	"filterInfo" : [
+		{
+			"logicalOperator" : "",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "56334478-2fdb-4363-bbdd-a8661151577b"
+					}
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41"
+					},
+					"attributeId" : 0
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 5
+				},
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "87d4def4-0d88-4e3a-8771-0e2c836d65e2"
+					}
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : "<",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 5
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
+					},
+					"attributeId" : 0
+				}
+			]
+		},
+		{
+			"logicalOperator" : "AND",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad"
+					},
+					"attributeId" : 4
+				},
+				{
+					"ref" : {
+						"type" : "simple"
+					},
+					"value" : "CA",
+					"attributeType" : "string"
+				}
+			]
+		}
+	],
+	"uuid" : "8b99e3f1-abvp-43d1-981b-4b08c878b12c",
+	"version" : "1540374309",
+	"name" : "High Velocity Cash Transfers",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.144Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displayName" : "High Velocity Cash Transfers"
 }

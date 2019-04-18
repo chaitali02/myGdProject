@@ -35,7 +35,7 @@
 			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-03-14T14:58:47.746Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.720Z"),
 	"tags" : [
 		"DEV",
 		"1.0.1",
@@ -57,5 +57,6 @@
 		"medium" : "50",
 		"high" : "75",
 		"type" : "PERCENTAGE"
-	}
+	},
+	"displayName" : "dqr_fact_customer_summary_monthy_min_amount"
 }

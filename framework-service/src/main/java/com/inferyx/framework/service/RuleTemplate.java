@@ -36,11 +36,8 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.BaseRuleGroupExec;
-import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -330,7 +327,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	public Status restart (String baseRuleExecUUID, String baseRuleExecVersion, MetaType ruleExecType) throws Exception {
 		Status operatorLeastSigStatus = null;
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(baseRuleExecUUID, baseRuleExecVersion, ruleExecType.toString(), "N");
-		operatorLeastSigStatus = helper.getLatestStatus(baseRuleExec.getStatusList());
+		operatorLeastSigStatus = Helper.getLatestStatus(baseRuleExec.getStatusList());
 		if(Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
 				||Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 			operatorLeastSigStatus = new Status(Status.Stage.READY, new Date());

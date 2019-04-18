@@ -1,177 +1,178 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "4",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "4",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "5",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "5",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "6",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "6",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "7",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "7",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "8",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "8",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "9",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "9",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "10",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "10",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "11",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "11",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "12",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "12",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "13",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "13",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "14",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "14",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "15",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "15",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "16",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "16",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "17",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "17",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "18",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "18",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		},
 		{
-			"attrId": "19",
-			"ref": {
-				"type": "datapod",
-				"uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
+			"attrId" : "19",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
 			}
 		}
 	],
-	"uuid": "cc61a658-528f-4ebe-9c34-826c41ef72aa",
-	"version": "1491912489",
-	"name": "profile_dim_account",
-	"desc": "Data profiling to see statistical check results on dw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "cc61a658-528f-4ebe-9c34-826c41ef72aa",
+	"version" : "1491912489",
+	"name" : "profile_dim_account",
+	"desc" : "Data profiling to see statistical check results on dw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_dim_account"
 }

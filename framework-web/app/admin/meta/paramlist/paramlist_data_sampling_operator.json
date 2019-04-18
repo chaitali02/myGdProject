@@ -1,68 +1,69 @@
 {
-    "params" : [ 
-        {
-            "paramId" : "0",
-            "paramName" : "sourceDatapod",
-            "paramType" : "datapod",
-            "paramDispName" : "sourceDatapod"
-        }, 
-        {
-            "paramId" : "1",
-            "paramName" : "sampleSize",
-            "paramType" : "integer",
-            "paramDispName" : "sampleSize",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "100"
-            }
-        }, 
-        {
-            "paramId" : "2",
-            "paramName" : "samplePercent",
-            "paramType" : "double",
-            "paramDispName" : "samplePercent", 
-	    "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "10"
-            }
-        }, 
-        {
-            "paramId" : "5",
-            "paramName" : "saveLocation",
-            "paramType" : "datapod",
-            "paramDispName" : "saveLocation"
-        }
-    ],
-    "paramListType" : "model",
-    "templateFlg" : "Y",
-    "uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d42b",
-    "version" : "1549013239",
-    "name" : "paramlist_data_sampling_operator",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-02-09T08:42:50.042Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153"
-            }
-        }
-    ]
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "sourceDatapod",
+			"paramType" : "datapod",
+			"paramDispName" : "sourceDatapod"
+		},
+		{
+			"paramId" : "1",
+			"paramName" : "sampleSize",
+			"paramType" : "integer",
+			"paramDispName" : "sampleSize",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "100"
+			}
+		},
+		{
+			"paramId" : "2",
+			"paramName" : "samplePercent",
+			"paramType" : "double",
+			"paramDispName" : "samplePercent",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "10"
+			}
+		},
+		{
+			"paramId" : "5",
+			"paramName" : "saveLocation",
+			"paramType" : "datapod",
+			"paramDispName" : "saveLocation"
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d42b",
+	"version" : "1549013239",
+	"name" : "paramlist_data_sampling_operator",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153"
+			}
+		}
+	],
+	"displayName" : "paramlist_data_sampling_operator"
 }

@@ -1,77 +1,78 @@
 {
-  "uuid": "0e0cf3fa-2870-4c10-8890-c66eefe054c3",
-  "version": "1536442424",
-  "name": "rc_transaction_total_amount",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Sep 08 17:33:44 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "sourceAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-      "version": null,
-      "name": "transaction"
-    },
-    "value": null,
-    "attrId": "7",
-    "attrName": "amount_usd",
-    "attrType": null
-  },
-  "sourceFunc": {
-    "ref": {
-      "type": "function",
-      "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
-      "version": null,
-      "name": "sum(col)"
-    },
-    "value": null
-  },
-  "targetAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-      "version": null,
-      "name": "fact_transaction"
-    },
-    "value": null,
-    "attrId": "12",
-    "attrName": "amount_usd",
-    "attrType": null
-  },
-  "targetFunc": {
-    "ref": {
-      "type": "function",
-      "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
-      "version": null,
-      "name": "sum(col)"
-    },
-    "value": null
-  },
-  "sourceFilter": null,
-  "targetFilter": null,
-  "sourceDistinct": "N",
-  "targetDistinct": "N"
+	"uuid" : "0e0cf3fa-2870-4c10-8890-c66eefe054c3",
+	"version" : "1536442424",
+	"name" : "rc_transaction_total_amount",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.095Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"sourceAttr" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "49fc0656-109d-46a2-a826-c09e92895035",
+			"version" : null,
+			"name" : "transaction"
+		},
+		"value" : null,
+		"attrId" : "7",
+		"attrName" : "amount_usd",
+		"attrType" : null
+	},
+	"sourceFunc" : {
+		"ref" : {
+			"type" : "function",
+			"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671",
+			"version" : null,
+			"name" : "sum(col)"
+		},
+		"value" : null
+	},
+	"targetAttr" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+			"version" : null,
+			"name" : "fact_transaction"
+		},
+		"value" : null,
+		"attrId" : "12",
+		"attrName" : "amount_usd",
+		"attrType" : null
+	},
+	"targetFunc" : {
+		"ref" : {
+			"type" : "function",
+			"uuid" : "9e3e314c-02fb-11e7-93ae-92361f002671",
+			"version" : null,
+			"name" : "sum(col)"
+		},
+		"value" : null
+	},
+	"sourceFilter" : null,
+	"targetFilter" : null,
+	"sourceDistinct" : "N",
+	"targetDistinct" : "N",
+	"displayName" : "rc_transaction_total_amount"
 }

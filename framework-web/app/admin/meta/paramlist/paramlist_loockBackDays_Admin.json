@@ -40,5 +40,6 @@
             }
         }
     ],
-    "publicFlag" : "Y"
+    "publicFlag" : "Y",
+ "displayName" : "paramlist_Administration"
 }

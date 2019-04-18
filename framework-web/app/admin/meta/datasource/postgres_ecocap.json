@@ -30,5 +30,6 @@
 	"username" : "inferyx",
 	"password" : "inferyx",
 	"path" : "/user/hive/warehouse/ecocap/",
-	"sessionParameters" : ""
+	"sessionParameters" : "",
+	"displayName" : "postgres_ecocap"
 }

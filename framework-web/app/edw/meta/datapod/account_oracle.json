@@ -1,299 +1,300 @@
 {
-  "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4",
-  "version": "1538728909",
-  "name": "account_oracle",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
-  },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
-  "tags": null,
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-      }
-    }
-  ],
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
-    }
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "name": "account_id",
-      "type": "integer",
-      "desc": "account_id",
-      "expression": null,
-      "key": "0",
-      "partition": "N",
-      "dispName": "account_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 1,
-      "name": "account_type_id",
-      "type": "integer",
-      "desc": "account_type_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "account_type_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 2,
-      "name": "account_status_id",
-      "type": "integer",
-      "desc": "account_status_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "account_status_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 3,
-      "name": "product_type_id",
-      "type": "integer",
-      "desc": "product_type_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "product_type_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 4,
-      "name": "customer_id",
-      "type": "integer",
-      "desc": "customer_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "customer_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 5,
-      "name": "pin_number",
-      "type": "integer",
-      "desc": "pin_number",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "pin_number",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 6,
-      "name": "nationality",
-      "type": "string",
-      "desc": "nationality",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "nationality",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 7,
-      "name": "primary_iden_doc",
-      "type": "string",
-      "desc": "primary_iden_doc",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "primary_iden_doc",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 8,
-      "name": "primary_iden_doc_id",
-      "type": "string",
-      "desc": "primary_iden_doc_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "primary_iden_doc_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 9,
-      "name": "secondary_iden_doc",
-      "type": "string",
-      "desc": "secondary_iden_doc",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "secondary_iden_doc",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 10,
-      "name": "secondary_iden_doc_id",
-      "type": "string",
-      "desc": "secondary_iden_doc_id",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "secondary_iden_doc_id",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 11,
-      "name": "account_open_date",
-      "type": "string",
-      "desc": "account_open_date",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "account_open_date",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 12,
-      "name": "account_number",
-      "type": "string",
-      "desc": "account_number",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "account_number",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 13,
-      "name": "opening_balance",
-      "type": "integer",
-      "desc": "opening_balance",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "opening_balance",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 14,
-      "name": "current_balance",
-      "type": "integer",
-      "desc": "current_balance",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "current_balance",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 15,
-      "name": "overdue_balance",
-      "type": "integer",
-      "desc": "overdue_balance",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "overdue_balance",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 16,
-      "name": "overdue_date",
-      "type": "string",
-      "desc": "overdue_date",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "overdue_date",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 17,
-      "name": "currency_code",
-      "type": "string",
-      "desc": "currency_code",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "currency_code",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 18,
-      "name": "interest_type",
-      "type": "string",
-      "desc": "interest_type",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "interest_type",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 19,
-      "name": "interest_rate",
-      "type": "double",
-      "desc": "interest_rate",
-      "expression": null,
-      "key": null,
-      "partition": "N",
-      "dispName": "interest_rate",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 20,
-      "name": "load_date",
-      "type": "string",
-      "desc": "load_date",
-      "expression": null,
-      "key": null,
-      "partition": "Y",
-      "dispName": "load_date",
-      "active" : "Y",
-        "length": null
-    },
-    {
-      "attributeId": 21,
-      "name": "load_id",
-      "type": "integer",
-      "desc": "load_id",
-      "expression": null,
-      "key": null,
-      "partition": "Y",
-      "dispName": "load_id",
-      "active" : "Y",
-        "length": null
-    }
-  ],
-    "prefix" : "cut"
+	"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4",
+	"version" : "1538728909",
+	"name" : "account_oracle",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
+		}
+	},
+	"cache" : "Y",
+	"attributes" : [
+		{
+			"attributeId" : 0,
+			"name" : "account_id",
+			"type" : "integer",
+			"desc" : "account_id",
+			"expression" : null,
+			"key" : "0",
+			"partition" : "N",
+			"dispName" : "account_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 1,
+			"name" : "account_type_id",
+			"type" : "integer",
+			"desc" : "account_type_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "account_type_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 2,
+			"name" : "account_status_id",
+			"type" : "integer",
+			"desc" : "account_status_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "account_status_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 3,
+			"name" : "product_type_id",
+			"type" : "integer",
+			"desc" : "product_type_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "product_type_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 4,
+			"name" : "customer_id",
+			"type" : "integer",
+			"desc" : "customer_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "customer_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 5,
+			"name" : "pin_number",
+			"type" : "integer",
+			"desc" : "pin_number",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "pin_number",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 6,
+			"name" : "nationality",
+			"type" : "string",
+			"desc" : "nationality",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "nationality",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 7,
+			"name" : "primary_iden_doc",
+			"type" : "string",
+			"desc" : "primary_iden_doc",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "primary_iden_doc",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 8,
+			"name" : "primary_iden_doc_id",
+			"type" : "string",
+			"desc" : "primary_iden_doc_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "primary_iden_doc_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 9,
+			"name" : "secondary_iden_doc",
+			"type" : "string",
+			"desc" : "secondary_iden_doc",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "secondary_iden_doc",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 10,
+			"name" : "secondary_iden_doc_id",
+			"type" : "string",
+			"desc" : "secondary_iden_doc_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "secondary_iden_doc_id",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 11,
+			"name" : "account_open_date",
+			"type" : "string",
+			"desc" : "account_open_date",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "account_open_date",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 12,
+			"name" : "account_number",
+			"type" : "string",
+			"desc" : "account_number",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "account_number",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 13,
+			"name" : "opening_balance",
+			"type" : "integer",
+			"desc" : "opening_balance",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "opening_balance",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 14,
+			"name" : "current_balance",
+			"type" : "integer",
+			"desc" : "current_balance",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "current_balance",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 15,
+			"name" : "overdue_balance",
+			"type" : "integer",
+			"desc" : "overdue_balance",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "overdue_balance",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 16,
+			"name" : "overdue_date",
+			"type" : "string",
+			"desc" : "overdue_date",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "overdue_date",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 17,
+			"name" : "currency_code",
+			"type" : "string",
+			"desc" : "currency_code",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "currency_code",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 18,
+			"name" : "interest_type",
+			"type" : "string",
+			"desc" : "interest_type",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "interest_type",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 19,
+			"name" : "interest_rate",
+			"type" : "double",
+			"desc" : "interest_rate",
+			"expression" : null,
+			"key" : null,
+			"partition" : "N",
+			"dispName" : "interest_rate",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 20,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"expression" : null,
+			"key" : null,
+			"partition" : "Y",
+			"dispName" : "load_date",
+			"active" : "Y",
+			"length" : null
+		},
+		{
+			"attributeId" : 21,
+			"name" : "load_id",
+			"type" : "integer",
+			"desc" : "load_id",
+			"expression" : null,
+			"key" : null,
+			"partition" : "Y",
+			"dispName" : "load_id",
+			"active" : "Y",
+			"length" : null
+		}
+	],
+	"prefix" : "cut",
+	"displayName" : "account_oracle"
 }

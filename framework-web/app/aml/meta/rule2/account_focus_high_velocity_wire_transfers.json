@@ -1,175 +1,176 @@
 {
-  "id": "5ca340533749ab166aeb2beb",
-  "uuid": "fb18c845-f004-4b01-a0b7-fc99894ae9a4",
-  "version": "1554202707",
-  "name": "Account Focus - High Velocity Wire Transfers",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Apr 02 16:28:27 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "abortCondition": null,
-  "sourceInfo": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-      "version": null,
-      "name": "account_summary_daily"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "display_seq": "0",
-      "logicalOperator": "",
-      "operator": ">=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-            "version": null,
-            "name": "account_summary_daily"
-          },
-          "attributeId": 2,
-          "value": null,
-          "attributeName": "trans_start_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "formula",
-            "uuid": "87d4def4-0d88-4e3a-8771-0e2c836d65e2",
-            "version": null,
-            "name": "fm_lookback_date_high_trans_velocity"
-          },
-          "attributeId": null,
-          "value": null,
-          "attributeName": null,
-          "attributeType": null
-        }
-      ]
-    },
-    {
-      "display_seq": "1",
-      "logicalOperator": "AND",
-      "operator": "<=",
-      "operand": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-            "version": null,
-            "name": "account_summary_daily"
-          },
-          "attributeId": 2,
-          "value": null,
-          "attributeName": "trans_start_date",
-          "attributeType": null
-        },
-        {
-          "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-            "version": null,
-            "name": "paramlist_aml_app"
-          },
-          "attributeId": 0,
-          "value": null,
-          "attributeName": "business_date",
-          "attributeType": null
-        }
-      ]
-    }
-  ],
-  "entityType": "Account",
-  "scoringMethod": null,
-  "entityId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-      "version": null,
-      "name": "account_summary_daily"
-    },
-    "value": null,
-    "attrId": "1",
-    "attrName": "account_id",
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "criteriaInfo": [
-    {
-      "criteriaId": "0",
-      "criteriaName": "Transaction Volume",
-      "activeFlag": "Y",
-      "criteriaFilter": [
-        {
-          "display_seq": "0",
-          "logicalOperator": "",
-          "operator": ">=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
-                "version": null,
-                "name": "account_summary_daily"
-              },
-              "attributeId": 55,
-              "value": null,
-              "attributeName": "all_wire_trans_velocity_ratio",
-              "attributeType": null
-            },
-            {
-              "ref": {
-                "type": "paramlist",
-                "uuid": "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
-                "version": null,
-                "name": "paramlist_high_trans_velocity"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "trans_velocity",
-              "attributeType": null
-            }
-          ]
-        }
-      ],
-      "score": 1,
-      "filter_critria": null,
-      "criteriaWeight": 1
-    }
-  ],
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
-      "version": null,
-      "name": "paramlist_high_trans_velocity"
-    },
-    "value": null
-  }
+	"id" : "5ca340533749ab166aeb2beb",
+	"uuid" : "fb18c845-f004-4b01-a0b7-fc99894ae9a4",
+	"version" : "1554202707",
+	"name" : "Account Focus - High Velocity Wire Transfers",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.525Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"abortCondition" : null,
+	"sourceInfo" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+			"version" : null,
+			"name" : "account_summary_daily"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"display_seq" : "0",
+			"logicalOperator" : "",
+			"operator" : ">=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+						"version" : null,
+						"name" : "account_summary_daily"
+					},
+					"attributeId" : 2,
+					"value" : null,
+					"attributeName" : "trans_start_date",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "formula",
+						"uuid" : "87d4def4-0d88-4e3a-8771-0e2c836d65e2",
+						"version" : null,
+						"name" : "fm_lookback_date_high_trans_velocity"
+					},
+					"attributeId" : null,
+					"value" : null,
+					"attributeName" : null,
+					"attributeType" : null
+				}
+			]
+		},
+		{
+			"display_seq" : "1",
+			"logicalOperator" : "AND",
+			"operator" : "<=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+						"version" : null,
+						"name" : "account_summary_daily"
+					},
+					"attributeId" : 2,
+					"value" : null,
+					"attributeName" : "trans_start_date",
+					"attributeType" : null
+				},
+				{
+					"ref" : {
+						"type" : "paramlist",
+						"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+						"version" : null,
+						"name" : "paramlist_aml_app"
+					},
+					"attributeId" : 0,
+					"value" : null,
+					"attributeName" : "business_date",
+					"attributeType" : null
+				}
+			]
+		}
+	],
+	"entityType" : "Account",
+	"scoringMethod" : null,
+	"entityId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+			"version" : null,
+			"name" : "account_summary_daily"
+		},
+		"value" : null,
+		"attrId" : "1",
+		"attrName" : "account_id",
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"criteriaInfo" : [
+		{
+			"criteriaId" : "0",
+			"criteriaName" : "Transaction Volume",
+			"activeFlag" : "Y",
+			"criteriaFilter" : [
+				{
+					"display_seq" : "0",
+					"logicalOperator" : "",
+					"operator" : ">=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+								"version" : null,
+								"name" : "account_summary_daily"
+							},
+							"attributeId" : 55,
+							"value" : null,
+							"attributeName" : "all_wire_trans_velocity_ratio",
+							"attributeType" : null
+						},
+						{
+							"ref" : {
+								"type" : "paramlist",
+								"uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
+								"version" : null,
+								"name" : "paramlist_high_trans_velocity"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "trans_velocity",
+							"attributeType" : null
+						}
+					]
+				}
+			],
+			"score" : 1,
+			"filter_critria" : null,
+			"criteriaWeight" : 1
+		}
+	],
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "fd0ec9dd-ac5a-41be-bc6c-20afa3e8ba41",
+			"version" : null,
+			"name" : "paramlist_high_trans_velocity"
+		},
+		"value" : null
+	},
+	"displayName" : "Account Focus - High Velocity Wire Transfers"
 }

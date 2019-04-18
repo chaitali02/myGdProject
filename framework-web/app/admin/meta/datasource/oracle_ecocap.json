@@ -31,5 +31,6 @@
 	"username" : "inferyx",
 	"password" : "root",
 	"path" : "/user/hive/warehouse/xe",
-	"sessionParameters" : "framework.oracle.schema=ecocap"
+	"sessionParameters" : "framework.oracle.schema=ecocap",
+	"displayName" : "oracle_ecocap"
 }
