@@ -1178,6 +1178,7 @@ public class RegisterService {
 			Datapod datapodDet = (Datapod) commonServiceImpl.getLatestByUuid(refMI.getUuid(), refMI.getType().toString());
 			MetaIdentifier ref = new MetaIdentifier();
 			ref.setName(datapodDet.getName());
+			ref.setDisplayName(datapodDet.getDisplayName());
 			ref.setUuid(datapodDet.getUuid());
 			ref.setVersion(datapodDet.getVersion());
 			ref.setType(MetaType.datapod);
@@ -1197,6 +1198,7 @@ public class RegisterService {
 			DataSet datasetDet = (DataSet) commonServiceImpl.getLatestByUuid(refMI.getUuid(), refMI.getType().toString());
 			MetaIdentifier ref = new MetaIdentifier();
 			ref.setName(datasetDet.getName());
+			ref.setDisplayName(datasetDet.getDisplayName());
 			ref.setUuid(datasetDet.getUuid());
 			ref.setVersion(datasetDet.getVersion());
 			ref.setType(MetaType.dataset);
@@ -1309,6 +1311,7 @@ public class RegisterService {
 			finalDataRef.setUuid(dataset.getUuid());
 			finalDataRef.setVersion(dataset.getVersion());
 			finalDataRef.setName(dataset.getName());
+			finalDataRef.setDisplayName(dataset.getDisplayName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(dataset.getAttributeInfo().get(i).getAttrSourceName());
 			if(sourceAttributes.get(i).getSourceAttr().getAttrType()!=null) {
@@ -1336,6 +1339,7 @@ public class RegisterService {
 			finalDataRef.setUuid(rule.getUuid());
 			finalDataRef.setVersion(rule.getVersion());
 			finalDataRef.setName(rule.getName());
+			finalDataRef.setDisplayName(rule.getDisplayName());
 			attributeRef.setAttrId(sourceAttributes.get(i).getAttrSourceId());
 			attributeRef.setAttrName(rule.getAttributeInfo().get(i).getAttrSourceName());
 			//attributeRef.setAttrType(rule.getAttributeInfo().get(i).getSourceAttr().getAttrType());
@@ -1360,6 +1364,7 @@ public class RegisterService {
 			finalDataRef.setUuid(datapod.getUuid());
 			finalDataRef.setVersion(datapod.getVersion());
 			finalDataRef.setName(datapod.getName());
+			finalDataRef.setDisplayName(datapod.getDisplayName());
 			attributeRef.setAttrId(Integer.toString(datapod.getAttributes().get(i).getAttributeId()));
 			attributeRef.setAttrType(datapod.getAttributes().get(i).getType());
 			if (datapod.getAttributes().get(i).getName() != null) {

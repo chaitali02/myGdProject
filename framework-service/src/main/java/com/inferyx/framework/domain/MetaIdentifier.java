@@ -18,6 +18,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class MetaIdentifier {
+
+	private MetaType type;
+	private String uuid;
+	private String version;
+	private String name;
+	private String displayName;
+
+	public MetaIdentifier() {
+		super();// TODO Auto-generated constructor stub
+	}
 	
 	public MetaIdentifier(MetaType type, String uuid, String version) {
 		super();
@@ -25,10 +35,7 @@ public class MetaIdentifier {
 		this.uuid = uuid;
 		this.version = version;
 	}
-	public MetaIdentifier() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	
 	public MetaIdentifier(MetaType type, String uuid, String version, String name) {
 		super();
 		this.type = type;
@@ -36,6 +43,7 @@ public class MetaIdentifier {
 		this.version = version;
 		this.name = name;
 	}
+	
 	public MetaType getType() {
 		return type;
 	}
@@ -63,6 +71,13 @@ public class MetaIdentifier {
 		this.name = name;
 	}
 
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+	
 	/* Obsolete method and can be removed
 	 * 
 	 * @JsonIgnore
@@ -186,10 +201,7 @@ public class MetaIdentifier {
 	}
 
 
-	private MetaType type;
-	private String uuid;
-	private String version;
-	private String name;
+	
 	
 	
 }
