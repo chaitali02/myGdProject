@@ -567,6 +567,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.valuelist = [];
 		$scope.grouplist = [];
 		$scope.filterAttributeTags=[];
+		$scope.sortByAttributeTags=null;
 		VizpodSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.sourcetype).then(function (response) { onSuccessGetAllAttributeBySourcet(response.data) });
 		var onSuccessGetAllAttributeBySourcet = function (response) {
 			$scope.allSourceAttribute = response

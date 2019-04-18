@@ -464,11 +464,12 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
 					attributedetail.type = response[j].ref.type;
-					attributedetail.datapodname = response[j].ref.name;
-					attributedetail.name = response[j].attrName;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributedetail.id = response[j].ref.uuid + "_" + j;
 					attributes.push(attributedetail)
 				}
@@ -488,11 +489,12 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
 					attributedetail.type = response[j].ref.type;
-					attributedetail.datapodname = response[j].ref.name;
-					attributedetail.name = response[j].attrName;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributedetail.id = response[j].ref.uuid + "_" + j;
 					attributes.push(attributedetail)
 				}
@@ -512,9 +514,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
 					attributedetail.type = response[j].ref.type;
-					attributedetail.datapodname = response[j].ref.name;
-					attributedetail.name = response[j].attrName;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
 					attributedetail.id = response[j].ref.uuid + "_" + j;
@@ -535,8 +538,9 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
 					attributedetail.type = response[j].ref.type;
-					attributedetail.datapodname = response[j].ref.name;
-					attributedetail.name = response[j].paramName;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attibuteName = response[j].paramName;
 					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
 					attributedetail.attributeId = response[j].paramId;
 					attributedetail.id = response[j].ref.uuid + "_" + j;
@@ -618,12 +622,14 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 			if (response.length > 0) {
 				response.sort(sortFactory.sortByProperty("name"));
 				defaultoption.name = response[0].name;
+				defaultoption.displayName = response[0].displayName;
 				defaultoption.uuid = response[0].uuid;
 				defaultoption.version = response[0].version;
 				data.defaultoption = defaultoption;
 				for (var i = 0; i < response.length; i++) {
 					var datajosn = {}
 					datajosn.name = response[i].name;
+					datajosn.displayName = response[i].displayName;
 					datajosn.uuid = response[i].uuid;
 					datajosn.version = response[i].version;
 					data.options[i] = datajosn
@@ -762,9 +768,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						filterInfo.islhsDatapod = true;
 						lhsdatapodAttribute.uuid = response.filterInfo[i].operand[0].ref.uuid;
 						lhsdatapodAttribute.type = response.filterInfo[i].operand[0].ref.type;
-						lhsdatapodAttribute.datapodname = response.filterInfo[i].operand[0].ref.name;
-						lhsdatapodAttribute.name = response.filterInfo[i].operand[0].attributeName;
-						lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.name + "." + response.filterInfo[i].operand[0].attributeName;
+						lhsdatapodAttribute.name = response.filterInfo[i].operand[0].ref.name;
+						lhsdatapodAttribute.displayName = response.filterInfo[i].operand[0].ref.displayName;
+						lhsdatapodAttribute.attibuteName = response.filterInfo[i].operand[0].attributeName;
+						lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.displayName + "." + response.filterInfo[i].operand[0].attributeName;
 						lhsdatapodAttribute.attributeId = response.filterInfo[i].operand[0].attributeId;
 						filterInfo.lhsdatapodAttribute = lhsdatapodAttribute;
 					}
@@ -780,6 +787,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						lhsformula.uuid = response.filterInfo[i].operand[0].ref.uuid;
 						lhsformula.type = response.filterInfo[i].operand[0].ref.type;
 						lhsformula.name = response.filterInfo[i].operand[0].ref.name;
+						lhsformula.displayName = response.filterInfo[i].operand[0].ref.displayName;
 						filterInfo.lhsformula = lhsformula;
 					}
 					if (response.filterInfo[i].operand[1].ref.type == "simple") {
@@ -831,9 +839,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						filterInfo.isrhsFunction = false;
 						rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
-						rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
-						rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.name = response.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.displayName = response.filterInfo[i].operand[1].ref.displayName;
+						rhsdatapodAttribute.attributeName= response.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
 						rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
 					}
@@ -851,9 +860,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						filterInfo.isrhsFunction = false;
 						rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
-						rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
-						rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.displayName = response.filterInfo[i].operand[1].ref.displayName;
+						rhsdatapodAttribute.name = response.filterInfo[i].operand[1].ref.name;
+						rhsdatapodAttribute.attibuteName = response.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
 						rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
 					}
@@ -872,6 +882,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						rhsformula.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsformula.type = response.filterInfo[i].operand[1].ref.type;
 						rhsformula.name = response.filterInfo[i].operand[1].ref.name;
+						rhsformula.displayName = response.filterInfo[i].operand[1].ref.displayName;
 						filterInfo.rhsformula = rhsformula;
 					}
 					else if (response.filterInfo[i].operand[1].ref.type == "function") {
@@ -889,6 +900,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						rhsfunction.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsfunction.type = response.filterInfo[i].operand[1].ref.type;
 						rhsfunction.name = response.filterInfo[i].operand[1].ref.name;
+						rhsfunction.displayName = response.filterInfo[i].operand[1].ref.displayName;
 						filterInfo.rhsfunction = rhsfunction;
 					}
 					else if (response.filterInfo[i].operand[1].ref.type == "dataset") {
@@ -905,9 +917,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						filterInfo.isrhsFunction = false;
 						rhsdataset.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsdataset.type = response.filterInfo[i].operand[1].ref.type;
-						rhsdataset.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsdataset.name = response.filterInfo[i].operand[1].attributeName;
-						rhsdataset.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+						rhsdataset.displayName = response.filterInfo[i].operand[1].ref.name;
+						rhsdataset.name = response.filterInfo[i].operand[1].ref.name;
+						rhsdataset.attributeName= response.filterInfo[i].operand[1].attributeName;
+						rhsdataset.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
 						rhsdataset.attributeId = response.filterInfo[i].operand[1].attributeId;
 
 						filterInfo.rhsdataset = rhsdataset;
@@ -927,9 +940,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 						filterInfo.isrhsFunction = false;
 						rhsparamlist.uuid = response.filterInfo[i].operand[1].ref.uuid;
 						rhsparamlist.type = response.filterInfo[i].operand[1].ref.type;
-						rhsparamlist.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsparamlist.name = response.filterInfo[i].operand[1].attributeName;
-						rhsparamlist.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+						rhsparamlist.displayName = response.filterInfo[i].operand[1].ref.displayName;
+						rhsparamlist.name = response.filterInfo[i].operand[1].ref.name;
+						rhsparamlist.attributeName = response.filterInfo[i].operand[1].attributeName;
+						rhsparamlist.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
 						rhsparamlist.attributeId = response.filterInfo[i].operand[1].attributeId;
 
 						filterInfo.rhsparamlist = rhsparamlist;
@@ -968,7 +982,10 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					sourcedatapod.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourcedatapod.name = response.attributeInfo[n].sourceAttr.attrName;
+					sourcedatapod.name = response.attributeInfo[n].sourceAttr.ref.name;
+					sourcedatapod.displayName = response.attributeInfo[n].sourceAttr.ref.displayName;
+					sourcedatapod.attributeName = response.attributeInfo[n].sourceAttr.attrName;
+
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
@@ -988,6 +1005,8 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
 					sourceparamlist.name = response.attributeInfo[n].sourceAttr.ref.name;
+					sourceparamlist.displayName = response.attributeInfo[n].sourceAttr.ref.displayName;
+					sourceparamlist.attibuteName = response.attributeInfo[n].sourceAttr.paramName;
 					var obj = {}
 					obj.text = "paramlist"
 					obj.caption = "paramlist"
@@ -1004,6 +1023,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var sourceexpression = {};
 					sourceexpression.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
 					sourceexpression.name = response.attributeInfo[n].sourceAttr.ref.name;
+					sourceexpression.displayName = response.attributeInfo[n].sourceAttr.ref.displayName;
 					var obj = {}
 					obj.text = "expression"
 					obj.caption = "expression"
@@ -1021,6 +1041,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var sourceformula = {};
 					sourceformula.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
 					sourceformula.name = response.attributeInfo[n].sourceAttr.ref.name;
+					sourceformula.displayName = response.attributeInfo[n].sourceAttr.ref.displayName;
 					var obj = {}
 					obj.text = "formula"
 					obj.caption = "formula"
@@ -1038,6 +1059,8 @@ DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFacto
 					var sourcefunction = {};
 					sourcefunction.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
 					sourcefunction.name = response.attributeInfo[n].sourceAttr.ref.name;
+					sourcefunction.displayName = response.attributeInfo[n].sourceAttr.ref.displayName;
+
 					var obj = {}
 					obj.text = "function"
 					obj.caption = "function"

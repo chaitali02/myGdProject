@@ -1283,6 +1283,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 			rulljosn.uuid = response.data[i].uuid;
 			rulljosn.id = response.data[i].uuid //+ "_" + response.data[i].version
 			rulljosn.name = response.data[i].name;
+			rulljosn.displayName = response.data[i].displayName;
 			rulljosn.version = response.data[i].version;
 			rullArray[i] = rulljosn;
 		}
@@ -1320,6 +1321,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 				var ruletag = {};
 				ruletag.uuid = response.ruleInfo[i].ref.uuid;
 				ruletag.name = response.ruleInfo[i].ref.name;
+				ruletag.displayName = response.ruleInfo[i].ref.displayName;
 				ruletag.id = response.ruleInfo[i].ref.uuid// + "_" + response.ruleInfo[i].ref.version;
 				ruletag.version = response.ruleInfo[i].ref.version;
 				ruleTagArray[i] = ruletag;

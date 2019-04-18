@@ -213,7 +213,7 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <tags-input class="tag-scroll" min-length="1" ng-model="ruleTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true"
+                  <tags-input class="tag-scroll" min-length="1" ng-model="ruleTags" ng-disabled="{{mode}}" display-property="displayName" key-property="id" add-from-autocomplete-only="true"
                     ng-focus="onTagFocuse()" required="">
                     <auto-complete source="loadRules($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                       load-on-empty="true" required="">

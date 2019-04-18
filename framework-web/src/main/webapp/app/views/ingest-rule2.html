@@ -271,7 +271,7 @@
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <select class="form-control" select2 name="sourceds" data-ng-change="onChangeSourceDataSource()" data-ng-model="selectedSourceDatasource"
-                                                    ng-options="r as r.name for r in allSourceDatasource | orderBy: 'name' track by r.uuid"
+                                                    ng-options="r as r.displayName for r in allSourceDatasource | orderBy: 'displayName' track by r.uuid"
                                                     ng-disabled="{{mode}}">
                                                 </select>
                                                 <input type="hidden" name="sourceds" ng-model="selectedSourceDatasource.uuid" required>
@@ -331,7 +331,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r as r.name for r in sourceDetails track by r.uuid"
+                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceDetail" ng-options="r as r.displayName for r in sourceDetails track by r.uuid"
                                                     ng-disabled="{{mode}}" ng-change="onChangeSourceDetail()">
                                                 </select>
                                                 <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
@@ -342,7 +342,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceAttrDetail" ng-options="r as r.name for r in allSourceAttribute track by r.uuid+r.attributeId"
+                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSourceAttrDetail" ng-options="r as r.attributeName for r in allSourceAttribute track by r.uuid+r.attributeId"
                                                     ng-disabled="{{mode}}" required>
                                                 </select>
                                                 <input type="hidden" name="sourceDetails" ng-model="selectedSourceDetail.uuid" required>
@@ -353,7 +353,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSplitBy" ng-options="r as r.name for r in allSourceAttribute track by r.uuid+r.attributeId"
+                                                <select class="form-control" select2 name="" data-ng-model="$parent.selectedSplitBy" ng-options="r as r.attributeName for r in allSourceAttribute track by r.uuid+r.attributeId"
                                                     ng-disabled="{{mode}}" required>
                                                 </select>
                                                 <input type="hidden" name="SplitBy" ng-model="selectedSplitBy.uuid" required>
@@ -398,7 +398,7 @@
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <select class="form-control" select2 name="targetds" data-ng-change="onChangeTargetDataSource()" data-ng-model="selectedTargetDatasource"
-                                                    ng-options="r as r.name for r in allTargetDatasource | orderBy: 'name'  track by r.uuid"
+                                                    ng-options="r as r.displayName for r in allTargetDatasource | orderBy: 'displayName'  track by r.uuid"
                                                     ng-disabled="{{mode}}">
                                                 </select>
                                                 <input type="hidden" name="targetds" ng-model="selectedTargetDatasource.uuid" required>
@@ -431,7 +431,7 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <select class="form-control" select2 name="tagetDetail" data-ng-model="$parent.selectedTargetDetail" ng-options="r as r.name for r in tagetDetail track by r.uuid"
+                                                <select class="form-control" select2 name="tagetDetail" data-ng-model="$parent.selectedTargetDetail" ng-options="r as r.displayName for r in tagetDetail track by r.uuid"
                                                     ng-disabled="{{mode}}" ng-change="getAllAttributeByTarget(null);">
                                                 </select>
                                                 <input type="hidden" name="tagetDetail" ng-model="$parent.selectedTargetDetail.uuid" required>
@@ -594,14 +594,14 @@
                                                                     <div width="200px" ng-if="tabledata.islhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                                                                                ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                                                                                ng-options="c as (c.displayName + '.' + c.attributeName) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
                                                                                 ng-change="onChangeAttribute()" required disable-validation-message="">
                                                                             </select>
                                                                         </span>
                                                                     </div>
                                                                     <div ng-if="tabledata.islhsFormula">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                            <select select2 class="form-control" ng-change="onChangeFromula()" data-ng-model="tabledata.lhsformula" ng-options="r as r.displayName for r in allFormula track by r.uuid"
                                                                                 ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula"
                                                                                 required disable-validation-message="">
                                                                             </select>
@@ -678,7 +678,7 @@
                                                                     <div ng-if="tabledata.isrhsDatapod">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 class="form-control" name="rhsdatapodAttribute_{{$index}}" ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}"
-                                                                                ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                                                                                ng-options="c as (c.displayName + '.' + c.attributeName) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
                                                                                 required disable-validation-message="" uib-tooltip="{{myform['rhsdatapodAttribute_'+$index].$valid ? '' : 'Please select Attribute'}}"
                                                                                 tooltip-placement="top">
                                                                             </select>
@@ -687,7 +687,7 @@
                                                                     <div ng-if="tabledata.isrhsFormula">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
-                                                                                ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                ng-options="r as r.displayName for r in allFormula track by r.uuid"
                                                                                 ng-disabled="{{mode}}">
                                                                             </select>
                                                                         </span>
@@ -695,7 +695,7 @@
 
                                                                     <div ng-if="tabledata.isrhsFunction">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 class="form-control" name="rhsformula_{{$index}}" data-ng-model="tabledata.rhsfunction" ng-options="c as  c.name for c in allFunction track by c.uuid"
+                                                                            <select select2 class="form-control" name="rhsformula_{{$index}}" data-ng-model="tabledata.rhsfunction" ng-options="c as  c.displayName for c in allFunction track by c.uuid"
                                                                                 ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction"
                                                                                 required disable-validation-message="" uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
                                                                                 tooltip-placement="top">
@@ -706,7 +706,7 @@
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
                                                                             <div class="col-md-11" style="padding: 0px;">
-                                                                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name" title="{{tabledata.rhsdataset.dname}}"
+                                                                                <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.attributeName" title="{{tabledata.rhsdataset.dname}}"
                                                                                     required disable-validation-message="">
                                                                             </div>
                                                                             <div class="col-md-1" style="padding:7px 0px 0px 5px;">
@@ -847,19 +847,19 @@
                                                                     </div>
                                                                     <div ng-if="ingestTableArray[$index].isSourceAtributeFormula">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 ng-model="ingestTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
+                                                                            <select select2 ng-model="ingestTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.displayName for c in allMapLodeFormula track by c.uuid"
                                                                                 style="font-family: 'FontAwesome', Helvetica;"  required disable-validation-message="" >
                                                                             </select>
                                                                         </span>
                                                                     </div>
                                                                     <div ng-if="ingestTableArray[$index].isSourceAtributeExpression">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 ng-model="ingestTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+                                                                            <select select2 ng-model="ingestTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.displayName for c in allMapLodeExpression track by c.uuid"></select>
                                                                         </span>
                                                                     </div>
                                                                     <div ng-if="ingestTableArray[$index].isSourceAtributeFunction">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                            <select select2 ng-model="ingestTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
+                                                                            <select select2 ng-model="ingestTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.displayName for c in ruleLodeFunction track by c.uuid"
                                                                                 ng-change="onChangeFunction(ingestTableArray[$index].sourcefunction,$index)"  required disable-validation-message="" ></select>
                                                                         </span>
                                                                     </div>
@@ -952,14 +952,14 @@
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Select</label>
                                     <div class="col-md-8">
-                                        <select select2 class="form-control" ng-change="onChangeSearchAttr()" data-ng-model="allSearchType.defaultoption" ng-options="r as r.name for r in allSearchType.options track by r.uuid">
+                                        <select select2 class="form-control" ng-change="onChangeSearchAttr()" data-ng-model="allSearchType.defaultoption" ng-options="r as r.displayName for r in allSearchType.options track by r.uuid">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Attribute</label>
                                     <div class="col-md-8">
-                                        <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
+                                        <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.attributeName for r in allAttr track by r.uuid+r.attributeId">
                                         </select>
                                     </div>
                                 </div>

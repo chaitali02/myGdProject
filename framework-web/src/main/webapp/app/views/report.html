@@ -270,9 +270,7 @@
                                                        <span class="required" aria-required="true"> * </span>
                                                     </label>
                                                     <div class="col-md-6">
-                                                        
-                                                        <select
-                                                        ng-model="report.type" ng-options="x.text as x.caption for x in types"
+                                                        <select ng-model="report.type" ng-options="x.text as x.caption for x in types"
                                                         ng-disabled=" {{mode}}" class="form-control" required ng-change="onChangeType(report.type,true)">
                                                     </select>
                                                     </div>
@@ -311,7 +309,7 @@
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
                                                     <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectOption()"
-                                                        data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options  track by r.uuid ">
+                                                        data-ng-model="allSource.defaultoption" ng-options="r as r.displayName for r in allSource.options  track by r.uuid ">
                                                     </select>
                                                 </div>
                                             </div>
@@ -339,7 +337,7 @@
 
                                                     <select class="form-control" select2 name="version" ng-disabled="{{mode}}"
                                                         ng-change="onChangeParamListOFRule()" data-ng-model="allparamlist.defaultoption"
-                                                        ng-options="r as r.name for r in allparamlist.options | orderBy:'name' track by r.uuid ">
+                                                        ng-options="r as r.displayName for r in allparamlist.options | orderBy:'name' track by r.uuid ">
                                                         <option value="">-Select-</option>
                                                     </select>
                                                 </div>
@@ -529,7 +527,7 @@
                                                                                     ng-model="tabledata.lhsdatapodAttribute"
                                                                                     ng-disabled="{{mode}}" class="form-control"
                                                                                     ng-change="onChangeAttribute()"
-                                                                                    ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                                                                    ng-options="c as (c.displayName + '.' + c.attributeName) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                                                                 </select>
                                                                             </span>
                                                                         </div>
@@ -538,7 +536,7 @@
                                                                                 <select select2 class="form-control"
                                                                                     ng-change="onChangeFromula()"
                                                                                     data-ng-model="tabledata.lhsformula"
-                                                                                    ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                    ng-options="r as r.displayName for r in allFormula track by r.uuid"
                                                                                     ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula"
                                                                                     required disable-validation-message="">
                                                                                 </select>
@@ -650,7 +648,7 @@
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <select select2 class="form-control" name="rhsdatapodAttribute_{{$index}}"
                                                                                     ng-model="tabledata.rhsdatapodAttribute"
-                                                                                    ng-disabled="{{mode}}" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                                                                                    ng-disabled="{{mode}}" ng-options="c as (c.displayName + '.' + c.attributeName) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
                                                                                     required disable-validation-message=""
                                                                                     uib-tooltip="{{myform['rhsdatapodAttribute_'+$index].$valid ? '' : 'Please select Attribute'}}"
                                                                                     tooltip-placement="top">
@@ -663,16 +661,16 @@
                                                                                 <select select2 class="form-control"
                                                                                     ng-change="selectmetrhsType()"
                                                                                     data-ng-model="tabledata.rhsformula"
-                                                                                    ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                    ng-options="r as r.displayName for r in allFormula track by r.uuid"
                                                                                     ng-disabled="{{mode}}">
                                                                                 </select>
                                                                             </span>
                                                                         </div>
                                                                         <div ng-if="tabledata.isrhsDataset">
-                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <div class="col-md-11" style="padding: 0px;">
                                                                                     <input type="text" ng-disabled="true"
-                                                                                        class="form-control" ng-model="tabledata.rhsdataset.name"
+                                                                                        class="form-control" ng-model="tabledata.rhsdataset.attributeName"
                                                                                         title="{{tabledata.rhsdataset.dname}}"
                                                                                         required disable-validation-message="">
                                                                                 </div>
@@ -687,7 +685,7 @@
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <select select2 class="form-control" name="rhsformula_{{$index}}"
                                                                                     data-ng-model="tabledata.rhsfunction"
-                                                                                    ng-options="c as  c.name for c in allFunction track by c.uuid"
+                                                                                    ng-options="c as  c.displayName for c in allFunction track by c.uuid"
                                                                                     ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction"
                                                                                     required disable-validation-message=""
                                                                                     uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
@@ -892,7 +890,7 @@
                                                                                         <div ng-if="!data.isOnDropDown">
                                                                                             <div class="col-md-11" style="padding: 0px;">
                                                                                                 <input type="text" class="form-control"
-                                                                                                    ng-model="data.sourcedatapod.name"
+                                                                                                    ng-model="data.sourcedatapod.attributeName"
                                                                                                     required
                                                                                                     disable-validation-message=""
                                                                                                     ng-disabled="false"
@@ -912,7 +910,7 @@
                                                                                                 ng-show="data.isSourceAtributeDatapod"
                                                                                                 ng-disabled="{{mode}}"
                                                                                                 class="form-control"
-                                                                                                ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
+                                                                                                ng-options="c as (c.displayName + '.' + c.attributeName) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
                                                                                                 ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"
                                                                                                 required
                                                                                                 disable-validation-message="">
@@ -925,7 +923,7 @@
                                                                                         <div ng-if="!data.isOnDropDown">
                                                                                             <div class="col-md-11" style="padding: 0px;">
                                                                                                 <input type="text" class="form-control"
-                                                                                                    ng-model="data.sourceformula.name"
+                                                                                                    ng-model="data.sourceformula.displayName"
                                                                                                     required
                                                                                                     disable-validation-message=""
                                                                                                     ng-disabled="false"
@@ -947,14 +945,14 @@
                                                                                                 theme="" ng-disabled="{{mode}}"
                                                                                                 on-select="onChangeFormula(data.sourceformula,$index)">
                                                                                                 <ui-select-match>
-                                                                                                    <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
+                                                                                                    <span title="{{data.sourceformula.displayName}}">{{data.sourceformula.displayName}}</span>
                                                                                                 </ui-select-match>
                                                                                                 <ui-select-choices repeat="x in (allSourceFormula | filter: $select.search) track by x.uuid"
                                                                                                     position='up'>
                                                                                                     <div ng-click="routeForFormula(x,data.id)">
                                                                                                         <span class="{{x.iconclass}}"></span>
                                                                                                         <span class="{{x.class}}"
-                                                                                                            ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                                                            ng-bind-html="x.displayName | highlight: $select.search"></span>
                                                                                                     </div>
                                                                                                 </ui-select-choices>
                                                                                             </ui-select>
@@ -966,7 +964,7 @@
                                                                                         <div ng-if="!data.isOnDropDown">
                                                                                             <div class="col-md-11" style="padding: 0px;">
                                                                                                 <input type="text" class="form-control"
-                                                                                                    ng-model="data.soureexpression.name"
+                                                                                                    ng-model="data.soureexpression.displayName"
                                                                                                     required
                                                                                                     disable-validation-message=""
                                                                                                     ng-disabled="false"
@@ -988,14 +986,14 @@
                                                                                                 theme="" ng-disabled="{{mode}}"
                                                                                                 on-select="onChangeExpression(data.sourceexpression,$index)">
                                                                                                 <ui-select-match>
-                                                                                                    <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
+                                                                                                    <span title="{{data.soureexpression.displayName}}">{{data.sourceexpression.displayName}}</span>
                                                                                                 </ui-select-match>
                                                                                                 <ui-select-choices repeat="x in (allExpress | filter: $select.search) track by x.uuid"
                                                                                                     position='up'>
                                                                                                     <div ng-click="routeForExpression(x,data.id)">
                                                                                                         <span class="{{x.iconclass}}"></span>
                                                                                                         <span class="{{x.class}}"
-                                                                                                            ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                                                            ng-bind-html="x.displayName | highlight: $select.search"></span>
                                                                                                     </div>
                                                                                                 </ui-select-choices>
                                                                                             </ui-select>
@@ -1007,7 +1005,7 @@
                                                                                         <div ng-if="!data.isOnDropDown">
                                                                                             <div class="col-md-11" style="padding: 0px;">
                                                                                                 <input type="text" class="form-control"
-                                                                                                    ng-model="data.sourcefunction.name"
+                                                                                                    ng-model="data.sourcefunction.displayName"
                                                                                                     required
                                                                                                     disable-validation-message=""
                                                                                                     ng-disabled="false"
@@ -1026,7 +1024,7 @@
                                                                                             <select select2 ng-model="data.sourcefunction"
                                                                                                 ng-disabled="{{mode}}"
                                                                                                 class="form-control"
-                                                                                                ng-options="c as  c.name for c in allFunction track by c.uuid"
+                                                                                                ng-options="c as  c.displayName for c in allFunction track by c.uuid"
                                                                                                 ng-change="ngChangeFunction(data.sourcefunction,$index)"></select>
                                                                                         </div>
                                                                                     </span>
@@ -1036,7 +1034,7 @@
                                                                                         <div ng-if="!data.isOnDropDown">
                                                                                             <div class="col-md-11" style="padding: 0px;">
                                                                                                 <input type="text" class="form-control"
-                                                                                                    ng-model="data.sourceparamlist.name"
+                                                                                                    ng-model="data.sourceparamlist.attributeName"
                                                                                                     required
                                                                                                     disable-validation-message=""
                                                                                                     ng-disabled="false"
@@ -1289,14 +1287,14 @@
                                         <label class="col-md-3 control-label">Select</label>
                                         <div class="col-md-8">
                                             <select select2 class="form-control" ng-change="onChangeSearchAttr()"
-                                                data-ng-model="allSearchType.defaultoption" ng-options="r as r.name for r in allSearchType.options track by r.uuid">
+                                                data-ng-model="allSearchType.defaultoption" ng-options="r as r.displayName for r in allSearchType.options track by r.uuid">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">Attribute</label>
                                         <div class="col-md-8">
-                                            <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
+                                            <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.attributeName for r in allAttr track by r.uuid+r.attributeId">
                                             </select>
                                         </div>
                                     </div>
