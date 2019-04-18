@@ -141,6 +141,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		});
 	};
 	$scope.getLovByType();
+	$scope.onChangeName = function (data) {
+		$scope.vizpoddata.displayName = data;
+	}
     $scope.popOverSetFalse=function(){
 		for(var i=0;i< $scope.valuelist.length;i++){
 			$scope.valuelist[i].popoverIsOpen=false;
@@ -163,7 +166,6 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	}
 
 	$scope.onChangeColorPalette=function(colorPalette){
-		debugger
 		if(colorPalette !=null){
 			var str="Random_4";
 			if(colorPalette !="Standard"){
@@ -745,6 +747,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var vizpodjson = {};
 		vizpodjson.uuid = $scope.vizpoddata.uuid;
 		vizpodjson.name = $scope.vizpoddata.name;
+		vizpodjson.displayName = $scope.vizpoddata.displayName;
 		vizpodjson.limit = $scope.vizpoddata.limit;
 		vizpodjson.sortOrder = $scope.vizpoddata.sortOrder;
 
