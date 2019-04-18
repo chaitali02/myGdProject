@@ -59,9 +59,9 @@ import com.inferyx.framework.service.MetadataServiceImpl;
  *
  */
 @Component
-public class DQRecOperator {
+public class DQRecommender {
 
-	static final Logger logger = Logger.getLogger(DQRecOperator.class);
+	static final Logger logger = Logger.getLogger(DQRecommender.class);
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -71,124 +71,6 @@ public class DQRecOperator {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
-
-	public List<DQIntelligence> genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode) throws Exception {
-		try {
-			List<DQIntelligence> recommendationList = new ArrayList<>();
-			try {
-				synchronized (dqRecExec.getUuid()) {
-					dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
-							Status.Stage.RUNNING);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-			String appUuid = commonServiceImpl.getApp().getUuid();
-			float minThreshold = 0.0F;
-			minThreshold = Float.parseFloat(commonServiceImpl.getConfigValue("framework.dataqual.sample.score.minthreshold"));
-			
-			MetaIdentifier execDependsOnMI = dqRecExec.getDependsOn().getRef();
-			Datapod sourceDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(execDependsOnMI.getUuid(), execDependsOnMI.getVersion(), execDependsOnMI.getType().toString(), "N");
-			
-			Datasource sourceDS = commonServiceImpl.getDatasourceByObject(sourceDp);
-			
-			//***************** getting source data *****************//
-			ExecContext execContext = commonServiceImpl.getExecContext(runMode);
-			IExecutor exec = execFactory.getExecutor(execContext.toString());
-			ResultSetHolder rsHolder = exec.executeSqlByDatasource(dqRecExec.getExec(), sourceDS, appUuid);
-			if(rsHolder.getType().equals(ResultType.resultset)) {
-				rsHolder = sparkExecutor.convertResultsetToDataframe(rsHolder);
-			}
-			
-			List<DataQual> latestDQList = metadataServiceImpl.getAllDQByDatapod(sourceDp.getUuid());
-			
-			String samplePercent = dqRecExec.getSamplePercent();
-			if(StringUtils.isBlank(samplePercent)) {
-				samplePercent = commonServiceImpl.getConfigValue("framework.dataqual.sample.percent");
-			} 
-			
-			dqRecExec.setSamplePercent(samplePercent);
-			
-			//***************** gettting sample *****************//
-			Dataset<Row> sampleDf = null;
-			if(samplePercent.contains("%")) {
-				String samplePerc = samplePercent.substring(0, samplePercent.lastIndexOf("%"));
-				double sample = Double.parseDouble(samplePerc);
-				Dataset<Row>[] splits = rsHolder.getDataFrame().randomSplit(new double[] {sample/100, (100 - sample)/100}, 12345);
-				sampleDf = splits[0];
-			} else {
-				sampleDf = rsHolder.getDataFrame().limit(Integer.parseInt(samplePercent));
-			}
-
-			//***************** setting default properties *****************//
-			String defaultPath = commonServiceImpl.getConfigValue("framework.schema.Path");
-			defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
-			String filePath = String.format("%s/%s/%s/", sourceDp.getUuid(), sourceDp.getVersion(), dqRecExec.getVersion());
-			String tempTableName = String.format("%s_%s_%s", sourceDp.getUuid().replaceAll("-", "_"), sourceDp.getVersion(), dqRecExec.getVersion());
-			
-			String sampleFilePathUrl = defaultPath.concat(filePath).concat("sample");
-			ResultSetHolder sampleHolder = new ResultSetHolder();
-			sampleHolder.setDataFrame(sampleDf);
-			sampleHolder.setType(ResultType.dataframe);
-
-			//***************** saving sample *****************//
-			String sampleTempTableName = String.format("%s_%s", tempTableName, "sample");
-			sampleHolder = save(sampleHolder, sampleFilePathUrl, sampleTempTableName, true);
-			sampleHolder.setCountRows(sampleHolder.getDataFrame().count());
-			
-			sampleHolder.setTableName(sampleTempTableName);
-			
-			//***************** domain check for recommendation *****************//
-			recommendationList.addAll(domainCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-
-			//***************** null check for recommendation *****************//
-			recommendationList.addAll(nullCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-			
-			//***************** duplication (primary key) check for recommendation *****************//
-			recommendationList.addAll(duplicateCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-
-			//***************** range check for recommendation *****************//
-			recommendationList.addAll(rangeCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-			
-			//***************** value check for recommendation *****************//
-			recommendationList.addAll(valueCheck(sampleHolder, defaultPath, filePath, tempTableName, sourceDp, latestDQList, minThreshold));
-			
-			dqRecExec.setIntelligenceResult(recommendationList);
-			
-			synchronized (dqRecExec.getUuid()) {
-				dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
-						Status.Stage.COMPLETED);
-			}
-			
-			List<String> tempTableList = new ArrayList<>();
-			tempTableList.add(sampleTempTableName);
-			sparkExecutor.dropTempTable(tempTableList);
-			return recommendationList;
-		}catch (Exception e) {
-			e.printStackTrace();
-			// Set status to FAILED
-			try {
-				synchronized (dqRecExec.getUuid()) {
-					dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec,
-							Status.Stage.FAILED);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			String message = null;
-			try {
-				message = e.getMessage();
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
-			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getUuid(), dqRecExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Data Qual recommendation failed ...", dependsOn);
-			throw new java.lang.Exception((message != null) ? message : "Data Qual recommendation failed ...");
-		}
-	}
 
 	public List<DQIntelligence> domainCheck(ResultSetHolder rsHolder, String defaultPath, String filePath,
 			String defaultTempTableName, Datapod datapod, List<DataQual> latestDQList, float minThreshold)
@@ -224,13 +106,9 @@ public class DQRecOperator {
 					i++;
 				}
 				regextQuery.append(" FROM ").append(rsHolder.getTableName()).append(" ");
-//				regextQuery.append(" UNION ALL ");
-
-//				String sql = regextQuery.substring(0, regextQuery.lastIndexOf(" UNION ALL "));
-//				String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
-				sparkExecutor.executeAndRegisterByTempTable(regextQuery.toString(), domainTempTableName, true,
-						appUuid)/* .getDataFrame().show(100, false) */;
+				sparkExecutor.executeAndRegisterByTempTable(regextQuery.toString(), domainTempTableName, true,appUuid);
 				
+				//***************** calculating score for each column, formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
 				if(sampleTotalRows > 0) {
 					for(String colName : dfColumns) {	
 						StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
@@ -252,68 +130,9 @@ public class DQRecOperator {
 					}					
 				}
 			}
-			
-//			String sql = regextQuery.substring(0, regextQuery.lastIndexOf(" UNION ALL "));
-//			String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
-//			sparkExecutor.executeAndRegisterByTempTable(sql, domainTempTableName, true, appUuid).getDataFrame().show(100, false);
-			
+					
 			tempTableList.add(domainTempTableName);
 			
-			//***************** calculating score for each column, formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
-//			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
-//			tempTableList.add(colScoreTempTable);
-//			
-//			List<DQIntelligence> domainRecommendation = new ArrayList<>();
-//			
-//			long sampleTotalRows = rsHolder.getCountRows();
-//			for(AttributeDomain domain : attrDomainList) {
-//				if(sampleTotalRows > 0) {
-//					for(String colName : dfColumns) {	
-//						StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-//						StringBuilder scoreCountBuilder = new StringBuilder();
-//						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, ");
-//						scoreCountBuilder.append("(COUNT(").append(colName).append(") / ").append(sampleTotalRows).append(") * 100 AS score_count").append(", ");
-//						scoreCountBuilder.append("'").append(colName).append("'").append(" AS score_column");
-//						
-//						scoreCountBuilder.append(" FROM ").append(domainTempTableName);
-//						scoreCountBuilder.append(" WHERE ").append(" domain_name = '").append(domain.getName()).append("' AND ").append(colName).append(" = 'Y' ");
-//						scoreCountBuilder.append(" GROUP BY ").append("domain_name, domain_uuid, datapod_uuid");
-//												
-//						outerSqlBuilder.append(scoreCountBuilder).append(") WHERE score_count >= "+minThreshold);
-//						
-//						ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), colScoreTempTable, false, appUuid);
-////						scoreCountHolder.getDataFrame().show(false);
-//						
-//						domainRecommendation.addAll(getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList));
-//					}					
-//				}
-//			}
-			
-//			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
-//			tempTableList.add(colScoreTempTable);
-//			
-//			StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-//			StringBuilder scoreCountBuilder = new StringBuilder();
-//			long sampleTotalRows = rsHolder.getCountRows();
-//			for(AttributeDomain domain : attrDomainList) {
-//				if(sampleTotalRows > 0) {
-//					for(String colName : dfColumns) {					
-//						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, "
-//								+ "(COUNT(" + colName + ")/" + sampleTotalRows + ") * 100 AS score_count, '"
-//								+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
-//								+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column, domain_uuid, datapod_uuid");
-//						
-//						scoreCountBuilder.append(" UNION ALL ");
-//					}
-//				}
-//			}
-			
-//			String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
-////			outerSqlBuilder.append(scoreSql).append(") WHERE score_count >= "+minThreshold);
-//			
-//			ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(scoreSql, colScoreTempTable, true, appUuid);
-//			scoreCountHolder.getDataFrame().show(false);
-//			
 //			//***************** saving score *****************//
 //			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
 //			save(scoreCountHolder, scoreFilePathUrl, null, false);
