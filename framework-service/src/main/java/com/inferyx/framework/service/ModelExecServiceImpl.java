@@ -533,9 +533,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param version
 	 */
 	/*****************************Unused******************************/
-	/*public void kill (String uuid, String version) {
+	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.trainExec);
-	}*/
+	}
 	
 	public void setStatus (String type, String uuid, String version,String status){
 		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){

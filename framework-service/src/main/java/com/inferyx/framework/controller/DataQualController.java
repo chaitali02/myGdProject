@@ -39,7 +39,6 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.intelligence.DQRecOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataQualExecServiceImpl;
 import com.inferyx.framework.service.DataQualGroupExecServiceImpl;
@@ -66,8 +65,6 @@ public class DataQualController {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
-	@Autowired
-	private DQRecOperator dqRecOperator;
 	
 
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
@@ -287,7 +284,8 @@ public class DataQualController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		DQRecExec dqRecExec = dataQualServiceImpl.createCustom(datapodUuid, datapodVersion, null, null, null, null, runMode, samplePercent);
 		dqRecExec = (DQRecExec) dataQualServiceImpl.parseCustom(dqRecExec.getUuid(), dqRecExec.getVersion(), null, null, null, null, null, runMode);
-		return dqRecOperator.genRecommendation(dqRecExec, null, runMode);
+		dqRecExec = dataQualServiceImpl.genRecommendation(dqRecExec, null, runMode);
+		return dqRecExec.getIntelligenceResult();
 	}
 	
 	@RequestMapping(value = "/generateDq", method = RequestMethod.POST)

@@ -85,9 +85,9 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	}
 	
 	/****************************Unused*****************************/
-	/*public void kill (String uuid, String version) {
+	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.profilegroupExec, MetaType.profileExec);
-	}*/
+	}
 	
 
 

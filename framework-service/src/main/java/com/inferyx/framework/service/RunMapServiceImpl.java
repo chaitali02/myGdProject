@@ -15,14 +15,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
@@ -33,7 +29,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -49,11 +44,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	ConnectionFactory connFactory;
 	
 	protected MapExec mapExec;
-	protected List<java.util.Map<String, Object>> data;
-	private HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	protected Map map;
-	protected Dataset<Row> df;
 	private ExecutorFactory execFactory;
 	private OrderKey datapodKey;
 	protected MapExecServiceImpl mapExecServiceImpl;
@@ -203,23 +195,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 	public void setMapExec(MapExec mapExec) {
 		this.mapExec = mapExec;
-	} 
-	
-	public List<java.util.Map<String, Object>> getData() {
-		return data;
-	}
-
-	public void setData(List<java.util.Map<String, Object>> data) {
-		this.data = data;
-	}	
-
-	public HDFSInfo getHdfsInfo() {
-		return hdfsInfo;
-	}
-
-	public void setHdfsInfo(HDFSInfo hdfsInfo) {
-		this.hdfsInfo = hdfsInfo;
-	}
+	} 	
 
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
