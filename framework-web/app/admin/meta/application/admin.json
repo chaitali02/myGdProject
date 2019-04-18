@@ -58,5 +58,7 @@
     },
     "value": null
   },
-  "applicationType": "SYSADMIN"
+  "applicationType": "SYSADMIN",
+	"displayName" : "Administration"
+
 }
