@@ -919,6 +919,8 @@ public class MetadataServiceImpl {
 			
 			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 			paramListHolder.getRef().setName(paramList.getName());
+			paramListHolder.getRef().setDisplayName(paramList.getDisplayName());
+
 			holderList.add(paramListHolder);
 		}
 		return holderList;
@@ -1690,55 +1692,36 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public List<Function> getFunctionByCriteria(String category, String inputReq) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		
-		Application application = commonServiceImpl.getApp();
+	public List<Function> getFunctionByCriteria(String category, String inputReq)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		Query query = new Query();
-		query.fields().include("uuid");
-		query.fields().include("version");
-		query.fields().include("name");
-		query.fields().include("type");
-		query.fields().include("createdOn");
-		query.fields().include("appInfo");
-		query.fields().include("active");
-		query.fields().include("desc");
-		query.fields().include("published");
-		query.fields().include("inputReq");
-		query.fields().include("publicFlag");
-		query.fields().include("funcType");
-		query.fields().include("functionInfo");
-		query.fields().include("category");
+				Application application = commonServiceImpl.getApp();
+				MatchOperation filter = null;
+				String appUuid = application.getUuid();
+				List<Function> result = new ArrayList<>();
 
-		String appUuid=application.getUuid();
-		if(appUuid != null && !appUuid.isEmpty()) {
-			query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),where("publicFlag").is("Y")));
-			
-		}
-		
-		
-		
-		if (inputReq != null && !inputReq.isEmpty()) {
-			query.addCriteria(Criteria.where("inputReq").is(inputReq));
-		}
+				if (!inputReq.isEmpty() && !category.isEmpty()) filter = match(new Criteria("_id").ne(1).orOperator(new Criteria("appInfo.ref.uuid").is(appUuid), new Criteria("publicFlag").is("Y")).andOperator(new Criteria("inputReq").is(inputReq).andOperator(new Criteria("category").is(category))));
+				else if (inputReq.isEmpty() && !category.isEmpty()) filter = match(new Criteria("_id").ne(1).orOperator(new Criteria("appInfo.ref.uuid").is(appUuid), new Criteria("publicFlag").is("Y")).andOperator(new Criteria("category").is(category)));
+				else if (!inputReq.isEmpty() && category.isEmpty()) filter = match(new Criteria("_id").ne(1).orOperator(new Criteria("appInfo.ref.uuid").is(appUuid), new Criteria("publicFlag").is("Y")).andOperator(new Criteria("inputReq").is(inputReq)));
+				else if (inputReq.isEmpty() && category.isEmpty()) filter = match(new Criteria("_id").ne(1).orOperator(new Criteria("appInfo.ref.uuid").is(appUuid), new Criteria("publicFlag").is("Y")));
 
-		if (category != null && !category.isEmpty()) {
-			query.addCriteria(Criteria.where("category").is(category));
-		}
+				GroupOperation groupByUuid = group("uuid").max("version").as("version");
+				SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 
-		// if (!inputReq.isEmpty() && !category.isEmpty()) {
-		// query.addCriteria(
-		// Criteria.where("inputReq").is(inputReq).andOperator(Criteria.where("category").is(category)));
-		// }
-		List<Function> result = new ArrayList<>();
-		List<Function> functions = new ArrayList<>();
-		functions = (List<Function>) mongoTemplate.find(query, Function.class);
+				Aggregation userAggr = newAggregation(filter, groupByUuid, sortByVersion);
+
 		
-		for (Function function : functions) {
-			Function latestFunction = (Function) commonServiceImpl.getLatestByUuid(function.getUuid(),
-					MetaType.function.toString(), "N");
-			result.add(latestFunction);
-		}
+				AggregationResults<Function> functionAggrResults = mongoTemplate.aggregate(userAggr,
+				MetaType.function.toString(), Function.class);
+				List<Function> sortedFunctionList = functionAggrResults.getMappedResults();
+
+				for (Function
+				function: sortedFunctionList) {
+					Function latestFunction = (Function) commonServiceImpl.getLatestByUuid(function.getId(), MetaType.
+					function.toString(), "N");
+					result.add(latestFunction);
+				}
 
 		return result;
 
@@ -1886,6 +1869,7 @@ public class MetadataServiceImpl {
 				baseEntity.setUuid(datapod2.getUuid());
 				baseEntity.setVersion(datapod2.getVersion());
 				baseEntity.setName(datapod2.getName());
+				baseEntity.setDisplayName(datapod2.getDisplayName());
 				baseEntity.setDesc(datapod2.getDesc());
 				baseEntity.setCreatedBy(datapod2.getCreatedBy());
 				baseEntity.setCreatedOn(datapod2.getCreatedOn());
@@ -1907,6 +1891,7 @@ public class MetadataServiceImpl {
 		query.fields().include("version");
 		query.fields().include("active");
 		query.fields().include("name");
+		query.fields().include("displayName");
 		query.fields().include("appInfo");
 		query.fields().include("createdBy");
 		query.fields().include("createdOn");
