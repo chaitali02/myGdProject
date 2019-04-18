@@ -103,6 +103,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private SessionHelper sessionHelper;
+	@Autowired
+	private ThreadPoolTaskExecutor metaExecutor;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1400,7 +1402,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 			runDQRecServiceImpl.setSessionContext(sessionHelper.getSessionContext());
 			runDQRecServiceImpl.setName(MetaType.dqrecExec+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion());
 			
-			runDQRecServiceImpl.call();
+			FutureTask<TaskHolder> futureTask = new FutureTask<>(runDQRecServiceImpl);
+			metaExecutor.execute(futureTask);
+//			taskList.add(futureTask);
+			taskThreadMap.put(MetaType.dqrecExec.toString()+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion(), futureTask);
 			
 			dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(dqRecExec.getUuid(), dqRecExec.getVersion(), MetaType.dqrecExec.toString(), "N");
 		} catch (Exception e) {
