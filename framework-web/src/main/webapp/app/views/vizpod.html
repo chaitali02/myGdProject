@@ -19,7 +19,8 @@
 			</li>
 		</ul>
 		<div class="page-toolbar">
-			<div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+			<div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+			 data-original-title="Change dashboard date range">
 				<i class="icon-calendar"></i>&nbsp;
 				<span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
 			</div>
@@ -45,11 +46,12 @@
 						 style="height:16px;font-size:16px;" data-ng-click="showHome(vizpoddata.uuid,vizpoddata.version,mode)">
 							<i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a title="Edit" ng-class="(isEdit==true || isPrivlage || vizpoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-						 data-placement="top" tooltip ng-click="enableEdit(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
+						<a title="Edit" ng-class="(isEdit==true || isPrivlage || vizpoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+						 data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(vizpoddata.uuid,vizpoddata.version)"
+						 ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						
+
 						<a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 ng-hide="isAdd" data-ng-click="isShowSimpleData ==false?showSampleTable(vizpoddata):''" style="height:16px;">
 							<i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -58,11 +60,12 @@
 						 ng-disabled="isDownloadDatapod">
 							<i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a title="Knowledge Graph" ng-class="(showvizpod==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-toggle="tooltip"
-						 data-placement="top" tooltip data-ng-click="showVizpodGraph(vizpoddata.uuid,vizpoddata.version)">
+						<a title="Knowledge Graph" ng-class="(showvizpod==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+						 ng-show="isDependencyShow" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showVizpodGraph(vizpoddata.uuid,vizpoddata.version)">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
 						</a>
-						<a title="Refresh" ng-click="isShowSimpleData ==true?showSampleTable(vizpoddata):broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
+						<a title="Refresh" ng-click="isShowSimpleData ==true?showSampleTable(vizpoddata):broadcastRefreshData()"
+						 data-toggle="tooltip" data-placement="top" tooltip>
 							<i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
 						</a>
 						<a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="okVizpodSave()" style="height:14px;">
@@ -87,8 +90,8 @@
 								<div class="col-md-6 col-sm-6">
 									<div class="dataTables_length" id="sample_1_length">
 										<label>Show
-											<select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
-											 ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+											<select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline"
+											 ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
 											</select>
 										</label>
 									</div>
@@ -96,8 +99,8 @@
 								<div class="col-md-6 col-sm-6">
 									<div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
 										<label>Search:</label>
-										<input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext"
-										 aria-controls="datastoredatatable">
+										<input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()"
+										 ng-model="searchtext" aria-controls="datastoredatatable">
 									</div>
 								</div>
 							</div>
@@ -118,8 +121,8 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6"></div>
-								<div class="col-md-6" >
-								  <div class="grey"style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
+								<div class="col-md-6">
+									<div class="grey" style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
 								</div>
 							</div>
 						</div>
@@ -147,7 +150,8 @@
 							</div>
 						</div>
 						<div ng-show="!isEditInprogess && !isEditVeiwError">
-							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitVizpod()" prevent-enter-submit>
+							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitVizpod()"
+							 prevent-enter-submit>
 								<div class="form-body">
 									<div class="form-group" ng-show="vizpoddata.uuid">
 										<label class="col-md-3 control-label">UUID</label>
@@ -161,17 +165,17 @@
 											<span class="required" aria-required="true"> * </span>
 										</label>
 										<div class="col-md-6">
-											<input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(vizpoddata.name)" ng-model="vizpoddata.name"
-											 required="">
+											<input type="text" class="form-control" ng-disabled="{{mode}}" ng-change="onChangeName(vizpoddata.name)"
+											 ng-model="vizpoddata.name" required="">
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-md-3 control-label">Display Name
-										  <span class="required" aria-required="true"> * </span>
+											<span class="required" aria-required="true"> * </span>
 										</label>
 										<div class="col-md-6">
-										  <input type="text" class="form-control" ng-disabled="{{mode}}"
-											ng-model="vizpoddata.displayName" placeholder="" required="">
+											<input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="vizpoddata.displayName" placeholder=""
+											 required="">
 										</div>
 									</div>
 									<div class="form-group" ng-show="vizpoddata.uuid">
@@ -200,9 +204,10 @@
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
 										<div class="col-md-6">
-											<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-											 add-on-enter="true" add-on-space="true">
-												<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+											<tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+											 add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+												<auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true"
+												 max-results-to-show="10">
 												</auto-complete>
 											</tags-input>
 										</div>
@@ -228,8 +233,9 @@
 											<span class="required" aria-required="true"> * </span>
 										</label>
 										<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-											<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption" ng-options="r as r.name for r in allSource.options | orderBy: 'datapodname' track by r.uuid"
-											 ng-disabled="{{mode}}" required="">
+											<select class="form-control" select2 name="" data-ng-change="onChangeSource()" data-ng-model="allSource.defaultoption"
+											 ng-options="r as r.displayName for r in allSource.options | orderBy: 'datapodname' track by r.uuid" ng-disabled="{{mode}}"
+											 required="">
 											</select>
 										</div>
 									</div>
@@ -254,38 +260,40 @@
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Color Palette
 										</label>
 										<div class="col-md-2 col-sm-2 col-xs-12">
-											<ui-select  name ="nodeIcon" ng-model="vizpoddata.colorPalette"  theme="" ng-disabled="{{mode}}"   on-select="onChangeColorPalette(vizpoddata.colorPalette)" append-to-body="true">
-												<ui-select-match  >
+											<ui-select name="nodeIcon" ng-model="vizpoddata.colorPalette" theme="" ng-disabled="{{mode}}" on-select="onChangeColorPalette(vizpoddata.colorPalette)"
+											 append-to-body="true">
+												<ui-select-match>
 													<div style="margin-top:0px;">
-															<!-- ng-if="vizpoddata.colorPalette !='Standard' " -->
-														<span  style="background-color:{{code}};width:10px;padding-right:20%;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
+														<!-- ng-if="vizpoddata.colorPalette !='Standard' " -->
+														<span style="background-color:{{code}};width:10px;padding-right:20%;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
 														<!-- <span  ng-if="vizpoddata.colorPalette =='Standard' ">{{vizpoddata.colorPalette}}</span> -->
 
 													</div>
 												</ui-select-match>
-												<ui-select-choices repeat="x.text as x in (colorPalette | filter: $select.search)  track by x.text" position='down'>
+												<ui-select-choices repeat="x.text as x in (colorPalette | filter: $select.search)  track by x.text"
+												 position='down'>
 													<div>
-														<span  style="padding-right: 6px;"ng-bind-html="x.text | highlight: $select.search"></span>
-														<span  style="background-color:{{code}};width:10px;padding-right:7px;" ng-repeat="code in x.codes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
+														<span style="padding-right: 6px;" ng-bind-html="x.text | highlight: $select.search"></span>
+														<span style="background-color:{{code}};width:10px;padding-right:7px;" ng-repeat="code in x.codes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
 													</div>
 												</ui-select-choices>
 											</ui-select>
 										</div>
-										<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px; padding-right:0px;">										
+										<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px; padding-right:0px;">
 										</label>
 										<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
-											
+
 										</div>
 									</div>
-								
-								
+
+
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
 											<span class="required" aria-required="true"> * </span>
 										</label>
 										<div class="col-md-6">
-											<select class="form-control" data-ng-model="vizpodtype" ng-options="r for r in vizpodTypes  | orderBy:orderByValue" ng-disabled="{{mode}}"
-											 required="" data-ng-change="onChangeChartType()">
+											<select class="form-control" data-ng-model="vizpodtype" ng-options="r for r in vizpodTypes  | orderBy:orderByValue"
+											 ng-disabled="{{mode}}" required="" data-ng-change="onChangeChartType()">
 											</select>
 										</div>
 									</div>
@@ -298,20 +306,21 @@
 
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Sort Order
-											
+
 										</label>
 										<div class="col-md-6">
-											<select class="form-control" data-ng-model="vizpoddata.sortOrder" ng-options="r for r in sortOrders  | orderBy" ng-disabled="{{mode}}">
+											<select class="form-control" data-ng-model="vizpoddata.sortOrder" ng-options="r for r in sortOrders  | orderBy"
+											 ng-disabled="{{mode}}">
 											</select>
 										</div>
 									</div>
-                                    <div class="form-group">
+									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Sort By</label>
 										<div class="col-md-6">
-											<tags-input class="tag-scroll" ng-model="sortByAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
-											 add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
-												<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-												 load-on-empty="true">
+											<tags-input class="tag-scroll" ng-model="sortByAttributeTags" ng-disabled="{{mode}}" display-property="dname"
+											 key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+												<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true"
+												 load-on-focus="true" load-on-empty="true">
 												</auto-complete>
 											</tags-input>
 										</div>
@@ -320,27 +329,29 @@
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Detail Attribute</label>
 										<div class="col-md-6">
-											<tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
-												add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
-												<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-													load-on-empty="true">
+											<tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname"
+											 key-property="id" add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+												<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true"
+												 load-on-focus="true" load-on-empty="true">
 												</auto-complete>
 											</tags-input>
 										</div>
 										<div class="col-md-1" style="left:-19px">
-										
-											<span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
-												ng-click="addAll()" style="top:6px;left:-24px;cursor: pointer;display: block;margin-bottom: 1px;margin-top: 10px;"></span>
-											<span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
-												aria-hidden="true" ng-click=" clearAllDetailAttr()" style="top:3px;left:-1px;cursor: pointer;"></span>
+
+											<span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top"
+											 tooltip aria-hidden="true" ng-click="addAll()" style="top:6px;left:-24px;cursor: pointer;display: block;margin-bottom: 1px;margin-top: 10px;"></span>
+											<span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
+											 data-placement="top" tooltip aria-hidden="true" ng-click=" clearAllDetailAttr()" style="top:3px;left:-1px;cursor: pointer;"></span>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
 										<div class="col-md-6 col-sm-6 col-xs-12">
 											<div class="btn-group" ng-init="vizpoddata.active='Y'">
-												<label class="btn btn-default" ng-model="vizpoddata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-												<label class="btn btn-default" ng-model="vizpoddata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+												<label class="btn btn-default" ng-model="vizpoddata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="vizpoddata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}"
+												 uncheckable>No</label>
 											</div>
 										</div>
 									</div>
@@ -348,8 +359,10 @@
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
 										<div class="col-md-6 col-sm-6 col-xs-12">
 											<div class="btn-group">
-												<label class="btn btn-default" ng-model="vizpoddata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-												<label class="btn btn-default" ng-model="vizpoddata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+												<label class="btn btn-default" ng-model="vizpoddata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="vizpoddata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}"
+												 uncheckable>No</label>
 											</div>
 										</div>
 									</div>
@@ -357,23 +370,25 @@
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
 										<div class="col-md-6 col-sm-6 col-xs-12">
 											<div class="btn-group" ng-init="vizpoddata.published='N'">
-												<label class="btn btn-default" ng-model="vizpoddata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-												<label class="btn btn-default" ng-model="vizpoddata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+												<label class="btn btn-default" ng-model="vizpoddata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="vizpoddata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}"
+												 uncheckable>No</label>
 											</div>
 										</div>
-									</div> 
+									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
 										<div class="col-md-6 col-sm-6 col-xs-12">
-										  <div class="btn-group" ng-init="vizpoddata.publicFlag='N'">
-											<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'Y'"
-											  ng-disabled="{{mode}}" uncheckable>Yes</label>
-											<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'N'"
-											  ng-disabled="{{mode}}" uncheckable>No</label>
-										  </div>
+											<div class="btn-group" ng-init="vizpoddata.publicFlag='N'">
+												<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+												 uncheckable>Yes</label>
+												<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+												 uncheckable>No</label>
+											</div>
 										</div>
-									  </div>
-									
+									</div>
+
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
 										<div class="col-md-6">
@@ -399,8 +414,8 @@
 													<label for="name">Key
 														<span class="required" aria-required="true"> * </span>
 													</label>
-													<ul class="tagitdd" ng-class="({{mode}} ==true || ['form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
-													 ng-disabled="{{mode}}" jqyoui-droppable="{multiple:true,'onDrop':'onDropKey($index)','onOver':'onOverCallBackKey()','beforeDrop':'beforeDropKey'}">
+													<ul class="tagitdd" ng-class="({{mode}} ==true || ['form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'"
+													 style="height:150px;" data-drop="true" ng-model='keylist' ng-disabled="{{mode}}" jqyoui-droppable="{multiple:true,'onDrop':'onDropKey($index)','onOver':'onOverCallBackKey()','beforeDrop':'beforeDropKey'}">
 														<li ng-disabled="{{mode}}" title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd"
 														 ng-repeat="item in keylist" style="background-color:#99ddff" required="">
 															<span class="tagit-label">{{item.dname}}</span>
@@ -415,8 +430,8 @@
 													<label for="name">Group</label>
 													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='grouplist' ng-class="({{mode}} ==true || ['score-card','form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'"
 													 jqyoui-droppable="{multiple:true,'onDrop':'onDropGroup($index)','beforeDrop':'beforeDropGroup'}">
-														<li title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in grouplist"
-														 style="background-color:#ffb380">
+														<li title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd"
+														 ng-repeat="item in grouplist" style="background-color:#ffb380">
 															<span class="tagit-label">{{item.attributeName}}</span>
 															<a class="tagit-close-dd">
 																<span class="text-icon" ng-click="removeGroup($index)">×</span>
@@ -427,16 +442,17 @@
 												</div>
 
 												<div class="col-xs-4">
-													<label for="name">Value 
+													<label for="name">Value
 														<span class="required" aria-required="true"> * </span>
 													</label>
 													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='valuelist' ng-class="({{mode}} ==true)?'disabled-ul':'default'"
 													 jqyoui-droppable="{multiple:true,'onDrop':'onDropValue($index)','beforeDrop':'beforeDropValue'}">
-														<li title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in valuelist" style="background-color:#e6ff99"
-														
-														 required="" popover-placement="bottom-left" uib-popover-template="'functionPopoverTemplate.html'" popover-is-open="item.popoverIsOpen" popover-enable="item.popoverIsOpen" ng-click="onClickPopoverOpen($index)"  popover-trigger="'click'" >
+														<li title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in valuelist"
+														 style="background-color:#e6ff99" required="" popover-placement="bottom-left" uib-popover-template="'functionPopoverTemplate.html'"
+														 popover-is-open="item.popoverIsOpen" popover-enable="item.popoverIsOpen" ng-click="onClickPopoverOpen($index)"
+														 popover-trigger="'click'">
 															<span class="tagit-label">{{item.dname}}</span>
-															
+
 															<a class="tagit-close-dd">
 																<span class="text-icon" ng-click="removeValue($index)">×</span>
 																<span class="ui-icon ui-icon-close"></span>
@@ -455,7 +471,7 @@
 															</script>
 														</li>
 													</ul>
-													
+
 												</div>
 											</div>
 										</div>
@@ -482,9 +498,9 @@
 			</div>
 		</div>
 	</div>
-	 <div ng-if="isDownloadDirective">
-    <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
-  </div>
+	<div ng-if="isDownloadDirective">
+		<download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
+	</div>
 
 </div>
 <!-- END MAIN CONTENT -->

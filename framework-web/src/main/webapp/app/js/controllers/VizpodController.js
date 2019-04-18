@@ -522,10 +522,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				formulajson.index = $scope.allSourceAttribute.length;
 				formulajson.id = response[i].uuid+"_"+i;
 				formulajson.class = "tagit-choice_formula-dd"
-				formulajson.uuid = response[i].uuid
-				formulajson.dname = response[i].name
-				formulajson.name = response[i].name
-				formulajson.type = "formula"
+				formulajson.uuid = response[i].uuid;
+				formulajson.dname = response[i].displayName;
+				formulajson.name = response[i].name;
+				formulajson.type = "formula";
 				$scope.allSourceAttribute.push(formulajson)
 			}//End For
 		}//End onSuccessGetFormulaByType
@@ -539,10 +539,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				expressionjson.index = $scope.allSourceAttribute.length;
 				expressionjson.id = response[i].uuid+"_"+i
 				expressionjson.class = "tagit-choice_expression-dd"
-				expressionjson.uuid = response[i].uuid
-				expressionjson.dname = response[i].name
-				expressionjson.name = response[i].name
-				expressionjson.type = "expression"
+				expressionjson.uuid = response[i].uuid;
+				expressionjson.dname = response[i].displayName;
+				expressionjson.name = response[i].name;
+				expressionjson.type = "expression";
 				$scope.allSourceAttribute.push(expressionjson)
 			}//End For
 		}//End onSuccessGetFormulaByType

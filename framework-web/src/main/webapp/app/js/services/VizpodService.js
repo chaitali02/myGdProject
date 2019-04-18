@@ -216,7 +216,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attributedetail.name = response[j].ref.name;
           attributedetail.attributeName = response[j].attrName;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributes.push(attributedetail)
         }
@@ -241,7 +241,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attributedetail.name = response[j].ref.name;
           attributedetail.attributeName = response[j].attrName;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributes.push(attributedetail)
         }
@@ -268,7 +268,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attributedetail.name = response[j].ref.name;
           attributedetail.attributeName = response[j].attrName;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributes.push(attributedetail)
         }
@@ -294,7 +294,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attributedetail.name = response[j].ref.name;
           attributedetail.attributeName = response[j].attrName;
           attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-          attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+          attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
           attributes.push(attributedetail)
         }
@@ -318,7 +318,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         attributedetail.uuid = response[j].ref.uuid;
         attributedetail.datapodname = response[j].ref.name;
         attributedetail.name = response[j].attrName;
-        attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+        attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
         attributedetail.attributeId = response[j].attrId;
         attributes.push(attributedetail)
       }
@@ -473,11 +473,13 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attrinfo.uuid = response.detailAttr[i].ref.uuid;
           attrinfo.type = response.detailAttr[i].ref.type;
           if(response.detailAttr[i].ref.type !="formula"){
-            attrinfo.dname = response.detailAttr[i].ref.name + "." + response.detailAttr[i].attributeName;
+            attrinfo.dname = response.detailAttr[i].ref.displayName + "." + response.detailAttr[i].attributeName;
+            attrinfo.name = response.detailAttr[i].ref.name 
             attrinfo.attributeId = response.detailAttr[i].attributeId;
             attrinfo.id = response.detailAttr[i].ref.uuid + "_" + response.detailAttr[i].attributeId
           }else{
-            attrinfo.dname = response.detailAttr[i].ref.name;
+            attrinfo.name = response.detailAttr[i].ref.name;
+            attrinfo.dname = response.detailAttr[i].ref.displayName;
             attrinfo.id = response.detailAttr[i].ref.uuid;
           }
 
@@ -492,11 +494,13 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           attrinfo.uuid = response.sortBy[i].ref.uuid;
           attrinfo.type = response.sortBy[i].ref.type;
           if(response.sortBy[i].ref.type != "formula"){
-            attrinfo.dname = response.sortBy[i].ref.name + "." + response.sortBy[i].attributeName;
+            attrinfo.dname = response.sortBy[i].ref.displayName + "." + response.sortBy[i].attributeName;
+            attrinfo.name = response.sortBy[i].ref.name; 
             attrinfo.attributeId = response.sortBy[i].attributeId;
             attrinfo.id = response.sortBy[i].ref.uuid + "_" + response.sortBy[i].attributeId  
           }else{
-            attrinfo.dname = response.sortBy[i].ref.name;
+            attrinfo.name = response.sortBy[i].ref.name;
+            attrinfo.dname = response.sortBy[i].ref.displayName;
             attrinfo.id = response.sortBy[i].ref.uuid;       
           }
           sortByAttr[i] = attrinfo;
@@ -514,9 +518,11 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         if(response.keys[i].ref.type !='formula'){
           keyjson.attributeId = response.keys[i].attributeId;
           keyjson.attributeName = response.keys[i].attributeName;
-          keyjson.dname =response.keys[i].ref.name+"."+response.keys[i].attributeName;
+          keyjson.dname =response.keys[i].ref.displayName+"."+response.keys[i].attributeName;
+          keyjson.name =response.keys[i].ref.name;
         }else{
           keyjson.dname =response.keys[i].ref.name;
+          keyjson.dname =response.keys[i].ref.displayName;
         }
         keyArray[i] = keyjson;
       }
@@ -530,6 +536,7 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         groupjson.uuid = response.groups[i].ref.uuid;
         groupjson.attributeId = response.groups[i].attributeId;
         groupjson.attributeName = response.groups[i].attributeName;
+        groupjson.dname = response.groups[i].ref.displayName+"."+response.groups[i].attributeName;
         groupArray[i] = groupjson;
       }
       vizpodjosn.groups = groupArray;
@@ -542,14 +549,14 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         valuejson.uuid = response.values[i].ref.uuid;
         valuejson.function = response.values[i].function;
         if (response.values[i].ref.type == "datapod" || response.values[i].ref.type == "dataset") {
-          valuejson.dname = response.values[i].ref.name + "." + response.values[i].attributeName;
+          valuejson.dname = response.values[i].ref.displayName + "." + response.values[i].attributeName;
           if(response.values[i].function !=null){
-            valuejson.dname = response.values[i].function+"("+response.values[i].ref.name + "." + response.values[i].attributeName+")";
+            valuejson.dname = response.values[i].function+"("+response.values[i].ref.displayName + "." + response.values[i].attributeName+")";
           }
           valuejson.attributeId = response.values[i].attributeId;
           valuejson.attributeName = response.values[i].attributeName;
         } else {
-          valuejson.dname = response.values[i].ref.name;
+          valuejson.dname = response.values[i].ref.displayName;
         }
 
         valueArray[i] = valuejson;
@@ -601,11 +608,13 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         var defaultoption = {};
         response.sort(sortFactory.sortByProperty("name"));
         defaultoption.name = response[0].name;
+        defaultoption.displayName = response[0].displayName;
         defaultoption.uuid = response[0].uuid;
         data.defaultoption = defaultoption;
         for (var i = 0; i < response.length; i++) {
           var datajosn = {}
           datajosn.name = response[i].name;
+          datajosn.displayName = response[i].displayName;
           datajosn.uuid = response[i].uuid;
           data.options[i] = datajosn
         }
