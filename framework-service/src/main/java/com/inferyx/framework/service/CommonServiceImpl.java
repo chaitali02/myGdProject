@@ -5445,6 +5445,19 @@ public class CommonServiceImpl<T> {
 	
 	/**
 	 * 
+	 * @param param
+	 * @return
+	 */
+	public String wrapSysParams (String param) {
+		final String META = "<META>";
+		if (StringUtils.isNotBlank(param)) {
+			return META + param + META;
+		}
+		return param;
+	}
+	
+	/**
+	 * 
 	 * @param baseExec
 	 * @param execParams
 	 * @param sql
