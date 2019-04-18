@@ -25,6 +25,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 
 @Service
@@ -114,15 +115,11 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	 * @throws Exception
 	 */
 	/****************************Unused***************************/
-	/*public Status restart(BaseExec baseExec) throws Exception {
-		try {
-			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profilegroupExec, MetaType.profileExec);
-		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		}
-	}*/
+	public Status restart(BaseExec baseExec) throws Exception {
+		return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profilegroupExec,
+				MetaType.profileExec);
+
+	}
 
 
 	/**

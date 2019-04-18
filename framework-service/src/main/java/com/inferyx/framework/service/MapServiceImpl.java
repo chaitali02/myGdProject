@@ -483,15 +483,12 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		/*OrderKey datapodKey = new OrderKey(targetDatapod.getUuid(),
 				targetDatapod.getVersion());*/
 		//sql = mapExec.getExec();
-		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		//mapExec.exportBaseProperty();
 		//List<Status> statusList = new ArrayList<>();
 		RunMapServiceImpl runMapServiceImpl = new RunMapServiceImpl();
 		runMapServiceImpl.setMapExecServiceImpl(mapExecServiceImpl);
 //		runMapServiceImpl.setDaoRegister(daoRegister);
-		runMapServiceImpl.setData(data);
 		runMapServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
-		runMapServiceImpl.setHdfsInfo(hdfsInfo);
 		runMapServiceImpl.setMap(map);
 		runMapServiceImpl.setExecFactory(execFactory);
 		runMapServiceImpl.setDatapodKey(datapodKey);

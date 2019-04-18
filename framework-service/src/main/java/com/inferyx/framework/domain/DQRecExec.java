@@ -19,8 +19,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document(collection = "dqrecexec")
-public class DQRecExec extends BaseExec {
+public class DQRecExec extends BaseRuleExec {
 	private List<DQIntelligence> intelligenceResult;
+	private String samplePercent;
 
 	/**
 	 * @Ganesh
@@ -38,5 +39,23 @@ public class DQRecExec extends BaseExec {
 	 */
 	public void setIntelligenceResult(List<DQIntelligence> intelligenceResult) {
 		this.intelligenceResult = intelligenceResult;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the samplePercent
+	 */
+	public String getSamplePercent() {
+		return samplePercent;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param samplePercent the samplePercent to set
+	 */
+	public void setSamplePercent(String samplePercent) {
+		this.samplePercent = samplePercent;
 	}
 }

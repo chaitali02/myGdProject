@@ -14,7 +14,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,14 +30,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IDataQualGroupExecDao;
+import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecStatsHolder;
+import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -57,6 +65,8 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	DataQualServiceImpl dataQualServiceImpl;	
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;	
+	@Resource(name="taskThreadMap")
+	ConcurrentHashMap taskThreadMap;
 	
 	static final Logger logger = Logger.getLogger(DataQualExecServiceImpl.class);
 
@@ -268,11 +278,10 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	
-	/*************************Unused*************************/
-	/*public void PAUSE (String uuid, String version) {
+	/**********************Unused***********************/
+	public void PAUSE (String uuid, String version) {
 		PAUSE(uuid, version, MetaType.dqExec);
-	}*/
+	}
 	
  	/**
 	 * Kill meta thread if RUNNING
@@ -280,20 +289,53 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param version
 	 */
 	/**********************Unused***********************/
-	/*public void kill (String uuid, String version) {
+	public void kill (String uuid, String version) {
 		super.kill(uuid, version, MetaType.dqExec);
-	}*/
+	}
+
 	
 	/**
 	 * RESUME DQ Execution
 	 * @param uuid
 	 * @param version
 	 */
-	
-	/*******************************Unused**************************/
-	/*public void RESUME (String uuid, String version) {
+	/**********************Unused***********************/
+	public void RESUME (String uuid, String version) {
 		super.RESUME(uuid, version, MetaType.dqExec);
-	}*/
+	}
 
-	
+	  /**
+		 * Kill meta thread if RUNNING
+		 * @param uuid
+		 * @param version
+		 */
+		public void kill (String uuid, String version, MetaType metaType)  {
+			DQRecExec dqRecExec = null;
+			try {
+				dqRecExec = (DQRecExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dqrecExec.toString(), "N");
+			} catch (JsonProcessingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (dqRecExec == null) {
+				logger.info("Nothing to kill. Aborting ... ");
+				return;
+			}
+			
+			try {
+				dqRecExec = (DQRecExec) commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.TERMINATING);
+				if (!Helper.getLatestStatus(dqRecExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+					logger.info(" Status is not TERMINATING. So aborting ... ");
+					return;
+				}
+				FutureTask futureTask = (FutureTask) taskThreadMap.get(MetaType.dqrecExec+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion());
+				if (futureTask != null && !futureTask.isDone()) {
+					futureTask.cancel(true);
+				}
+				taskThreadMap.remove(MetaType.dqrecExec+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion());
+				commonServiceImpl.setMetaStatus(dqRecExec, MetaType.dqrecExec, Status.Stage.KILLED);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 }

@@ -63,7 +63,7 @@ public class MapController {
 			mapExec = mapServiceImpl.create(uuid, version, null, null, null, null, null, execParams, runMode);
 			mapExec = mapServiceImpl.generateSql(uuid, version, mapExec, null, null, null, null, execParams, runMode);
 			/*com.inferyx.framework.domain.Map map = mapServiceImpl.findLatestByUuid(uuid);*/
-			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(uuid, "map");
+			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString());
 			OrderKey datapodKey = map.getTarget().getRef().getKey();
 			mapExec = mapServiceImpl.executeSql(mapExec, datapodKey, runMode);
 		} catch (Exception e) {

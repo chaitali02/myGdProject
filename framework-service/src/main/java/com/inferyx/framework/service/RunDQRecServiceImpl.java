@@ -8,7 +8,7 @@
  *
  * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
  *******************************************************************************/
-package com.inferyx.framework.intelligence;
+package com.inferyx.framework.service;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -16,15 +16,13 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.functions;
 import org.apache.spark.sql.expressions.Window;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
@@ -37,11 +35,13 @@ import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
+import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.CheckType;
 import com.inferyx.framework.enums.RunMode;
@@ -50,29 +50,205 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.MessageStatus;
-import com.inferyx.framework.service.MetadataServiceImpl;
 
 /**
  * @author Ganesh
  *
  */
-@Component
-public class DQRecOperator {
-
-	static final Logger logger = Logger.getLogger(DQRecOperator.class);
+public class RunDQRecServiceImpl implements Callable<TaskHolder> {
 	
-	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
 	private SparkExecutor<?> sparkExecutor;
-	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
+	private DQRecExec dqRecExec;
+	private ExecParams execParams;
+	private RunMode runMode;
+	private String name;
+	private SessionContext sessionContext;
 
-	public List<DQIntelligence> genRecommendation(DQRecExec dqRecExec, ExecParams execParams, RunMode runMode) throws Exception {
+	/**
+	 * @Ganesh
+	 *
+	 * @return the commonServiceImpl
+	 */
+	public CommonServiceImpl<?> getCommonServiceImpl() {
+		return commonServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param commonServiceImpl the commonServiceImpl to set
+	 */
+	public void setCommonServiceImpl(CommonServiceImpl<?> commonServiceImpl) {
+		this.commonServiceImpl = commonServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the execFactory
+	 */
+	public ExecutorFactory getExecFactory() {
+		return execFactory;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param execFactory the execFactory to set
+	 */
+	public void setExecFactory(ExecutorFactory execFactory) {
+		this.execFactory = execFactory;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sparkExecutor
+	 */
+	public SparkExecutor<?> getSparkExecutor() {
+		return sparkExecutor;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param sparkExecutor the sparkExecutor to set
+	 */
+	public void setSparkExecutor(SparkExecutor<?> sparkExecutor) {
+		this.sparkExecutor = sparkExecutor;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the metadataServiceImpl
+	 */
+	public MetadataServiceImpl getMetadataServiceImpl() {
+		return metadataServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param metadataServiceImpl the metadataServiceImpl to set
+	 */
+	public void setMetadataServiceImpl(MetadataServiceImpl metadataServiceImpl) {
+		this.metadataServiceImpl = metadataServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dqRecExec
+	 */
+	public DQRecExec getDqRecExec() {
+		return dqRecExec;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param dqRecExec the dqRecExec to set
+	 */
+	public void setDqRecExec(DQRecExec dqRecExec) {
+		this.dqRecExec = dqRecExec;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the execParams
+	 */
+	public ExecParams getExecParams() {
+		return execParams;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param execParams the execParams to set
+	 */
+	public void setExecParams(ExecParams execParams) {
+		this.execParams = execParams;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the runMode
+	 */
+	public RunMode getRunMode() {
+		return runMode;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param runMode the runMode to set
+	 */
+	public void setRunMode(RunMode runMode) {
+		this.runMode = runMode;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sessionContext
+	 */
+	public SessionContext getSessionContext() {
+		return sessionContext;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param sessionContext the sessionContext to set
+	 */
+	public void setSessionContext(SessionContext sessionContext) {
+		this.sessionContext = sessionContext;
+	}
+	
+	@Override
+	public TaskHolder call() throws Exception {
+		try {
+			FrameworkThreadLocal.getSessionContext().set(sessionContext);
+			execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			
+			throw new RuntimeException((message != null) ? message : "Data Quality recommendation execution FAILED.");
+		}
+		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.dqrecExec, dqRecExec.getUuid(), dqRecExec.getVersion()));
+		return taskHolder;
+	}
+	public List<DQIntelligence> execute() throws Exception {
 		try {
 			List<DQIntelligence> recommendationList = new ArrayList<>();
 			try {
@@ -224,13 +400,9 @@ public class DQRecOperator {
 					i++;
 				}
 				regextQuery.append(" FROM ").append(rsHolder.getTableName()).append(" ");
-//				regextQuery.append(" UNION ALL ");
-
-//				String sql = regextQuery.substring(0, regextQuery.lastIndexOf(" UNION ALL "));
-//				String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
-				sparkExecutor.executeAndRegisterByTempTable(regextQuery.toString(), domainTempTableName, true,
-						appUuid)/* .getDataFrame().show(100, false) */;
+				sparkExecutor.executeAndRegisterByTempTable(regextQuery.toString(), domainTempTableName, true,appUuid);
 				
+				//***************** calculating score for each column, formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
 				if(sampleTotalRows > 0) {
 					for(String colName : dfColumns) {	
 						StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
@@ -252,68 +424,9 @@ public class DQRecOperator {
 					}					
 				}
 			}
-			
-//			String sql = regextQuery.substring(0, regextQuery.lastIndexOf(" UNION ALL "));
-//			String domainTempTableName = defaultTempTableName.concat("_").concat("domain_union");
-//			sparkExecutor.executeAndRegisterByTempTable(sql, domainTempTableName, true, appUuid).getDataFrame().show(100, false);
-			
+					
 			tempTableList.add(domainTempTableName);
 			
-			//***************** calculating score for each column, formula: ((no. of 'Y' in a column)/sampleTotalRows) *****************//
-//			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
-//			tempTableList.add(colScoreTempTable);
-//			
-//			List<DQIntelligence> domainRecommendation = new ArrayList<>();
-//			
-//			long sampleTotalRows = rsHolder.getCountRows();
-//			for(AttributeDomain domain : attrDomainList) {
-//				if(sampleTotalRows > 0) {
-//					for(String colName : dfColumns) {	
-//						StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-//						StringBuilder scoreCountBuilder = new StringBuilder();
-//						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, ");
-//						scoreCountBuilder.append("(COUNT(").append(colName).append(") / ").append(sampleTotalRows).append(") * 100 AS score_count").append(", ");
-//						scoreCountBuilder.append("'").append(colName).append("'").append(" AS score_column");
-//						
-//						scoreCountBuilder.append(" FROM ").append(domainTempTableName);
-//						scoreCountBuilder.append(" WHERE ").append(" domain_name = '").append(domain.getName()).append("' AND ").append(colName).append(" = 'Y' ");
-//						scoreCountBuilder.append(" GROUP BY ").append("domain_name, domain_uuid, datapod_uuid");
-//												
-//						outerSqlBuilder.append(scoreCountBuilder).append(") WHERE score_count >= "+minThreshold);
-//						
-//						ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(outerSqlBuilder.toString(), colScoreTempTable, false, appUuid);
-////						scoreCountHolder.getDataFrame().show(false);
-//						
-//						domainRecommendation.addAll(getCheckTypeListForDomain(scoreCountHolder, attrDomainList, datapod, latestDQList));
-//					}					
-//				}
-//			}
-			
-//			String colScoreTempTable = defaultTempTableName.concat("_").concat("score");		
-//			tempTableList.add(colScoreTempTable);
-//			
-//			StringBuilder outerSqlBuilder = new StringBuilder("SELECT * FROM (");
-//			StringBuilder scoreCountBuilder = new StringBuilder();
-//			long sampleTotalRows = rsHolder.getCountRows();
-//			for(AttributeDomain domain : attrDomainList) {
-//				if(sampleTotalRows > 0) {
-//					for(String colName : dfColumns) {					
-//						scoreCountBuilder.append("SELECT domain_name, domain_uuid, datapod_uuid, "
-//								+ "(COUNT(" + colName + ")/" + sampleTotalRows + ") * 100 AS score_count, '"
-//								+ colName + "' AS score_column FROM " + domainTempTableName + " WHERE domain_name = '"
-//								+ domain.getName() + "' AND " + colName + " = 'Y' GROUP BY domain_name, score_column, domain_uuid, datapod_uuid");
-//						
-//						scoreCountBuilder.append(" UNION ALL ");
-//					}
-//				}
-//			}
-			
-//			String scoreSql = scoreCountBuilder.substring(0, scoreCountBuilder.lastIndexOf(" UNION ALL "));
-////			outerSqlBuilder.append(scoreSql).append(") WHERE score_count >= "+minThreshold);
-//			
-//			ResultSetHolder scoreCountHolder = sparkExecutor.executeAndRegisterByTempTable(scoreSql, colScoreTempTable, true, appUuid);
-//			scoreCountHolder.getDataFrame().show(false);
-//			
 //			//***************** saving score *****************//
 //			String scoreFilePathUrl = defaultPath.concat(filePath).concat("score");
 //			save(scoreCountHolder, scoreFilePathUrl, null, false);
@@ -958,4 +1071,5 @@ public class DQRecOperator {
 
 		return checkTypeList;
 	}
+
 }

@@ -186,6 +186,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
+import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
@@ -224,10 +225,10 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.BusinessRule;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.SysParamsEnum;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskOperator;
 import com.inferyx.framework.domain.Train;
@@ -2132,7 +2133,7 @@ public class CommonServiceImpl<T> {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
+	public ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
 		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		List<ParamSetHolder> paramSetHolder = execParams.getParamInfo();
 		if (paramListInfo != null)
@@ -3471,8 +3472,13 @@ public class CommonServiceImpl<T> {
 	public void kill(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
+
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("kill", String.class, String.class).invoke(service, uuid, version);
+			if(type.equals(MetaType.dqrecExec)) {
+				(service).getClass().getMethod("kill", String.class, String.class, MetaType.class).invoke(service, uuid, version, type);
+			} else {
+				(service).getClass().getMethod("kill", String.class, String.class).invoke(service, uuid, version);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -5478,6 +5484,43 @@ public class CommonServiceImpl<T> {
 	public  String getCurrentTimeStampByFormat() {
 		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		return formatter.format(new Date());
+	}
+	
+	/**
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public String wrapSysParams (String param) {
+		final String META = "<META>";
+		if (StringUtils.isNotBlank(param)) {
+			return META + param + META;
+		}
+		return param;
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @param execParams
+	 * @param sql
+	 * @return
+	 */
+	public String replaceSysParams(BaseExec baseExec, ExecParams execParams, String sql) {
+		final String META = "<META>";
+		if (StringUtils.isBlank(sql)) {
+			return sql;
+		}
+		for (SysParamsEnum sysParam : SysParamsEnum.values()) {
+			switch(sysParam) {
+				case EXEC_VERSION : {
+					if (baseExec != null) {
+						sql = sql.replaceAll(META + SysParamsEnum.EXEC_VERSION.toString() + META, baseExec.getVersion());
+					}
+				}	// End case EXEC_VERSION
+			}	// End switch
+		}	// End for
+		return sql;
 	}
 
 
