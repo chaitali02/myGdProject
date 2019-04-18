@@ -1,53 +1,54 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "d28a5d0f-0a91-4591-9211-45acc1d06a45",
-				"version": "1490111522"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "d28a5d0f-0a91-4591-9211-45acc1d06a45",
+				"version" : "1490111522"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "b6a287c1-4a5a-4cd0-bebf-e8f130575af5",
-				"version": "1490080328"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "b6a287c1-4a5a-4cd0-bebf-e8f130575af5",
+				"version" : "1490080328"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "2e754f3b-43a5-4696-8b4e-4d9d7beea7e0",
-				"version": "1490080397"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "2e754f3b-43a5-4696-8b4e-4d9d7beea7e0",
+				"version" : "1490080397"
 			}
 		}
 	],
-	"uuid": "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261",
-	"version": "1490114336",
-	"name": "dqg_branch_type",
-	"desc": "dq rule group for combination of all dq rules for table - branch type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "fc9bd7db-dad9-4bfd-8c8f-f178ecc6b261",
+	"version" : "1490114336",
+	"name" : "dqg_branch_type",
+	"desc" : "dq rule group for combination of all dq rules for table - branch type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_branch_type"
 }

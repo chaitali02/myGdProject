@@ -1,75 +1,75 @@
 {
-	"uuid": "59d41ea3-b929-48c4-b339-d951bf983894",
-	"version": "1488801521",
-	"name": "lower",
-	"desc": "Returns the string resulting from converting all characters of B to lower case. For example, lower('fOoBaR') results in 'foobar'",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "59d41ea3-b929-48c4-b339-d951bf983894",
+	"version" : "1488801521",
+	"name" : "lower",
+	"desc" : "Returns the string resulting from converting all characters of B to lower case. For example, lower('fOoBaR') results in 'foobar'",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"paramInfo": [
+	"createdOn" : ISODate("2019-04-16T14:28:16.308Z"),
+	"paramInfo" : [
 		{
-			"paramId": "0",
-			"paramName": "A",
-			"paramType": "string",
-			"paramReq": "Y",
-			"paramDefVal": ""
+			"paramId" : "0",
+			"paramName" : "A",
+			"paramType" : "string",
+			"paramReq" : "Y",
+			"paramDefVal" : ""
 		}
 	],
-	"tags": [
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  	"locked" : "N",
-	"published": "N",
-	"inputReq": "Y",
-        "publicFlag" : "Y",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"inputReq" : "Y",
+	"publicFlag" : "Y",
+	"appInfo" : [
 		{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-
-	"returnType":"STRING",
-    "category": "STRING",
-	"functionInfo" : [ 
-        {
-            "type" : "file",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        },
-        {
-            "type" : "mysql",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "hive",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "impala",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "oracle",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        },
-        {
-            "type" : "postgres",
-            "name" : "lower",
-            "paramInfoHolder" : []
-        }
-    ]
+	"returnType" : "STRING",
+	"category" : "STRING",
+	"functionInfo" : [
+		{
+			"type" : "file",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "mysql",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "hive",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "impala",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "oracle",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "postgres",
+			"name" : "lower",
+			"paramInfoHolder" : [ ]
+		}
+	],
+	"displayName" : "lower"
 }

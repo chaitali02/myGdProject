@@ -160,5 +160,6 @@
 			"attributeType": null
 		}
 	],
-	"formulaType": "aggr"
+	"formulaType": "aggr",
+	"displayName" : "fm_consistency_score_db"
 }

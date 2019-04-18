@@ -1,53 +1,54 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "fb349374-fa83-4401-bd7d-efddddbdd5cf",
-				"version": "1490111816"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "fb349374-fa83-4401-bd7d-efddddbdd5cf",
+				"version" : "1490111816"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "eac6956b-98fb-478a-b2fd-7cd9ca02b4a9",
-				"version": "1490082270"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "eac6956b-98fb-478a-b2fd-7cd9ca02b4a9",
+				"version" : "1490082270"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "09d473c2-38e2-4c95-a651-a11a518d6ca7",
-				"version": "1490082328"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "09d473c2-38e2-4c95-a651-a11a518d6ca7",
+				"version" : "1490082328"
 			}
 		}
 	],
-	"uuid": "9028015c-049a-4845-8e0e-d245f5b6a1d0",
-	"version": "1490115619",
-	"name": "dqg_transaction_type",
-	"desc": "dq rule group for combination of all dq rules for table - transaction type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "9028015c-049a-4845-8e0e-d245f5b6a1d0",
+	"version" : "1490115619",
+	"name" : "dqg_transaction_type",
+	"desc" : "dq rule group for combination of all dq rules for table - transaction type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_transaction_type"
 }

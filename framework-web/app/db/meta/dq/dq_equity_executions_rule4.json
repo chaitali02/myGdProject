@@ -1,86 +1,91 @@
 {
-  "uuid": "45f5f608-72bb-4f39-90f7-c3e500744f54",
-  "version": "1553032185",
-  "name": "dq_equity_executions_rule4",
-  "desc": "Execution time must be less than or equal to the Execution event time",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-      "version": "1548315952",
-      "name": "db_admin"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 19 17:49:45 EDT 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552267311",
-        "name": "Deutsche Admin"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": null,
-  "attribute": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-      "version": null,
-      "name": "equity_executions"
-    },
-    "value": null,
-    "attrId": "4",
-    "attrName": "trade_execution_time",
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
-      "version": null,
-      "name": "equity_executions"
-    },
-    "value": null
-  },
-  "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
-  "valueCheck": [],
-  "rangeCheck": {},
-  "dataTypeCheck": "",
-  "dateFormatCheck": null,
-  "customFormatCheck": null,
-  "lengthCheck": {},
-  "refIntegrityCheck": null,
-  "filterInfo": null,
-  "userInfo": null,
-  "thresholdInfo": {
-    "low": "25",
-    "medium": "50",
-    "high": "75",
-    "type": "PERCENTAGE"
-  },
-  "domainCheck": null,
-  "blankSpaceCheck": null,
-  "expressionCheck": {
-    "ref": {
-      "type": "expression",
-      "uuid": "cf11a6f5-0894-4d14-912c-90bab1622ae7",
-      "version": null,
-      "name": "expr_dq_equity_executions_rule4"
-    },
-    "value": null
-  },
-  "caseCheck": null,
-  "abortCondition": null
+	"uuid" : "45f5f608-72bb-4f39-90f7-c3e500744f54",
+	"version" : "1553032185",
+	"name" : "dq_equity_executions_rule4",
+	"desc" : "Execution time must be less than or equal to the Execution event time",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+			"version" : "1548315952",
+			"name" : "db_admin"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.720Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
+				"version" : "1552267311",
+				"name" : "Deutsche Admin"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : null,
+	"attribute" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+			"version" : null,
+			"name" : "equity_executions"
+		},
+		"value" : null,
+		"attrId" : "4",
+		"attrName" : "trade_execution_time",
+		"attrType" : null,
+		"attrUnitType" : null,
+		"function" : null
+	},
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+			"version" : null,
+			"name" : "equity_executions"
+		},
+		"value" : null
+	},
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
+		
+	},
+	"dataTypeCheck" : "",
+	"dateFormatCheck" : null,
+	"customFormatCheck" : null,
+	"lengthCheck" : {
+		
+	},
+	"refIntegrityCheck" : null,
+	"filterInfo" : null,
+	"userInfo" : null,
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	},
+	"domainCheck" : null,
+	"blankSpaceCheck" : null,
+	"expressionCheck" : {
+		"ref" : {
+			"type" : "expression",
+			"uuid" : "cf11a6f5-0894-4d14-912c-90bab1622ae7",
+			"version" : null,
+			"name" : "expr_dq_equity_executions_rule4"
+		},
+		"value" : null
+	},
+	"caseCheck" : null,
+	"abortCondition" : null,
+	"displayName" : "dq_equity_executions_rule4"
 }

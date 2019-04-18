@@ -1,2169 +1,2170 @@
 {
-  "uuid": "b9a2408e-fcd3-411e-861a-e0f78639da3d",
-  "version": "1550095673",
-  "name": "map_device_data_final_features",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Feb 13 17:07:53 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1547482153",
-        "name": "Predictive Maintenance"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-      "version": null,
-      "name": "device_data_final_features"
-    },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-      "version": null,
-      "name": "ds_device_data_final_features"
-    },
-    "value": null
-  },
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "deviceid",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "deviceid",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "date",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "date",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "warn_type1_total",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "warn_type1_total",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "warn_type2_total",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "warn_type2_total",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "fault_code_type_1_count",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "fault_code_type_1_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "5",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "fault_code_type_2_count",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "fault_code_type_2_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "6",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "fault_code_type_3_count",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "fault_code_type_3_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "7",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "fault_code_type_4_count",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "fault_code_type_4_count",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "8",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "problem_type_1_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "problem_type_1_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "9",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "problem_type_2_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "problem_type_2_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "10",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "problem_type_3_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "problem_type_3_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "11",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "problem_type_4_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "problem_type_4_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "12",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "fault_code_type_1_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "fault_code_type_1_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "13",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "fault_code_type_2_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "fault_code_type_2_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "14",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "fault_code_type_3_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "fault_code_type_3_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "15",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "fault_code_type_4_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "fault_code_type_4_count_per_usage1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "16",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "problem_type_1_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "problem_type_1_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "17",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "problem_type_2_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "problem_type_2_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "18",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "problem_type_3_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "problem_type_3_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "19",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": "problem_type_4_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "problem_type_4_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "20",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "24",
-        "attrName": "fault_code_type_1_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "fault_code_type_1_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "21",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "25",
-        "attrName": "fault_code_type_2_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "fault_code_type_2_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "22",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "26",
-        "attrName": "fault_code_type_3_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "fault_code_type_3_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "23",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": "fault_code_type_4_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": "fault_code_type_4_count_per_usage2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "24",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "28",
-        "attrName": "problem_type_1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "24",
-        "attrName": "problem_type_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "25",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": "problem_type_2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "25",
-        "attrName": "problem_type_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "26",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": "problem_type_3",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "26",
-        "attrName": "problem_type_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "27",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": "problem_type_4",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": "problem_type_4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "28",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "problemreported",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "28",
-        "attrName": "problemreported",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "29",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "usage_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": "usage_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "30",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "usage_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": "usage_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "31",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "error_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": "error_count_1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "32",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "error_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "error_count_2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "33",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "error_count_3",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "error_count_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "34",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "error_count_4",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "error_count_4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "35",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "error_count_5",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "error_count_5",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "36",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "error_count_6",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "error_count_6",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "37",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "error_count_7",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "error_count_7",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "38",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "error_count_8",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "error_count_8",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "39",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "date_month",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "date_month",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "40",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "date_week",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "date_week",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "41",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "date_day",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "date_day",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "42",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": "cat1",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "cat1",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "43",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": "cat2",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "cat2",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "44",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": "cat3",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "cat3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "45",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": "cat4",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "cat4",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "46",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": "problem_type_1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": "problem_type_1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "47",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": "problem_type_2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": "problem_type_2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "48",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "55",
-        "attrName": "problem_type_3_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "48",
-        "attrName": "problem_type_3_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "49",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "56",
-        "attrName": "problem_type_4_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": "problem_type_4_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "50",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "57",
-        "attrName": "problem_type_1_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": "problem_type_1_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "51",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "58",
-        "attrName": "problem_type_2_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": "problem_type_2_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "52",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "59",
-        "attrName": "problem_type_3_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": "problem_type_3_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "53",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "60",
-        "attrName": "problem_type_4_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": "problem_type_4_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "54",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "61",
-        "attrName": "problem_type_1_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": "problem_type_1_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "55",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "62",
-        "attrName": "problem_type_2_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "55",
-        "attrName": "problem_type_2_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "56",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "63",
-        "attrName": "problem_type_3_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "56",
-        "attrName": "problem_type_3_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "57",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "64",
-        "attrName": "problem_type_4_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "57",
-        "attrName": "problem_type_4_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "58",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "65",
-        "attrName": "fault_code_type_1_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "58",
-        "attrName": "fault_code_type_1_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "59",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "66",
-        "attrName": "fault_code_type_2_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "59",
-        "attrName": "fault_code_type_2_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "60",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "67",
-        "attrName": "fault_code_type_3_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "60",
-        "attrName": "fault_code_type_3_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "61",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "68",
-        "attrName": "fault_code_type_4_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "61",
-        "attrName": "fault_code_type_4_count_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "62",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "69",
-        "attrName": "fault_code_type_1_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "62",
-        "attrName": "fault_code_type_1_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "63",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "70",
-        "attrName": "fault_code_type_2_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "63",
-        "attrName": "fault_code_type_2_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "64",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "71",
-        "attrName": "fault_code_type_3_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "64",
-        "attrName": "fault_code_type_3_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "65",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "72",
-        "attrName": "fault_code_type_4_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "65",
-        "attrName": "fault_code_type_4_count_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "66",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "73",
-        "attrName": "fault_code_type_1_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "66",
-        "attrName": "fault_code_type_1_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "67",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "74",
-        "attrName": "fault_code_type_2_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "67",
-        "attrName": "fault_code_type_2_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "68",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "75",
-        "attrName": "fault_code_type_3_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "68",
-        "attrName": "fault_code_type_3_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "69",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "76",
-        "attrName": "fault_code_type_4_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "69",
-        "attrName": "fault_code_type_4_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "70",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "85",
-        "attrName": "warning_features",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "70",
-        "attrName": "warning_features",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "71",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "86",
-        "attrName": "summary_features",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "71",
-        "attrName": "summary_features",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "72",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5e203d49-590f-4925-827b-b4b84cfa2a84",
-          "version": null,
-          "name": "ds_device_data_final_features"
-        },
-        "value": null,
-        "attrId": "87",
-        "attrName": "version",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-          "version": null,
-          "name": "device_data_final_features"
-        },
-        "value": null,
-        "attrId": "72",
-        "attrName": "version",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    }
-  ]
+	"uuid" : "b9a2408e-fcd3-411e-861a-e0f78639da3d",
+	"version" : "1550095673",
+	"name" : "map_device_data_final_features",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.884Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153",
+				"name" : "Predictive Maintenance"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+			"version" : null,
+			"name" : "device_data_final_features"
+		},
+		"value" : null
+	},
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+			"version" : null,
+			"name" : "ds_device_data_final_features"
+		},
+		"value" : null
+	},
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "deviceid",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "deviceid",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "date",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "date",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "warn_type1_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "warn_type1_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "warn_type2_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "warn_type2_total",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "fault_code_type_1_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "fault_code_type_1_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "fault_code_type_2_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "fault_code_type_2_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "6",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "fault_code_type_3_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "fault_code_type_3_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "fault_code_type_4_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "fault_code_type_4_count",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "8",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "problem_type_1_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "problem_type_1_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "9",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "problem_type_2_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "problem_type_2_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "10",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "problem_type_3_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "problem_type_3_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "11",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "problem_type_4_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "problem_type_4_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "12",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "fault_code_type_1_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "fault_code_type_1_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "13",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "fault_code_type_2_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "fault_code_type_2_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "fault_code_type_3_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "fault_code_type_3_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "15",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "fault_code_type_4_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "fault_code_type_4_count_per_usage1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "16",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "problem_type_1_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "problem_type_1_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "17",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "problem_type_2_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "problem_type_2_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "18",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "problem_type_3_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "problem_type_3_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "19",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "23",
+				"attrName" : "problem_type_4_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "problem_type_4_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "20",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "24",
+				"attrName" : "fault_code_type_1_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "fault_code_type_1_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "21",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "25",
+				"attrName" : "fault_code_type_2_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "fault_code_type_2_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "22",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "26",
+				"attrName" : "fault_code_type_3_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "fault_code_type_3_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "23",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "27",
+				"attrName" : "fault_code_type_4_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "23",
+				"attrName" : "fault_code_type_4_count_per_usage2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "24",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "28",
+				"attrName" : "problem_type_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "24",
+				"attrName" : "problem_type_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "25",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "29",
+				"attrName" : "problem_type_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "25",
+				"attrName" : "problem_type_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "26",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "30",
+				"attrName" : "problem_type_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "26",
+				"attrName" : "problem_type_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "27",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "31",
+				"attrName" : "problem_type_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "27",
+				"attrName" : "problem_type_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "28",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "32",
+				"attrName" : "problemreported",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "28",
+				"attrName" : "problemreported",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "29",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "33",
+				"attrName" : "usage_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "29",
+				"attrName" : "usage_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "34",
+				"attrName" : "usage_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "30",
+				"attrName" : "usage_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "31",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "35",
+				"attrName" : "error_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "31",
+				"attrName" : "error_count_1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "32",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "36",
+				"attrName" : "error_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "32",
+				"attrName" : "error_count_2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "33",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "37",
+				"attrName" : "error_count_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "33",
+				"attrName" : "error_count_3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "34",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "38",
+				"attrName" : "error_count_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "34",
+				"attrName" : "error_count_4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "35",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "39",
+				"attrName" : "error_count_5",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "35",
+				"attrName" : "error_count_5",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "36",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "40",
+				"attrName" : "error_count_6",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "36",
+				"attrName" : "error_count_6",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "37",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "41",
+				"attrName" : "error_count_7",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "37",
+				"attrName" : "error_count_7",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "38",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "42",
+				"attrName" : "error_count_8",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "38",
+				"attrName" : "error_count_8",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "39",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "43",
+				"attrName" : "date_month",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "39",
+				"attrName" : "date_month",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "40",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "date_week",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "40",
+				"attrName" : "date_week",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "41",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "date_day",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "41",
+				"attrName" : "date_day",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "42",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "49",
+				"attrName" : "cat1",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "42",
+				"attrName" : "cat1",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "43",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "50",
+				"attrName" : "cat2",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "43",
+				"attrName" : "cat2",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "44",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "51",
+				"attrName" : "cat3",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "cat3",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "45",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "52",
+				"attrName" : "cat4",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "cat4",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "46",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "53",
+				"attrName" : "problem_type_1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "46",
+				"attrName" : "problem_type_1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "47",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "54",
+				"attrName" : "problem_type_2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "47",
+				"attrName" : "problem_type_2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "48",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "55",
+				"attrName" : "problem_type_3_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "48",
+				"attrName" : "problem_type_3_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "49",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "56",
+				"attrName" : "problem_type_4_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "49",
+				"attrName" : "problem_type_4_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "50",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "57",
+				"attrName" : "problem_type_1_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "50",
+				"attrName" : "problem_type_1_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "51",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "58",
+				"attrName" : "problem_type_2_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "51",
+				"attrName" : "problem_type_2_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "52",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "59",
+				"attrName" : "problem_type_3_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "52",
+				"attrName" : "problem_type_3_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "53",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "60",
+				"attrName" : "problem_type_4_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "53",
+				"attrName" : "problem_type_4_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "54",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "61",
+				"attrName" : "problem_type_1_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "54",
+				"attrName" : "problem_type_1_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "55",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "62",
+				"attrName" : "problem_type_2_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "55",
+				"attrName" : "problem_type_2_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "56",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "63",
+				"attrName" : "problem_type_3_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "56",
+				"attrName" : "problem_type_3_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "57",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "64",
+				"attrName" : "problem_type_4_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "57",
+				"attrName" : "problem_type_4_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "58",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "65",
+				"attrName" : "fault_code_type_1_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "58",
+				"attrName" : "fault_code_type_1_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "59",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "66",
+				"attrName" : "fault_code_type_2_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "59",
+				"attrName" : "fault_code_type_2_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "60",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "67",
+				"attrName" : "fault_code_type_3_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "60",
+				"attrName" : "fault_code_type_3_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "61",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "68",
+				"attrName" : "fault_code_type_4_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "61",
+				"attrName" : "fault_code_type_4_count_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "62",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "69",
+				"attrName" : "fault_code_type_1_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "62",
+				"attrName" : "fault_code_type_1_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "63",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "70",
+				"attrName" : "fault_code_type_2_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "63",
+				"attrName" : "fault_code_type_2_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "64",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "71",
+				"attrName" : "fault_code_type_3_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "64",
+				"attrName" : "fault_code_type_3_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "65",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "72",
+				"attrName" : "fault_code_type_4_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "65",
+				"attrName" : "fault_code_type_4_count_per_usage1_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "66",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "73",
+				"attrName" : "fault_code_type_1_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "66",
+				"attrName" : "fault_code_type_1_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "67",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "74",
+				"attrName" : "fault_code_type_2_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "67",
+				"attrName" : "fault_code_type_2_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "68",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "75",
+				"attrName" : "fault_code_type_3_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "68",
+				"attrName" : "fault_code_type_3_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "69",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "76",
+				"attrName" : "fault_code_type_4_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "69",
+				"attrName" : "fault_code_type_4_count_per_usage2_category",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "70",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "85",
+				"attrName" : "warning_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "70",
+				"attrName" : "warning_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "71",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "86",
+				"attrName" : "summary_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "71",
+				"attrName" : "summary_features",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "72",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+					"version" : null,
+					"name" : "ds_device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "87",
+				"attrName" : "version",
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+					"version" : null,
+					"name" : "device_data_final_features"
+				},
+				"value" : null,
+				"attrId" : "72",
+				"attrName" : "version",
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		}
+	],
+	"displayName" : "map_device_data_final_features"
 }

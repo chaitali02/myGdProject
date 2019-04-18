@@ -85,5 +85,6 @@
 			],
 			"logicaloperand": null
 		}
-	]
+	],
+	"displayName" : "rel_cust_addr"
 }

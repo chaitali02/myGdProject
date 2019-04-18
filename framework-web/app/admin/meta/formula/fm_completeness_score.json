@@ -137,5 +137,6 @@
       "attributeType": null
     }
   ],
-  "formulaType": "aggr"
+  "formulaType": "aggr",
+	"displayName" : "fm_completeness_score_file"
 }

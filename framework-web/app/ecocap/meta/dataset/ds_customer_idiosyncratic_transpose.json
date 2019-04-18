@@ -1,130 +1,131 @@
 {
-  "uuid": "a60e3667-13d5-4846-8f86-5f942ac4f661",
-  "version": "1534299609",
-  "name": "ds_customer_idiosyncratic_transpose",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-      "version": null,
-      "name": "customer_idiosyncratic_transpose_stage"
-    },
-    "value": null
-  },
-  "filterInfo": [],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "iterationid",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose_stage"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "iterationid",
-        "attrType": "integer"
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "customer",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose_stage"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "customer",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "pd",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose_stage"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "pd",
-        "attrType": "double"
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
-          "version": null,
-          "name": "paramlist_ecocap_app"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "reporting_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq" : "4",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
-          "version": null,
-          "name": "customer_idiosyncratic_transpose_stage"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "version",
-        "attrType": "integer"
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "a60e3667-13d5-4846-8f86-5f942ac4f661",
+	"version" : "1534299609",
+	"name" : "ds_customer_idiosyncratic_transpose",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.282Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+			"version" : null,
+			"name" : "customer_idiosyncratic_transpose_stage"
+		},
+		"value" : null
+	},
+	"filterInfo" : [ ],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "iterationid",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose_stage"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "iterationid",
+				"attrType" : "integer"
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "customer",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose_stage"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "customer",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "pd",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose_stage"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "pd",
+				"attrType" : "double"
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "paramlist",
+					"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6a",
+					"version" : null,
+					"name" : "paramlist_ecocap_app"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "reporting_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "c7b72b53-2516-49e6-aa5a-0b9f7535044b",
+					"version" : null,
+					"name" : "customer_idiosyncratic_transpose_stage"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "version",
+				"attrType" : "integer"
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displayName" : "ds_customer_idiosyncratic_transpose"
 }

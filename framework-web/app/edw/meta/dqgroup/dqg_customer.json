@@ -1,109 +1,110 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "ed365463-098d-4e10-a9c8-8241c47c9595",
-				"version": "1490111583"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "ed365463-098d-4e10-a9c8-8241c47c9595",
+				"version" : "1490111583"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "a4d5683f-bb4a-49da-b9a9-69a16c01db07",
-				"version": "1490080503"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "a4d5683f-bb4a-49da-b9a9-69a16c01db07",
+				"version" : "1490080503"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "0a672dae-9481-4715-9a43-16f9398bb5eb",
-				"version": "1490080565"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "0a672dae-9481-4715-9a43-16f9398bb5eb",
+				"version" : "1490080565"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "968dc453-e0cb-428b-9a41-fdd25d5cc1e3",
-				"version": "1490080633"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "968dc453-e0cb-428b-9a41-fdd25d5cc1e3",
+				"version" : "1490080633"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "6324766e-37f1-4282-8765-2889988ee81a",
-				"version": "1490080695"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "6324766e-37f1-4282-8765-2889988ee81a",
+				"version" : "1490080695"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "a13aa4e5-fac3-48a3-a9fe-159a5d079e9c",
-				"version": "1490080814"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "a13aa4e5-fac3-48a3-a9fe-159a5d079e9c",
+				"version" : "1490080814"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "8c91a5a2-f102-48ed-9080-45d4f01a9cb9",
-				"version": "1490080750"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "8c91a5a2-f102-48ed-9080-45d4f01a9cb9",
+				"version" : "1490080750"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "39884e46-d7d5-4d39-9b35-787980c68517",
-				"version": "1490080875"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "39884e46-d7d5-4d39-9b35-787980c68517",
+				"version" : "1490080875"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "fd25b3a8-6140-4b10-9eb0-3f9b0cc35520",
-				"version": "1490080951"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "fd25b3a8-6140-4b10-9eb0-3f9b0cc35520",
+				"version" : "1490080951"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "bfa6e774-f820-41cf-9796-7e7462939d69",
-				"version": "1490081032"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "bfa6e774-f820-41cf-9796-7e7462939d69",
+				"version" : "1490081032"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "447d6782-b711-408e-be54-d9f36ac4b122",
-				"version": "1490081111"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "447d6782-b711-408e-be54-d9f36ac4b122",
+				"version" : "1490081111"
 			}
 		}
 	],
-	"uuid": "853c0149-f51a-413e-9e5f-a0dd6860a296",
-	"version": "1490115065",
-	"name": "dqg_customer",
-	"desc": "dq rule group for combination of all dq rules for table - customer",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "853c0149-f51a-413e-9e5f-a0dd6860a296",
+	"version" : "1490115065",
+	"name" : "dqg_customer",
+	"desc" : "dq rule group for combination of all dq rules for table - customer",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_customer"
 }

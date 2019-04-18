@@ -1,138 +1,139 @@
 {
-	"cache": "Y",
-	"published": "N",
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"cache" : "Y",
+	"published" : "N",
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"attributes": [
+	"attributes" : [
 		{
-			"attributeId": 0,
-			"name": "customer_id",
-			"type": "integer",
-			"desc": "customer_id",
-			"key": "0",
-			"partition": "N",
-			"dispName": "customer_id",
-			"active": "Y"
+			"attributeId" : 0,
+			"name" : "customer_id",
+			"type" : "integer",
+			"desc" : "customer_id",
+			"key" : "0",
+			"partition" : "N",
+			"dispName" : "customer_id",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 1,
-			"name": "yyyy_mm",
-			"type": "string",
-			"desc": "yyyy_mm",
-			"key": "1",
-			"partition": "N",
-			"dispName": "year_month",
-			"active": "Y"
+			"attributeId" : 1,
+			"name" : "yyyy_mm",
+			"type" : "string",
+			"desc" : "yyyy_mm",
+			"key" : "1",
+			"partition" : "N",
+			"dispName" : "year_month",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 2,
-			"name": "total_trans_count",
-			"type": "integer",
-			"desc": "total_trans_count",
-			"key": "",
-			"partition": "N",
-			"dispName": "total_trans_count",
-			"active": "Y"
+			"attributeId" : 2,
+			"name" : "total_trans_count",
+			"type" : "integer",
+			"desc" : "total_trans_count",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "total_trans_count",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 3,
-			"name": "total_trans_amount_usd",
-			"type": "integer",
-			"desc": "total_trans_amount_usd",
-			"key": "",
-			"partition": "N",
-			"dispName": "total_trans_amount_usd",
-			"active": "Y"
+			"attributeId" : 3,
+			"name" : "total_trans_amount_usd",
+			"type" : "integer",
+			"desc" : "total_trans_amount_usd",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "total_trans_amount_usd",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 4,
-			"name": "avg_trans_amount",
-			"type": "integer",
-			"desc": "avg_trans_amount",
-			"key": "",
-			"partition": "N",
-			"dispName": "avg_trans_amount",
-			"active": "Y"
+			"attributeId" : 4,
+			"name" : "avg_trans_amount",
+			"type" : "integer",
+			"desc" : "avg_trans_amount",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "avg_trans_amount",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 5,
-			"name": "min_amount",
-			"type": "integer",
-			"desc": "min_amount",
-			"key": "",
-			"partition": "N",
-			"dispName": "min_amount",
-			"active": "Y"
+			"attributeId" : 5,
+			"name" : "min_amount",
+			"type" : "integer",
+			"desc" : "min_amount",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "min_amount",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 6,
-			"name": "max_amount",
-			"type": "integer",
-			"desc": "max_amount",
-			"key": "",
-			"partition": "N",
-			"dispName": "max_amount",
-			"active": "Y"
+			"attributeId" : 6,
+			"name" : "max_amount",
+			"type" : "integer",
+			"desc" : "max_amount",
+			"key" : "",
+			"partition" : "N",
+			"dispName" : "max_amount",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 7,
-			"name": "load_date",
-			"type": "string",
-			"desc": "load_date",
-			"dispName": "load_date",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 7,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"dispName" : "load_date",
+			"partition" : "Y",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 8,
-			"name": "load_id",
-			"type": "Integer",
-			"desc": "load_id",
-			"dispName": "load_id",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 8,
+			"name" : "load_id",
+			"type" : "Integer",
+			"desc" : "load_id",
+			"dispName" : "load_id",
+			"partition" : "Y",
+			"active" : "Y"
 		}
 	],
-	"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94",
-	"version": "1489650533",
-	"name": "fact_customer_summary_monthly",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94",
+	"version" : "1489650533",
+	"name" : "fact_customer_summary_monthly",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"tags": [
+	"locked" : "N",
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
-	"appInfo": [
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
-		}	
+		}
 	],
-      "prefix" : "fcc"
+	"prefix" : "fcc",
+	"displayName" : "fact_customer_summary_monthly"
 }

@@ -1,87 +1,88 @@
 {
-  "uuid": "7714b8bb-b1ea-4575-bc35-38cc375f21f3",
-  "version": "1533082934",
-  "name": "rel_portfolio_loss_simulation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-      "version": null,
-      "name": "portfolio_loss_simulation"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-          "version": null,
-          "name": "portfolio_loss_simulaton_aggr"
-        },
-        "value": null
-      },
-      "joinType": "CROSS",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-                "version": null,
-                "name": "portfolio_loss_simulation"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "6b3b3dd2-8313-4138-b42c-fed8d16458df",
-                "version": null,
-                "name": "portfolio_loss_simulaton_aggr"
-              },
-              "attributeId": 3,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "7714b8bb-b1ea-4575-bc35-38cc375f21f3",
+	"version" : "1533082934",
+	"name" : "rel_portfolio_loss_simulation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+			"version" : null,
+			"name" : "portfolio_loss_simulation"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+					"version" : null,
+					"name" : "portfolio_loss_simulaton_aggr"
+				},
+				"value" : null
+			},
+			"joinType" : "CROSS",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+								"version" : null,
+								"name" : "portfolio_loss_simulation"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "6b3b3dd2-8313-4138-b42c-fed8d16458df",
+								"version" : null,
+								"name" : "portfolio_loss_simulaton_aggr"
+							},
+							"attributeId" : 3,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_portfolio_loss_simulation"
 }

@@ -9,7 +9,7 @@
 			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.357Z"),
 	"active" : "Y",
 	"locked" : "N",
 	"publicFlag" : "Y",
@@ -30,5 +30,6 @@
 	"username" : "",
 	"password" : "",
 	"path" : "s3n://inferyx/user/hive/warehouse/framework/upload/",
-	"sessionParameters" : ""
+	"sessionParameters" : "",
+	"displayName" : "file_upload_s3"
 }

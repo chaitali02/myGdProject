@@ -1,43 +1,44 @@
 {
-  "uuid": "48234bd5-f86a-4142-a39d-1d9e8d6708f0",
-  "version": "1542669837",
-  "name": "batch_run_aml_models",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 18:23:57 EST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "pipelineInfo": [
-    {
-      "ref": {
-        "type": "dag",
-        "uuid": "4c2252fc-ff2b-4424-b658-8615efcb01f9",
-        "version": null,
-        "name": "ppl_suspicious_activity_prediction"
-      },
-      "value": null
-    }
-  ],
-  "inParallel": null
+	"uuid" : "48234bd5-f86a-4142-a39d-1d9e8d6708f0",
+	"version" : "1542669837",
+	"name" : "batch_run_aml_models",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.842Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"pipelineInfo" : [
+		{
+			"ref" : {
+				"type" : "dag",
+				"uuid" : "4c2252fc-ff2b-4424-b658-8615efcb01f9",
+				"version" : null,
+				"name" : "ppl_suspicious_activity_prediction"
+			},
+			"value" : null
+		}
+	],
+	"inParallel" : null,
+	"displayName" : "batch_run_aml_models"
 }

@@ -1853,6 +1853,7 @@ public class CommonServiceImpl<T> {
 			baseEntity.setUuid(objDet.getUuid());
 			baseEntity.setVersion(objDet.getVersion());
 			baseEntity.setName(objDet.getName());
+			baseEntity.setDisplayName(objDet.getDisplayName());
 			baseEntity.setDesc(objDet.getDesc());
 			baseEntity.setCreatedBy(objDet.getCreatedBy());
 			baseEntity.setCreatedOn(objDet.getCreatedOn());
@@ -1905,6 +1906,7 @@ public class CommonServiceImpl<T> {
 		ArrayList listObj = null;
 		Class[] interfaces = null;
 		String name = null;
+		String displayName = null;
 		String attrId = null;
 		if (object instanceof AttributeRefHolder) {
 			Object attributeId = object.getClass().getMethod(GET + "AttrId").invoke(object);
@@ -1945,9 +1947,15 @@ public class CommonServiceImpl<T> {
 			type = (MetaType) object.getClass().getMethod(GET + "Type").invoke(object);
 			name = getName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
 					(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+			displayName = getDisplayName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
+					(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
 			if (name != null) {
 				object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
 				name = null;
+			}
+			if (displayName != null) {
+				object.getClass().getMethod(SET + "DisplayName", String.class).invoke(object, displayName);
+				displayName = null;
 			}
 			return object;
 		}
@@ -1962,9 +1970,15 @@ public class CommonServiceImpl<T> {
 					// logger.info(" Inside resolveName : " + type);
 					name = getName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
 							(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+					displayName = getDisplayName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
+							(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
 					if (name != null) {
 						object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
 						name = null;
+					}
+					if (displayName != null) {
+						object.getClass().getMethod(SET + "DisplayName", String.class).invoke(object, displayName);
+						displayName = null;
 					}
 					continue;
 				}
@@ -1972,8 +1986,16 @@ public class CommonServiceImpl<T> {
 					// logger.info(" Inside resolveName : " + type);
 					name = getName((String) object.getClass().getMethod(GET + "UUID").invoke(object),
 							(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+					
 					object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
 					name = null;
+					
+					displayName = getDisplayName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
+							(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+					
+					object.getClass().getMethod(SET + "DisplayName", String.class).invoke(object, displayName);
+					displayName = null;
+	
 					continue;
 				}
 				if ((method.getName().contains("AttrId") || method.getName().contains("AttributeId"))
@@ -2206,6 +2228,27 @@ public class CommonServiceImpl<T> {
 		}
 		if (baseEntity != null)
 			return baseEntity.getName();
+		else
+			return null;
+	}
+	
+	public String getDisplayName(String uuid, String version, MetaType type)
+			throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		if (type == MetaType.simple || type == MetaType.attribute || type == null || uuid == null) {
+			return null;
+		}
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
+		BaseEntity baseEntity = null;
+		if (version != null)
+			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+					.invoke(iDao, uuid, version);
+		else {
+			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class)
+					.invoke(iDao, uuid, new Sort(Sort.Direction.DESC, "version"));
+		}
+		if (baseEntity != null)
+			return baseEntity.getDisplayName();
 		else
 			return null;
 	}

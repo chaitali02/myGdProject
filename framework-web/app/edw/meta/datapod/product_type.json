@@ -1,85 +1,86 @@
 {
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"cache": "Y",
-	"published": "N",
-	"attributes": [
+	"cache" : "Y",
+	"published" : "N",
+	"attributes" : [
 		{
-			"attributeId": 0,
-			"name": "product_type_id",
-			"type": "integer",
-			"desc": "product_type_id",
-			"dispName": "product_type_id",
-			"key": 0,
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 0,
+			"name" : "product_type_id",
+			"type" : "integer",
+			"desc" : "product_type_id",
+			"dispName" : "product_type_id",
+			"key" : 0,
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 1,
-			"name": "product_type_code",
-			"type": "string",
-			"desc": "product_type_code",
-			"dispName": "product_type_code",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 1,
+			"name" : "product_type_code",
+			"type" : "string",
+			"desc" : "product_type_code",
+			"dispName" : "product_type_code",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 2,
-			"name": "product_type_desc",
-			"type": "string",
-			"desc": "product_type_desc",
-			"dispName": "product_type_desc",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 2,
+			"name" : "product_type_desc",
+			"type" : "string",
+			"desc" : "product_type_desc",
+			"dispName" : "product_type_desc",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 3,
-			"name": "load_date",
-			"type": "string",
-			"desc": "load_date",
-			"dispName": "load_date",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 3,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"dispName" : "load_date",
+			"partition" : "Y",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 4,
-			"name": "load_id",
-			"type": "integer",
-			"desc": "load_id",
-			"dispName": "load_id",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 4,
+			"name" : "load_id",
+			"type" : "integer",
+			"desc" : "load_id",
+			"dispName" : "load_id",
+			"partition" : "Y",
+			"active" : "Y"
 		}
 	],
-	"uuid": "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d",
-	"version": "1488620583",
-	"name": "product_type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "8ad2dd8e-bb40-44a7-b0b4-7ff5d2d99c2d",
+	"version" : "1488620583",
+	"name" : "product_type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"appInfo": [
+	"locked" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
-	    {
-	      "ref": {
-	        "type": "application",
-	        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-	      }
-	    }
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			}
+		}
 	],
-      "prefix" : "pou"
+	"prefix" : "pou",
+	"displayName" : "product_type"
 }

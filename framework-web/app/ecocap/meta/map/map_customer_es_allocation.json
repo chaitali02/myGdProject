@@ -1,186 +1,187 @@
 {
-  "uuid": "1e2a5b29-5cc3-4773-935a-846105d2ffb7",
-  "version": "1532916788",
-  "name": "map_customer_es_allocation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 22:13:08 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-      "version": null,
-      "name": "customer_es_allocation"
-    },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-      "version": null,
-      "name": "ds_customer_es_allocation"
-    },
-    "value": null
-  },
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-          "version": null,
-          "name": "ds_customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "cust_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-          "version": null,
-          "name": "customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "cust_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-          "version": null,
-          "name": "ds_customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "es_contribution",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-          "version": null,
-          "name": "customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "es_contribution",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-          "version": null,
-          "name": "ds_customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "fm_es_allocation",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-          "version": null,
-          "name": "customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "es_allocation",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-          "version": null,
-          "name": "ds_customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "reporting_date",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-          "version": null,
-          "name": "customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "reporting_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-          "version": null,
-          "name": "ds_customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "version",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-          "version": null,
-          "name": "customer_es_allocation"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "version",
-        "attrType": null
-      }
-    }
-  ]
+	"uuid" : "1e2a5b29-5cc3-4773-935a-846105d2ffb7",
+	"version" : "1532916788",
+	"name" : "map_customer_es_allocation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.884Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+			"version" : null,
+			"name" : "customer_es_allocation"
+		},
+		"value" : null
+	},
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+			"version" : null,
+			"name" : "ds_customer_es_allocation"
+		},
+		"value" : null
+	},
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+					"version" : null,
+					"name" : "ds_customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "cust_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+					"version" : null,
+					"name" : "customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "cust_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+					"version" : null,
+					"name" : "ds_customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "es_contribution",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+					"version" : null,
+					"name" : "customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "es_contribution",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+					"version" : null,
+					"name" : "ds_customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "fm_es_allocation",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+					"version" : null,
+					"name" : "customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "es_allocation",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+					"version" : null,
+					"name" : "ds_customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "reporting_date",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+					"version" : null,
+					"name" : "customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "reporting_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+					"version" : null,
+					"name" : "ds_customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "version",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e5430fca-1df7-42ee-8732-a21b49878662",
+					"version" : null,
+					"name" : "customer_es_allocation"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "version",
+				"attrType" : null
+			}
+		}
+	],
+	"displayName" : "map_customer_es_allocation"
 }

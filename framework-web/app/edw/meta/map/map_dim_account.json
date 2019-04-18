@@ -1,676 +1,677 @@
 {
-  "uuid": "ec398401-8495-419f-bde7-76db137f3088",
-  "version": "1539945200",
-  "name": "map_dim_account",
-  "desc": "mapping transformations from source rules to target datapod",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
-  "tags": [
-    "DEV",
-    "1.0.1",
-    "DEMO"
-  ],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-      "version": null,
-      "name": "dim_account"
-    },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-      "version": null,
-      "name": "ds_dim_account"
-    },
-    "value": null
-  },
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "account_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "account_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "src_account_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "src_account_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "account_type_code",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "account_type_code",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "account_status_code",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "account_status_code",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "product_type_code",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "product_type_code",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "5",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "pin_number",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "pin_number",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "6",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "nationality",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "nationality",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "7",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "primary_iden_doc",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "primary_iden_doc",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "8",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "primary_iden_doc_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "primary_iden_doc_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "9",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "secondary_iden_doc",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "secondary_iden_doc",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "10",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "secondary_iden_doc_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "secondary_iden_doc_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "11",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "account_open_date",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "account_open_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "12",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "account_number",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "account_number",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "13",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "opening_balance",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "opening_balance",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "14",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "current_balance",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "current_balance",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "15",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "overdue_balance",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "overdue_balance",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "16",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "overdue_date",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "overdue_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "17",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "currency_code",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "currency_code",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "18",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "interest_type",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "interest_type",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "19",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "interest_rate",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "interest_rate",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "20",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "9656b9ab-6faf-4250-bc66-54efa304159c",
-          "version": null,
-          "name": "ds_dim_account"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "customer_id",
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "customer_id",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "21",
-      "sourceAttr": {
-        "ref": {
-          "type": "function",
-          "uuid": "9e3de26e-02fb-11e7-93ae-92361f002671",
-          "version": null,
-          "name": "current_date"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "load_date",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "22",
-      "sourceAttr": {
-        "ref": {
-          "type": "function",
-          "uuid": "9e3dff24-02fb-11e7-93ae-92361f002671",
-          "version": null,
-          "name": "unix_timestamp()"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "load_id",
-        "attrType": null
-      }
-    }
-  ]
+	"uuid" : "ec398401-8495-419f-bde7-76db137f3088",
+	"version" : "1539945200",
+	"name" : "map_dim_account",
+	"desc" : "mapping transformations from source rules to target datapod",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.884Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+			"version" : null,
+			"name" : "dim_account"
+		},
+		"value" : null
+	},
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+			"version" : null,
+			"name" : "ds_dim_account"
+		},
+		"value" : null
+	},
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "account_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "account_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "src_account_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "src_account_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "account_type_code",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "account_type_code",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "account_status_code",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "account_status_code",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "product_type_code",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "product_type_code",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "pin_number",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "pin_number",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "6",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "nationality",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "nationality",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "primary_iden_doc",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "primary_iden_doc",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "8",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "primary_iden_doc_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "primary_iden_doc_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "9",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "secondary_iden_doc",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "secondary_iden_doc",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "10",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "secondary_iden_doc_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "secondary_iden_doc_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "11",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "account_open_date",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "account_open_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "12",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "account_number",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "account_number",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "13",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "opening_balance",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "opening_balance",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "current_balance",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "current_balance",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "15",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "overdue_balance",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "overdue_balance",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "16",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "overdue_date",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "overdue_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "17",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "currency_code",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "currency_code",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "18",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "interest_type",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "interest_type",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "19",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "interest_rate",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "interest_rate",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "20",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "9656b9ab-6faf-4250-bc66-54efa304159c",
+					"version" : null,
+					"name" : "ds_dim_account"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "customer_id",
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "customer_id",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "21",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3de26e-02fb-11e7-93ae-92361f002671",
+					"version" : null,
+					"name" : "current_date"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "load_date",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "22",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "function",
+					"uuid" : "9e3dff24-02fb-11e7-93ae-92361f002671",
+					"version" : null,
+					"name" : "unix_timestamp()"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "load_id",
+				"attrType" : null
+			}
+		}
+	],
+	"displayName" : "map_dim_account"
 }

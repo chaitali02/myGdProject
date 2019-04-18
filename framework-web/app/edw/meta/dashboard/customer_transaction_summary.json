@@ -1,181 +1,182 @@
 {
-  "uuid": "745a0e88-e7cf-49fc-aea4-fa0fe3a3cbfa",
-  "version": "1552409279",
-  "name": "Customer Transaction Summary",
-  "desc": "Customer Transaction Summary",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Mar 12 12:47:59 EDT 2019",
-  "tags": [
-    "DEV",
-    "0.1.0"
-  ],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "sectionInfo": [
-    {
-      "sectionId": "2",
-      "name": "Cust and Acct By Country - Bar Line Chart",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
-          "version": null,
-          "name": "viz_cust_and_acct_by_country_barline"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 1
-    },
-    {
-      "sectionId": "1",
-      "name": "Accounts By Nationality - Bar Chart",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "887b311f-bb30-43aa-836a-93f9093b858b",
-          "version": null,
-          "name": "viz_accounts_by_nationality_bar"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
-    },
-    {
-      "sectionId": "5",
-      "name": "Trans Amount By Country - Pie Chart",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "887b311f-bb30-43aa-836a-93f9093b858f",
-          "version": null,
-          "name": "viz_trans_amount_by_country_pie"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 1
-    },
-    {
-      "sectionId": "3",
-      "name": "Trans Count By Country - Donut Chart",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "887b311f-bb30-43aa-836a-93f9093b858d",
-          "version": null,
-          "name": "viz_trans_count_by_country_donut"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Trans Amount By Country - Bubble Chart",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "c0a28a37-80a8-4a38-bd64-314b447a69fc",
-          "version": null,
-          "name": "viz_trans_amount_by_country_bubble"
-        },
-        "value": null
-      },
-      "rowNo": 3,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
-      "name": "Customers By State - Map",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "98aba397-92b5-46ad-9ea2-ec066ed01467",
-          "version": null,
-          "name": "viz_total_customers_by_state_map"
-        },
-        "value": null
-      },
-      "rowNo": 3,
-      "colNo": 2
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "relation",
-      "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
-      "version": null,
-      "name": "rel_datawarehouse"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-        "version": null,
-        "name": "dim_branch"
-      },
-      "value": null,
-      "attrId": "3",
-      "attrName": "branch_name",
-      "attrType": null,
-      "attrUnitType": null,
-      "function": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-        "version": null,
-        "name": "dim_transaction_type"
-      },
-      "value": null,
-      "attrId": "2",
-      "attrName": "transaction_type_code",
-      "attrType": null,
-      "attrUnitType": null,
-      "function": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-        "version": null,
-        "name": "dim_account"
-      },
-      "value": null,
-      "attrId": "2",
-      "attrName": "account_type_code",
-      "attrType": null,
-      "attrUnitType": null,
-      "function": null
-    }
-  ],
-  "saveOnRefresh": "Y"
+	"uuid" : "745a0e88-e7cf-49fc-aea4-fa0fe3a3cbfa",
+	"version" : "1552409279",
+	"name" : "Customer Transaction Summary",
+	"desc" : "Customer Transaction Summary",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.137Z"),
+	"tags" : [
+		"DEV",
+		"0.1.0"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"sectionInfo" : [
+		{
+			"sectionId" : "2",
+			"name" : "Cust and Acct By Country - Bar Line Chart",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
+					"version" : null,
+					"name" : "viz_cust_and_acct_by_country_barline"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : "1",
+			"name" : "Accounts By Nationality - Bar Chart",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "887b311f-bb30-43aa-836a-93f9093b858b",
+					"version" : null,
+					"name" : "viz_accounts_by_nationality_bar"
+				},
+				"value" : null
+			},
+			"rowNo" : 1,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : "5",
+			"name" : "Trans Amount By Country - Pie Chart",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "887b311f-bb30-43aa-836a-93f9093b858f",
+					"version" : null,
+					"name" : "viz_trans_amount_by_country_pie"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : "3",
+			"name" : "Trans Count By Country - Donut Chart",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "887b311f-bb30-43aa-836a-93f9093b858d",
+					"version" : null,
+					"name" : "viz_trans_count_by_country_donut"
+				},
+				"value" : null
+			},
+			"rowNo" : 2,
+			"colNo" : 2
+		},
+		{
+			"sectionId" : null,
+			"name" : "Trans Amount By Country - Bubble Chart",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "c0a28a37-80a8-4a38-bd64-314b447a69fc",
+					"version" : null,
+					"name" : "viz_trans_amount_by_country_bubble"
+				},
+				"value" : null
+			},
+			"rowNo" : 3,
+			"colNo" : 1
+		},
+		{
+			"sectionId" : null,
+			"name" : "Customers By State - Map",
+			"vizpodInfo" : {
+				"ref" : {
+					"type" : "vizpod",
+					"uuid" : "98aba397-92b5-46ad-9ea2-ec066ed01467",
+					"version" : null,
+					"name" : "viz_total_customers_by_state_map"
+				},
+				"value" : null
+			},
+			"rowNo" : 3,
+			"colNo" : 2
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "15beaf47-0a35-486b-9b65-9a57a2e835df",
+			"version" : null,
+			"name" : "rel_datawarehouse"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+				"version" : null,
+				"name" : "dim_branch"
+			},
+			"value" : null,
+			"attrId" : "3",
+			"attrName" : "branch_name",
+			"attrType" : null,
+			"attrUnitType" : null,
+			"function" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+				"version" : null,
+				"name" : "dim_transaction_type"
+			},
+			"value" : null,
+			"attrId" : "2",
+			"attrName" : "transaction_type_code",
+			"attrType" : null,
+			"attrUnitType" : null,
+			"function" : null
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+				"version" : null,
+				"name" : "dim_account"
+			},
+			"value" : null,
+			"attrId" : "2",
+			"attrName" : "account_type_code",
+			"attrType" : null,
+			"attrUnitType" : null,
+			"function" : null
+		}
+	],
+	"saveOnRefresh" : "Y",
+	"displayName" : "Customer Transaction Summary"
 }

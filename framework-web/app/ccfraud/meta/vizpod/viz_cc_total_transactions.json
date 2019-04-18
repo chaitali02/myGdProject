@@ -1,511 +1,512 @@
 {
-  "uuid": "ba084266-1ce6-4ece-8c68-a11c847575aa",
-  "version": "1551858070",
-  "name": "viz_cc_total_transactions",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Mar 06 13:11:10 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-        "version": "1521430822",
-        "name": "Fraud Analytics"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "title": null,
-  "source": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-      "version": null,
-      "name": "cc_transactions"
-    },
-    "value": null
-  },
-  "type": "bar-chart",
-  "limit": -1,
-  "keys": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 31,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 0,
-      "function": null,
-      "value": null,
-      "attributeName": "time"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "V1"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 2,
-      "function": null,
-      "value": null,
-      "attributeName": "V2"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 3,
-      "function": null,
-      "value": null,
-      "attributeName": "V3"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 4,
-      "function": null,
-      "value": null,
-      "attributeName": "V4"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 5,
-      "function": null,
-      "value": null,
-      "attributeName": "V5"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 6,
-      "function": null,
-      "value": null,
-      "attributeName": "V6"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 7,
-      "function": null,
-      "value": null,
-      "attributeName": "V7"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 8,
-      "function": null,
-      "value": null,
-      "attributeName": "V8"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 9,
-      "function": null,
-      "value": null,
-      "attributeName": "V9"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 10,
-      "function": null,
-      "value": null,
-      "attributeName": "V10"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 11,
-      "function": null,
-      "value": null,
-      "attributeName": "V11"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 12,
-      "function": null,
-      "value": null,
-      "attributeName": "V12"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 13,
-      "function": null,
-      "value": null,
-      "attributeName": "V13"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 14,
-      "function": null,
-      "value": null,
-      "attributeName": "V14"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 15,
-      "function": null,
-      "value": null,
-      "attributeName": "V15"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 16,
-      "function": null,
-      "value": null,
-      "attributeName": "V16"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 17,
-      "function": null,
-      "value": null,
-      "attributeName": "V17"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 18,
-      "function": null,
-      "value": null,
-      "attributeName": "V18"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 19,
-      "function": null,
-      "value": null,
-      "attributeName": "V19"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 20,
-      "function": null,
-      "value": null,
-      "attributeName": "V20"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 21,
-      "function": null,
-      "value": null,
-      "attributeName": "V21"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 22,
-      "function": null,
-      "value": null,
-      "attributeName": "V22"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 23,
-      "function": null,
-      "value": null,
-      "attributeName": "V23"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 24,
-      "function": null,
-      "value": null,
-      "attributeName": "V24"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 25,
-      "function": null,
-      "value": null,
-      "attributeName": "V25"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 26,
-      "function": null,
-      "value": null,
-      "attributeName": "V26"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 27,
-      "function": null,
-      "value": null,
-      "attributeName": "V27"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 28,
-      "function": null,
-      "value": null,
-      "attributeName": "V28"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 29,
-      "function": null,
-      "value": null,
-      "attributeName": "amount"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 30,
-      "function": null,
-      "value": null,
-      "attributeName": "class"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
-        "version": null,
-        "name": "cc_transactions"
-      },
-      "attributeId": 31,
-      "function": null,
-      "value": null,
-      "attributeName": "version"
-    },
-    {
-      "ref": {
-        "type": "expression",
-        "uuid": "6a76b4b7-c802-4422-8239-cbc2cf9d2041",
-        "version": null,
-        "name": "expr_fraud_ind"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "f2499ea7-e741-49f3-8d19-928f6dba6352",
-        "version": null,
-        "name": "fm_total_transactions"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "98ebca17-5b1b-465b-9667-723dc56a73a6",
-        "version": null,
-        "name": "fm_fraud_ind"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "cda08d9f-fd8b-41c3-b30b-3bd4bd03f329",
-        "version": null,
-        "name": "fm_fraud_ind_count"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    }
-  ],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "f2499ea7-e741-49f3-8d19-928f6dba6352",
-        "version": null,
-        "name": "fm_total_transactions"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    }
-  ],
-  "sortBy": [],
-  "sortOrder": null
+	"uuid" : "ba084266-1ce6-4ece-8c68-a11c847575aa",
+	"version" : "1551858070",
+	"name" : "viz_cc_total_transactions",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:19.248Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+				"version" : "1521430822",
+				"name" : "Fraud Analytics"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"title" : null,
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+			"version" : null,
+			"name" : "cc_transactions"
+		},
+		"value" : null
+	},
+	"type" : "bar-chart",
+	"limit" : -1,
+	"keys" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 31,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		}
+	],
+	"dimension" : [ ],
+	"detailAttr" : [
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 0,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "time"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 1,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V1"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 2,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V2"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 3,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V3"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 4,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V4"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 5,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V5"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 6,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V6"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 7,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V7"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 8,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V8"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 9,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V9"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 10,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V10"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 11,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V11"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 12,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V12"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 13,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V13"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 14,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V14"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 15,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V15"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 16,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V16"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 17,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V17"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 18,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V18"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 19,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V19"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 20,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V20"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 21,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V21"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 22,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V22"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 23,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V23"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 24,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V24"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 25,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V25"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 26,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V26"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 27,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V27"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 28,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "V28"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 29,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "amount"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 30,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "class"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "311f9b56-474e-4119-8ce4-455a371c10d7",
+				"version" : null,
+				"name" : "cc_transactions"
+			},
+			"attributeId" : 31,
+			"function" : null,
+			"value" : null,
+			"attributeName" : "version"
+		},
+		{
+			"ref" : {
+				"type" : "expression",
+				"uuid" : "6a76b4b7-c802-4422-8239-cbc2cf9d2041",
+				"version" : null,
+				"name" : "expr_fraud_ind"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "f2499ea7-e741-49f3-8d19-928f6dba6352",
+				"version" : null,
+				"name" : "fm_total_transactions"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "98ebca17-5b1b-465b-9667-723dc56a73a6",
+				"version" : null,
+				"name" : "fm_fraud_ind"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		},
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "cda08d9f-fd8b-41c3-b30b-3bd4bd03f329",
+				"version" : null,
+				"name" : "fm_fraud_ind_count"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		}
+	],
+	"filterInfo" : [ ],
+	"groups" : [ ],
+	"values" : [
+		{
+			"ref" : {
+				"type" : "formula",
+				"uuid" : "f2499ea7-e741-49f3-8d19-928f6dba6352",
+				"version" : null,
+				"name" : "fm_total_transactions"
+			},
+			"attributeId" : null,
+			"function" : null,
+			"value" : null,
+			"attributeName" : null
+		}
+	],
+	"sortBy" : [ ],
+	"sortOrder" : null,
+	"displayName" : "viz_cc_total_transactions"
 }

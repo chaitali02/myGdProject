@@ -1,36 +1,37 @@
 {
-    "uuid" : "9f0063af-86b4-4610-bf6e-047d74fc1786",
-    "version" : "1495325960",
-    "name" : "Data Sampling",
-    "desc" : "Data Sampling",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-        },
-        "value" : null
-    },
-    "createdOn" : ISODate("2018-05-31T00:54:11.108Z"),
-    "tags" : [ 
-        "DEV", 
-        "0.1.0"
-    ],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "operatorType" : "DataSampling",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ],
-    "paramList" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d42b"
-        }
-    }
+	"uuid" : "9f0063af-86b4-4610-bf6e-047d74fc1786",
+	"version" : "1495325960",
+	"name" : "Data Sampling",
+	"desc" : "Data Sampling",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.325Z"),
+	"tags" : [
+		"DEV",
+		"0.1.0"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"operatorType" : "DataSampling",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d42b"
+		}
+	},
+	"displayName" : "Data Sampling"
 }

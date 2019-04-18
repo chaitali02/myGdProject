@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5cb6244dda75e91b2c59403d"),
     "roleId" : {
         "ref" : {
             "type" : "role",
@@ -37,5 +38,6 @@
                 "name" : "Administration"
             }
         }
-    ]
+    ],
+    "displayName" : "aptivaa_admin"
 }

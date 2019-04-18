@@ -1,55 +1,56 @@
 {
-  "uuid": "9d8fa426-d817-4b21-bb32-1b6797c9acb6",
-  "version": "1552077546",
-  "name": "fact_transaction_journal",
-  "desc": "Creating datastore for fact_transaction_journal",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Mar 08 15:39:06 EST 2019",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "metaId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": "1552068467",
-      "name": "fact_transaction_journal"
-    },
-    "value": null
-  },
-  "execId": {
-    "ref": {
-      "type": "loadExec",
-      "uuid": "a379efa4-4db7-4594-b4df-9c7d2cd265a5",
-      "version": "1552077544",
-      "name": "fact_transaction_journal"
-    },
-    "value": null
-  },
-  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1552068467/1552077544",
-  "persistMode": "DISK_ONLY",
-  "dimInfo": null,
-  "numRows": 6012,
-  "runMode": "BATCH"
+	"uuid" : "9d8fa426-d817-4b21-bb32-1b6797c9acb6",
+	"version" : "1552077546",
+	"name" : "fact_transaction_journal",
+	"desc" : "Creating datastore for fact_transaction_journal",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+			"version" : "1552068467",
+			"name" : "fact_transaction_journal"
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "a379efa4-4db7-4594-b4df-9c7d2cd265a5",
+			"version" : "1552077544",
+			"name" : "fact_transaction_journal"
+		},
+		"value" : null
+	},
+	"location" : "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1552068467/1552077544",
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 6012,
+	"runMode" : "BATCH",
+	"displayName" : "fact_transaction_journal"
 }

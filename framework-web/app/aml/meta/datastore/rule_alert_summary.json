@@ -1,54 +1,55 @@
 {
-  "uuid": "ba86c158-4c93-477a-b636-5eea7033a638",
-  "version": "1542671142",
-  "name": "rule_alert_summary",
-  "desc": "Creating datastore for rule_alert_summary",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Mon Nov 19 18:45:42 EST 2018",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "metaId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "04afa6cf-0021-4ca1-a492-966bb528d060",
-      "version": "1542671126",
-      "name": "rule_alert_summary"
-    },
-    "value": null
-  },
-  "execId": {
-    "ref": {
-      "type": "loadExec",
-      "uuid": "8070fe1a-930d-404d-9077-3f199358363f",
-      "version": "1542671141",
-      "name": "rule_alert_summary"
-    },
-    "value": null
-  },
-  "location": "/04afa6cf-0021-4ca1-a492-966bb528d060/1542671126/1542671141",
-  "persistMode": "DISK_ONLY",
-  "dimInfo": null,
-  "numRows": 10,
-  "runMode": "BATCH"
+	"uuid" : "ba86c158-4c93-477a-b636-5eea7033a638",
+	"version" : "1542671142",
+	"name" : "rule_alert_summary",
+	"desc" : "Creating datastore for rule_alert_summary",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060",
+			"version" : "1542671126",
+			"name" : "rule_alert_summary"
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "8070fe1a-930d-404d-9077-3f199358363f",
+			"version" : "1542671141",
+			"name" : "rule_alert_summary"
+		},
+		"value" : null
+	},
+	"location" : "/04afa6cf-0021-4ca1-a492-966bb528d060/1542671126/1542671141",
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 10,
+	"runMode" : "BATCH",
+	"displayName" : "rule_alert_summary"
 }

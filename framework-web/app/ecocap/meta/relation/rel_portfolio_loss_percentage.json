@@ -1,87 +1,88 @@
 {
-  "uuid": "bcc30d2b-a387-450c-9ae1-ac90ac2613a2",
-  "version": "1533964901",
-  "name": "rel_portfolio_loss_percentage",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 01:21:41 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
-      "version": null,
-      "name": "portfolio_loss_summary"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-          "version": null,
-          "name": "portfolio_loss_simulation"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
-                "version": null,
-                "name": "portfolio_loss_summary"
-              },
-              "attributeId": 11,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
-                "version": null,
-                "name": "portfolio_loss_simulation"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "bcc30d2b-a387-450c-9ae1-ac90ac2613a2",
+	"version" : "1533964901",
+	"name" : "rel_portfolio_loss_percentage",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
+			"version" : null,
+			"name" : "portfolio_loss_summary"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+					"version" : null,
+					"name" : "portfolio_loss_simulation"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "5f1a85d8-c7e8-4cc7-a8d8-1afc902fe3f0",
+								"version" : null,
+								"name" : "portfolio_loss_summary"
+							},
+							"attributeId" : 11,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "e3003ee3-47ea-4fa0-9d1c-f364f7d4c887",
+								"version" : null,
+								"name" : "portfolio_loss_simulation"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_portfolio_loss_percentage"
 }

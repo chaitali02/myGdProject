@@ -1,132 +1,133 @@
 {
-  "uuid": "f8831f12-4e5f-4718-af66-159f2c46dd43",
-  "version": "1539945979",
-  "name": "rel_fact_transaction_sender_details",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-      "version": null,
-      "name": "fact_transaction"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-          "version": null,
-          "name": "dim_account"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 9,
-              "value": null,
-              "attributeName": "from_account",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                "version": null,
-                "name": "dim_account"
-              },
-              "attributeId": 12,
-              "value": null,
-              "attributeName": "account_number",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    },
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-          "version": null,
-          "name": "dim_customer"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-                "version": null,
-                "name": "dim_account"
-              },
-              "attributeId": 20,
-              "value": null,
-              "attributeName": "customer_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
-                "version": null,
-                "name": "dim_customer"
-              },
-              "attributeId": 1,
-              "value": null,
-              "attributeName": "src_customer_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "f8831f12-4e5f-4718-af66-159f2c46dd43",
+	"version" : "1539945979",
+	"name" : "rel_fact_transaction_sender_details",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+			"version" : null,
+			"name" : "fact_transaction"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+					"version" : null,
+					"name" : "dim_account"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 9,
+							"value" : null,
+							"attributeName" : "from_account",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+								"version" : null,
+								"name" : "dim_account"
+							},
+							"attributeId" : 12,
+							"value" : null,
+							"attributeName" : "account_number",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		},
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+					"version" : null,
+					"name" : "dim_customer"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+								"version" : null,
+								"name" : "dim_account"
+							},
+							"attributeId" : 20,
+							"value" : null,
+							"attributeName" : "customer_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+								"version" : null,
+								"name" : "dim_customer"
+							},
+							"attributeId" : 1,
+							"value" : null,
+							"attributeName" : "src_customer_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_fact_transaction_sender_details"
 }

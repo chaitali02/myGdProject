@@ -203,5 +203,6 @@
             "expr" : null
         }
     ],
-  "prefix":"rrl"
+  "prefix":"rrl",
+	"displayName" : "rc_rule_results"
 }

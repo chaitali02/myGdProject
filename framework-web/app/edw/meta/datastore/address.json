@@ -51,5 +51,6 @@
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 60,
-  "runMode": "BATCH"
+  "runMode": "BATCH",
+	"displayName" : "address"
 }

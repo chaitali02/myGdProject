@@ -946,5 +946,6 @@
 			"cdeFlag": "N"
 		}
 	],
-	"prefix": "rsl"
+	"prefix": "rsl",
+	"displayName" : "dq_result_summary"
 }

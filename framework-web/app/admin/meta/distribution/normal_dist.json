@@ -1,0 +1,64 @@
+{
+	"id" : "5ad9e623b1dfe3183aa2acc6",
+	"uuid" : "e6104187-625b-49e4-806b-12c93a3b2279",
+	"version" : "1524229667",
+	"name" : "Normal Dist",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.578Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			}
+		}
+	],
+	"library" : "MATH3",
+	"className" : "org.apache.commons.math3.distribution.NormalDistribution",
+	"methodName" : "sample",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "4e0e0daf-8861-4aa6-bf0d-f5cd4d109555",
+			"version" : null
+		},
+		"value" : null
+	},
+	"displayName" : "Normal Dist"
+}

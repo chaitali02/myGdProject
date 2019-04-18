@@ -1,20 +1,25 @@
 {
-
-      "uuid": "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
-      "name": "graphpod",
-      "version": "1465454441",
-      "createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc",
+	"name" : "graphpod",
+	"version" : "1465454441",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-      "active" : "Y",
-  "locked" : "N",
-      "appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
-    			],
-      "desc": "Meta for graphpod",
-      "menu":""
-
+	"createdOn" : ISODate("2019-04-16T14:28:17.102Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"desc" : "Meta for graphpod",
+	"menu" : "",
+	"displayName" : "graphpod"
 }

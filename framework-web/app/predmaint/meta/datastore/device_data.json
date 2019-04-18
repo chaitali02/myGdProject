@@ -1,54 +1,55 @@
 {
-  "uuid": "032d7e3e-fe09-44d6-81eb-0d8cd8e6e521",
-  "version": "1545347952",
-  "name": "device_data",
-  "desc": "Creating datastore for device_data",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Dec 20 18:19:12 EST 2018",
-  "tags": null,
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1521430822",
-        "name": "Dept Of Transportation"
-      },
-      "value": null
-    }
-  ],
-  "metaId": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "db48358e-4b2b-4e91-9f9c-b0373f1213ee",
-      "version": "1545347790",
-      "name": "device_data"
-    },
-    "value": null
-  },
-  "execId": {
-    "ref": {
-      "type": "loadExec",
-      "uuid": "9d4806df-4fbf-4d6a-bd36-c99370994fed",
-      "version": "1545347790",
-      "name": "device_data"
-    },
-    "value": null
-  },
-  "location": "/db48358e-4b2b-4e91-9f9c-b0373f1213ee/1545347790/1545347790",
-  "persistMode": "DISK_ONLY",
-  "dimInfo": null,
-  "numRows": 4392,
-  "runMode": "BATCH"
+	"uuid" : "032d7e3e-fe09-44d6-81eb-0d8cd8e6e521",
+	"version" : "1545347952",
+	"name" : "device_data",
+	"desc" : "Creating datastore for device_data",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"tags" : null,
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822",
+				"name" : "Dept Of Transportation"
+			},
+			"value" : null
+		}
+	],
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f1213ee",
+			"version" : "1545347790",
+			"name" : "device_data"
+		},
+		"value" : null
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "9d4806df-4fbf-4d6a-bd36-c99370994fed",
+			"version" : "1545347790",
+			"name" : "device_data"
+		},
+		"value" : null
+	},
+	"location" : "/db48358e-4b2b-4e91-9f9c-b0373f1213ee/1545347790/1545347790",
+	"persistMode" : "DISK_ONLY",
+	"dimInfo" : null,
+	"numRows" : 4392,
+	"runMode" : "BATCH",
+	"displayName" : "device_data"
 }

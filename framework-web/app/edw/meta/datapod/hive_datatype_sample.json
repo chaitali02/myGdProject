@@ -197,5 +197,6 @@
             }
         }
     ],
-      "prefix" : "hvd"
+      "prefix" : "hvd",
+	"displayName" : "hive_datatype_sample_test"
 }

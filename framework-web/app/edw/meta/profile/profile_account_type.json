@@ -1,65 +1,66 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "ed7efa81-3a55-4edc-b849-3285ffe29542"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "ed7efa81-3a55-4edc-b849-3285ffe29542"
 			}
 		}
 	],
-	"uuid": "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
-	"version": "1491902083",
-	"name": "profile_account_type",
-	"desc": "Data profiling to see statistical check results on raw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "a8e63693-a93d-49c3-90e7-c3bf78fa296c",
+	"version" : "1491902083",
+	"name" : "profile_account_type",
+	"desc" : "Data profiling to see statistical check results on raw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_account_type"
 }

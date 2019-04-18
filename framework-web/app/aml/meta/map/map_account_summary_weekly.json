@@ -1,1757 +1,1758 @@
 {
-  "uuid": "0c898aa8-9a0d-4c58-bca3-db3cb4bf2897",
-  "version": "1551906023",
-  "name": "map_account_summary_weekly",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Thu Mar 07 02:30:23 IST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "target": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-      "version": null,
-      "name": "account_summary_weekly"
-    },
-    "value": null
-  },
-  "source": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-      "version": null,
-      "name": "ds_account_summary_weekly"
-    },
-    "value": null
-  },
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "account_id",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "trans_start_date",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "trans_start_date",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "trans_end_date",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "trans_end_date",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "week_num",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "week_num",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "5",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "in_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "in_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "6",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "in_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "6",
-        "attrName": "in_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "7",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "out_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "7",
-        "attrName": "out_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "8",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "out_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "8",
-        "attrName": "out_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "9",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "net_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "9",
-        "attrName": "net_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "10",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "net_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "net_wire_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "11",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "in_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "11",
-        "attrName": "in_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "12",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "in_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "in_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "13",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "out_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": "out_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "14",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "out_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "out_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "15",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "net_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": "net_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "16",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "net_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "16",
-        "attrName": "net_cash_transfers_trans_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "17",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "all_wire_transfers_round_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "17",
-        "attrName": "all_wire_transfers_round_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "18",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "all_cash_transfers_round_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "18",
-        "attrName": "all_cash_transfers_round_amount_usd",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "19",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "all_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "19",
-        "attrName": "all_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "20",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "all_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": "all_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "21",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "all_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": "all_cash_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "22",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "all_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": "all_wire_transfers_trans_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "23",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": "in_cash_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": "in_cash_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "24",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "24",
-        "attrName": "out_wire_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "24",
-        "attrName": "out_wire_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "25",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "25",
-        "attrName": "all_wire_transfers_round_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "25",
-        "attrName": "all_wire_transfers_round_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "26",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "26",
-        "attrName": "all_cash_transfers_round_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "26",
-        "attrName": "all_cash_transfers_round_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "27",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": "in_wire_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": "in_wire_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "28",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "28",
-        "attrName": "out_cash_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "28",
-        "attrName": "out_cash_transfers_trans_amount_min",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "29",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": "all_cash_transfers_round_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": "all_cash_transfers_round_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "30",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": "all_wire_transfers_round_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": "all_wire_transfers_round_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "31",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": "in_wire_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": "in_wire_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "32",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "in_cash_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "in_cash_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "33",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "out_wire_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "out_wire_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "34",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "out_cash_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "out_cash_transfers_trans_amount_max",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "35",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "all_wire_transfers_round_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "all_wire_transfers_round_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "36",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "all_cash_transfers_round_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "all_cash_transfers_round_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "37",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "in_wire_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "in_wire_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "38",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "in_cash_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "in_cash_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "39",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "out_wire_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "out_wire_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "40",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "out_cash_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "out_cash_transfers_trans_amount_avg",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "41",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "all_cash_transfers_round_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "all_cash_transfers_round_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "42",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "43",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "44",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "all_wire_transfers_round_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": "all_wire_transfers_round_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "45",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "46",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "47",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": "in_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": "in_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "48",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "48",
-        "attrName": "in_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "48",
-        "attrName": "in_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "49",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": "out_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": "out_wire_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "50",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": "out_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": "out_cash_transfers_round_amount_count",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "51",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": "out_cash_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": "out_cash_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "52",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": "out_wire_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": "out_wire_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "53",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": "in_wire_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": "in_wire_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrMapId": "54",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-          "version": null,
-          "name": "ds_account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": "in_cash_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
-          "version": null,
-          "name": "account_summary_weekly"
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": "in_cash_transfers_round_amount_sum",
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    }
-  ]
+	"uuid" : "0c898aa8-9a0d-4c58-bca3-db3cb4bf2897",
+	"version" : "1551906023",
+	"name" : "map_account_summary_weekly",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.884Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"target" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+			"version" : null,
+			"name" : "account_summary_weekly"
+		},
+		"value" : null
+	},
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+			"version" : null,
+			"name" : "ds_account_summary_weekly"
+		},
+		"value" : null
+	},
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "customer_id",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "customer_id",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "customer_id",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "account_id",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "trans_start_date",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "trans_start_date",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "trans_end_date",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "trans_end_date",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "week_num",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "week_num",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "in_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "in_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "6",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "in_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "6",
+				"attrName" : "in_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "out_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "7",
+				"attrName" : "out_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "8",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "out_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "8",
+				"attrName" : "out_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "9",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "net_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "9",
+				"attrName" : "net_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "10",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "net_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "10",
+				"attrName" : "net_wire_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "11",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "in_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "11",
+				"attrName" : "in_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "12",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "in_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "12",
+				"attrName" : "in_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "13",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "out_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "13",
+				"attrName" : "out_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "out_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "14",
+				"attrName" : "out_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "15",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "net_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "15",
+				"attrName" : "net_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "16",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "net_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "16",
+				"attrName" : "net_cash_transfers_trans_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "17",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "all_wire_transfers_round_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "17",
+				"attrName" : "all_wire_transfers_round_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "18",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "all_cash_transfers_round_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "18",
+				"attrName" : "all_cash_transfers_round_amount_usd",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "19",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "all_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "19",
+				"attrName" : "all_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "20",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "all_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "20",
+				"attrName" : "all_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "21",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "all_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "21",
+				"attrName" : "all_cash_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "22",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "all_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "22",
+				"attrName" : "all_wire_transfers_trans_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "23",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "23",
+				"attrName" : "in_cash_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "23",
+				"attrName" : "in_cash_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "24",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "24",
+				"attrName" : "out_wire_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "24",
+				"attrName" : "out_wire_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "25",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "25",
+				"attrName" : "all_wire_transfers_round_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "25",
+				"attrName" : "all_wire_transfers_round_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "26",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "26",
+				"attrName" : "all_cash_transfers_round_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "26",
+				"attrName" : "all_cash_transfers_round_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "27",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "27",
+				"attrName" : "in_wire_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "27",
+				"attrName" : "in_wire_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "28",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "28",
+				"attrName" : "out_cash_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "28",
+				"attrName" : "out_cash_transfers_trans_amount_min",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "29",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "29",
+				"attrName" : "all_cash_transfers_round_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "29",
+				"attrName" : "all_cash_transfers_round_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "30",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "30",
+				"attrName" : "all_wire_transfers_round_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "30",
+				"attrName" : "all_wire_transfers_round_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "31",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "31",
+				"attrName" : "in_wire_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "31",
+				"attrName" : "in_wire_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "32",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "32",
+				"attrName" : "in_cash_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "32",
+				"attrName" : "in_cash_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "33",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "33",
+				"attrName" : "out_wire_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "33",
+				"attrName" : "out_wire_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "34",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "34",
+				"attrName" : "out_cash_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "34",
+				"attrName" : "out_cash_transfers_trans_amount_max",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "35",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "35",
+				"attrName" : "all_wire_transfers_round_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "35",
+				"attrName" : "all_wire_transfers_round_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "36",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "36",
+				"attrName" : "all_cash_transfers_round_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "36",
+				"attrName" : "all_cash_transfers_round_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "37",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "37",
+				"attrName" : "in_wire_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "37",
+				"attrName" : "in_wire_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "38",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "38",
+				"attrName" : "in_cash_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "38",
+				"attrName" : "in_cash_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "39",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "39",
+				"attrName" : "out_wire_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "39",
+				"attrName" : "out_wire_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "40",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "40",
+				"attrName" : "out_cash_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "40",
+				"attrName" : "out_cash_transfers_trans_amount_avg",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "41",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "41",
+				"attrName" : "all_cash_transfers_round_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "41",
+				"attrName" : "all_cash_transfers_round_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "42",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "42",
+				"attrName" : "in_cash_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "42",
+				"attrName" : "in_cash_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "43",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "43",
+				"attrName" : "out_cash_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "43",
+				"attrName" : "out_cash_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "44",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "all_wire_transfers_round_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "44",
+				"attrName" : "all_wire_transfers_round_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "45",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "in_wire_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "45",
+				"attrName" : "in_wire_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "46",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "46",
+				"attrName" : "out_wire_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "46",
+				"attrName" : "out_wire_transfers_trans_amount_stddev",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "47",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "47",
+				"attrName" : "in_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "47",
+				"attrName" : "in_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "48",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "48",
+				"attrName" : "in_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "48",
+				"attrName" : "in_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "49",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "49",
+				"attrName" : "out_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "49",
+				"attrName" : "out_wire_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "50",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "50",
+				"attrName" : "out_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "50",
+				"attrName" : "out_cash_transfers_round_amount_count",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "51",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "51",
+				"attrName" : "out_cash_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "51",
+				"attrName" : "out_cash_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "52",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "52",
+				"attrName" : "out_wire_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "52",
+				"attrName" : "out_wire_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "53",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "53",
+				"attrName" : "in_wire_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "53",
+				"attrName" : "in_wire_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		},
+		{
+			"attrMapId" : "54",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
+					"version" : null,
+					"name" : "ds_account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "54",
+				"attrName" : "in_cash_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "3a085d6b-8a39-4e52-a914-4eaf3cb54963",
+					"version" : null,
+					"name" : "account_summary_weekly"
+				},
+				"value" : null,
+				"attrId" : "54",
+				"attrName" : "in_cash_transfers_round_amount_sum",
+				"attrType" : null,
+				"attrUnitType" : null,
+				"function" : null
+			}
+		}
+	],
+	"displayName" : "map_account_summary_weekly"
 }
