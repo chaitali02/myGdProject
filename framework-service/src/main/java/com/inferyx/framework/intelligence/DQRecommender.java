@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -31,27 +30,17 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DQIntelligence;
-import com.inferyx.framework.domain.DQRecExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataType;
 import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.ResultType;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.CheckType;
-import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
-import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
 /**
@@ -65,8 +54,6 @@ public class DQRecommender {
 	
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private ExecutorFactory execFactory;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired

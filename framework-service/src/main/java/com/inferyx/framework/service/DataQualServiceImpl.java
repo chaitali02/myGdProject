@@ -73,6 +73,7 @@ import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.intelligence.DQRecommender;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -105,6 +106,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	private SessionHelper sessionHelper;
 	@Autowired
 	private ThreadPoolTaskExecutor metaExecutor;
+	@Autowired
+	private DQRecommender dqRecommender;
 
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -1401,6 +1404,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			runDQRecServiceImpl.setRunMode(runMode);
 			runDQRecServiceImpl.setSessionContext(sessionHelper.getSessionContext());
 			runDQRecServiceImpl.setName(MetaType.dqrecExec+"_"+dqRecExec.getUuid()+"_"+dqRecExec.getVersion());
+			runDQRecServiceImpl.setDqRecommender(dqRecommender);
 			
 			FutureTask<TaskHolder> futureTask = new FutureTask<>(runDQRecServiceImpl);
 			metaExecutor.execute(futureTask);
