@@ -112,4 +112,14 @@ public class ParamListHolder extends MetaIdentifierHolder{
 		this.paramDesc = paramDesc;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ParamListHolder [paramId=" + paramId + ", paramName=" + paramName + ", paramType=" + paramType
+				+ ", paramDispName=" + paramDispName + ", paramDesc=" + paramDesc + ", paramValue=" + paramValue
+				+ ", attributeInfo=" + attributeInfo + "]";
+	}
+	
 }
