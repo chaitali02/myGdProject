@@ -7,7 +7,7 @@ public class Threshold {
 	private String low = "25";
 	private String medium = "50";
 	private String high = "75";
-	private ThresholdType type = ThresholdType.NUMERIC;
+	private ThresholdType type = ThresholdType.PERCENTAGE;
 	
 	public String getLow() {
 		return low;
