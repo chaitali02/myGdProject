@@ -1,3 +1,4 @@
+import { RoutesParam } from './../../metadata/domain/domain.routeParams';
 import { Param } from './../../metadata/domain/domain.param';
 import { MetaIdentifier } from './../../metadata/domain/domain.metaIdentifier';
 import { BaseEntity } from './../../metadata/domain/domain.baseEntity';
@@ -136,9 +137,10 @@ export class ApplicationComponent implements OnInit {
 
     this.selectdatasourceType = this.datasourceType[0].value
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion();
         this.getAllVersionByUuid();

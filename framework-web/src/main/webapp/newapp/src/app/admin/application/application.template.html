@@ -15,20 +15,20 @@
           <div class="tools">
 
             <span class="wrapcurrentpage">
-              <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip
+              <a *ngIf="!isAdd" class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip
                 [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" (click)="showMainPage(uuid,version)">
                 <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
               </a>
             </span>
             <span class="wrapcurrentpage">
-              <a class="left-marginpage" title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip"
+              <a *ngIf="!isAdd" class="left-marginpage" title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip"
                 data-placement="top" tooltip="Edit" style="height:16px;" [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'">
                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
               </a>
             </span>
             <span class="wrapcurrentpage">
-              <a class="left-marginpage" title="Show Dependencies" data-toggle="tooltip" (click)="showGraph(uuid,version)"
-                data-placement="top" tooltip style="height:14px;" *ngIf="mode" [ngClass]="showForm==false? 'currentpage':'notcurrentpage'">
+              <a *ngIf="!isAdd" class="left-marginpage" title="Show Dependencies" data-toggle="tooltip" (click)="showGraph(uuid,version)"
+                data-placement="top" tooltip style="height:14px;" [ngClass]="showForm==false? 'currentpage':'notcurrentpage'">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
               </a>
             </span>
@@ -156,7 +156,7 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="published"></ui-switch>
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="locked"></ui-switch>
                     </div>
                   </div>
                 </div>
