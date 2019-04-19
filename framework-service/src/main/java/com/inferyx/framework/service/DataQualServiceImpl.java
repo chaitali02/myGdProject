@@ -1313,12 +1313,14 @@ public class DataQualServiceImpl extends RuleTemplate {
 			Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecParams execParams = new ExecParams();
-			if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString())) datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
-			else datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
+		/*if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
+				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
+			else*/
+				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
 
 			DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
 
-			Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(datapod);
+			Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
 			paramValMap.put("numDays", period);
 			ParamListHolder paramListHolder = new ParamListHolder();
 

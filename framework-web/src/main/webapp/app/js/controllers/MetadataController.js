@@ -1726,8 +1726,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.getColumnData = function (response) {
         var columnDefs = [];
         angular.forEach(response[0], function (value, key) {
-		  var temp=key.split("_").join().replace(/,/g, ' ');
-          columnDefs.push(temp);
+		   var columnDefsObj={};
+		   columnDefsObj.name=key;
+		   var temp=key.split("_").join().replace(/,/g, ' ');
+           columnDefsObj.displayName=temp;
+          columnDefs.push(columnDefsObj);
         });
         return columnDefs;
     }

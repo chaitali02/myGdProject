@@ -671,7 +671,7 @@
                     </div>
                 </div> -->
                 <div class="form-group">
-                    <div class="col-md-5 col-sm-5 col-xs-5"style="padding:0px;float: right;">
+                    <div class="col-md-4 col-sm-4 col-xs-4"style="padding:0px;float: right;">
                       <select  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" ng-model="$parent.selectPeriod" select2 ng-options="r as r.caption for r in periods"  ng-change="onChangePriode()">
                       </select>
                     </div>
@@ -682,12 +682,13 @@
             <br>
             <div class="row">
                 <div class="col-md-12">
-                    <table class="table table-bordered dqstats" style="width:100%">
+                    <table class="table table-bordered dqstats" style="width:50%">
                        <tbody>
                           <tr ng-repeat="data in dqStatsCol">
-                              <td style="width:40%;text-transform: capitalize !important;">{{data}}</td>
+                              <td style="width:40%;text-transform: capitalize !important;">{{data.displayName}}</td>
                               <td style="width:60%">
-                                <b>{{dqStatsData[0][data]}}</b>
+                                <b ng-if="dqStatsData[0][data.name]!=null">{{dqStatsData[0][data.name]}}</b>
+                                <b ng-if="dqStatsData[0][data.name] ==null">-NA-</b>
                               </td>
                           </tr>
                       </tbody>

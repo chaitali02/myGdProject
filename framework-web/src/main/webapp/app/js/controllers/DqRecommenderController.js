@@ -254,14 +254,19 @@ DataQualityModule.controller("DqRecommenderSearchController", function ($state, 
 	
 	$scope.genIntelligence=function(){
 		$('#searchAttr').modal('hide');
+		$scope.autorefresh = true;
+		$scope.autoRefreshOnChange();
 		RecommenderService.genIntelligence("dqrecexec", $scope.selectedDatapod.uuid, $scope.selectedDatapod.version, $scope.samplePercent)
 		.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
 		var onSuccess = function (respone) {
 			$scope.originalDataQuality=respone;
 			$scope.getBaseEntityStatusByCriteria(false);
 			$scope.getAllLatestExec();
+			//$scope.autorefresh = false;
+
 		}
 		var onError=function(response){
+			$scope.autorefresh = false;
             $scope.dataErrorMsgDQ="Some error occurred";
 		}
     }
@@ -569,7 +574,7 @@ DataQualityModule.controller('DqRecommenderController', function (CommonService,
 		var onSuccess = function (respone) {
 			notify.type = 'success',
 			notify.title = 'Success',
-			notify.content = 'Rule Create Successfully'
+			notify.content = 'Rule Created Successfully'
 			$scope.$emit('notify', notify);
 			$scope.selectedQualityAllRow=false;
 			$scope.OnSelectQualityAllRow ();

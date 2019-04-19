@@ -40,6 +40,7 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
+import com.inferyx.framework.domain.SysParamsEnum;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -106,6 +107,8 @@ public class AttributeMapOperator {
 			builder.append(mapSql(attr, mapSource, refKeyMap, otherParams, execParams, paramValMap));
 			comma = ",";
 		}
+		
+		//replace 
 		return builder.toString();
 	}
 
@@ -177,7 +180,17 @@ public class AttributeMapOperator {
 			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
 				//special handling for ingest 				
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
-			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
+			}
+			// handle sysparam
+			else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple) && attrMap.getSourceAttr().getValue().toString().equalsIgnoreCase(SysParamsEnum.MAPEXEC_VERSION.toString())) {
+				return builder.append("'" + execParams.getSysParams().get(SysParamsEnum.MAPEXEC_VERSION) + "'").append(" as ").append("version").toString();
+			}
+
+			else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple) && attrMap.getSourceAttr().getValue().toString().equalsIgnoreCase(SysParamsEnum.DAGEXEC_VERSION.toString())) {
+				return builder.append("'" + execParams.getSysParams().get(SysParamsEnum.DAGEXEC_VERSION) + "'").append(" as ").append("version").toString();
+			}
+			
+			else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.sysParams)) {
 				return builder.append("\'").append(commonServiceImpl.wrapSysParams(attrMap.getSourceAttr().getValue())).append("\'").append(" as ").append(alias).append(" ").toString();			
@@ -195,6 +208,9 @@ public class AttributeMapOperator {
 					&& !getTypeInSourceAttrs(attrMap.getSourceAttr(), MetaType.formula)) {
 				return builder.append(" ").toString();
 			}
+			
+		
+		
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

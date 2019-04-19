@@ -578,6 +578,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.getAllAttributesByDatapods = function () {
 		ReportSerivce.getAllAttributesByDatapods("datapod").then(function (response) { onSuccessGetAllAttributesByDatapods(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetAllAttributesByDatapods = function (response) {
+			
 			$scope.allAttributesRef = response;
 		}
 	}
@@ -590,6 +591,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 	$scope.onChangeType = function (type, isSourceNameByTypeCall) {
 		$scope.attributeRefTags = null;
+		$scope.allAttributesRef=null;
+		$scope.attributeTableArray=[];
 		if (type == "dq") {
 			$scope.getAllAttributesByDatapods();
 			$scope.selectSourceType = "datapod";
@@ -647,7 +650,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				else
 					attributeinfo.isOnDropDown = true;
 				attributeinfo.sourcedatapod = $scope.sourcedatapodattribute[i];
-				attributeinfo.name = $scope.sourcedatapodattribute[i].name;
+				attributeinfo.name = $scope.sourcedatapodattribute[i].attributeName;
 				attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
 				attributeinfo.isSourceAtributeSimple = false;
 				attributeinfo.isSourceAtributeDatapod = true;
@@ -1135,6 +1138,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
 	}
+
+
+
 	$scope.removeRowFitler = function () {
 		var newDataList = [];
 		$scope.checkAll = false;
@@ -1323,6 +1329,18 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 		});
 		$scope.attributeTableArray = newDataList;
+		var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				var result=$scope.onChangeSourceName1(index,dupArray);
+				if(result.length >0 ){
+					$scope.isDuplication = true;
+				}else {
+					$scope.isDuplication = false;
+				}
+			},10,(i));
+		}
+		console.log(dupArray)
 	}
 
 

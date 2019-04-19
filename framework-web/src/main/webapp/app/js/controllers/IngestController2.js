@@ -867,7 +867,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	$scope.getFormulaByType=function(){
 		IngestRuleService.getFormulaByType($scope.selectedSourceDetail.uuid,"datapod").then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
-				$scope.allMapLodeFormula = response.data
+				$scope.allMapLodeFormula = response;
+				$scope.allFormula=response;
 		}
 	}
 	
@@ -1342,7 +1343,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.filterTableArray[index].islhsDatapod = false;
 			IngestRuleService.getFormulaByType($scope.selectedSourceDetail.uuid, "datapod").then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
-				response.splice(0, 1);
+				//response.splice(0, 1);
 				$scope.allFormula = response;
 			}
 		}
@@ -1392,7 +1393,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			IngestRuleService.getFormulaByType($scope.selectedSourceDetail.uuid, "datapod").then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				$scope.allFormula = response;
-				$scope.allFormula.splice(0, 1);
+				//$scope.allFormula.splice(0, 1);
 			}
 		}
 		else if (type == "function") {
