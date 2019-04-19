@@ -28,5 +28,13 @@ export class FormulaService {
                 catchError(error => this.handleError<string>(error, "Network Error!")));
     }
 
+    getParamByApp(uuid: any, type: String): Observable<any[]> {
+        let url = '/metadata/getParamByApp?action=view&uuid=' + uuid + '&type=' + type;
+        return this._sharedService.getCall(url)
+            .pipe(
+                map(response => { return <any[]>response.json(); }),
+                catchError(error => this.handleError<string>(error, "Network Error!")));
+    }
+
 
 }

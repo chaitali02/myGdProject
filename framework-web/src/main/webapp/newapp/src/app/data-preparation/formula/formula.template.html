@@ -83,7 +83,8 @@
               <div class="form-group taginput">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' [disable]="mode == 'true'" style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                  <p-chips [(ngModel)]="tags" styleClass="pchip-height" [disabled]="mode == 'true'"
+                  name="tags" [allowDuplicate]="false"></p-chips>
                 </div>
               </div>
 
@@ -113,35 +114,47 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <p-dropdown [options]="allNames" [(ngModel)]="dependsOn" name="dependsOnName" [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType();clearFormula()"
-                      placeholder="select">
+                      placeholder="--select--">
                     </p-dropdown>
                   </div>
                 </div>
               </div>
 
-              <!-- <div class="form-group">
+              <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="formulajson.active" name="active"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                       [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
+
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6 ui-switch-top-left-padding">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="formulajson.published" name="published"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked " name="locked"
+                      [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6 ui-switch-top-left-padding">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published " name="published"
                       [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
-              </div> -->
+              </div>
+
               <div class="form-group">
                 <label class="col-md-3 control-label">FormulaInfo</label>
                 <div class="col-md-6">
                   <div id="formulaInfo" contenteditable="false">
-                    <span (dblclick)="onDbclcikEdit(data.type,i)" [ngClass]="data.type =='simple' ? 'formula-default' : (data.type =='function' ? 'formula-default' : 'formula-color')"
+                    <span (dblclick)="onDbclcikEdit(data.attributeType,i)" [ngClass]="data.attributeType =='simple' ? 'formula-default' : (data.attributeType =='function' ? 'formula-default' : 'formula-color')"
                       *ngFor="let data of formulaarray;let i=index">
                       {{data.value}}
                     </span>
@@ -151,7 +164,7 @@
 
               <div class="form-group" [ngClass]="mode=='true'?'currentpage':'notcurrentpage'">
                 <label class="col-md-3 control-label"></label>
-                <div class="col-md-6 clearfix" style="width:52%">
+                <div class="col-md-6 clearfix" style="width:51%">
                   <span *ngFor="let x of formulafuction" class="{{x.class}} formula_span">
                     <a (click)="addData(x)">
                       <i>{{x.value}} </i>
@@ -183,7 +196,6 @@
                     </p-dropdown>
                   </div>
                   <div *ngIf="isSourceAtributeFormula">
-
                     <p-dropdown [options]="allFormula" [(ngModel)]="sourceformula" name="sourceformula" [disabled]="mode == 'true'"
                       [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="select">
                     </p-dropdown>
@@ -211,7 +223,7 @@
                     </p-dropdown>
                   </div>
                   <div *ngIf="isSourceAtributeParamlist">
-                    <p-dropdown [options]="lodeParamlist" [(ngModel)]="sourceparamlist" name="sourcefunction"
+                    <p-dropdown [options]="lodeParamlist" [(ngModel)]="sourceparamlist" name="sourceparamlist"
                       [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
                       placeholder="select">
                     </p-dropdown>

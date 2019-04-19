@@ -36,6 +36,7 @@ import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 import { ResultComponent } from './result/result.component';
 import { ResultModule } from '../shared/module/result.module';
 import { UiSwitchModule } from 'ngx-ui-switch';
+import { FormulaService } from '../metadata/services/formula.service';
 
 @NgModule({
     imports: [
@@ -86,7 +87,8 @@ import { UiSwitchModule } from 'ngx-ui-switch';
         MapServices,
         DatasetService,
         RelationService,
-        DatapodService
+        DatapodService,
+        FormulaService
     ]
 
 })
