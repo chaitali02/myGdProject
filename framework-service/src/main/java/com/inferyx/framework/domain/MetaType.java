@@ -47,7 +47,7 @@ public enum MetaType {
 				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec,
 				MetaType.trainresult, MetaType.deployExec, MetaType.processExec,MetaType.organization,
 				MetaType.dashboardExec, MetaType.graphExec ,MetaType.reportExec, MetaType.dashboardExec, MetaType.rule2,
-				MetaType.rule2Exec, MetaType.domain, MetaType.dqrecExec, MetaType.sysParams);
+				MetaType.rule2Exec, MetaType.domain, MetaType.dqrecExec);
 	}
 
 	public static List<MetaType> getMetaExecList() {
