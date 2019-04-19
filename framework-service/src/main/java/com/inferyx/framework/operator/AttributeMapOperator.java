@@ -138,7 +138,8 @@ public class AttributeMapOperator {
 				if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.attribute)
 						|| ((attrMap.getTargetAttr().getRef().getType().equals(MetaType.function)
 						|| attrMap.getTargetAttr().getRef().getType().equals(MetaType.formula)) 
-								&& mapSource.getRef().getType().equals(MetaType.simple))) {
+								&& (mapSource.getRef().getType().equals(MetaType.simple) 
+								|| mapSource.getRef().getType().equals(MetaType.sysParams)))) {
 					//special handling for ingest 
 					alias = attrMap.getTargetAttr().getValue();
 				} else {
@@ -178,6 +179,8 @@ public class AttributeMapOperator {
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
+			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.sysParams)) {
+				return builder.append("\'").append(commonServiceImpl.wrapSysParams(attrMap.getSourceAttr().getValue())).append("\'").append(" as ").append(alias).append(" ").toString();			
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
 				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef(), paramValMap);
 //				boolean isNumber = Helper.isNumber(value);			
