@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.RunMode;
+
 @Document(collection="session")
 public class Session extends BaseEntity
 {
@@ -22,6 +24,7 @@ public class Session extends BaseEntity
 	private MetaIdentifierHolder roleInfo;
 	private String sessionId;
 	private String ipAddress;
+	private RunMode type;
 	
 	public String getIpAddress() {
 		return ipAddress;
@@ -61,5 +64,23 @@ public class Session extends BaseEntity
 
 	public void setUserInfo(MetaIdentifierHolder userInfo) {
 		this.userInfo = userInfo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the type
+	 */
+	public RunMode getType() {
+		return type;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param type the type to set
+	 */
+	public void setType(RunMode type) {
+		this.type = type;
 	}
 }
