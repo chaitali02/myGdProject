@@ -1,3 +1,7 @@
+import { DropDownIO } from './../../metadata/domainIO/domain.dropDownIO';
+import { AppHelper } from './../../app.helper';
+import { Activity } from './../../metadata/domain/domain.activity';
+import { MetaType } from './../../metadata/enums/metaType';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -6,6 +10,9 @@ import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Version } from '../../shared/version';
 import { KnowledgeGraphComponent } from '../../shared/components';
+import { RoutesParam } from '../../metadata/domain/domain.routeParams';
+import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
 
 @Component({
   selector: 'app-activity',
@@ -44,85 +51,143 @@ export class ActivityComponent implements OnInit {
   msgs: any;
   isSubmitEnable: any;
 
-  isHomeEnable: boolean = false
-  showGraph: boolean = false;
-  isDependencyGraphEnable: boolean = true;
+  // isHomeEnable: boolean = false
+  // showGraph: boolean = false;
+  // isDependencyGraphEnable: boolean = true;
   isShowReportData: boolean = true;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  caretdown = 'fa fa-caret-down';
+  metaType = MetaType;
+  isEditInprogess: boolean = false;
+  isEditError: boolean = false;
+  isEdit: boolean = false;
+  isversionEnable: boolean;
+  isAdd: boolean;
+  isHomeEnable: boolean;
+  showForm: boolean = true;
+  showDivGraph: boolean;
+  isGraphInprogess: boolean;
+  // defaultDate: Date;
 
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router,
+    private _commonService: CommonService, private appHelper: AppHelper) {
     this.showActivity = true;
     this.activity = {};
-    this.activity["active"] = true
+    this.active = true
     this.isSubmitEnable = true;
     this.metaInfo = {};
     this.sessionInfo = {};
     this.userInfo = {};
 
-    this.breadcrumbDataFrom = [{
-      "caption": "Admin",
-      "routeurl": "/app/list/activity"
-    },
-    {
-      "caption": "Activity",
-      "routeurl": "/app/list/activity"
-    },
-    {
-      "caption": "",
-      "routeurl": null
-    }
-    ]
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "Admin",
+        "routeurl": "/app/list/activity"
+      },
+      {
+        "caption": "Activity",
+        "routeurl": "/app/list/activity"
+      },
+      {
+        "caption": "",
+        "routeurl": null
+      }];
+
+    this.isEditInprogess = false;
+    this.isEditError = false;
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       this.getOneByUuidAndVersion();
       this.getAllVersionByUuid();
 
-    })
+    });
+    this.setMode(this.mode);
   }
 
-  showDagGraph(uuid,version){
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  enableEdit(uuid, version) {
+    this.isEdit = true;
+    console.log("enableEdit call.....");
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false
+    this.showDivGraph = false;
+    this.showForm = true;
+    // this.isDependencyGraphEnable = true;
+    this.isShowReportData = true;
+  }
+
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
-    this.showGraph = true;
+    this.showDivGraph = true;
+    this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
-    }, 1000); 
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
   }
 
   getOneByUuidAndVersion() {
-    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'activity')
+    this.isEditInprogess = true;
+    this.isEditError = false;
+    this._commonService.getOneByUuidAndVersion(this.id, this.version, this.metaType.ACTIVITY)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
-        error => console.log("Error :: " + error));
+        error => {
+          console.log("Error :: " + error);
+          this.isEditError = true;
+        });
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('activity', this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.ACTIVITY, this.id)
       .subscribe(
         response => {
-          this.OnSuccesgetAllVersionByUuid(response)
+          this.onSuccesgetAllVersionByUuid(response)
         },
         error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.name
+    this.breadcrumbDataFrom[2].caption = response.name;
+    // this.activity = new Activity;
     this.activity = response;
+
     const version: Version = new Version();
-    version.label = response['version'];
-    version.uuid = response['uuid'];
+    version.label = response.version;
+    version.uuid = response.uuid;
     this.selectedVersion = version
+
     this.createdBy = this.activity.createdBy.ref.name;
-    this.activity.published = response["published"] == 'Y' ? true : false;
-    this.activity.locked = response["locked"] == 'Y' ? true : false;
-    this.activity.active = response["active"] == 'Y' ? true : false;
+
+    this.published = this.appHelper.convertStringToBoolean(response.published);
+    this.locked = this.appHelper.convertStringToBoolean(response.locked);
+    this.active = this.appHelper.convertStringToBoolean(response.active);
+
     if (response.userInfo != null) {
       this.userInfo = response.userInfo.ref.name;
     }
@@ -142,27 +207,28 @@ export class ActivityComponent implements OnInit {
     else {
       this.metaInfo = "";
     }
-    this.version = response['version'];
+    this.version = response.version;
 
-    this.breadcrumbDataFrom[2].caption = this.activity.name;
+    // this.breadcrumbDataFrom[2].caption = this.activity.name;
     console.log('Data is' + response);
+    this.isEditInprogess = false;
   }
 
-  OnSuccesgetAllVersionByUuid(response) {
+  onSuccesgetAllVersionByUuid(response) {
     var temp = []
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { label: "", uuid: "" };
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
       temp[i] = ver;
     }
     this.VersionList = temp
   }
 
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'activity')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, this.metaType.ACTIVITY)
       .subscribe(
         response => {//console.log(response)},
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -172,63 +238,53 @@ export class ActivityComponent implements OnInit {
 
   submitActivity() {
     this.isSubmitEnable = true;
-    let activityJson = {};
-    activityJson["uuid"] = this.activity.uuid
-    activityJson["name"] = this.activity.name
-    //let tagArray=[];
-    const tagstemp = [];
-    for (const t in this.tags) {
-      tagstemp.push(this.tags[t]["value"]);
-    }
-    // if(this.tags.length > 0){
-    //   for(let counttag=0;counttag < this.tags.length;counttag++){
-    //     tagArray[counttag]=this.tags[counttag]["value"];
-    //   }
+    let activityJson = new Activity;
+    activityJson.uuid = this.activity.uuid
+    activityJson.name = this.activity.name
+    // const tagstemp = [];
+    // for (const t in this.tags) {
+    //   tagstemp.push(this.tags[t]["value"]);
     // }
-    activityJson["tags"] = tagstemp
-    activityJson["desc"] = this.activity.desc
+    activityJson.tags = this.activity.tags;
+    activityJson.desc = this.activity.desc;
     //activityJson["createdBy"]=this.activity.createdBy
-    activityJson["createdOn"] = this.activity.createdOn
-    activityJson["active"] = this.activity.active == true ? 'Y' : "N"
-    activityJson["published"] = this.activity.published == true ? 'Y' : "N";
-    activityJson["locked"] = this.activity.locked == true ? 'Y' : "N";
-    activityJson["status"] = this.activity.status
-    let userInfo = {};
-    let refUserInfo = {};
-    refUserInfo["name"] = this.userInfo;
-    userInfo["ref"] = refUserInfo;
-    activityJson["userInfo"] = userInfo;
+    activityJson.createdOn = this.activity.createdOn
+    activityJson.active = this.appHelper.convertBooleanToString(this.active);
+    activityJson.published = this.appHelper.convertBooleanToString(this.published);
+    activityJson.locked = this.appHelper.convertBooleanToString(this.locked);
+    activityJson.status = this.activity.status;
+    
+    let userInfo = new MetaIdentifierHolder;
+    let refUserInfo = new MetaIdentifier;
+    refUserInfo.name = this.userInfo;
+    userInfo.ref = refUserInfo;
+    activityJson.userInfo = userInfo;
 
-    let sessionInfo = {};
-    let refSessionInfo = {};
-    refSessionInfo["name"] = this.sessionInfo;
-    sessionInfo["ref"] = refSessionInfo;
-    activityJson["sessionInfo"] = sessionInfo;
+    let sessionInfo = new MetaIdentifierHolder;
+    let refSessionInfo = new MetaIdentifier;
+    refSessionInfo.name = this.sessionInfo;
+    sessionInfo.ref = refSessionInfo;
+    activityJson.sessionInfo = sessionInfo;
 
-    activityJson["requestUrl"] = this.activity.requestUrl
+    activityJson.requestUrl = this.activity.requestUrl;
 
-    //  let dependsOn={};
-    //  let ref={}
-    //  ref["type"]=this.depends
-    //  ref["uuid"]=this.dependsOn.uuid
-    //  dependsOn["ref"]=ref;
-    //  filterJson["dependsOn"] = dependsOn;
+    let metaInfo = new MetaIdentifierHolder;
+    let refMetaInfo = new MetaIdentifier;
+    refMetaInfo.type = this.metaInfoType
+    refMetaInfo.name = this.metaInfoName
+    metaInfo.ref = refMetaInfo;
 
-    let metaInfo = {};
-    let refMetaInfo = {}
-    refMetaInfo["type"] = this.metaInfoType
-    refMetaInfo["name"] = this.metaInfoName
-    metaInfo["ref"] = refMetaInfo;
-    activityJson["metaInfo"] = metaInfo;
-    console.log(JSON.stringify(activityJson))
-    this._commonService.submit("activity", activityJson).subscribe(
-      response => { this.OnSuccessubmit(response) },
+    activityJson.metaInfo = metaInfo;
+    console.log(JSON.stringify(activityJson));
+
+    this._commonService.submit(this.metaType.ACTIVITY, activityJson).subscribe(
+      response => { this.onSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
 
   }
 
-  OnSuccessubmit(response) {
+  onSuccessubmit(response) {
     this.isSubmitEnable = true;
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Activity Submitted Successfully' });
@@ -238,17 +294,6 @@ export class ActivityComponent implements OnInit {
 
   public goBack() {
     this._location.back();
-  }
+  } 
 
-  showMainPage(uuid, version) {
-    this.isHomeEnable = false
-    this.showGraph = false;
-    this.isDependencyGraphEnable = true;
-    this.isShowReportData = true;
-  }
-  
-  enableEdit(uuid, version) {
-    console.log("enableEdit call.....");
-  }
-  
 }

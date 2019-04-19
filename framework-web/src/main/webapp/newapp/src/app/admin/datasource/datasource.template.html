@@ -9,226 +9,285 @@
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
         <div class="portlet-title">
-          <div class="caption">
+          <div class="caption" *ngIf="!isEditInprogess && !isEditError">
             <i class="fa fa-gift"></i>{{datasource.name}}
           </div>
 
           <div class="tools">
-            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-              data- (click)="showMainPage(datasource.uuid,datasource.version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-              data-(click)="enableEdit(datasource.uuid,datasource.version)">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-              data- (click)="showDagGraph(datasource.uuid,datasource.version)">
-              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'"
+                data- (click)="showMainPage(datasource.uuid,datasource.version)">
+                <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(datasource.uuid,datasource.version)">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+                [ngClass]="showForm==false? 'currentpage':'notcurrentpage'" data- (click)="showGraph(datasource.uuid,datasource.version)">
+                <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="showGraph(datasource.uuid,datasource.version)"
+                [ngClass]="showForm == true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;"
+                (click)="goBack()">
+                <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
           </div>
 
         </div>
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+          <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <div class="spinner" id="graphloader">
+            <div class="spinner" id="graphloader" *ngIf="isGraphInprogess">
               <div class="bounce1"></div>
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="show-graph-body" id="graphWrapper" >
-              <knowledge-graph ></knowledge-graph>
+            <div class="show-graph-body" id="graphWrapper">
+              <knowledge-graph></knowledge-graph>
             </div>
           </div>
 
-          <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDatasource()" #myNewForm="ngForm">
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.uuid" name="uuid" placeholder="" [disabled]="true">
-                </div>
-              </div>
+          <div class="form-body" style="padding-top:50px;" *ngIf='showForm'>
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.name" name="name" placeholder="" [disabled]="mode == 'true'">
-                </div>
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
-                  </p-dropdown>
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="datasource.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [disable]="mode == 'true'" [(ngModel)]="datasource.tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="datasource.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <!-- <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangeActive(event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datasource.active"
-                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+            </div>
+            <div *ngIf="!isEditInprogess && !isEditError">
+              <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitDatasource()"
+                #myNewForm="ngForm">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.uuid" name="uuid" placeholder=""
+                      [disabled]="true">
                   </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangePublished(event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datasource.published"
-                      name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div> -->
-
-              <div class="col-md-12">
-                <div class="col-md-6 form-group">
-                  <label class="control-label col-md-6 col-sm-6 col-xs-12">Type
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    Name
                     <span class="required" aria-required="true"> * </span>
                   </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [(ngModel)]="datasource.type" [disabled]="mode == 'true'" name="type" style="z-index:99">
-                      <option *ngFor="let i of datasourceOnType" [ngValue]="i">{{i}}</option>
-                    </select>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.name" name="name" placeholder=""
+                      [disabled]="mode == 'true'" #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Access
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.access" name="access" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()" [dropdownIcon]="caretdown">
+                    </p-dropdown>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Driver
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.driver" name="driver" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="datasource.createdBy.ref.name"
+                      name="createdBy">
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Host
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.host" name="host" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="datasource.createdOn" name="createdOn">
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">DB Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.dbname" name="dbname" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!-- <tag-input [disable]="mode == 'true'" [(ngModel)]="datasource.tags" name="tags" theme='bootstrap'
+                      style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                    <p-chips [(ngModel)]="datasource.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                      [allowDuplicate]="false"></p-chips>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Port
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.port" name="port" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea [disabled]="mode == 'true'" [(ngModel)]="datasource.desc" name="desc" class="form-control noresize "
+                      rows="2" style="resize:none;"></textarea>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Username
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.username" name="username" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"></ui-switch>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Password
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.password" name="password" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="locked"></ui-switch>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Path
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.path" name="path" placeholder="" [disabled]="mode == 'true'">
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"></ui-switch>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Session Parameters
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datasource.sessionParameters" name="sessionParameters" placeholder=""
-                    [disabled]="mode == 'true'">
+
+                <div class="col-md-12">
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-6 col-sm-6 col-xs-12" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['type']?.invalid)}">
+                      Type
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <select class="form-control" [(ngModel)]="datasource.type" [disabled]="mode == 'true'" name="type"
+                        style="z-index:99" #type="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['type']?.invalid)}">
+                        <option *ngFor="let i of datasourceOnType" [ngValue]="i">{{i}}</option>
+                      </select>
+                      <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['type']?.invalid)">
+                        <div class="help-block has-error error-msg">
+                          This field is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Access
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.access" name="access" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
                 </div>
-              </div>
-            </form>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Driver
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.driver" name="driver" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Host
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.host" name="host" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">DB Name
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.dbname" name="dbname" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Port
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.port" name="port" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Username
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.username" name="username"
+                      placeholder="" [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Password
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.password" name="password"
+                      placeholder="" [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Path
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.path" name="path" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Session Parameters
+                    <!-- <span class="required" aria-required="true"> * </span> -->
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="datasource.sessionParameters" name="sessionParameters"
+                      placeholder="" [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+
+                    <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

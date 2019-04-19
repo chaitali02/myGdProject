@@ -116,7 +116,7 @@
               </div>
               <div class="tab-content">
                 <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
-                  <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()"
+                  <form class="form-horizontal" name="myNewForm1" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()"
                     #myNewForm1="ngForm">
                     <div class="form-group" *ngIf="mode">
                       <label class="col-md-3 control-label">UUID</label>

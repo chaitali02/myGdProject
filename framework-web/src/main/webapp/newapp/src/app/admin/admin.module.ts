@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
-import { MessagesModule, MessageModule, TabViewModule, GrowlModule} from 'primeng/primeng';
+import { MessagesModule, MessageModule, TabViewModule, GrowlModule, ChipsModule} from 'primeng/primeng';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -43,6 +43,7 @@ import { MenuItem } from 'primeng/components/common/api';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { FileManagerService } from '../metadata/services/fileManager.service';
 import { DialogModule } from 'primeng/components/dialog/dialog';
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 @NgModule({
     imports:[
@@ -50,7 +51,6 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,
@@ -62,7 +62,16 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         DataTableModule,
         MenuModule,
         TabMenuModule,
-        DialogModule
+        DialogModule,
+        ChipsModule,
+        UiSwitchModule.forRoot({
+            size: 'small',
+            color: '#15C5D5',
+            switchColor: '#FFFFF',
+            defaultBoColor: '#ccc',
+            // checkedLabel: 'Yes',
+            //uncheckedLabel: 'No'
+        })
     ],
     declarations :[
         AdminComponent,

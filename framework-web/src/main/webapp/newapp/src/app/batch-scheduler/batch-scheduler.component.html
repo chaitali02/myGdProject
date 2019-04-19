@@ -90,7 +90,7 @@
                   </label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" [(ngModel)]="batch.name" name="name" placeholder=""
-                      [disabled]="mode == 'true'" #name="ngModel" required (ngModelChange)="setBatchChg()" required
+                      [disabled]="mode == 'true'" #name="ngModel" required (ngModelChange)="setBatchChg()"
                       [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
                     <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
                       <div class="help-block has-error error-msg">

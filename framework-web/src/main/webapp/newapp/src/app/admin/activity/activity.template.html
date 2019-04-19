@@ -8,203 +8,231 @@
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
         <div class="portlet-title">
-          <div class="caption">
+          <div class="caption" *ngIf="!isEditInprogess && !isEditError">
             <i class="fa fa-gift"></i>{{activity.name}}
           </div>
           <div class="tools">
-
-            <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
-              (click)="showMainPage(uuid,version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
-            </a>
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip="Edit"
-              style="height:16px;" [ngClass]="mode == 'true'?'currentpage':'currentpage'">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDagGraph(uuid,version)"
-              data-placement="top" tooltip style="height:14px;" *ngIf="mode" [ngClass]="isDependencyGraphEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip="refresh" [ngClass]="isRefreshEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip="close" style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip
+                [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip"
+                data-placement="top" tooltip="Edit" style="height:16px;" [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Show Dependencies" data-toggle="tooltip" (click)="showGraph(uuid,version)"
+                data-placement="top" tooltip style="height:14px;" [ngClass]="showForm==false? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip="refresh"
+                data- (click)="showGraph(uuid,version)" [ngClass]="showForm == true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip="close" style="height:14px;"
+                (click)="goBack()">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              </a>
+            </span>
 
           </div>
         </div>
 
         <div class="portlet-body form">
-          <div class="form-body" style="padding-top:50px;" *ngIf='!showGraph'>
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitActivity()"
-              #myNewForm="ngForm">
-              <div class="form-group">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="activity.uuid" name="uuid" placeholder=""
-                    [disabled]="true">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="activity.name" name="name" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
-                  </p-dropdown>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="activity.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="activity.tags" [disable]="true" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="activity.desc" name="desc" class="form-control noresize "
-                    rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="activity.active"
-                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="activity.locked"
-                      name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="activity.published"
-                      name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Status
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="activity.status" name="status" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">UserInfo
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="userInfo" name="userInfo" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">SessionId
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="sessionInfo" name="sessionInfo" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">RequestUrl
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="activity.requestUrl" name="requestUrl"
-                    placeholder="" [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Meta Info
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-2">
-                  <input type="text" class="form-control" [(ngModel)]="metaInfoType" name="metaInfoType" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-                <label class="col-md-1 control-label">Name
-                  <span class="required" aria-required="true"> </span>
-                </label>
-                <div class="col-md-3">
-                  <input type="text" class="form-control" [(ngModel)]="metaInfoName" name="metaInfoName" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
-            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <div class="spinner" id="graphloader">
+          <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;" *ngIf="isGraphError">Some Error Occur</div>
+            <div class="spinner" id="graphloader" *ngIf="isGraphInprogess">
               <div class="bounce1"></div>
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="show-graph-body" id="graphWrapper" >
-              <knowledge-graph ></knowledge-graph>
+            <div class="show-graph-body" id="graphWrapper">
+              <knowledge-graph></knowledge-graph>
             </div>
           </div>
-          
+
+          <div class="form-body" style="padding-top:50px;" *ngIf='showForm'>
+
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </div>
+
+            <div *ngIf="!isEditInprogess && !isEditError">
+              <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitActivity()"
+                #myNewForm="ngForm">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="activity.uuid" name="uuid" placeholder=""
+                      [disabled]="true">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="activity.name" name="name" placeholder=""
+                      [disabled]="mode == 'true'" #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true" [disabled]="mode == 'false'" (ngModelChange)="onVersionChange()" [dropdownIcon]="caretdown">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6" *ngIf="locations!=''">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="activity.createdBy.ref.name"
+                      name="createdBy">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="activity.createdOn" name="createdOn">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!-- <tag-input [(ngModel)]="activity.tags" [disable]="true" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                    <p-chips [(ngModel)]="activity.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                      [allowDuplicate]="false"></p-chips>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea [disabled]="mode == 'true'" [(ngModel)]="activity.desc" name="desc" class="form-control noresize "
+                      rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="published"></ui-switch>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"></ui-switch>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Status
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="activity.status" name="status" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">UserInfo
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="userInfo" name="userInfo" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">SessionId
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="sessionInfo" name="sessionInfo" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">RequestUrl
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="activity.requestUrl" name="requestUrl"
+                      placeholder="" [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Meta Info
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-2">
+                    <input type="text" class="form-control" [(ngModel)]="metaInfoType" name="metaInfoType" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                  <label class="col-md-1 control-label">Name
+                    <span class="required" aria-required="true"> </span>
+                  </label>
+                  <div class="col-md-3">
+                    <input type="text" class="form-control" [(ngModel)]="metaInfoName" name="metaInfoName" placeholder=""
+                      [disabled]="mode == 'true'">
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                    <input type="submit" class="btn btn-success btn-margin " value="Submit" name="submit" [disabled]="(!issSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+
+
         </div>
       </div>
     </div>
