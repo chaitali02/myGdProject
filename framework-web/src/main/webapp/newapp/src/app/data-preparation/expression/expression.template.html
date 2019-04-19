@@ -13,313 +13,360 @@
             <i class="fa fa-gift"></i>{{expression.name}}
           </div>
           <div class="tools">
-            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-              data- (click)="showMainPage(expression.uuid,expression.version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-              data-(click)="enableEdit(expression.uuid,expression.version)">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-
-            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-              data- (click)="showDagGraph(expression.uuid,expression.version)">
-              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a style="color:white" class="left-marginpage" title="Main" data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
+                data- (click)="showMainPage(expression.uuid,expression.version)" *ngIf="!isAdd">
+                <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a style="color:white" class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip"
+                data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(expression.uuid,expression.version)"
+                *ngIf="!isAdd">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a style="color:white" class="left-marginpage" href="javascript:;" title="Show Dependencies"
+                data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(expression.uuid,expression.version)"
+                *ngIf="!isAdd">
+                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a href="javascript:;" style="color:white" class="left-marginpage" data-placement="top" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
+                (click)="showDagGraph(expression.uuid,expression.version)" data-original-title="" title="Refresh">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" style="color:white" data-placement="top" (click)="goBack()" title="Close">
+                <i class="fa fa-times" style="display: inline;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
           </div>
         </div>
 
         <div class="portlet-body form" *ngIf="!showGraph">
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
-            *ngIf="showgraphdiv">
-            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <!--<div class="spinner" id="graphloader">-->
-            <!--<div class="bounce1"></div>-->
-            <!--<div class="bounce2"></div>-->
-            <!--<div class="bounce3"></div>-->
-            <!--</div>-->
-            <div class="form-body show-graph-body" id="graphWrapper">
-              <app-d3></app-d3>
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+            <div class="spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
             </div>
           </div>
 
-          <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitExpression()"
-              #myNewForm="ngForm">
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="expression.uuid" name="uuid" placeholder=""
-                    [disabled]="true">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="expression.name" name="name" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
-                  </p-dropdown>
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="expression.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <p-chips [(ngModel)]="expression.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
-                    [allowDuplicate]="false"></p-chips>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="expression.desc" name="desc" class="form-control noresize "
-                    rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="col-md-12">
-                <div class="col-md-6 form-group">
-                  <label class="control-label col-md-6 col-sm-6 col-xs-12">Depends On
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [(ngModel)]="depends" name="depends" (change)="selectType()"
-                      [disabled]='isDependonDisabled || mode == "true"'>
-                      <option *ngFor="let app of dependsOnType" [ngValue]="app.value">{{app.label}} </option>
-                    </select>
+          <div *ngIf="!isEditInprogess && !isEditError">
+            <div class="form-body" style="padding-top:50px;">
+              <form class="form-horizontal" name="myNewForm1" (submit)="myNewForm1.form.valid && submitExpression()"
+                novalidate="novalidate" #myNewForm1="ngForm">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="expression.uuid" name="uuid" placeholder=""
+                      [disabled]="true">
                   </div>
                 </div>
-                <div class="col-md-6 form-group">
-                  <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
                     <span class="required" aria-required="true"> * </span>
                   </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <p-dropdown [options]="allNames" [(ngModel)]="dependsOn" name="dependsOnName" [disabled]='isDependonDisabled || mode == "true"'
-                      [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeType()">
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="expression.name" name="name" placeholder=""
+                      [disabled]="mode == 'true'" #name="ngModel" required (ngModelChange)="onChangeName($event)"
+                      [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                     </p-dropdown>
                   </div>
                 </div>
-              </div>
-              <!-- <div class="form-group">
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="expression.createdOn" name="createdOn">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <p-chips [(ngModel)]="expression.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                      [allowDuplicate]="false"></p-chips>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea [disabled]="mode == 'true'" [(ngModel)]="expression.desc" name="desc" class="form-control noresize "
+                      rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-6 col-sm-6 col-xs-12" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['dependsReq']?.invalid)}">Depends
+                      On
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['dependsReq']?.invalid)}">
+                      <select class="form-control" [(ngModel)]="depends" name="dependsReq" (change)="selectType()"
+                        [disabled]='isDependonDisabled || mode == "true"'  placeholder="--Select--" #dependsReq="ngModel" required>
+                        <option *ngFor="let app of dependsOnType" [ngValue]="app.value">{{app.label}} </option>
+                      </select>
+                      <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['dependsReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div> 
+                    </div>
+                  
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;"
+                      [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['dependsOnNameReq']?.invalid)}">Name
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['dependsOnNameReq']?.invalid)}">
+                        <p-dropdown [options]="allNames" [(ngModel)]="dependsOn" name="dependsOnNameReq" [disabled]='isDependonDisabled || mode == "true"'
+                          [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="true" (onChange)="changeType()" placeholder="--Select--"
+                          #dependsOnNameReq="ngModel" required>
+                        </p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'"
                       [(ngModel)]="expression.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
                       labelOff="No"></ui-switch>
                   </div>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'"
-                      [(ngModel)]="expression.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes"
-                      labelOff="No"></ui-switch>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="expression.locked " name="locked"
+                        [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    </div>
                   </div>
                 </div>
-              </div> -->
-
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'"
+                        [(ngModel)]="expression.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes"
+                        labelOff="No"></ui-switch>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="x_title">
-                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRow()"
-                  [disabled]="mode == 'true'"></button>
-                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()"
-                  [disabled]="mode == 'true'"></button>
-                <h4>
-                  <strong>Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <br>
-              <div>
-                <table id="addConditionAttributeTable" class=" row-border hover table  table-striped table-bordered"
-                  style="table-layout:fixed;
-                  word-wrap:break-word;">
-                  <thead>
-                    <tr>
-                      <th style="text-align: center; Vertical-align: middle;width:5%;">
-                        <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectallrow"
-                          name="selectallrow" (change)="selectAllRow()" />
-                      </th>
-                      <th style="width:11%;text-align:center;">Logical Operator</th>
-                      <th style="width:13%;text-align:center;"> LHS Type</th>
-                      <th style="width:25%;text-align:center;">LHS Attribute</th>
-                      <th style="width:13%;text-align:center;">Operator</th>
-                      <th style="width:13%;text-align:center;">RHS Type</th>
-                      <th style="width:25%;text-align:center;">RHS Attribute</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let tabledata of expressionTableArray;let i=index">
-                      <th style="text-align: center; Vertical-align: middle;width:5%;">
-                        <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="tabledata.selected"
-                          name="selected" />
-                      </th>
-                      <td>
 
-                        <select class="form-control" [(ngModel)]="tabledata.logicalOperator" name="logicalOperator+{{i}}"
-                          [disabled]="i===0 && mode == 'true'">
-                          <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
-                        </select>
-                      </td>
-                      <td>
-                        <p-dropdown [options]="lhsType" [(ngModel)]="tabledata.lhstype" name="lhstype+{{i}}"
-                          optionLabel="caption" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                          (onChange)="selectlhsType(tabledata.lhstype.text,i)">
-                        </p-dropdown>
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" [(ngModel)]="tabledata.lhsvalue" name="sourcesimple+{{i}}"
-                          *ngIf="tabledata.islhsSimple" [disabled]="mode == 'true'">
-                        <div *ngIf="tabledata.islhsDatapod">
+                <div class="form-group" style="padding-top: 10px">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a href="javascript:;" class="btn btn-primary" (click)="goBack()" style="margin: 0% 1% 0% 0%;">
+                      Cancel
+                    </a>
+                    <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm1.form.dirty == true)?false:true"
+                      style="border-radius: 4px;">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="iSSubmitEnable=='true'">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
 
-                          <p-dropdown [options]="allAttribute" [(ngModel)]="expressionTableArray[i].lhsdatapodAttribute"
-                            name="sourceattribute+{{i}}" dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
+                <div class="x_title">
+                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeRow()"
+                    [disabled]="mode == 'true'"></button>
+                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()"
+                    [disabled]="mode == 'true'"></button>
+                  <h4>
+                    <strong>Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <br>
+                <div>
+                  <table id="addConditionAttributeTable" class=" row-border hover table  table-striped table-bordered"
+                    style="table-layout:fixed; word-wrap:break-word;">
+                    <thead>
+                      <tr>
+                        <th style="text-align: center; Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'"
+                            [(ngModel)]="selectallrow" name="selectallrow" (change)="selectAllRow()" />
+                        </th>
+                        <th style="width:11%;text-align:center;">Logical Operator</th>
+                        <th style="width:13%;text-align:center;">LHS Type</th>
+                        <th style="width:25%;text-align:center;">LHS Attribute</th>
+                        <th style="width:13%;text-align:center;">Operator</th>
+                        <th style="width:13%;text-align:center;">RHS Type</th>
+                        <th style="width:25%;text-align:center;">RHS Attribute</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let tabledata of expressionTableArray;let i=index">
+                        <th style="text-align: center; Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode == 'true'"
+                            [(ngModel)]="tabledata.selected" name="selected" />
+                        </th>
+                        <td>
+                          <select class="form-control" [(ngModel)]="tabledata.logicalOperator" name="logicalOperator+{{i}}"
+                            [disabled]="i===0 || mode == 'true'">
+                            <option *ngFor="let app of logicalOperators" [ngValue]="app">{{app}}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <p-dropdown [options]="lhsType" [(ngModel)]="tabledata.lhstype" name="lhstype+{{i}}"
+                            optionLabel="caption" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                            (onChange)="selectlhsType(tabledata.lhstype.text,i)">
                           </p-dropdown>
-                        </div>
+                        </td>
+                        <td>
+                          <input type="text" class="form-control" [(ngModel)]="tabledata.lhsvalue" name="sourcesimple{{i}}" [disabled]="mode == 'true'"
+                            [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['sourcesimple'+i]?.invalid)}"
+                            required #sourcesimple="ngModel" *ngIf="tabledata.islhsSimple">
 
-                        <div *ngIf="tabledata.islhsFormula">
-                          <p-dropdown [options]="allFormula" [(ngModel)]="expressionTableArray[i].lhsformula" name="sourceformula+{{i}}"
-                            dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
-                          </p-dropdown>
-                        </div>
-                      </td>
-                      <td>
-                        <select class="form-control" [(ngModel)]="tabledata.operator" name="operator+{{i}}" [disabled]="mode == 'true'">
-                          <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
-                        </select>
-                      </td>
-                      <td>
-                        <p-dropdown [options]="rhsType" [(ngModel)]="tabledata.rhstype" name="rhstype+{{i}}"
-                          optionLabel="caption" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                          (onChange)="selectrhsType(tabledata.rhstype.text,i)">
-                        </p-dropdown>
-                      </td>
-                      <td>
-                        <input type="text" class="form-control" [(ngModel)]="tabledata.rhsvalue" name="sourcesimpleRhs+{{i}}"
-                          *ngIf="tabledata.isrhsSimple" [disabled]="mode == 'true'">
-                        <div *ngIf="tabledata.isrhsDatapod">
-                          <p-dropdown [options]="allAttribute" [(ngModel)]="expressionTableArray[i].rhsdatapodAttribute"
-                            name="rhsdatapodAttribute+{{i}}" dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
-                          </p-dropdown>
-                        </div>
-                        <div *ngIf="tabledata.isrhsFormula">
-                          <p-dropdown [options]="allFormula" [(ngModel)]="expressionTableArray[i].rhsformula" name="rhsformula+{{i}}"
-                            dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
-                          </p-dropdown>
+                          <div *ngIf="tabledata.islhsDatapod" class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['lhsSourceAttribute'+i]?.invalid)}">
+                            <p-dropdown [options]="allAttribute" [(ngModel)]="expressionTableArray[i].lhsdatapodAttribute"
+                              name="lhsSourceAttribute{{i}}" dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" placeholder="--Select--" required #lhsSourceAttribute="ngModel">
+                            </p-dropdown>
+                          </div>
 
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <h4 class="pull-left bold" style="padding:10px;margin-top:-12px;">Match</h4>
-                <table class="table table-condensed table-bordered">
-                  <thead class="">
-                    <tr>
-                      <th style="width:20%;text-align:left;padding-left: 10px;">Type</th>
-                      <th style="width:20%;text-align:center;">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style="width:15%;">
-                        <select class="form-control" name="match" [(ngModel)]="expressionmetnotmat.metinfo.mettype"
-                          (change)="selectmetlhsType(expressionmetnotmat.metinfo.mettype)" [disabled]="mode == 'true'">
-                          <option *ngFor="let app of matType" [ngValue]="app">{{app}}</option>
-                        </select>
-                      </td>
-                      <td *ngIf="expressionmetnotmat.metinfo">
-                        <div *ngIf="expressionmetnotmat.metinfo.ismetFormula">
-                          <p-dropdown [options]="allFormula" [(ngModel)]="expressionmetnotmat.metinfo.metformula" name="matchformula+{{i}}"
-                            dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
+                          <div *ngIf="tabledata.islhsFormula" class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['lhsSourceFormula'+i]?.invalid)}">
+                            <p-dropdown [options]="allFormula" [(ngModel)]="expressionTableArray[i].lhsformula" name="lhsSourceFormula{{i}}"
+                              dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" placeholder="--Select--" required #lhsSourceFormula="ngModel">
+                            </p-dropdown>
+                          </div>
+                        </td>
+                        <td>
+                          <select class="form-control" [(ngModel)]="tabledata.operator" name="operator+{{i}}"
+                            [disabled]="mode == 'true'">
+                            <option *ngFor="let app of operators" [ngValue]="app">{{app}}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <p-dropdown [options]="rhsType" [(ngModel)]="tabledata.rhstype" name="rhstype+{{i}}"
+                            optionLabel="caption" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                            (onChange)="selectrhsType(tabledata.rhstype.text,i)">
                           </p-dropdown>
-                        </div>
-                        <input type="text" class="form-control" [(ngModel)]="expressionmetnotmat.metinfo.metlhsvalue"
-                          name="matchsourcesimple" *ngIf="expressionmetnotmat.metinfo.ismetlhsSimple" [disabled]="mode == 'true'">
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <h4 class="pull-left bold" style="padding:10px;margin-top:-12px;">Not Match</h4>
-                <table class="table table-condensed table-bordered">
-                  <thead class=" ">
-                    <tr>
-                      <th style="width:20%;text-align:left;padding-left: 10px;">Type</th>
-                      <th style="width:20%;text-align:center;">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style="width:15%;">
-                        <select class="form-control" name="Notmatch" [(ngModel)]="expressionmetnotmat.notmetinfo.notmettype"
-                          (change)="selectnotmmetlhsType(expressionmetnotmat.notmetinfo.notmettype)" [disabled]="mode == 'true'">
-                          <option *ngFor="let app of matType" [ngValue]="app">{{app}}</option>
-                        </select>
-                      </td>
-                      <td *ngIf="expressionmetnotmat.notmetinfo">
-                        <div *ngIf="expressionmetnotmat.notmetinfo.isnotmetFormula">
-                          <p-dropdown [options]="allFormula" [(ngModel)]="expressionmetnotmat.notmetinfo.notmetformula"
-                            name="notmatchformula+{{i}}" dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true">
-                          </p-dropdown>
-                        </div>
-                        <input type="text" class="form-control" [(ngModel)]="expressionmetnotmat.notmetinfo.notmetlhsvalue"
-                          name="notmatchsourcesimple" *ngIf="expressionmetnotmat.notmetinfo.isnotmetlhsSimple"
-                          [disabled]="mode == 'true'">
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
+                        </td>
+                        <td>
+                          <input type="text" class="form-control" [(ngModel)]="tabledata.rhsvalue" name="sourcesimple{{i}}" [disabled]="mode == 'true'"
+                          [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['sourcesimple'+i]?.invalid)}"
+                          required #sourcesimple="ngModel" *ngIf="tabledata.isrhsSimple">
+
+                          <div *ngIf="tabledata.isrhsDatapod" class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['rhsSourceAttribute'+i]?.invalid)}">
+                            <p-dropdown [options]="allAttribute" [(ngModel)]="expressionTableArray[i].rhsdatapodAttribute"
+                              name="rhsSourceAttribute{{i}}" dataKey="attributeId" [disabled]="mode == 'true'"
+                              [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="--Select--" required #rhsSourceAttribute="ngModel">
+                            </p-dropdown>
+                          </div>
+
+                          <div *ngIf="tabledata.isrhsFormula" class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['lhsSourceFormula'+i]?.invalid)}">
+                            <p-dropdown [options]="allFormula" [(ngModel)]="expressionTableArray[i].rhsformula" name="rhsSourceFormula{{i}}"
+                              dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" placeholder="--Select--"  required #rhsSourceFormula="ngModel">
+                            </p-dropdown>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <h4 class="pull-left bold" style="padding:10px;margin-top:-12px;">Match</h4>
+                  <table class="table table-condensed table-bordered">
+                    <thead class="">
+                      <tr>
+                        <th style="width:20%;text-align:left;padding-left: 10px;">Type</th>
+                        <th style="width:20%;text-align:center;">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="width:15%;">
+                          <select class="form-control" name="match" [(ngModel)]="expressionmetnotmat.metinfo.mettype"
+                            (change)="selectmetlhsType(expressionmetnotmat.metinfo.mettype)" [disabled]="mode == 'true'">
+                            <option *ngFor="let app of matType" [ngValue]="app">{{app}}</option>
+                          </select>
+                        </td>
+                        <td *ngIf="expressionmetnotmat.metinfo">
+                          <div *ngIf="expressionmetnotmat.metinfo.ismetFormula">
+                            <p-dropdown [options]="allFormula" [(ngModel)]="expressionmetnotmat.metinfo.metformula"
+                              name="matchformula+{{i}}" dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true">
+                            </p-dropdown>
+                          </div>
+                          <input type="text" class="form-control" [(ngModel)]="expressionmetnotmat.metinfo.metlhsvalue"
+                            name="matchsourcesimple" *ngIf="expressionmetnotmat.metinfo.ismetlhsSimple" [disabled]="mode == 'true'">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <h4 class="pull-left bold" style="padding:10px;margin-top:-12px;">Not Match</h4>
+                  <table class="table table-condensed table-bordered">
+                    <thead class=" ">
+                      <tr>
+                        <th style="width:20%;text-align:left;padding-left: 10px;">Type</th>
+                        <th style="width:20%;text-align:center;">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="width:15%;">
+                          <select class="form-control" name="Notmatch" [(ngModel)]="expressionmetnotmat.notmetinfo.notmettype"
+                            (change)="selectnotmmetlhsType(expressionmetnotmat.notmetinfo.notmettype)" [disabled]="mode == 'true'">
+                            <option *ngFor="let app of matType" [ngValue]="app">{{app}}</option>
+                          </select>
+                        </td>
+                        <td *ngIf="expressionmetnotmat.notmetinfo">
+                          <div *ngIf="expressionmetnotmat.notmetinfo.isnotmetFormula">
+                            <p-dropdown [options]="allFormula" [(ngModel)]="expressionmetnotmat.notmetinfo.notmetformula"
+                              name="notmatchformula+{{i}}" dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true">
+                            </p-dropdown>
+                          </div>
+                          <input type="text" class="form-control" [(ngModel)]="expressionmetnotmat.notmetinfo.notmetlhsvalue"
+                            name="notmatchsourcesimple" *ngIf="expressionmetnotmat.notmetinfo.isnotmetlhsSimple"
+                            [disabled]="mode == 'true'">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -329,7 +376,7 @@
           </div> -->
       <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-        <div class="spinner" id="graphloader">
+        <div class="spinner" *ngIf="isGraphInprogess">
           <div class="bounce1"></div>
           <div class="bounce2"></div>
           <div class="bounce3"></div>
@@ -338,8 +385,6 @@
           <knowledge-graph></knowledge-graph>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>
