@@ -27,6 +27,7 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1177,12 +1178,13 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 		
 		// ******************* creating dq rules *******************//
+		int j = 1;
 		for (DQIntelligence checkType : optimizedDQIntelLIst) {
 			try {
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
-				String attrName = checkType.getAttributeName() != null ? checkType.getAttributeName().getAttrName() : "";
-				String name = "dq_" + datapod.getPrefix() + "_" + attrName;
+				String attrName = checkType.getAttributeName() != null ? "_"+checkType.getAttributeName().getAttrName() : "";
+				String name = "dq_" + datapod.getPrefix() + attrName;
 				dataQual.setName(name);
 				dataQual.setDisplayName(name);
 				dataQual.setLocked("N");
@@ -1206,7 +1208,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 					dataQual.setDesc(checkType.getCheckType()+" check.");
 				}
 				dataQual.setBaseEntity();
-
+				
+				long version = Integer.parseInt(dataQual.getVersion()) + j;
+				dataQual.setVersion(version+"");
+				if(StringUtils.isBlank(attrName)) {
+					attrName = attrName+"_"+version;
+				}
+				
+				j++;
+				
 				// ******************* setting dq specific properties *******************//
 				MetaIdentifier ref = datapod.getRef(MetaType.datapod);
 				ref.setVersion(null);
@@ -1268,10 +1278,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 		case RANGE:
 			Map<String, String> range = new LinkedHashMap<>();
 			for(MetaIdentifierHolder checkValueHolder : dqColCheck.getCheckValue()) {
-				if(checkValueHolder.getRef().getName().equalsIgnoreCase("Lower Bound")) {
-					range.put("Lower Bound", checkValueHolder.getValue());
-				} else if(checkValueHolder.getRef().getName().equalsIgnoreCase("Upper Bound")) {
-					range.put("Upper Bound", checkValueHolder.getValue());
+				if(checkValueHolder.getRef().getName().equalsIgnoreCase("lowerBound")) {
+					range.put("lowerBound", checkValueHolder.getValue());
+				} else if(checkValueHolder.getRef().getName().equalsIgnoreCase("upperBound")) {
+					range.put("upperBound", checkValueHolder.getValue());
 				}
 			}
 			dataQual.setRangeCheck(range);
@@ -1303,8 +1313,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			Datasource dpDataSource = commonServiceImpl.getDatasourceByDatapod(datapod);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecParams execParams = new ExecParams();
-			
-			/*if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
+		/*if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
 				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
 			else*/
 				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");

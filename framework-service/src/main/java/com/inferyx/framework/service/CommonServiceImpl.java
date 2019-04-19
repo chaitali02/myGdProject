@@ -2936,64 +2936,66 @@ public class CommonServiceImpl<T> {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, ParseException, JsonProcessingException {
 		String appUuid = null;
-		
+
 		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()
 				: null;
-		
+
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
 		if (type == null) {
 			for (MetaType mType : metaTypes) {
-				// logger.info("MetaType: "+mType+"\n");
-				long count = 0;
-				Object iDao = this.getClass()
-						.getMethod(GET + Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase())))
-						.invoke(this);
-				if (appUuid == null) {
-					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
-							null, null, null, null).size();
-
-				}
-
-				else {
-					
-
-					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
-							null, null, null, null).size();
-				}
-				if (count > 0) {
-					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao,
-							new Sort(Sort.Direction.DESC, "version"));
-					Object metaobjNew = metadataServiceImpl.resolveBaseEntity((BaseEntity) metaObj);
-					Object createdBy = metaobjNew.getClass().getMethod("getCreatedBy").invoke(metaobjNew);
-					Object ref = createdBy.getClass().getMethod("getRef").invoke(createdBy);
-					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
-					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
-					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count),
-							nameLastUpdatedBy, lastUpdatedOn));
-					if (mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())) {
-						count = metadataServiceImpl.getParamList(MetaType.rule.toString(),
-								MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
-								.size();
-						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy,
-								lastUpdatedOn));
-						count = metadataServiceImpl.getParamList(MetaType.model.toString(),
-								MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
-								.size();
-						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy,
-								lastUpdatedOn));
-						count = metadataServiceImpl.getParamList(MetaType.dag.toString(), MetaType.paramlist.toString(),
-								null, null, null, null, null, null, null, null, null).size();
-						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy,
-								lastUpdatedOn));
-						count = metadataServiceImpl.getParamList(MetaType.report.toString(), MetaType.paramlist.toString(),
-								null, null, null, null, null, null, null, null, null).size();
-						countHolder.add(new MetaStatsHolder("paramlistreport", Long.toString(count), nameLastUpdatedBy,
-								lastUpdatedOn));
-
-
+				try {
+					// logger.info("MetaType: "+mType+"\n");
+					long count = 0;
+					Object iDao = this.getClass()
+							.getMethod(GET + Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase())))
+							.invoke(this);
+					if (appUuid == null) {
+						count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null,
+								null, null, null, null, null).size();
+					} else {
+						count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null,
+								null, null, null, null, null).size();
 					}
+
+					if (count > 0) {
+						Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao,
+								new Sort(Sort.Direction.DESC, "version"));
+						Object metaobjNew = metadataServiceImpl.resolveBaseEntity((BaseEntity) metaObj);
+						Object createdBy = metaobjNew.getClass().getMethod("getCreatedBy").invoke(metaobjNew);
+						Object ref = createdBy.getClass().getMethod("getRef").invoke(createdBy);
+						String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
+						String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn")
+								.invoke(metaobjNew);
+						countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count),
+								nameLastUpdatedBy, lastUpdatedOn));
+						if (mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())) {
+							count = metadataServiceImpl.getParamList(MetaType.rule.toString(),
+									MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+									.size();
+							countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count),
+									nameLastUpdatedBy, lastUpdatedOn));
+							count = metadataServiceImpl.getParamList(MetaType.model.toString(),
+									MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+									.size();
+							countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count),
+									nameLastUpdatedBy, lastUpdatedOn));
+							count = metadataServiceImpl.getParamList(MetaType.dag.toString(),
+									MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+									.size();
+							countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy,
+									lastUpdatedOn));
+							count = metadataServiceImpl.getParamList(MetaType.report.toString(),
+									MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+									.size();
+							countHolder.add(new MetaStatsHolder("paramlistreport", Long.toString(count),
+									nameLastUpdatedBy, lastUpdatedOn));
+						}
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
 				}
 			}
 		} else {
@@ -3003,7 +3005,7 @@ public class CommonServiceImpl<T> {
 			if (appUuid == null) {
 				count = (long) iDao.getClass().getMethod("count").invoke(iDao);
 			} else {
-				
+
 				count = metadataServiceImpl
 						.getBaseEntityByCriteria(type, null, null, null, null, null, null, null, null, null).size();
 			}

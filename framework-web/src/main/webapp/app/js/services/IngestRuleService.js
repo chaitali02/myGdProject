@@ -300,6 +300,34 @@ DataIngestionModule.factory('IngestRuleFactory', function ($http, $location) {
 			}
 		}
 		return rTypes;
+    }
+    factory.findAttributesByDatapod = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByDatapod?action=view&uuid=" + uuid + "&type=" + type,
+
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+    }
+    factory.findAttributesByDataset = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getAttributesByDataset?action=view&uuid=" + uuid,
+			method: "GET",
+		}).then(function (response) { return response })
+    }
+    factory.findAttributesByRelation = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
 	}
     return factory;
 })
@@ -540,9 +568,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
             for (var j = 0; j < response.length; j++) {
                 var attributedetail = {};
                 attributedetail.uuid = response[j].datapodRef.uuid;
-                attributedetail.datapodname = response[j].datapodRef.name;
-                attributedetail.name = response[j].attributeName;
-                attributedetail.dname = response[j].datapodRef.name + "." + response[j].attributeName;
+                attributedetail.name = response[j].datapodRef.name;
+                attributedetail.displayName = response[j].datapodRef.displayName;
+                attributedetail.attributeName = response[j].attributeName;
+                attributedetail.dname = response[j].datapodRef.displayName + "." + response[j].attributeName;
                 attributedetail.attributeId = response[j].attributeId;
                 attributes.push(attributedetail)
             }
@@ -639,9 +668,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.islhsDatapod = true;
                         lhsdatapodAttribute.uuid = response.filterInfo[i].operand[0].ref.uuid;
                         lhsdatapodAttribute.type = response.filterInfo[i].operand[0].ref.type;
-                        lhsdatapodAttribute.datapodname = response.filterInfo[i].operand[0].ref.name;
-                        lhsdatapodAttribute.name = response.filterInfo[i].operand[0].attributeName;
-                        lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.name + "." + response.filterInfo[i].operand[0].attributeName;
+                        lhsdatapodAttribute.name = response.filterInfo[i].operand[0].ref.name;
+                        lhsdatapodAttribute.displayName = response.filterInfo[i].operand[0].ref.displayName;
+                        lhsdatapodAttribute.attributeName = response.filterInfo[i].operand[0].attributeName;
+                        lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.displayName + "." + response.filterInfo[i].operand[0].attributeName;
                         lhsdatapodAttribute.attributeId = response.filterInfo[i].operand[0].attributeId;
                         filterInfo.lhsdatapodAttribute = lhsdatapodAttribute;
                     }
@@ -657,6 +687,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         lhsformula.uuid = response.filterInfo[i].operand[0].ref.uuid;
                         lhsformula.type = response.filterInfo[i].operand[0].ref.type;
                         lhsformula.name = response.filterInfo[i].operand[0].ref.name;
+                        lhsformula.displayName= response.filterInfo[i].operand[0].ref.displayName;
+
                         filterInfo.lhsformula = lhsformula;
                     }
                     if (response.filterInfo[i].operand[1].ref.type == "simple") {
@@ -705,9 +737,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsDatapod = true;
                         rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
                         rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
-                        rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
-                        rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
-                        rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+                        rhsdatapodAttribute.name = response.filterInfo[i].operand[1].ref.name;
+                        rhsdatapodAttribute.displayName = response.filterInfo[i].operand[1].ref.displayName;
+                        rhsdatapodAttribute.attributeName = response.filterInfo[i].operand[1].attributeName;
+                        rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
                         rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
                         filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
                     }
@@ -722,9 +755,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsDatapod = true;
 						filterInfo.isrhsDataset = false;
 						rhsdatapodAttribute.uuid =response.filterInfo[i].operand[1].ref.uuid;
-						rhsdatapodAttribute.datapodname =response.filterInfo[i].operand[1].ref.name;
-						rhsdatapodAttribute.name =response.filterInfo[i].operand[1].attributeName;
-						rhsdatapodAttribute.dname =response.filterInfo[i].operand[1].ref.name + "." +response.filterInfo[i].operand[1].attributeName;
+                        rhsdatapodAttribute.name =response.filterInfo[i].operand[1].ref.name;
+                        rhsdatapodAttribute.displayName =response.filterInfo[i].operand[1].ref.displayName;
+						rhsdatapodAttribute.attributeName =response.filterInfo[i].operand[1].attributeName;
+						rhsdatapodAttribute.dname =response.filterInfo[i].operand[1].ref.displayName + "." +response.filterInfo[i].operand[1].attributeName;
 						rhsdatapodAttribute.attributeId =response.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
 					}
@@ -740,6 +774,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         rhsformula.uuid = response.filterInfo[i].operand[1].ref.uuid;
                         rhsformula.type = response.filterInfo[i].operand[1].ref.type;
                         rhsformula.name = response.filterInfo[i].operand[1].ref.name;
+                        rhsformula.displayName = response.filterInfo[i].operand[1].ref.displayName;
                         filterInfo.rhsformula = rhsformula;
                     }
                     else if (response.filterInfo[i].operand[1].ref.type == "function") {
@@ -755,7 +790,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsParamlist = false;
 					    filterInfo.isrhsFunction =  true;
 						rhsfunction.uuid =response.filterInfo[i].operand[1].ref.uuid;
-						rhsfunction.name =response.filterInfo[i].operand[1].ref.name;
+                        rhsfunction.name =response.filterInfo[i].operand[1].ref.name;
+                        rhsfunction.displayName =response.filterInfo[i].operand[1].ref.displayName;
 						filterInfo.rhsfunction = rhsfunction;
 					}
                     else if (response.filterInfo[i].operand[1].ref.type == "dataset") {
@@ -769,9 +805,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 						filterInfo.isrhsDatapod = false;
 						filterInfo.isrhsDataset = true;
 						rhsdataset.uuid = response.filterInfo[i].operand[1].ref.uuid;
-						rhsdataset.datapodname = response.filterInfo[i].operand[1].ref.name;
-						rhsdataset.name = response.filterInfo[i].operand[1].attributeName;
-						rhsdataset.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+                        rhsdataset.name = response.filterInfo[i].operand[1].ref.name;
+                        rhsdataset.displayName = response.filterInfo[i].operand[1].ref.displayName;
+						rhsdataset.attributeName = response.filterInfo[i].operand[1].attributeName;
+						rhsdataset.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
 						rhsdataset.attributeId = response.filterInfo[i].operand[1].attributeId;
 						filterInfo.rhsdataset = rhsdataset;
                     }
@@ -788,9 +825,10 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         filterInfo.isrhsParamlist = true;
                         filterInfo.isrhsFunction = false;
                         rhsparamlist.uuid = response.filterInfo[i].operand[1].ref.uuid;
-                        rhsparamlist.datapodname = response.filterInfo[i].operand[1].ref.name;
-                        rhsparamlist.name = response.filterInfo[i].operand[1].attributeName;
-                        rhsparamlist.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.name = response.filterInfo[i].operand[1].ref.name;
+                        rhsparamlist.displayName = response.filterInfo[i].operand[1].ref.displayName;
+                        rhsparamlist.attributeName = response.filterInfo[i].operand[1].attributeName;
+                        rhsparamlist.dname = response.filterInfo[i].operand[1].ref.displayName + "." + response.filterInfo[i].operand[1].attributeName;
                         rhsparamlist.attributeId = response.filterInfo[i].operand[1].attributeId;
                     
                         filterInfo.rhsparamlist = rhsparamlist;
@@ -809,6 +847,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
                         sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+                        sourceattribute.name = response.attributeMap[i].sourceAttr.ref.name;
+                        sourceattribute.displayName = response.attributeMap[i].sourceAttr.ref.displayName;
                         sourceattribute.attrName = response.attributeMap[i].sourceAttr.attrName;
                         attributemapjson.sourceattribute=sourceattribute;
                         var obj = {}
@@ -851,6 +891,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         var sourceexpression = {};
                         sourceexpression.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourceexpression.name = response.attributeMap[i].sourceAttr.ref.name;
+                        sourceexpression.displayName = response.attributeMap[i].sourceAttr.ref.displayName;
                         var obj = {}
                         obj.text = "expression"
                         obj.caption = "expression"
@@ -866,6 +907,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         var sourceformula = {};
                         sourceformula.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourceformula.name = response.attributeMap[i].sourceAttr.ref.name;
+                        sourceformula.displayName = response.attributeMap[i].sourceAttr.ref.displayName;
                         var obj = {}
                         obj.text = "formula"
                         obj.caption = "formula"
@@ -881,6 +923,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         var sourcefunction = {};
                         sourcefunction.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
                         sourcefunction.name = response.attributeMap[i].sourceAttr.ref.name;
+                        sourcefunction.displayName = response.attributeMap[i].sourceAttr.ref.displayName;
                         var obj = {}
                         obj.text = "function"
                         obj.caption = "function"
@@ -898,7 +941,8 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                         var targetattribute = {}
                         targetattribute.uuid = response.attributeMap[i].targetAttr.ref.uuid;
                         targetattribute.name = response.attributeMap[i].targetAttr.ref.name;
-                        targetattribute.dname = response.attributeMap[i].targetAttr.ref.name+"."+response.attributeMap[i].targetAttr.attrName;
+                        targetattribute.displayName = response.attributeMap[i].targetAttr.ref.displayName;
+                        targetattribute.dname = response.attributeMap[i].targetAttr.ref.displayName+"."+response.attributeMap[i].targetAttr.attrName;
                         targetattribute.type = response.attributeMap[i].targetAttr.ref.type;
                         targetattribute.attributeId = response.attributeMap[i].targetAttr.attrId;
                         targetattribute.attrName=response.attributeMap[i].targetAttr.attrName;
@@ -957,108 +1001,105 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
     }
 
     this.getAllAttributeBySource = function (uuid, type) {
-        var deferred = $q.defer();
-        if (type == "relation") {
-            IngestRuleFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
-            var onSuccess = function (response) {
-                var attributes = [];
-                for (var j = 0; j < response.length; j++) {
-                    for (var i = 0; i < response[j].attributes.length; i++) {
-                        var attributedetail = {};
-                        attributedetail.uuid = response[j].uuid;
-                        attributedetail.type = response[j].type;
-                        attributedetail.datapodname = response[j].name;
-                        attributedetail.name = response[j].attributes[i].name;
-                        attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-                        attributedetail.attributeId = response[j].attributes[i].attributeId;
-                        attributes.push(attributedetail)
-                    }
-                }
-                deferred.resolve({
-                    data: attributes
-                })
-            }
-        }
-        if (type == "dataset") {
-            IngestRuleFactory.findDatapodByDataset(uuid, type).then(function (response) { onSuccess(response.data) });
-            var onSuccess = function (response) {
-                var attributes = [];
-                for (var j = 0; j < response.length; j++) {
-                    var attributedetail = {};
-                    attributedetail.uuid = response[j].ref.uuid;
-                    attributedetail.type = response[j].ref.type;
-                    attributedetail.datapodname = response[j].ref.name;
-                    attributedetail.name = response[j].attrName;
-                    attributedetail.attributeId = response[j].attrId;
-                    attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-                    attributes.push(attributedetail)
-                }
-                deferred.resolve({
-                    data: attributes
-                })
-            }
-        }
-        if (type == "rule") {
-            IngestRuleFactory.findAttributesByRule(uuid, type).then(function (response) { onSuccess(response.data) });
-            var onSuccess = function (response) {
-                var attributes = [];
-                for (var j = 0; j < response.length; j++) {
-                    var attributedetail = {};
-                    attributedetail.uuid = response[j].ref.uuid;
-                    attributedetail.type = response[j].ref.type;
-                    attributedetail.datapodname = response[j].ref.name;
-                    attributedetail.name = response[j].attrName;
-                    attributedetail.attributeId = response[j].attrId;
-                    attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-                    attributes.push(attributedetail)
-                }
-                deferred.resolve({
-                    data: attributes
-                })
-            }
-        }
+		var deferred = $q.defer();
+		if (type == "relation") {
+			IngestRuleFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
+					attributedetail.id = response[j].ref.uuid + "_" + j;
+					attributes.push(attributedetail)
+				}
 
-        if (type == "datapod") {
-            IngestRuleFactory.findDatapodByDatapod(uuid, type).then(function (response) { onSuccess(response.data) });
-            var onSuccess = function (response) {
-                var attributes = [];
-                for (var j = 0; j < response.length; j++) {
-                    var attributedetail = {};
-                    attributedetail.uuid = response[j].ref.uuid;
-                    attributedetail.type = response[j].ref.type;
-                    attributedetail.datapodname = response[j].ref.name;
-                    attributedetail.name = response[j].attrName;
-                    attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
-                    attributedetail.attrName =response[j].attrName;
-                    attributedetail.attributeId = response[j].attrId;
-                    attributes.push(attributedetail)
-                }
-                deferred.resolve({
-                    data: attributes
-                })
-            }
-        }
-        if (type == "paramlist") {
-            IngestRuleFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
-            var onSuccess = function (response) {
-                var attributes = [];
-                for (var j = 0; j < response.length; j++) {
-                    var attributedetail = {};
-                    attributedetail.uuid = response[j].ref.uuid;
-                    attributedetail.type = response[j].ref.type;
-                    attributedetail.datapodname = response[j].ref.name;
-                    attributedetail.name = response[j].paramName;
-                    attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
-                    attributedetail.attributeId = response[j].paramId;
-                    attributes.push(attributedetail);
-                }
-                deferred.resolve({
-                    data: attributes
-                })
-            }
-        }
-        return deferred.promise;
-    }
+				deferred.resolve({
+					data: attributes
+				})
+			}
+		}
+		if (type == "dataset") {
+			IngestRuleFactory.findAttributesByDataset(uuid).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+
+
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
+					attributedetail.id = response[j].ref.uuid + "_" + j;
+					attributes.push(attributedetail)
+				}
+
+				deferred.resolve({
+					data: attributes
+				})
+			}
+
+
+		}
+		if (type == "datapod") {
+			IngestRuleFactory.findAttributesByDatapod(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attributeName = response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.id = response[j].ref.uuid + "_" + j;
+					attributes.push(attributedetail)
+				}
+
+				deferred.resolve({
+					data: attributes
+				})
+			}
+
+		}
+		if (type == "paramlist") {
+			IngestRuleFactory.findParamByParamList(uuid, type).then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.name = response[j].ref.name;
+					attributedetail.displayName=response[j].ref.displayName;
+					attributedetail.attibuteName = response[j].paramName;
+					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;
+					attributedetail.attributeId = response[j].paramId;
+					attributedetail.id = response[j].ref.uuid + "_" + j;
+					attributes.push(attributedetail);
+				}
+				deferred.resolve({
+					data: attributes
+				})
+			}
+		}
+
+		return deferred.promise;
+	}
 
     this.getAllLatest = function (type) {
         var deferred = $q.defer();
@@ -1070,12 +1111,14 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
             if (response.length > 0) {
                 response.sort(sortFactory.sortByProperty("name"));
                 defaultoption.name = response[0].name;
+                defaultoption.displayName = response[0].displayName;
                 defaultoption.uuid = response[0].uuid;
                 defaultoption.version = response[0].version;
                 data.defaultoption = defaultoption;
                 for (var i = 0; i < response.length; i++) {
                     var datajosn = {}
                     datajosn.name = response[i].name;
+                    datajosn.displayName = response[i].displayName;
                     datajosn.uuid = response[i].uuid;
                     datajosn.version = response[i].version;
                     data.options[i] = datajosn

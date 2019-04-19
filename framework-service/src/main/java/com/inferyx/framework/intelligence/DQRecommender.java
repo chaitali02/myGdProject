@@ -613,9 +613,9 @@ public class DQRecommender {
 				// ***************** setting check value *****************//
 				List<MetaIdentifierHolder> checkValueList = new ArrayList<>();
 				checkValueList.add(new MetaIdentifierHolder(
-						new MetaIdentifier(MetaType.simple, null, null, "Lower Bound"), row.get(1).toString()));
+						new MetaIdentifier(MetaType.simple, null, null, "lowerBound"), row.get(1).toString()));
 				checkValueList.add(new MetaIdentifierHolder(
-						new MetaIdentifier(MetaType.simple, null, null, "Upper Bound"), row.get(0).toString()));
+						new MetaIdentifier(MetaType.simple, null, null, "upperBound"), row.get(0).toString()));
 				dqIntelligence.setCheckValue(checkValueList);
 
 				// ***************** setting dq creation check *****************//

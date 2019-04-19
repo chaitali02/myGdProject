@@ -321,7 +321,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.thresholdInfo.mediumMax = $scope.thresholdInfo.high;
     $scope.thresholdInfo.highMin = $scope.thresholdInfo.medium;
     $scope.thresholdInfo.highMax = 100;
-    $scope.thresholdInfo.type = $scope.thresholdType[0];
+    $scope.thresholdInfo.type = $scope.thresholdType[1];
     $scope.thresholdInfo.isPresent = true;
   }
   

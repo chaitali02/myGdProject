@@ -221,7 +221,7 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Use Template</label>
                   <div class="col-md-5 col-sm-5 col-xs-12">
                     <select class="form-control" select2 name="templateInfo" ng-disabled="(isAdd ==true && !isUseTemlate == false) ? false:true"
-                      ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.name for c in allParamList track by c.uuid">
+                      ng-change="onChangeTemplateInfo()" data-ng-model="selectedTemplate" ng-options="c as c.displayName for c in allParamList track by c.uuid">
                       <!--||!isTemplate -->
                       <option value="">-select-</option>
                     </select>
@@ -317,7 +317,7 @@
                           <div ng-if="tabledata.paramValueType =='distribution'" ng-init="onNgInit('distribution',$index)">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <select select2 class="form-control" name="tabledata{{$index}}" ng-disabled="{{mode}}"
-                                data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allDistribution track by r.uuid"
+                                data-ng-model="tabledata.selectedParamValue" ng-options="r as r.displayName for r in allDistribution track by r.uuid"
                                 required disable-validation-message="">
                               </select>
                               <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid"
@@ -327,7 +327,7 @@
                           <div ng-if="tabledata.paramValueType =='function'" ng-init="onNgInit('function',$index)">
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <select select2 class="form-control" name="tabledata{{$index}}" ng-disabled="{{mode}}"
-                                data-ng-model="tabledata.selectedParamValue" ng-options="r as r.name for r in allFunction track by r.uuid"
+                                data-ng-model="tabledata.selectedParamValue" ng-options="r as r.displayName for r in allFunction track by r.uuid"
                                 required disable-validation-message="">
                               </select>
                               <input name="tabledata{{$index}}" type="hidden" ng-model="tabledata.selectedParamValue.uuid"
