@@ -1,63 +1,63 @@
 {
-    "uuid" : "c5bfcdab-6435-4848-9214-6a878a865322",
-    "version" : "1524229889",
-    "name" : "Normal Sparkml Dist",
-    "desc" : null,
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196"
-        },
-        "value" : null
-    },
-    "createdOn" : ISODate("2018-08-18T00:59:19.591Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-       {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }
-    ],
-    "library" : "SPARKML",
-    "className" : "org.apache.spark.mllib.random.RandomRDDs",
-    "methodName" : "normalRDD",
-    "paramList" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "72ac4a5d-bd99-4208-b9ad-6fa4551b9d77",
-            "version" : null
-        },
-        "value" : null
-    }
+	"uuid" : "c5bfcdab-6435-4848-9214-6a878a865322",
+	"version" : "1524229889",
+	"name" : "Normal Sparkml Dist",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.578Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			}
+		}
+	],
+	"library" : "SPARKML",
+	"className" : "org.apache.spark.mllib.random.RandomRDDs",
+	"methodName" : "normalRDD",
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "72ac4a5d-bd99-4208-b9ad-6fa4551b9d77",
+			"version" : null
+		},
+		"value" : null
+	},
+	"displayName" : "Normal Sparkml Dist"
 }

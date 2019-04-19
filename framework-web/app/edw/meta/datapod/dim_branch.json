@@ -1,136 +1,137 @@
 {
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+	"datasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
 		}
 	},
-	"cache": "Y",
-	"published": "N",
-	"attributes": [
+	"cache" : "Y",
+	"published" : "N",
+	"attributes" : [
 		{
-			"attributeId": 0,
-			"name": "branch_id",
-			"type": "string",
-			"desc": "branch_id",
-			"dispName": "branch_id",
-			"key": 0,
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 0,
+			"name" : "branch_id",
+			"type" : "string",
+			"desc" : "branch_id",
+			"dispName" : "branch_id",
+			"key" : 0,
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 1,
-			"name": "src_branch_id",
-			"type": "string",
-			"desc": "src_branch_id",
-			"dispName": "src_branch_id",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 1,
+			"name" : "src_branch_id",
+			"type" : "string",
+			"desc" : "src_branch_id",
+			"dispName" : "src_branch_id",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 2,
-			"name": "branch_type_code",
-			"type": "string",
-			"desc": "branch_type_code",
-			"dispName": "branch_type_code",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 2,
+			"name" : "branch_type_code",
+			"type" : "string",
+			"desc" : "branch_type_code",
+			"dispName" : "branch_type_code",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 3,
-			"name": "branch_name",
-			"type": "string",
-			"desc": "branch_name",
-			"dispName": "branch_name",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 3,
+			"name" : "branch_name",
+			"type" : "string",
+			"desc" : "branch_name",
+			"dispName" : "branch_name",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 4,
-			"name": "branch_desc",
-			"type": "string",
-			"desc": "branch_desc",
-			"dispName": "branch_desc",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 4,
+			"name" : "branch_desc",
+			"type" : "string",
+			"desc" : "branch_desc",
+			"dispName" : "branch_desc",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 5,
-			"name": "branch_contact_name",
-			"type": "string",
-			"desc": "branch_contact_name",
-			"dispName": "branch_contact_name",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 5,
+			"name" : "branch_contact_name",
+			"type" : "string",
+			"desc" : "branch_contact_name",
+			"dispName" : "branch_contact_name",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 6,
-			"name": "branch_contact_phone",
-			"type": "string",
-			"desc": "branch_contact_phone",
-			"dispName": "branch_contact_phone",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 6,
+			"name" : "branch_contact_phone",
+			"type" : "string",
+			"desc" : "branch_contact_phone",
+			"dispName" : "branch_contact_phone",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 7,
-			"name": "branch_contact_email",
-			"type": "string",
-			"desc": "branch_contact_email",
-			"dispName": "branch_contact_email",
-			"partition": "N",
-			"active": "Y"
+			"attributeId" : 7,
+			"name" : "branch_contact_email",
+			"type" : "string",
+			"desc" : "branch_contact_email",
+			"dispName" : "branch_contact_email",
+			"partition" : "N",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 8,
-			"name": "load_date",
-			"type": "string",
-			"desc": "load_date",
-			"dispName": "load_date",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 8,
+			"name" : "load_date",
+			"type" : "string",
+			"desc" : "load_date",
+			"dispName" : "load_date",
+			"partition" : "Y",
+			"active" : "Y"
 		},
 		{
-			"attributeId": 9,
-			"name": "load_id",
-			"type": "Integer",
-			"desc": "load_id",
-			"dispName": "load_id",
-			"partition": "Y",
-			"active": "Y"
+			"attributeId" : 9,
+			"name" : "load_id",
+			"type" : "Integer",
+			"desc" : "load_id",
+			"dispName" : "load_id",
+			"partition" : "Y",
+			"active" : "Y"
 		}
 	],
-	"uuid": "80794b71-8707-4f71-ae20-f22e839a8279",
-	"version": "1488623675",
-	"name": "dim_branch",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "80794b71-8707-4f71-ae20-f22e839a8279",
+	"version" : "1488623675",
+	"name" : "dim_branch",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-04-16T14:28:15.208Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"appInfo": [
+	"locked" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
 			}
 		},
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
 			}
-		}	
+		}
 	],
-      "prefix" : "dmo"
+	"prefix" : "dmo",
+	"displayName" : "dim_branch"
 }

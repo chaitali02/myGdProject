@@ -1771,7 +1771,7 @@ public class SparkExecutor<T> implements IExecutor {
 				
 				registerTempTable(df, "tempTrngDf");
 				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
-				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, trainLocationDS, (List<String>) trainOtherParam.get("vectorFields"), true, "", clientContext).getDataFrame();
+				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, trainLocationDS, (List<String>) trainOtherParam.get("vectorFields"), true, "tempTrngDf", clientContext).getDataFrame();
 				trngDf = applyModelSchema(null, "SELECT * FROM "+"tempTrngDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
 				
 				//dropping temptables tempTrngDf and tempValDf
@@ -1913,10 +1913,10 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 				
 				trainedDataSet = trngModel.transform(trngDf);
-				testSetPath = trainingSetPath;
-				testLocationDP = trainLocationDP;
-				testLocationDs = trainLocationDS;
-				testLFilePathUrl = trainFilePathUrl;
+//				testSetPath = trainingSetPath;
+//				testLocationDP = trainLocationDP;
+//				testLocationDs = trainLocationDS;
+//				testLFilePathUrl = trainFilePathUrl;
 			} else {
 				logger.info("Before train pipeline fit");
 				if (null != paramMap) {

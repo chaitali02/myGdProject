@@ -1,126 +1,127 @@
 {
-  "uuid": "0206c465-fe5f-4b27-8b47-47bb1491fd08",
-  "version": "1534007951",
-  "name": "ds_customer_var_contribution_top1",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Aug 11 13:19:11 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
-      "version": null,
-      "name": "ds_customer_var_contribution_ranking"
-    },
-    "value": null
-  },
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "filter",
-        "uuid": "472d6b6d-9c4d-4b3e-aa0a-54b0611993ea",
-        "version": null,
-        "name": "ds_customer_var_contribution_topn_perc"
-      },
-      "value": null,
-      "attrId": null,
-      "attrName": null,
-      "attrType": null
-    }
-  ],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "top_n",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "Top-1",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "fm_customer_var_contribution_topn_perc",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "86b92d15-c963-4918-9601-50f791afc481",
-          "version": null,
-          "name": "fm_customer_var_contribution_topn_perc"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
-          "version": null,
-          "name": "ds_customer_var_contribution_ranking"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "reporting_date",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
-          "version": null,
-          "name": "ds_customer_var_contribution_ranking"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "version",
-        "attrType": "integer"
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "0206c465-fe5f-4b27-8b47-47bb1491fd08",
+	"version" : "1534007951",
+	"name" : "ds_customer_var_contribution_top1",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.282Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
+			"version" : null,
+			"name" : "ds_customer_var_contribution_ranking"
+		},
+		"value" : null
+	},
+	"filterInfo" : [
+		{
+			"ref" : {
+				"type" : "filter",
+				"uuid" : "472d6b6d-9c4d-4b3e-aa0a-54b0611993ea",
+				"version" : null,
+				"name" : "ds_customer_var_contribution_topn_perc"
+			},
+			"value" : null,
+			"attrId" : null,
+			"attrName" : null,
+			"attrType" : null
+		}
+	],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "top_n",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "Top-1",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "fm_customer_var_contribution_topn_perc",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "86b92d15-c963-4918-9601-50f791afc481",
+					"version" : null,
+					"name" : "fm_customer_var_contribution_topn_perc"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
+					"version" : null,
+					"name" : "ds_customer_var_contribution_ranking"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "reporting_date",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "4906eb04-1ff0-4d3c-a12a-a5b94045e31b",
+					"version" : null,
+					"name" : "ds_customer_var_contribution_ranking"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "version",
+				"attrType" : "integer"
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displayName" : "ds_customer_var_contribution_top1"
 }

@@ -1,60 +1,60 @@
 {
-  "uuid": "27350544-dd58-4d22-a14f-5789ca9c55ca",
-  "version": "1519981034",
-  "name": "Random Forest Classifier",
-  "desc": "Random Forest Classifier Algorithm",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  	"publicFlag" : "Y",
-    "appInfo": [
-			{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
+	"uuid" : "27350544-dd58-4d22-a14f-5789ca9c55ca",
+	"version" : "1519981034",
+	"name" : "Random Forest Classifier",
+	"desc" : "Random Forest Classifier Algorithm",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:14.633Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
 	],
-  "type": "CLASSIFICATION",
-  "libraryType": "SPARKML",
-  "trainClass": "org.apache.spark.ml.classification.RandomForestClassifier",
-  "modelClass": "org.apache.spark.ml.classification.RandomForestClassificationModel",
-  "labelRequired": "Y",
-  "returnType": null,
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
-      "version": null,
-      "name": "paramlist_randomforest_classifier"
-    },
-    "value": null
-  },
-	 "paramListWoH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729"
-        }
-    },
-    "paramListWH" : {
-        "ref" : {
-            "type" : "paramlist",
-            "uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b"
-        }
-    },
-  "savePmml" : "N",
-	"summaryMethods" : [  
+	"type" : "CLASSIFICATION",
+	"libraryType" : "SPARKML",
+	"trainClass" : "org.apache.spark.ml.classification.RandomForestClassifier",
+	"modelClass" : "org.apache.spark.ml.classification.RandomForestClassificationModel",
+	"labelRequired" : "Y",
+	"returnType" : null,
+	"paramList" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+			"version" : null,
+			"name" : "paramlist_randomforest_classifier"
+		},
+		"value" : null
+	},
+	"paramListWoH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "2b6f8552-f5ce-428b-b7eb-32b05a589729"
+		}
+	},
+	"paramListWH" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "a82581f7-3818-40bb-a98d-3b518b755e0b"
+		}
+	},
+	"savePmml" : "N",
+	"summaryMethods" : [
 		"featureImportances",
 		"getCheckpointInterval",
 		"getMaxBins",
@@ -69,5 +69,6 @@
 		"numFeatures",
 		"totalNumNodes",
 		"treeWeights"
-	    ]
+	],
+	"displayName" : "Random Forest Classifier"
 }

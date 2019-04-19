@@ -31,5 +31,6 @@
 	"username" : "inferyx",
 	"password" : "root",
 	"path" : "/user/hive/warehouse/framwork",
-	"sessionParameters" : "framework.oracle.schema=framework"
+	"sessionParameters" : "framework.oracle.schema=framework",
+	"displayName" : "oracle"
 }

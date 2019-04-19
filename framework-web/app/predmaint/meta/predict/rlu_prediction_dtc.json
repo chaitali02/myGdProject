@@ -1,0 +1,950 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+		}
+	},
+	"source" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+		}
+	},
+	"target" : {
+		"ref" : {
+			"type" : "file"
+		}
+	},
+	"featureAttrMap" : [
+		{
+			"featureMapId" : "0",
+			"featureDisplaySeq" : "0",
+			"feature" : {
+				"featureId" : "0",
+				"featureName" : "warn_type1_total",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "1",
+			"featureDisplaySeq" : "1",
+			"feature" : {
+				"featureId" : "1",
+				"featureName" : "warn_type2_total",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "3",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "2",
+			"featureDisplaySeq" : "2",
+			"feature" : {
+				"featureId" : "2",
+				"featureName" : "cat1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "4",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "3",
+			"featureDisplaySeq" : "3",
+			"feature" : {
+				"featureId" : "3",
+				"featureName" : "cat2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "4",
+			"featureDisplaySeq" : "4",
+			"feature" : {
+				"featureId" : "4",
+				"featureName" : "cat3",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "6",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "5",
+			"featureDisplaySeq" : "5",
+			"feature" : {
+				"featureId" : "5",
+				"featureName" : "cat4",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "7",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "6",
+			"featureDisplaySeq" : "6",
+			"feature" : {
+				"featureId" : "6",
+				"featureName" : "fault_code_type_1_count",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "8",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "7",
+			"featureDisplaySeq" : "7",
+			"feature" : {
+				"featureId" : "7",
+				"featureName" : "fault_code_type_2_count",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "9",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "8",
+			"featureDisplaySeq" : "8",
+			"feature" : {
+				"featureId" : "8",
+				"featureName" : "fault_code_type_3_count",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "10",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "9",
+			"featureDisplaySeq" : "9",
+			"feature" : {
+				"featureId" : "9",
+				"featureName" : "fault_code_type_4_count",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "11",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "10",
+			"featureDisplaySeq" : "10",
+			"feature" : {
+				"featureId" : "10",
+				"featureName" : "problem_type_1_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "12",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "11",
+			"featureDisplaySeq" : "11",
+			"feature" : {
+				"featureId" : "11",
+				"featureName" : "problem_type_2_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "13",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "12",
+			"featureDisplaySeq" : "12",
+			"feature" : {
+				"featureId" : "12",
+				"featureName" : "problem_type_3_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "14",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "13",
+			"featureDisplaySeq" : "13",
+			"feature" : {
+				"featureId" : "13",
+				"featureName" : "problem_type_4_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "15",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "14",
+			"featureDisplaySeq" : "14",
+			"feature" : {
+				"featureId" : "14",
+				"featureName" : "fault_code_type_1_count_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "16",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "15",
+			"featureDisplaySeq" : "15",
+			"feature" : {
+				"featureId" : "15",
+				"featureName" : "fault_code_type_2_count_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "17",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "16",
+			"featureDisplaySeq" : "16",
+			"feature" : {
+				"featureId" : "16",
+				"featureName" : "fault_code_type_3_count_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "18",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "17",
+			"featureDisplaySeq" : "17",
+			"feature" : {
+				"featureId" : "17",
+				"featureName" : "fault_code_type_4_count_per_usage1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "19",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "18",
+			"featureDisplaySeq" : "18",
+			"feature" : {
+				"featureId" : "18",
+				"featureName" : "problem_type_1_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "20",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "19",
+			"featureDisplaySeq" : "19",
+			"feature" : {
+				"featureId" : "19",
+				"featureName" : "problem_type_2_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "21",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "20",
+			"featureDisplaySeq" : "20",
+			"feature" : {
+				"featureId" : "20",
+				"featureName" : "problem_type_3_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "22",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "21",
+			"featureDisplaySeq" : "21",
+			"feature" : {
+				"featureId" : "21",
+				"featureName" : "problem_type_4_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "23",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "22",
+			"featureDisplaySeq" : "22",
+			"feature" : {
+				"featureId" : "22",
+				"featureName" : "fault_code_type_1_count_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "24",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "23",
+			"featureDisplaySeq" : "23",
+			"feature" : {
+				"featureId" : "23",
+				"featureName" : "fault_code_type_2_count_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "25",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "24",
+			"featureDisplaySeq" : "24",
+			"feature" : {
+				"featureId" : "24",
+				"featureName" : "fault_code_type_3_count_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "26",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "25",
+			"featureDisplaySeq" : "25",
+			"feature" : {
+				"featureId" : "25",
+				"featureName" : "fault_code_type_4_count_per_usage2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "27",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "26",
+			"featureDisplaySeq" : "26",
+			"feature" : {
+				"featureId" : "26",
+				"featureName" : "problem_type_1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "28",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "27",
+			"featureDisplaySeq" : "27",
+			"feature" : {
+				"featureId" : "27",
+				"featureName" : "problem_type_2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "29",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "28",
+			"featureDisplaySeq" : "28",
+			"feature" : {
+				"featureId" : "28",
+				"featureName" : "problem_type_3",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "30",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "29",
+			"featureDisplaySeq" : "29",
+			"feature" : {
+				"featureId" : "29",
+				"featureName" : "problem_type_4",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "31",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "30",
+			"featureDisplaySeq" : "30",
+			"feature" : {
+				"featureId" : "30",
+				"featureName" : "usage_count_1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "34",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "31",
+			"featureDisplaySeq" : "31",
+			"feature" : {
+				"featureId" : "31",
+				"featureName" : "usage_count_2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "35",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "32",
+			"featureDisplaySeq" : "32",
+			"feature" : {
+				"featureId" : "32",
+				"featureName" : "error_count_1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "36",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "33",
+			"featureDisplaySeq" : "33",
+			"feature" : {
+				"featureId" : "33",
+				"featureName" : "error_count_2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "37",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "34",
+			"featureDisplaySeq" : "34",
+			"feature" : {
+				"featureId" : "34",
+				"featureName" : "error_count_3",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "38",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "35",
+			"featureDisplaySeq" : "35",
+			"feature" : {
+				"featureId" : "35",
+				"featureName" : "error_count_4",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "39",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "36",
+			"featureDisplaySeq" : "36",
+			"feature" : {
+				"featureId" : "36",
+				"featureName" : "error_count_5",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "40",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "37",
+			"featureDisplaySeq" : "37",
+			"feature" : {
+				"featureId" : "37",
+				"featureName" : "error_count_6",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "41",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "38",
+			"featureDisplaySeq" : "38",
+			"feature" : {
+				"featureId" : "38",
+				"featureName" : "error_count_7",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "42",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "39",
+			"featureDisplaySeq" : "39",
+			"feature" : {
+				"featureId" : "39",
+				"featureName" : "date_month",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "44",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "40",
+			"featureDisplaySeq" : "40",
+			"feature" : {
+				"featureId" : "40",
+				"featureName" : "date_week",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "45",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "41",
+			"featureDisplaySeq" : "41",
+			"feature" : {
+				"featureId" : "41",
+				"featureName" : "date_day",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "46",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "42",
+			"featureDisplaySeq" : "42",
+			"feature" : {
+				"featureId" : "42",
+				"featureName" : "deviceid",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		},
+		{
+			"featureMapId" : "43",
+			"featureDisplaySeq" : "43",
+			"feature" : {
+				"featureId" : "43",
+				"featureName" : "date",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
+				}
+			},
+			"attribute" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+				}
+			}
+		}
+	],
+	"trainInfo" : {
+		"ref" : {
+			"type" : "train",
+			"uuid" : "0fe1b1d3-ac2b-4009-b410-3ced654bd520"
+		}
+	},
+	"rowIdentifier" : [
+		{
+			"attrId" : "0",
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+			}
+		},
+		{
+			"attrId" : "1",
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+			}
+		}
+	],
+	"includeFeatures" : "Y",
+	"uuid" : "0eb3dba6-c58a-4016-b26f-39f78665f0fd",
+	"version" : "1548947604",
+	"name" : "RLU Prediction - DTC",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.610Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153"
+			}
+		}
+	],
+	"displayName" : "RLU Prediction - DTC"
+}

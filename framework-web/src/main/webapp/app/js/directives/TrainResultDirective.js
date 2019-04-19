@@ -165,7 +165,8 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           }
           else {
             obj.title = e;
-            $scope.title.push(obj.title)
+            if(obj.Importance >=1)
+            	$scope.title.push(obj.title)
           }
           return obj;
         })
@@ -182,7 +183,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         }
         $scope.featureImportanceNonZero=featureImportanceChartArr;
        /// console.log($scope.featureImportanceNonZero);
-        $scope.featureImportanceNonZero.sort(sortFactory.sortByProperty("Importance",'desc'));
+        //$scope.featureImportanceNonZero.sort(sortFactory.sortByProperty("Importance",'desc'));
         // console.log($scope.featureImportanceNonZero);
         
 

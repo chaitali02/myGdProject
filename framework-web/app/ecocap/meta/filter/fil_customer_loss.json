@@ -1,55 +1,56 @@
 {
-    "dependsOn" : {
-        "ref" : {
-            "type" : "relation",
-            "uuid" : "91290798-b6a9-4883-bc58-664b66a08794"
-        }
-    },
-    "filterInfo" : [ 
-        {
-            "logicalOperator" : "",
-            "operator" : "=",
-            "operand" : [ 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
-                    },
-                    "attributeId" : 0
-                }, 
-                {
-                    "ref" : {
-                        "type" : "datapod",
-                        "uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
-                    },
-                    "attributeId" : 0
-                }
-            ]
-        }
-    ],
-    "uuid" : "bdea0dd6-5b5a-45a5-81bf-77619b3529c9",
-    "version" : "1526601346",
-    "name" : "fil_customer_loss",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-05-17T23:55:46.000Z"),
-    "tags" : [],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"dependsOn" : {
+		"ref" : {
+			"type" : "relation",
+			"uuid" : "91290798-b6a9-4883-bc58-664b66a08794"
+		}
+	},
+	"filterInfo" : [
+		{
+			"logicalOperator" : "",
+			"operator" : "=",
+			"operand" : [
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeee"
+					},
+					"attributeId" : 0
+				},
+				{
+					"ref" : {
+						"type" : "datapod",
+						"uuid" : "ceb4f8ea-e02e-44f7-8083-2808cd8bdeqq"
+					},
+					"attributeId" : 0
+				}
+			]
+		}
+	],
+	"uuid" : "bdea0dd6-5b5a-45a5-81bf-77619b3529c9",
+	"version" : "1526601346",
+	"name" : "fil_customer_loss",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.144Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822"
+			}
+		}
+	],
+	"displayName" : "fil_customer_loss"
 }

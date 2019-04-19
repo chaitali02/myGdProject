@@ -1,89 +1,90 @@
 {
-  "uuid": "37d53ff8-eb7f-4536-9383-239aeae1f451",
-  "version": "1550867426",
-  "name": "rel_fact_transaction_report",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Fri Feb 22 15:30:26 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "dependsOn": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-      "version": null,
-      "name": "fact_transaction"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-          "version": null,
-          "name": "dim_transaction_type"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "display_seq": null,
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
-                "version": null,
-                "name": "fact_transaction"
-              },
-              "attributeId": 2,
-              "value": null,
-              "attributeName": "transaction_type_id",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "datapod",
-                "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
-                "version": null,
-                "name": "dim_transaction_type"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "transaction_type_id",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "37d53ff8-eb7f-4536-9383-239aeae1f451",
+	"version" : "1550867426",
+	"name" : "rel_fact_transaction_report",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1548315745",
+				"name" : "Anti Money Laundering"
+			},
+			"value" : null
+		}
+	],
+	"publicFlag" : "N",
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+			"version" : null,
+			"name" : "fact_transaction"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+					"version" : null,
+					"name" : "dim_transaction_type"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"display_seq" : null,
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "14bebb86-6137-4109-ad45-0eea53066768",
+								"version" : null,
+								"name" : "fact_transaction"
+							},
+							"attributeId" : 2,
+							"value" : null,
+							"attributeName" : "transaction_type_id",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "datapod",
+								"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
+								"version" : null,
+								"name" : "dim_transaction_type"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "transaction_type_id",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_fact_transaction_report"
 }

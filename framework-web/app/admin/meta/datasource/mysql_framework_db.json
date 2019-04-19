@@ -40,5 +40,6 @@
   "path": "/user/hive/warehouse/framework",
   "subType": null,
   "sessionParameters": "useSSL=false",
-  "sid": null
+  "sid": null,
+	"displayName" : "mysql_framework_db"
 }

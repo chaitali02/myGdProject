@@ -1,43 +1,44 @@
 {
-    "params" : [  
-        {
-            "paramId" : "0",
-            "paramName" : "k",
-            "paramType" : "integer",
-            "paramDispName" : "k",
-            "paramValue" : {
-                "ref" : {
-                    "type" : "simple"
-                },
-                "value" : "3"
-            }
-        }
-    ],
-    "paramListType" : "model",
-    "templateFlg" : "Y",
-    "uuid" : "d3c52f77-92b7-480a-af3a-46764a02d6f0",
-    "version" : "1549029806",
-    "name" : "paramlist_pca_algorithm",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-02-01T14:03:26.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ]
+	"params" : [
+		{
+			"paramId" : "0",
+			"paramName" : "k",
+			"paramType" : "integer",
+			"paramDispName" : "k",
+			"paramValue" : {
+				"ref" : {
+					"type" : "simple"
+				},
+				"value" : "3"
+			}
+		}
+	],
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"uuid" : "d3c52f77-92b7-480a-af3a-46764a02d6f0",
+	"version" : "1549029806",
+	"name" : "paramlist_pca_algorithm",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displayName" : "paramlist_pca_algorithm"
 }

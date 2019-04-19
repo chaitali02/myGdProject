@@ -1,142 +1,143 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "4",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "4",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "5",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "5",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "6",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "6",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "7",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "7",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "8",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "8",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "9",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "9",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "10",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "10",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "11",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "11",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "12",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "12",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "13",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "13",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		},
 		{
-			"attrId": "14",
-			"ref": {
-				"type": "datapod",
-				"uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849"
+			"attrId" : "14",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849"
 			}
 		}
 	],
-	"uuid": "b455fa9e-f4a8-4834-81da-488e9b810f45",
-	"version": "1491912256",
-	"name": "profile_dim_customer",
-	"desc": "Data profiling to see statistical check results on dw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "b455fa9e-f4a8-4834-81da-488e9b810f45",
+	"version" : "1491912256",
+	"name" : "profile_dim_customer",
+	"desc" : "Data profiling to see statistical check results on dw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_dim_customer"
 }

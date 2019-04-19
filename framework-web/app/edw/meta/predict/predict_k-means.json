@@ -1,0 +1,171 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "model",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
+		}
+	},
+	"source" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+		}
+	},
+	"target" : {
+		"ref" : {
+			"type" : "file"
+		}
+	},
+	"featureAttrMap" : [
+		{
+			"featureMapId" : "0",
+			"featureDisplaySeq" : "0",
+			"feature" : {
+				"featureId" : "0",
+				"featureName" : "customer_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
+				}
+			},
+			"attribute" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "0",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "1",
+			"featureDisplaySeq" : "1",
+			"feature" : {
+				"featureId" : "1",
+				"featureName" : "address_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
+				}
+			},
+			"attribute" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "1",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "2",
+			"featureDisplaySeq" : "2",
+			"feature" : {
+				"featureId" : "2",
+				"featureName" : "branch_id",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
+				}
+			},
+			"attribute" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "2",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		},
+		{
+			"featureMapId" : "3",
+			"featureDisplaySeq" : "3",
+			"feature" : {
+				"featureId" : "3",
+				"featureName" : "commute_distance_miles",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model",
+					"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b71235"
+				}
+			},
+			"attribute" : {
+				"attrId" : "3",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+				}
+			},
+			"imputeMethod" : {
+				"featureId" : "3",
+				"featureDefaultValue" : 0,
+				"ref" : {
+					"type" : "model"
+				}
+			}
+		}
+	],
+	"trainInfo" : {
+		"ref" : {
+			"type" : "train",
+			"uuid" : "d762b4ea-5adc-4d05-ab93-d78d00a48609"
+		}
+	},
+	"rowIdentifier" : [
+		{
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+			}
+		}
+	],
+	"includeFeatures" : "Y",
+	"uuid" : "5de51a33-79ad-417d-98d5-11877c68c744",
+	"version" : "1535967398",
+	"name" : "predict_k-means",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.610Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"displayName" : "predict_k-means"
+}

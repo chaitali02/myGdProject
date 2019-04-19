@@ -1,18 +1,25 @@
 {
-    "uuid": "36b73690-8130-48d0-bfaa-8da1d20c7c37",
-    "name": "paramlist",
-    "version": "1462885561",
-"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "36b73690-8130-48d0-bfaa-8da1d20c7c37",
+	"name" : "paramlist",
+	"version" : "1462885561",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [{"ref" : {"type" : "application","uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"}}
-    			],
-    "desc": "Meta for paramlist",
-    "menu":"DataScience"
+	"createdOn" : ISODate("2019-04-16T14:28:17.102Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"desc" : "Meta for paramlist",
+	"menu" : "DataScience",
+	"displayName" : "paramlist"
 }

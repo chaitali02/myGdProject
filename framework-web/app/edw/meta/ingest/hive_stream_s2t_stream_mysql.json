@@ -1,245 +1,245 @@
 {
-
-  "uuid": "83947980-42ec-4732-bdde-873a84b31f8c",
-  "version": "1542454729",
-  "name": "hive_stream_s2t_stream_mysql",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Nov 17 17:08:49 IST 2018",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "type": "STREAM-TABLE",
-  "sourceDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050",
-      "version": null,
-      "name": "Stream"
-    },
-    "value": null
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "topicA"
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
-      "version": null,
-      "name": "mysql"
-    },
-    "value": null
-  },
-  "targetDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-      "version": null,
-      "name": "mysql_stream"
-    },
-    "value": null
-  },
-  "filterInfo": null,
-  "runParams": null,
-  "sourceFormat": null,
-  "targetFormat": null,
-  "incrAttr": null,
-  "saveMode": "APPEND",
-  "ignoreCase": "N",
-  "sourceExtn": null,
-  "targetExtn": null,
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "kye",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "key1",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "value",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "value1",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "topic",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "topic1",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "partition",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "partition1",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "offset",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "offset1",
-        "attrType": null
-      }
-    },
-    {
-      "attrMapId": "5",
-      "sourceAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "timestamp",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "47946578-085a-4bd1-93f0-7099b173def2",
-          "version": null,
-          "name": "mysql_stream"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "timestamp1",
-        "attrType": null
-      }
-    }
-  ],
-  "splitBy": null,
-  "sourceHeader": "N",
-  "targetHeader": "N"
+	"uuid" : "83947980-42ec-4732-bdde-873a84b31f8c",
+	"version" : "1542454729",
+	"name" : "hive_stream_s2t_stream_mysql",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.528Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"type" : "STREAM-TABLE",
+	"sourceDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050",
+			"version" : null,
+			"name" : "Stream"
+		},
+		"value" : null
+	},
+	"sourceDetail" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "topicA"
+	},
+	"targetDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+			"version" : null,
+			"name" : "mysql"
+		},
+		"value" : null
+	},
+	"targetDetail" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+			"version" : null,
+			"name" : "mysql_stream"
+		},
+		"value" : null
+	},
+	"filterInfo" : null,
+	"runParams" : null,
+	"sourceFormat" : null,
+	"targetFormat" : null,
+	"incrAttr" : null,
+	"saveMode" : "APPEND",
+	"ignoreCase" : "N",
+	"sourceExtn" : null,
+	"targetExtn" : null,
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "kye",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "key1",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "value",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "value1",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "topic",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "2",
+				"attrName" : "topic1",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "partition",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "3",
+				"attrName" : "partition1",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "offset",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "offset1",
+				"attrType" : null
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "timestamp",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "47946578-085a-4bd1-93f0-7099b173def2",
+					"version" : null,
+					"name" : "mysql_stream"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "timestamp1",
+				"attrType" : null
+			}
+		}
+	],
+	"splitBy" : null,
+	"sourceHeader" : "N",
+	"targetHeader" : "N",
+	"displayName" : "hive_stream_s2t_stream_mysql"
 }

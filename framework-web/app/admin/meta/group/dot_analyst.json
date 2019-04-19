@@ -1,4 +1,5 @@
 {
+    "_id" : ObjectId("5cb6244eda75e91b2c594069"),
     "roleId" : {
         "ref" : {
             "type" : "role",
@@ -37,5 +38,6 @@
                 "name" : "Administration"
             }
         }
-    ]
+    ],
+    "displayName" : "dot_analyst"
 }

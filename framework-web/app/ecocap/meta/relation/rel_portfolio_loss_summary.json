@@ -1,87 +1,88 @@
 {
-  "uuid": "3f3422fe-bdd3-4f9f-819e-a09cdc00410a",
-  "version": "1533489890",
-  "name": "rel_portfolio_loss_summary",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Aug 05 13:24:50 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-      "version": null,
-      "name": "ds_portfolio_summary"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-          "version": null,
-          "name": "ds_portfolio_loss_aggr_es"
-        },
-        "value": null
-      },
-      "joinType": "CROSS",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
-                "version": null,
-                "name": "ds_portfolio_summary"
-              },
-              "attributeId": 3,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "0d574098-35f5-41d5-846e-399f62b4a7ec",
-                "version": null,
-                "name": "ds_portfolio_loss_aggr_es"
-              },
-              "attributeId": 4,
-              "value": null,
-              "attributeName": "reporting_date",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "3f3422fe-bdd3-4f9f-819e-a09cdc00410a",
+	"version" : "1533489890",
+	"name" : "rel_portfolio_loss_summary",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+			"version" : null,
+			"name" : "ds_portfolio_summary"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+					"version" : null,
+					"name" : "ds_portfolio_loss_aggr_es"
+				},
+				"value" : null
+			},
+			"joinType" : "CROSS",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "9e1e1b3d-8721-4eb5-b446-969e4444e91f",
+								"version" : null,
+								"name" : "ds_portfolio_summary"
+							},
+							"attributeId" : 3,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "0d574098-35f5-41d5-846e-399f62b4a7ec",
+								"version" : null,
+								"name" : "ds_portfolio_loss_aggr_es"
+							},
+							"attributeId" : 4,
+							"value" : null,
+							"attributeName" : "reporting_date",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_portfolio_loss_summary"
 }

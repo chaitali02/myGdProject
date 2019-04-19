@@ -42,5 +42,6 @@
                 "version" : "1521430822"
             }
         }
-    ]
+    ],
+	"displayName" : "account_oracle"
 }

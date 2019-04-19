@@ -1,87 +1,88 @@
 {
-  "uuid": "4aeb373d-3878-4184-ab97-58bc642763c1",
-  "version": "1533853299",
-  "name": "rel_portfolio_loss_histogram_perc_final",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "a09aaba6-e1f9-43fd-b191-d6fd754d2821",
-      "version": null,
-      "name": "ds_portfolio_loss_histogram_explode_perc_x"
-    },
-    "value": null
-  },
-  "relationInfo": [
-    {
-      "join": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "455c7c96-9bee-4f4d-bab8-69f8be724fe9",
-          "version": null,
-          "name": "ds_portfolio_loss_histogram_explode_perc_y"
-        },
-        "value": null
-      },
-      "joinType": "",
-      "joinKey": [
-        {
-          "logicalOperator": "",
-          "operator": "=",
-          "operand": [
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "a09aaba6-e1f9-43fd-b191-d6fd754d2821",
-                "version": null,
-                "name": "ds_portfolio_loss_histogram_explode_perc_x"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "x_no",
-              "attributeType": "string"
-            },
-            {
-              "ref": {
-                "type": "dataset",
-                "uuid": "455c7c96-9bee-4f4d-bab8-69f8be724fe9",
-                "version": null,
-                "name": "ds_portfolio_loss_histogram_explode_perc_y"
-              },
-              "attributeId": 0,
-              "value": null,
-              "attributeName": "y_no",
-              "attributeType": "string"
-            }
-          ]
-        }
-      ],
-      "logicaloperand": null
-    }
-  ]
+	"uuid" : "4aeb373d-3878-4184-ab97-58bc642763c1",
+	"version" : "1533853299",
+	"name" : "rel_portfolio_loss_histogram_perc_final",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.239Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "a09aaba6-e1f9-43fd-b191-d6fd754d2821",
+			"version" : null,
+			"name" : "ds_portfolio_loss_histogram_explode_perc_x"
+		},
+		"value" : null
+	},
+	"relationInfo" : [
+		{
+			"join" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "455c7c96-9bee-4f4d-bab8-69f8be724fe9",
+					"version" : null,
+					"name" : "ds_portfolio_loss_histogram_explode_perc_y"
+				},
+				"value" : null
+			},
+			"joinType" : "",
+			"joinKey" : [
+				{
+					"logicalOperator" : "",
+					"operator" : "=",
+					"operand" : [
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "a09aaba6-e1f9-43fd-b191-d6fd754d2821",
+								"version" : null,
+								"name" : "ds_portfolio_loss_histogram_explode_perc_x"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "x_no",
+							"attributeType" : "string"
+						},
+						{
+							"ref" : {
+								"type" : "dataset",
+								"uuid" : "455c7c96-9bee-4f4d-bab8-69f8be724fe9",
+								"version" : null,
+								"name" : "ds_portfolio_loss_histogram_explode_perc_y"
+							},
+							"attributeId" : 0,
+							"value" : null,
+							"attributeName" : "y_no",
+							"attributeType" : "string"
+						}
+					]
+				}
+			],
+			"logicaloperand" : null
+		}
+	],
+	"displayName" : "rel_portfolio_loss_histogram_perc_final"
 }

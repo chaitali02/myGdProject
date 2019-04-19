@@ -1,60 +1,61 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "d757bc25-deab-4b3c-801c-c7744756d6dc",
-				"version": "1490112462"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "d757bc25-deab-4b3c-801c-c7744756d6dc",
+				"version" : "1490112462"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "560603bc-31b0-4e46-8ec2-a02485ab202a",
-				"version": "1490089929"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "560603bc-31b0-4e46-8ec2-a02485ab202a",
+				"version" : "1490089929"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "c6a788a1-c7d5-42b9-99f0-c2f47127432f",
-				"version": "1490090013"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "c6a788a1-c7d5-42b9-99f0-c2f47127432f",
+				"version" : "1490090013"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "a5a9b8b9-52f2-4c75-9b82-f802fe223170",
-				"version": "1490090080"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "a5a9b8b9-52f2-4c75-9b82-f802fe223170",
+				"version" : "1490090080"
 			}
 		}
 	],
-	"uuid": "328e0a75-9614-4000-a2cd-2d23fceaa66c",
-	"version": "1490119254",
-	"name": "dqg_dim_transaction_type",
-	"desc": "dq rule group for combination of all dq rules for table - dim transaction type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "328e0a75-9614-4000-a2cd-2d23fceaa66c",
+	"version" : "1490119254",
+	"name" : "dqg_dim_transaction_type",
+	"desc" : "dq rule group for combination of all dq rules for table - dim transaction type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_dim_transaction_type"
 }

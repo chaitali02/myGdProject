@@ -1,459 +1,460 @@
 {
-  "uuid": "ea16c242-7a0b-43d9-95c7-ee22d2642ee4",
-  "version": "1547587452",
-  "name": "ingest_transactions",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Tue Jan 15 16:24:12 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
-        "version": "1547574098",
-        "name": "Sanctions Screening"
-      },
-      "value": null
-    }
-  ],
-  "type": "FILE-FILE",
-  "sourceDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
-      "version": null,
-      "name": "file_upload"
-    },
-    "value": null
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "transactions"
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "file_data"
-    },
-    "value": null
-  },
-  "targetDetail": {
-    "ref": {
-      "type": "simple",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": "transactions"
-  },
-  "filterInfo": null,
-  "runParams": null,
-  "sourceFormat": "CSV",
-  "targetFormat": "PARQUET",
-  "incrAttr": null,
-  "saveMode": "OVERWRITE",
-  "ignoreCase": "N",
-  "sourceExtn": "csv",
-  "targetExtn": null,
-  "attributeMap": [
-    {
-      "attrMapId": "0",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "1",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "account_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "account_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "2",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "customer_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "customer_id",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "3",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_type_code",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_type_code",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "4",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_date",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_date",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "5",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "transaction_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "6",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "7",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_country",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "8",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "amount_usd",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "amount_usd",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "9",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_name",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_name",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "10",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_name",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_name",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "11",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_address",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "sender_address",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "12",
-      "sourceAttr": {
-        "ref": {
-          "type": "simple",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_address",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "attribute",
-          "uuid": null,
-          "version": null,
-          "name": null
-        },
-        "value": "reciever_address",
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    }
-  ],
-  "splitBy": null,
-  "sourceHeader": "N",
-  "targetHeader": "N"
+	"uuid" : "ea16c242-7a0b-43d9-95c7-ee22d2642ee4",
+	"version" : "1547587452",
+	"name" : "ingest_transactions",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.528Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+				"version" : "1547574098",
+				"name" : "Sanctions Screening"
+			},
+			"value" : null
+		}
+	],
+	"type" : "FILE-FILE",
+	"sourceDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+			"version" : null,
+			"name" : "file_upload"
+		},
+		"value" : null
+	},
+	"sourceDetail" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "transactions"
+	},
+	"targetDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version" : null,
+			"name" : "file_data"
+		},
+		"value" : null
+	},
+	"targetDetail" : {
+		"ref" : {
+			"type" : "simple",
+			"uuid" : null,
+			"version" : null,
+			"name" : null
+		},
+		"value" : "transactions"
+	},
+	"filterInfo" : null,
+	"runParams" : null,
+	"sourceFormat" : "CSV",
+	"targetFormat" : "PARQUET",
+	"incrAttr" : null,
+	"saveMode" : "OVERWRITE",
+	"ignoreCase" : "N",
+	"sourceExtn" : "csv",
+	"targetExtn" : null,
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "account_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "account_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "customer_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "customer_id",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_type_code",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_type_code",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_date",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_date",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "transaction_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "6",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_country",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "8",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "amount_usd",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "amount_usd",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "9",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_name",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_name",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "10",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_name",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_name",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "11",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_address",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "sender_address",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		},
+		{
+			"attrMapId" : "12",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "simple",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_address",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			},
+			"targetAttr" : {
+				"ref" : {
+					"type" : "attribute",
+					"uuid" : null,
+					"version" : null,
+					"name" : null
+				},
+				"value" : "reciever_address",
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null,
+				"attrUnitType" : null
+			}
+		}
+	],
+	"splitBy" : null,
+	"sourceHeader" : "N",
+	"targetHeader" : "N",
+	"displayName" : "ingest_transactions"
 }

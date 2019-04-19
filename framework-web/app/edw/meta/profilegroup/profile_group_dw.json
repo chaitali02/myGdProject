@@ -1,125 +1,126 @@
 {
-	"id": "59115fb6096b645c3c5be376",
-	"uuid": "635a0b24-4fdc-4280-b2ec-aa8d482e83bf",
-	"version": "1494310838",
-	"name": "profile_group_dw",
-	"desc": "Profile group for datawarehouse data",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-			"version": null,
-			"name": "ypalrecha"
+	"id" : "59115fb6096b645c3c5be376",
+	"uuid" : "635a0b24-4fdc-4280-b2ec-aa8d482e83bf",
+	"version" : "1494310838",
+	"name" : "profile_group_dw",
+	"desc" : "Profile group for datawarehouse data",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : null,
+			"name" : "ypalrecha"
 		},
-		"value": null
+		"value" : null
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [],
+	"createdOn" : ISODate("2019-04-16T14:28:17.950Z"),
+	"tags" : [ ],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196",
-				"name": null
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : null
 			},
-			"value": null
+			"value" : null
 		}
 	],
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "cc61a658-528f-4ebe-9c34-826c41ef72aa",
-				"version": null,
-				"name": "profile_dim_account"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "cc61a658-528f-4ebe-9c34-826c41ef72aa",
+				"version" : null,
+				"name" : "profile_dim_account"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "2b479143-5cd7-4c48-9211-03a3aa9ce397",
-				"version": null,
-				"name": "profile_dim_address"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "2b479143-5cd7-4c48-9211-03a3aa9ce397",
+				"version" : null,
+				"name" : "profile_dim_address"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "55a0f643-9b79-4a2f-bff6-1a0003a9c51e",
-				"version": null,
-				"name": "profile_dim_bank"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "55a0f643-9b79-4a2f-bff6-1a0003a9c51e",
+				"version" : null,
+				"name" : "profile_dim_bank"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "e14bb81b-b496-44e3-9057-f4b940afe8d1",
-				"version": null,
-				"name": "profile_dim_branch"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "e14bb81b-b496-44e3-9057-f4b940afe8d1",
+				"version" : null,
+				"name" : "profile_dim_branch"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "b455fa9e-f4a8-4834-81da-488e9b810f45",
-				"version": null,
-				"name": "profile_dim_customer"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "b455fa9e-f4a8-4834-81da-488e9b810f45",
+				"version" : null,
+				"name" : "profile_dim_customer"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "e5dd13ef-761d-4813-b6b1-55588fd7dff8",
-				"version": null,
-				"name": "profile_dim_date"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "e5dd13ef-761d-4813-b6b1-55588fd7dff8",
+				"version" : null,
+				"name" : "profile_dim_date"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "5fbcb063-3f02-47ba-9463-dfd0cb210290",
-				"version": null,
-				"name": "profile_dim_transaction_type"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "5fbcb063-3f02-47ba-9463-dfd0cb210290",
+				"version" : null,
+				"name" : "profile_dim_transaction_type"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "ccf9f2cc-a91d-46fa-90b9-81fcf9650bfa",
-				"version": null,
-				"name": "profile_fact_account_summary_monthly"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "ccf9f2cc-a91d-46fa-90b9-81fcf9650bfa",
+				"version" : null,
+				"name" : "profile_fact_account_summary_monthly"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "9916c6de-c644-4341-be61-b410ab888ecb",
-				"version": null,
-				"name": "profile_fact_customer_summary_monthly"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "9916c6de-c644-4341-be61-b410ab888ecb",
+				"version" : null,
+				"name" : "profile_fact_customer_summary_monthly"
 			},
-			"value": null
+			"value" : null
 		},
 		{
-			"ref": {
-				"type": "profile",
-				"uuid": "28d7fac0-1901-42cc-ad35-1f6e81900706",
-				"version": null,
-				"name": "profile_fact_transcation"
+			"ref" : {
+				"type" : "profile",
+				"uuid" : "28d7fac0-1901-42cc-ad35-1f6e81900706",
+				"version" : null,
+				"name" : "profile_fact_transcation"
 			},
-			"value": null
+			"value" : null
 		}
 	],
-	"inParallel": null
+	"inParallel" : null,
+	"displayName" : "profile_group_dw"
 }

@@ -1,53 +1,54 @@
 {
-	"ruleInfo": [
+	"ruleInfo" : [
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "784aa064-e4aa-4442-9360-626150f75ab1",
-				"version": "1490110185"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "784aa064-e4aa-4442-9360-626150f75ab1",
+				"version" : "1490110185"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "91b778ef-01bd-4237-8e54-a300c4f7c859",
-				"version": "1490076535"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "91b778ef-01bd-4237-8e54-a300c4f7c859",
+				"version" : "1490076535"
 			}
 		},
 		{
-			"ref": {
-				"type": "dq",
-				"uuid": "44237b8b-15b2-4bd2-bc71-6af7a233924b",
-				"version": "1490076622"
+			"ref" : {
+				"type" : "dq",
+				"uuid" : "44237b8b-15b2-4bd2-bc71-6af7a233924b",
+				"version" : "1490076622"
 			}
 		}
 	],
-	"uuid": "0c9c2d41-26cf-4e7f-a884-eeffee82814d",
-	"version": "1490113619",
-	"name": "dqg_account_type",
-	"desc": "dq rule group for combination of all dq rules for table - account type",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "0c9c2d41-26cf-4e7f-a884-eeffee82814d",
+	"version" : "1490113619",
+	"name" : "dqg_account_type",
+	"desc" : "dq rule group for combination of all dq rules for table - account type",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:15.868Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-				"version": "1464977196"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
 			}
 		}
-	]
+	],
+	"displayName" : "dqg_account_type"
 }

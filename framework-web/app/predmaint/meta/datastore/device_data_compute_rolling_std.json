@@ -1,45 +1,46 @@
 {
-    "metaId" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
-            "version" : "1549630008"
-        }
-    },
-    "execId" : {
-        "ref" : {
-            "type" : "loadExec",
-            "uuid" : "00ba098c-d39d-4afa-9c54-b81d017f2f85",
-            "version" : "1549952275"
-        }
-    },
-    "location" : "/b03c8ed2-d387-49e1-91f8-a98b6b808fb6/1549630008/1549952275",
-    "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(4392),
-    "runMode" : "BATCH",
-    "uuid" : "14fa0b82-96d5-4094-9caf-ea65b63d6415",
-    "version" : "1549952365",
-    "name" : "device_data_compute_rolling_std",
-    "desc" : "Load",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2019-02-12T06:19:25.000Z"),
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153"
-            }
-        }
-    ]
+	"metaId" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
+			"version" : "1549630008"
+		}
+	},
+	"execId" : {
+		"ref" : {
+			"type" : "loadExec",
+			"uuid" : "00ba098c-d39d-4afa-9c54-b81d017f2f85",
+			"version" : "1549952275"
+		}
+	},
+	"location" : "/b03c8ed2-d387-49e1-91f8-a98b6b808fb6/1549630008/1549952275",
+	"persistMode" : "DISK_ONLY",
+	"numRows" : NumberLong(4392),
+	"runMode" : "BATCH",
+	"uuid" : "14fa0b82-96d5-4094-9caf-ea65b63d6415",
+	"version" : "1549952365",
+	"name" : "device_data_compute_rolling_std",
+	"desc" : "Load",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.430Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1547482153"
+			}
+		}
+	],
+	"displayName" : "device_data_compute_rolling_std"
 }

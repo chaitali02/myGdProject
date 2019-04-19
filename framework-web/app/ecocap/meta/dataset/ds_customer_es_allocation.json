@@ -1,130 +1,131 @@
 {
-  "uuid": "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
-  "version": "1532916741",
-  "name": "ds_customer_es_allocation",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sun Jul 29 22:12:21 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
-        "version": "1521430822",
-        "name": "Economic Capital"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
-      "version": null,
-      "name": "ds_customer_es_contribution"
-    },
-    "value": null
-  },
-  "filterInfo": [],
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq" : "0",
-      "attrSourceName": "cust_id",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
-          "version": null,
-          "name": "ds_customer_es_contribution"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "cust_id",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq" : "1",
-      "attrSourceName": "es_contribution",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
-          "version": null,
-          "name": "ds_customer_es_contribution"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "es_contribution",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq" : "2",
-      "attrSourceName": "fm_es_allocation",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "fa4a9f86-9e85-46af-86c7-fe67f4ac53be",
-          "version": null,
-          "name": "fm_es_allocation"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq" : "3",
-      "attrSourceName": "reporting_date",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
-          "version": null,
-          "name": "ds_customer_es_contribution"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "reporting_date",
-        "attrType": "string"
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq" : "4",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "0a92dfef-d3e4-46ab-9393-81356823d8ce",
-          "version": null,
-          "name": "ds_customer_es_contribution"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "version",
-        "attrType": "string"
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": 0
+	"uuid" : "0253f0bc-2a30-4e10-ba17-014eccf55f9e",
+	"version" : "1532916741",
+	"name" : "ds_customer_es_allocation",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:15.282Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc",
+				"version" : "1521430822",
+				"name" : "Economic Capital"
+			},
+			"value" : null
+		}
+	],
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+			"version" : null,
+			"name" : "ds_customer_es_contribution"
+		},
+		"value" : null
+	},
+	"filterInfo" : [ ],
+	"attributeInfo" : [
+		{
+			"attrSourceId" : "0",
+			"attrDisplaySeq" : "0",
+			"attrSourceName" : "cust_id",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+					"version" : null,
+					"name" : "ds_customer_es_contribution"
+				},
+				"value" : null,
+				"attrId" : "0",
+				"attrName" : "cust_id",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "1",
+			"attrDisplaySeq" : "1",
+			"attrSourceName" : "es_contribution",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+					"version" : null,
+					"name" : "ds_customer_es_contribution"
+				},
+				"value" : null,
+				"attrId" : "1",
+				"attrName" : "es_contribution",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "2",
+			"attrDisplaySeq" : "2",
+			"attrSourceName" : "fm_es_allocation",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "formula",
+					"uuid" : "fa4a9f86-9e85-46af-86c7-fe67f4ac53be",
+					"version" : null,
+					"name" : "fm_es_allocation"
+				},
+				"value" : null,
+				"attrId" : null,
+				"attrName" : null,
+				"attrType" : null
+			}
+		},
+		{
+			"attrSourceId" : "3",
+			"attrDisplaySeq" : "3",
+			"attrSourceName" : "reporting_date",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+					"version" : null,
+					"name" : "ds_customer_es_contribution"
+				},
+				"value" : null,
+				"attrId" : "4",
+				"attrName" : "reporting_date",
+				"attrType" : "string"
+			}
+		},
+		{
+			"attrSourceId" : "4",
+			"attrDisplaySeq" : "4",
+			"attrSourceName" : "version",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "dataset",
+					"uuid" : "0a92dfef-d3e4-46ab-9393-81356823d8ce",
+					"version" : null,
+					"name" : "ds_customer_es_contribution"
+				},
+				"value" : null,
+				"attrId" : "5",
+				"attrName" : "version",
+				"attrType" : "string"
+			}
+		}
+	],
+	"groupBy" : null,
+	"limit" : 0,
+	"displayName" : "ds_customer_es_allocation"
 }

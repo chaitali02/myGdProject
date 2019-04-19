@@ -1,66 +1,66 @@
 {
-    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4",
-    "version" : "1488801522",
-    "name" : "avg",
-    "desc" : "Returns the average of the elements in the group or the average of the distinct values of the column in the group. It required numeric value.",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "tags" : [ 
-        "DEV", 
-        "1.0.1", 
-        "DEMO"
-    ],
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "inputReq" : "Y",
-    "appInfo" : [ 
-     {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-                     }
-      }
-    ],
-    "functionInfo" : [ 
-        {
-            "type" : "file",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        },
-        {
-            "type" : "mysql",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "hive",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "impala",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        }, 
-        {
-            "type" : "oracle",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        },
-        {
-            "type" : "postgres",
-            "name" : "avg",
-            "paramInfoHolder" : []
-        }
-    ],
-    "returnType":"DOUBLE",
-  "category" : "AGGREGATE",
-    "publicFlag" : "Y"
+	"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+	"version" : "1488801522",
+	"name" : "avg",
+	"desc" : "Returns the average of the elements in the group or the average of the distinct values of the column in the group. It required numeric value.",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.308Z"),
+	"tags" : [
+		"DEV",
+		"1.0.1",
+		"DEMO"
+	],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"inputReq" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"functionInfo" : [
+		{
+			"type" : "file",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "mysql",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "hive",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "impala",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "oracle",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		},
+		{
+			"type" : "postgres",
+			"name" : "avg",
+			"paramInfoHolder" : [ ]
+		}
+	],
+	"returnType" : "DOUBLE",
+	"category" : "AGGREGATE",
+	"publicFlag" : "Y",
+	"displayName" : "avg"
 }
-

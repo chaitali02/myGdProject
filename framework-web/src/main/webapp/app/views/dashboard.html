@@ -169,7 +169,7 @@
                   </label>
                   <div class="col-md-3 col-sm-3 col-xs-12">
                     <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="selectDependsOnOption()" data-ng-model="alldependsOn.defaultoption"
-                      ng-options="r as r.name for r in alldependsOn.options  track by r.uuid ">
+                      ng-options="r as r.displayName for r in alldependsOn.options  track by r.uuid ">
                     </select>
                   </div>
                 </div>
@@ -276,7 +276,7 @@
                 </div>
                 <hr>
                 <br/>
-
+   
                 <div>
                   <table class=" row-border hover table  table-striped table-bordered">
                     <thead>
@@ -309,7 +309,7 @@
                         </td>
                         <td style="width:45%;" class="text-center">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <select class="form-control" name="vizpod" select2 ng-disabled="{{mode}}" data-ng-model="tabledata.vizpod" ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid "
+                            <select class="form-control" name="vizpod" select2 ng-disabled="{{mode}}" data-ng-model="tabledata.vizpod" ng-options="r as r.displayName for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid "
                               required disable-validation-message="">
                             </select>
                           </span>
@@ -356,7 +356,7 @@
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             {{column.vizpod}}
                             <select class="form-control" name="vizpod" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod" ng-change="onChangeVizpod(column.vizpod,$parent.$index,$index)"
-                              ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid " required
+                              ng-options="r as r.displayName for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid " required
                               disable-validation-message="">
                               <option value="">--Select Vizpod--</option>
                             </select>
@@ -422,7 +422,7 @@
                           </span>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="column.vizpod" ng-change="onChangeVizpod(column.vizpod,column.rowNo-1,column.colNo-1)"
-                              ng-options="r as r.name for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid " required
+                              ng-options="r as r.displayName for r in allVizpodByDependsOn | orderBy:'name' track by r.uuid " required
                               disable-validation-message="">
                               <option value="">--Select Vizpod--</option>
                             </select>

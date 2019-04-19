@@ -87,5 +87,6 @@
       ],
       "logicaloperand": null
     }
-  ]
+  ],
+	"displayName" : "rel_dim_address"
 }

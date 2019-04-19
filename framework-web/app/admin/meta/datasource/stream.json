@@ -30,5 +30,6 @@
 	"username" : "",
 	"password" : "",
 	"path" : "",
-	"sessionParameters" : ""
+	"sessionParameters" : "",
+	"displayName" : "Stream"
 }

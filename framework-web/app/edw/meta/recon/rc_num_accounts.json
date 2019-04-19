@@ -1,77 +1,78 @@
 {
-  "uuid": "0e0cf3fa-2870-4c10-8890-c66eefe054c4",
-  "version": "1536442248",
-  "name": "rc_num_accounts",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Sat Sep 08 17:30:48 EDT 2018",
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196",
-        "name": "Data Warehouse"
-      },
-      "value": null
-    }
-  ],
-  "sourceAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-      "version": null,
-      "name": "account"
-    },
-    "value": null,
-    "attrId": "0",
-    "attrName": "account_id",
-    "attrType": null
-  },
-  "sourceFunc": {
-    "ref": {
-      "type": "function",
-      "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
-      "version": null,
-      "name": "avg"
-    },
-    "value": null
-  },
-  "targetAttr": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
-      "version": null,
-      "name": "dim_account"
-    },
-    "value": null,
-    "attrId": "0",
-    "attrName": "account_id",
-    "attrType": null
-  },
-  "targetFunc": {
-    "ref": {
-      "type": "function",
-      "uuid": "ae9ee197-dc0f-4820-88b1-6025260f67b4",
-      "version": null,
-      "name": "avg"
-    },
-    "value": null
-  },
-  "sourceFilter": null,
-  "targetFilter": null,
-  "sourceDistinct": "N",
-  "targetDistinct": "N"
+	"uuid" : "0e0cf3fa-2870-4c10-8890-c66eefe054c4",
+	"version" : "1536442248",
+	"name" : "rc_num_accounts",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:18.095Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196",
+				"name" : "Data Warehouse"
+			},
+			"value" : null
+		}
+	],
+	"sourceAttr" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f",
+			"version" : null,
+			"name" : "account"
+		},
+		"value" : null,
+		"attrId" : "0",
+		"attrName" : "account_id",
+		"attrType" : null
+	},
+	"sourceFunc" : {
+		"ref" : {
+			"type" : "function",
+			"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+			"version" : null,
+			"name" : "avg"
+		},
+		"value" : null
+	},
+	"targetAttr" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
+			"version" : null,
+			"name" : "dim_account"
+		},
+		"value" : null,
+		"attrId" : "0",
+		"attrName" : "account_id",
+		"attrType" : null
+	},
+	"targetFunc" : {
+		"ref" : {
+			"type" : "function",
+			"uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4",
+			"version" : null,
+			"name" : "avg"
+		},
+		"value" : null
+	},
+	"sourceFilter" : null,
+	"targetFilter" : null,
+	"sourceDistinct" : "N",
+	"targetDistinct" : "N",
+	"displayName" : "rc_num_accounts"
 }

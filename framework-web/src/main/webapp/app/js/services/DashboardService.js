@@ -148,30 +148,8 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {
-			// MetadataDahsboardFactory.findDatapodByRelation(uuid, "datapod").then(function (response) { onSuccess(response.data) });
-			// var onSuccess = function (response) {
-			// 	var attributes = [];
-			// 	for (var j = 0; j < response.length; j++) {
-			// 		for (var i = 0; i < response[j].attributes.length; i++) {
-			// 			var attributedetail = {};
-			// 			attributedetail.uuid = response[j].uuid;
-			// 			attributedetail.datapodname = response[j].name;
-			// 			attributedetail.name = response[j].attributes[i].name;
-			// 			attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-			// 			attributedetail.attributeId = response[j].attributes[i].attributeId;
-			// 			attributedetail.id = response[j].uuid + "_" + response[j].attributes[i].attributeId;
-			// 			attributes.push(attributedetail)
-			// 		}
-			// 	}
-			// 	//console.log(JSON.stringify(attributes))
-			// 	deferred.resolve({
-			// 		data: attributes
-			// 	})
-			// }
 			MetadataDahsboardFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-
-
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
@@ -182,7 +160,7 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.attrType = response[j].attrType;
 					attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributes.push(attributedetail)
 				}
 
@@ -205,7 +183,7 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
 					attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributes.push(attributedetail)
 				}
 
@@ -226,7 +204,7 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
-					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.dname = response[j].ref.displayName + "." + response[j].attrName;
 					attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
 					attributedetail.attributeId = response[j].attrId;
 					attributes.push(attributedetail)
@@ -302,13 +280,14 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
+				filterinfo.name = response.filterInfo[i].ref.name;
 				if(response.filterInfo[i].ref.type !="formula"){
 					filterinfo.attributeId = response.filterInfo[i].attrId;
-					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.dname = response.filterInfo[i].ref.displayName + "." + response.filterInfo[i].attrName;
 					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
 				}
 				else{
-					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.displayName;
 					filterinfo.id = response.filterInfo[i].ref.uuid;
 				}
 			
@@ -361,13 +340,14 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
+				filterinfo.name = response.filterInfo[i].ref.name;
 				if(response.filterInfo[i].ref.type !="formula"){
 					filterinfo.attributeId = response.filterInfo[i].attrId;
-					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.dname = response.filterInfo[i].ref.displayName + "." + response.filterInfo[i].attrName;
 					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
 				}
 				else{
-					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.displayName;
 					filterinfo.id = response.filterInfo[i].ref.uuid;
 				}
 				filterInfoArray[i] = filterinfo;
@@ -414,11 +394,13 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var defaultoption = {};
 				response.sort(sortFactory.sortByProperty("name"));
 				defaultoption.name = response[0].name;
+				defaultoption.displayName = response[0].displayName;
 				defaultoption.uuid = response[0].uuid;
 				data.defaultoption = defaultoption;
 				for (var i = 0; i < response.length; i++) {
 					var datajosn = {}
 					datajosn.name = response[i].name;
+					datajosn.displayName = response[i].displayName;
 					datajosn.uuid = response[i].uuid;
 					data.options[i] = datajosn
 				}

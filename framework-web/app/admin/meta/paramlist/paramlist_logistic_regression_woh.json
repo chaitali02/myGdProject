@@ -1,73 +1,74 @@
 {
-	"params": [
+	"params" : [
 		{
-			"paramId": 0,
-			"paramName": "threshold",
-			"paramType": "double",
-   	   	    "paramDispName" : "Threshold",
-            "paramDesc" : "",	
-			"paramValue": {
+			"paramId" : 0,
+			"paramName" : "threshold",
+			"paramType" : "double",
+			"paramDispName" : "Threshold",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "1"
-			    }
+			}
 		},
 		{
-			"paramId": 1,
-			"paramName": "maxIter",
-			"paramType": "integer",
-   	   	    "paramDispName" : "Max Iter",
-            "paramDesc" : "",	
-			"paramValue": {
+			"paramId" : 1,
+			"paramName" : "maxIter",
+			"paramType" : "integer",
+			"paramDispName" : "Max Iter",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "10"
-			    }
+			}
 		},
 		{
-			"paramId": 4,
-			"paramName": "tol",
-			"paramType": "double",
-   	   	    "paramDispName" : "Tol",
-            "paramDesc" : "",	
-			"paramValue": {
+			"paramId" : 4,
+			"paramName" : "tol",
+			"paramType" : "double",
+			"paramDispName" : "Tol",
+			"paramDesc" : "",
+			"paramValue" : {
 				"ref" : {
-				    "type" : "simple"
+					"type" : "simple"
 				},
 				"value" : "10"
-			    }
+			}
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
-	"version": "1495146809",
-	"name": "paramlist_logistic_regression_woh",
-	"desc": "LogisticRegression Param List",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a80",
+	"version" : "1495146809",
+	"name" : "paramlist_logistic_regression_woh",
+	"desc" : "LogisticRegression Param List",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.465Z"),
+	"tags" : [
 		"DEV",
 		"0.1.0"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-    "paramListType" : "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null,
-		"publicFlag": "Y",
-  "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-    ]
+	"locked" : "N",
+	"published" : "N",
+	"paramListType" : "model",
+	"templateFlg" : "Y",
+	"templateInfo" : null,
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"displayName" : "paramlist_logistic_regression_woh"
 }

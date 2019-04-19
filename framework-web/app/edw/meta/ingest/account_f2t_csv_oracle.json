@@ -1,417 +1,418 @@
 {
-  "uuid": "05f13a2c-90ae-406d-a6fb-e2eca923bf58",
-  "version": "1538737507",
-  "name": "account_f2t_csv_oracle",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
-  },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
-        "version": "1464977196"
-      }
-    }
-  ],
-  "type": "FILE-TABLE",
-  "sourceDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
-    }
-  },
-  "sourceDetail": {
-    "ref": {
-      "type": "simple"
-    },
-    "value": "account"
-  },
-  "targetDatasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
-    }
-  },
-  "targetDetail": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "36f07b62-9785-4dd1-8163-6025b7e299f4"
-    }
-  },
-  "filterInfo": null,
-  "runParams": null,
-  "sourceFormat": "CSV",
-  "targetFormat": null,
-  "sourceExtn":"CSV",
-  "targetExtn":null,
-  "sourceHeader" : "Y",
-  "targetHeader" : "N",
-  "incrAttr": null,
-  "saveMode": "APPEND",
-  "ignoreCase": "N",
-  "attributeMap" : [ 
-        {
-            "attrMapId" : "0",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "account_id"
-            },
-            "targetAttr" : {
-                "attrId" : "0",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "1",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "account_type_id"
-            },
-            "targetAttr" : {
-                "attrId" : "1",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "2",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "account_status_id"
-            },
-            "targetAttr" : {
-                "attrId" : "2",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "3",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "product_type_id"
-            },
-            "targetAttr" : {
-                "attrId" : "3",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "4",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "customer_id"
-            },
-            "targetAttr" : {
-                "attrId" : "4",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "5",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "pin_number"
-            },
-            "targetAttr" : {
-                "attrId" : "5",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "6",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "nationality"
-            },
-            "targetAttr" : {
-                "attrId" : "6",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "7",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "primary_iden_doc"
-            },
-            "targetAttr" : {
-                "attrId" : "7",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "8",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "primary_iden_doc_id"
-            },
-            "targetAttr" : {
-                "attrId" : "8",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "9",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "secondary_iden_doc"
-            },
-            "targetAttr" : {
-                "attrId" : "9",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "10",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "secondary_iden_doc_id"
-            },
-            "targetAttr" : {
-                "attrId" : "10",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "11",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "account_open_date"
-            },
-            "targetAttr" : {
-                "attrId" : "11",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "12",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "account_number"
-            },
-            "targetAttr" : {
-                "attrId" : "12",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "13",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "opening_balance"
-            },
-            "targetAttr" : {
-                "attrId" : "13",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "14",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "current_balance"
-            },
-            "targetAttr" : {
-                "attrId" : "14",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "15",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "overdue_balance"
-            },
-            "targetAttr" : {
-                "attrId" : "15",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "16",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "overdue_date"
-            },
-            "targetAttr" : {
-                "attrId" : "16",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "17",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "currency_code"
-            },
-            "targetAttr" : {
-                "attrId" : "17",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "18",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "interest_type"
-            },
-            "targetAttr" : {
-                "attrId" : "18",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "19",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "interest_rate"
-            },
-            "targetAttr" : {
-                "attrId" : "19",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "20",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "load_date"
-            },
-            "targetAttr" : {
-                "attrId" : "20",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }, 
-        {
-            "attrMapId" : "21",
-            "sourceAttr" : {
-                "ref" : {
-                    "type" : "attribute"
-                },
-                "value" : "load_id"
-            },
-            "targetAttr" : {
-                "attrId" : "21",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
-                }
-            }
-        }
-    ]
+	"uuid" : "05f13a2c-90ae-406d-a6fb-e2eca923bf58",
+	"version" : "1538737507",
+	"name" : "account_f2t_csv_oracle",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:16.528Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+				"version" : "1464977196"
+			}
+		}
+	],
+	"type" : "FILE-TABLE",
+	"sourceDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040"
+		}
+	},
+	"sourceDetail" : {
+		"ref" : {
+			"type" : "simple"
+		},
+		"value" : "account"
+	},
+	"targetDatasource" : {
+		"ref" : {
+			"type" : "datasource",
+			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73026"
+		}
+	},
+	"targetDetail" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+		}
+	},
+	"filterInfo" : null,
+	"runParams" : null,
+	"sourceFormat" : "CSV",
+	"targetFormat" : null,
+	"sourceExtn" : "CSV",
+	"targetExtn" : null,
+	"sourceHeader" : "Y",
+	"targetHeader" : "N",
+	"incrAttr" : null,
+	"saveMode" : "APPEND",
+	"ignoreCase" : "N",
+	"attributeMap" : [
+		{
+			"attrMapId" : "0",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "account_id"
+			},
+			"targetAttr" : {
+				"attrId" : "0",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "1",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "account_type_id"
+			},
+			"targetAttr" : {
+				"attrId" : "1",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "2",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "account_status_id"
+			},
+			"targetAttr" : {
+				"attrId" : "2",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "3",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "product_type_id"
+			},
+			"targetAttr" : {
+				"attrId" : "3",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "4",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "customer_id"
+			},
+			"targetAttr" : {
+				"attrId" : "4",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "5",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "pin_number"
+			},
+			"targetAttr" : {
+				"attrId" : "5",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "6",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "nationality"
+			},
+			"targetAttr" : {
+				"attrId" : "6",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "7",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "primary_iden_doc"
+			},
+			"targetAttr" : {
+				"attrId" : "7",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "8",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "primary_iden_doc_id"
+			},
+			"targetAttr" : {
+				"attrId" : "8",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "9",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "secondary_iden_doc"
+			},
+			"targetAttr" : {
+				"attrId" : "9",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "10",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "secondary_iden_doc_id"
+			},
+			"targetAttr" : {
+				"attrId" : "10",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "11",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "account_open_date"
+			},
+			"targetAttr" : {
+				"attrId" : "11",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "12",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "account_number"
+			},
+			"targetAttr" : {
+				"attrId" : "12",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "13",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "opening_balance"
+			},
+			"targetAttr" : {
+				"attrId" : "13",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "14",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "current_balance"
+			},
+			"targetAttr" : {
+				"attrId" : "14",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "15",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "overdue_balance"
+			},
+			"targetAttr" : {
+				"attrId" : "15",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "16",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "overdue_date"
+			},
+			"targetAttr" : {
+				"attrId" : "16",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "17",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "currency_code"
+			},
+			"targetAttr" : {
+				"attrId" : "17",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "18",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "interest_type"
+			},
+			"targetAttr" : {
+				"attrId" : "18",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "19",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "interest_rate"
+			},
+			"targetAttr" : {
+				"attrId" : "19",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "20",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "load_date"
+			},
+			"targetAttr" : {
+				"attrId" : "20",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		},
+		{
+			"attrMapId" : "21",
+			"sourceAttr" : {
+				"ref" : {
+					"type" : "attribute"
+				},
+				"value" : "load_id"
+			},
+			"targetAttr" : {
+				"attrId" : "21",
+				"ref" : {
+					"type" : "datapod",
+					"uuid" : "36f07b62-9785-4dd1-8163-6025b7e299f4"
+				}
+			}
+		}
+	],
+	"displayName" : "account_f2t_csv_oracle"
 }

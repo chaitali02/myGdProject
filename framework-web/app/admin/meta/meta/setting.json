@@ -1,31 +1,31 @@
 {
-    
-    "uuid" : "86fdb3af-5f5b-4fa3-9fc8-98c6fa38ee2f",
-    "name" : "setting",
-    "version" : "1464977196",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }
-    ],
-    "desc" : "Meta for Setting",
-    "menu" : ""
+	"uuid" : "86fdb3af-5f5b-4fa3-9fc8-98c6fa38ee2f",
+	"name" : "setting",
+	"version" : "1464977196",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-04-16T14:28:17.102Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"desc" : "Meta for Setting",
+	"menu" : "",
+	"displayName" : "setting"
 }

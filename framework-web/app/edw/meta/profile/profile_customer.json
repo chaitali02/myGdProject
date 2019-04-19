@@ -1,121 +1,122 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 		}
 	},
-	"attributeInfo": [
+	"attributeInfo" : [
 		{
-			"attrId": "0",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "1",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "1",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "2",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "3",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "3",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "4",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "4",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "5",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "5",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "6",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "6",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "7",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "7",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "8",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "8",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "9",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "9",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "10",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "10",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		},
 		{
-			"attrId": "11",
-			"ref": {
-				"type": "datapod",
-				"uuid": "1b905436-3237-4dac-8093-8ceab5403752"
+			"attrId" : "11",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
 			}
 		}
 	],
-	"uuid": "c5e241b7-e32b-42bb-a618-800e8dd3aa08",
-	"version": "1491902450",
-	"name": "profile_customer",
-	"desc": "Data profiling to see statistical check results on raw tables for all columns",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "c5e241b7-e32b-42bb-a618-800e8dd3aa08",
+	"version" : "1491902450",
+	"name" : "profile_customer",
+	"desc" : "Data profiling to see statistical check results on raw tables for all columns",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-04-16T14:28:17.771Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"displayName" : "profile_customer"
 }
