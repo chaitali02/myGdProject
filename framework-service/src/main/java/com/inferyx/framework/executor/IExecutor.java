@@ -350,28 +350,26 @@ public interface IExecutor {
 	 * @param trainPercent
 	 * @param valPercent
 	 * @param tableName
-	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
-	 * @param testSetPath TODO
 	 * @param rowIdentifierCols TODO
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
 	 * @param encodingDetails TODO
-	 * @param saveTrainingSet TODO
-	 * @param trainingSetPath TODO
 	 * @param testLocationDP TODO
 	 * @param testLocationDS TODO
 	 * @param testLocationTableName TODO
 	 * @param testLFilePathUrl TODO
+	 * @param saveTrainingSet TODO
 	 * @param trainLocationDP TODO
 	 * @param trainLocationDS TODO
 	 * @param trainLocationTableName TODO
 	 * @param trainFilePathUrl TODO
+	 * @param clientContext
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, Object> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, Object algoClass,Map<String, Object> trainOtherParam, TrainResult trainResult, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, String saveTrainingSet, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl, String clientContext) throws IOException;
 	
 	/**
 	 * 
@@ -583,37 +581,34 @@ public interface IExecutor {
 	 * @param valPercent
 	 * @param tableName
 	 * @param hyperParamList 
-	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
-	 * @param testSetPath TODO
 	 * @param rowIdentifierCols TODO
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
-	 * @param enodingDetails TODO
-	 * @param saveTrainingSet TODO
-	 * @param trainingSetPath TODO
 	 * @param testLocationDP TODO
-	 * @param testLocationDS TODO
 	 * @param testLocationTableName TODO
 	 * @param testLFilePathUrl TODO
+	 * @param saveTrainingSet TODO
 	 * @param trainLocationDP TODO
 	 * @param trainLocationDS TODO
 	 * @param trainLocationTableName TODO
 	 * @param trainLocationFilePathUrl TODO
+	 * @param clientContext
+	 * @param enodingDetails TODO
+	 * @param testLocationDS TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName
-			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
-			, Map<String, Object> trainOtherParam, TrainResult trainResult, String testSetPath
-			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql
-			, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP 
-			, Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP
-			, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl
-			, Object algoclass) throws IOException;
+			, List<com.inferyx.framework.domain.Param> hyperParamList, Map<String, Object> trainOtherParam
+			, TrainResult trainResult, List<String> rowIdentifierCols, String includeFeatures
+			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, Object algoclass
+			, Datapod testLocationDP, Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl 
+			, String saveTrainingSet, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName
+			, String trainLocationFilePathUrl, String clientContext) throws IOException;
 	
 	/**
 	 * 
