@@ -53,6 +53,7 @@ import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.SysParamsEnum;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
@@ -304,6 +305,21 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			statusList.add(status);
 			//mapExec.setName(map.getName());
 			mapExec.setStatusList(statusList);
+			if (execParams == null) {
+
+				HashMap<SysParamsEnum, String> sysParams = new HashMap<SysParamsEnum, String>();
+
+				sysParams.put(SysParamsEnum.MAPEXEC_VERSION, "");
+				sysParams.put(SysParamsEnum.DAGEXEC_VERSION, "");
+
+				execParams = new ExecParams();
+				execParams.setSysParams(sysParams);
+			}
+
+			HashMap<SysParamsEnum, String> hashMap=	execParams.getSysParams();
+			hashMap.put(SysParamsEnum.MAPEXEC_VERSION, mapExec.getVersion());
+			execParams.setSysParams(hashMap);
+			mapExec.setExecParams(execParams);
 			commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -394,9 +410,11 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				synchronized (mapExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.STARTING);
 				}
+				String sql=mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, new HashMap<String, String>());
+				commonServiceImpl.replaceSysParams(mapExec, execParams, sql);
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode, new HashMap<String, String>()));
 				// Replace sys params - START
-				mapExec.setExec(commonServiceImpl.replaceSysParams(mapExec, execParams, mapExec.getExec()));
+			//	mapExec.setExec(commonServiceImpl.replaceSysParams(mapExec, execParams, mapExec.getExec()));
 				// Replace sys params - END
 				synchronized (mapExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.READY);
@@ -416,7 +434,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				execParams.getOtherParams().put("datapodUuid_" + datapodKey.getUUID() + "_tableName", mapTableName);
 				*/
 				String mapTableName = null;
-				if(execParams != null) {
+				if(execParams != null && execParams.getOtherParams() !=null) {
 					//String mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 //					Datasource datasource = commonServiceImpl.getDatasourceByApp();
 					Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), 

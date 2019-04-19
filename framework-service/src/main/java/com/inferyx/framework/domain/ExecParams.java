@@ -27,7 +27,17 @@ public class ExecParams implements Cloneable {
 	private ExecutionContext executionContext;
 	private GraphFilter graphFilter;
 	private java.util.Map<String, java.util.Map<String, String>> paramValMap;
+	private HashMap<SysParamsEnum, String> sysParams;
+
 	
+
+	public HashMap<SysParamsEnum, String> getSysParams() {
+		return sysParams;
+	}
+
+	public void setSysParams(HashMap<SysParamsEnum, String> sysParams) {
+		this.sysParams = sysParams;
+	}
 
 	/**
 	 * @Ganesh

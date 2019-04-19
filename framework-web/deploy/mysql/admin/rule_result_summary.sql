@@ -11,7 +11,9 @@ CREATE TABLE rule_result_summary
      entity_type       VARCHAR(50), 
      entity_id         VARCHAR(50), 
      score             DECIMAL(6, 3),
-     filter_expr       VARCHAR(500),      
+     filter_expr       VARCHAR(500),
+     threshold_limit       INT(10), 
+     threshold_ind         VARCHAR(50),       
      version           INT(10),
      INDEX (version) 
   ); 

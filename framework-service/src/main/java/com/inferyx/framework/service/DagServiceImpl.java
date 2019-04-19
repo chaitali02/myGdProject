@@ -78,6 +78,7 @@ import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.StageRef;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.SysParamsEnum;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskOperator;
@@ -206,6 +207,16 @@ public class DagServiceImpl {
 			throws Exception {
 		Dag dag = null;
 		DagExec dagExec = null;
+		 HashMap<SysParamsEnum, String> sysParams = new HashMap<SysParamsEnum, String>();
+		 
+		 
+		sysParams.put(SysParamsEnum.MAPEXEC_VERSION,"");
+		sysParams.put(SysParamsEnum.DAGEXEC_VERSION, "");
+		
+		if(execParams==null) {
+			execParams=new ExecParams();
+	    	execParams.setSysParams(sysParams);
+		}
 		if(execParams!=null)
 			execParams=commonServiceImpl.resolveExecParams(execParams);
 		if (StringUtils.isBlank(uuid)) {
@@ -451,6 +462,12 @@ public class DagServiceImpl {
 		dagExec.setStages(DagExecUtil.convertToStageList(dagExecStages));
 		// dagExec.setName("sys_" + dagExec.getUuid());
 		dagExec.setExecCreated("Y");
+		
+		
+		//set sysParam 
+		HashMap<SysParamsEnum, String> hashMap=	execParams.getSysParams();
+		hashMap.put(SysParamsEnum.DAGEXEC_VERSION, dagExec.getVersion());
+		execParams.setSysParams(hashMap);
 		// Set DagExec Status
 		return dagExec;
 	}
@@ -625,11 +642,15 @@ public class DagServiceImpl {
 						sourceAttrRef = attrMap.getSourceAttr().getRef();
 //						daoRegister.getRefObject(commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 						
+						BaseEntity sourceAttrBase=null;
 						BaseEntity targetAttrBase = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(targetAttrRef.getUuid(), targetAttrRef.getVersion(), targetAttrRef.getType().toString(), "N");
-						BaseEntity sourceAttrBase = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(sourceAttrRef.getUuid(), sourceAttrRef.getVersion(), sourceAttrRef.getType().toString(), "N");
-						
+						if (!sourceAttrRef.getType().equals(MetaType.simple)) {
+							sourceAttrBase = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(
+									sourceAttrRef.getUuid(), sourceAttrRef.getVersion(),
+									sourceAttrRef.getType().toString(), "N");
+							sourceAttrRef.setVersion(sourceAttrBase.getVersion());
+						}
 						targetAttrRef.setVersion(targetAttrBase.getVersion());
-						sourceAttrRef.setVersion(sourceAttrBase.getVersion());
 						
 						targetAttrRef = commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
 						sourceAttrRef = commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
