@@ -2396,11 +2396,13 @@ public class ModelServiceImpl {
 	public List<Map<String, Object>> getTrainOrTestSet(String trainExecUuid, String trainExecVersion, String setType) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
 		
-			MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
-			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
-			if(train.getSaveTrainingSet().equalsIgnoreCase("N") && setType.equalsIgnoreCase("trainSet")) {
-				return new ArrayList<>();
-			}
+		MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		if(!train.getName().toLowerCase().contains("pca") && train.getSaveTrainingSet() != null 
+				&& train.getSaveTrainingSet().equalsIgnoreCase("N") 
+				&& setType.equalsIgnoreCase("trainSet")) {
+			return new ArrayList<>();
+		}
 		
 		
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
