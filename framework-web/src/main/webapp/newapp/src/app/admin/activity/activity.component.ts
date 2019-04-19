@@ -245,8 +245,8 @@ export class ActivityComponent implements OnInit {
     // for (const t in this.tags) {
     //   tagstemp.push(this.tags[t]["value"]);
     // }
-    activityJson.tags = this.activity.tagstemp;
-    activityJson.desc = this.activity.desc
+    activityJson.tags = this.activity.tags;
+    activityJson.desc = this.activity.desc;
     //activityJson["createdBy"]=this.activity.createdBy
     activityJson.createdOn = this.activity.createdOn
     activityJson.active = this.appHelper.convertBooleanToString(this.active);

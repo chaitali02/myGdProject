@@ -9,262 +9,49 @@
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
         <div class="portlet-title">
-          <div class="caption">
+          <div class="caption" *ngIf="!isEditInprogess && !isEditError">
             <i class="fa fa-gift"></i>{{application.name}}
           </div>
           <div class="tools">
 
-            <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
-              (click)="showMainPage(uuid,version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
-            </a>
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip="Edit"
-              style="height:16px;" [ngClass]="mode == 'true'?'notcurrentpage':'currentpage'">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-            </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDagGraph(uuid,version)" data-placement="top"
-              tooltip style="height:14px;" *ngIf="mode" [ngClass]="isDependencyGraphEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip="refresh" [ngClass]="isRefreshEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip="close" style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-            </a>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip
+                [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" (click)="showMainPage(uuid,version)">
+                <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip"
+                data-placement="top" tooltip="Edit" style="height:16px;" [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Show Dependencies" data-toggle="tooltip" (click)="showGraph(uuid,version)"
+                data-placement="top" tooltip style="height:14px;" *ngIf="mode" [ngClass]="showForm==false? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip="refresh"
+                (click)="showGraph(uuid,version)" [ngClass]="showForm == true? 'currentpage':'notcurrentpage'">
+                <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              </a>
+            </span>
+            <span class="wrapcurrentpage">
+              <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip="close" style="height:14px;"
+                (click)="goBack()">
+                <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              </a>
+            </span>
 
           </div>
         </div>
 
         <div class="portlet-body form">
-
-          <div class="form-body" style="padding-top:50px;" *ngIf='!showGraph'>
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitApplication()"
-              #myNewForm="ngForm">
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="application.uuid" name="uuid" placeholder=""
-                    [disabled]="true">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="application.name" name="name" placeholder=""
-                    [disabled]="mode == 'true'">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
-                  </p-dropdown>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="application.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap'
-                    style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="application.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="application.desc" name="desc" class="form-control noresize "
-                    rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
-                      [(ngModel)]="application.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
-                      labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChange($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="application.locked"
-                      name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <!-- <div class="btn-group">
-                    < (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'"
-                      [(ngModel)]="application.published" name="published" [checked]="published" color="#32c5d2"
-                      labelOn="Yes" labelOff="No"></>
-                  </div> -->
-                </div>
-              </div>
-              <div class="col-md-12">
-                <div class="col-md-6 form-group">
-                  <label class="control-label col-md-6 col-sm-6 col-xs-12">Data Source
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="datasource_name"
-                      #d name="d" id="d" (change)="selectType(d.value)">
-                      <option *ngFor="let d of datasourceType" [value]="d.value">{{d.name}}</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="col-md-6 form-group">
-                  <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;">Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [(ngModel)]="detasource_uuid" name="detasource_uuid" [disabled]="mode == 'true'">
-                      <option selected *ngFor="let d of datasource1" [value]="d.uuid">{{d.name}}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-3 control-label">Deploy Port</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="application.deployPort"
-                    name="deployPort">
-                </div>
-              </div>
-
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
-                </div>
-              </div>
-
-
-              <!-- Table -->
-              <div class="x_title">
-                <button type="Button" [disabled]="mode == 'true'" (click)="removeRow()" class=" btn btn-danger fa fa-minus pull-right"></button>
-                <button type="button" [disabled]="mode == 'true'" (click)="addRow()" class=" btn btn-success fa fa-plus pull-right"></button>
-                <h4>
-                  <strong>Parameter Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <br>
-              <div>
-                <table class=" row-border hover table  table-striped table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="text-align:center;Vertical-align: middle;width:5%;">
-                        <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute"
-                          (click)="checkAllAttributeRow()" name="selectAll" /></th>
-                      <th style="width:7%;text-align:center">ID</th>
-                      <th class="text-center" style="width:18%;">Name</th>
-                      <th class="text-center" style="width:18%;">Display Name</th>
-                      <th class="text-center" style="width:16%;">Desc</th>
-                      <th class="text-center" style="width:11%;">Type</th>
-                      <th class="text-center" style="width:25%;">Default Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let tabledata of paramtable; let i =index">
-                      <td style="text-align: center; Vertical-align: middle;width:5%;">
-                        <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}"
-                          [disabled]="mode" />
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.id" title="id" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="id+{{i}}">
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="name+{{i}}">
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.dispName" title="dispName" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="dispName+{{i}}">
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.desc" title="desc" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="desc+{{i}}">
-                      </td>
-                      <td>
-                        <select class="form-control" [(ngModel)]="tabledata.type" name="type+{{i}}" [disabled]="mode == 'true'"
-                          (change)="onChangeType(tabledata.type, i)">
-                          <option *ngFor="let app of types" [ngValue]="app.name">{{app.caption}} </option>
-                        </select>
-                      </td>
-                      <td>
-                        <div *ngIf="tabledata.type =='distribution'">
-                          <p-dropdown [options]="typeDistributions" [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}"
-                            dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true" placeholder="--Select--">
-                          </p-dropdown>
-                        </div>
-                        <div *ngIf="tabledata.type =='function'">
-                          <p-dropdown [options]="typeFunctions" [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}"
-                            dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
-                            [filter]="true" placeholder="--Select--">
-                          </p-dropdown>
-                        </div>
-                        <div *ngIf="tabledata.type =='date'">
-                          <p-calendar [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}" [inputStyle]="{'width':'70%'}"
-                            [readonlyInput]="true" showButtonBar="true" [showIcon]="true">
-                          </p-calendar>
-                        </div>
-                        <div *ngIf="tabledata.type =='array'">
-                          <tag-input [(ngModel)]="tabledata.doubleType" [disable]="mode == 'true'" name="doubleType+{{i}}"
-                            theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc; border-radius: 5px; padding-left:5px"
-                            secondaryPlaceholder="" placeholder=""></tag-input>
-                        </div>
-                        <div *ngIf="tabledata.type =='double' || tabledata.type =='integer' || tabledata.type =='list' || tabledata.type =='string'">
-                          <input type="text" [(ngModel)]="tabledata.doubleType" title="doubleType" [disabled]="tabledata.isAttributeEnable || mode"
-                            class="form-control" name="doubleType+{{i}}">
-                        </div>
-                        <div class="text-center" *ngIf="['distribution','date','function','array','double','integer','list','string'].indexOf(tabledata.type) == -1">
-                          NA
-                        </div>
-
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </form>
-          </div>
-
-          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+          <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <div class="spinner" id="graphloader">
+            <div class="spinner" id="graphloader" *ngIf="isGraphInprogess">
               <div class="bounce1"></div>
               <div class="bounce2"></div>
               <div class="bounce3"></div>
@@ -273,6 +60,316 @@
               <knowledge-graph></knowledge-graph>
             </div>
           </div>
+
+          <div class="form-body" style="padding-top:40px;" *ngIf='showForm'>
+
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </div>
+            <div *ngIf="!isEditInprogess && !isEditError">
+              <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitApplication()"
+                #myNewForm="ngForm">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="application.uuid" name="uuid" placeholder=""
+                      [disabled]="true">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="application.name" name="name" placeholder=""
+                      [disabled]="mode == 'true'" #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()" [dropdownIcon]="caretdown">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!-- <tag-input [(ngModel)]="application.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap'
+                      style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                    <p-chips [(ngModel)]="application.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                      [allowDuplicate]="false"></p-chips>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="application.createdBy.ref.name"
+                      name="createdBy">
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="application.createdOn" name="createdOn">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea [disabled]="mode == 'true'" [(ngModel)]="application.desc" name="desc" class="form-control noresize "
+                      rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked" name="published"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-6 col-sm-6 col-xs-12" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['datasource_name1']?.invalid)}">
+                      Data Source
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="datasource_name1"
+                        #d name="d" id="d" (change)="selectType(d.value)" #datasource_name1="ngModel" required
+                        [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['datasource_name1']?.invalid)}">
+                        <option *ngFor="let d of datasourceType" [value]="d.value">{{d.name}}</option>
+                      </select>
+                      <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['datasource_name1']?.invalid)">
+                        <div class="help-block has-error error-msg">
+                          This field is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 form-group">
+                    <label class="control-label col-md-2 col-sm-6 col-xs-12" style="float:left;margin-left: -3%;padding-right: 0px;"
+                      [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['detasource_uuid1']?.invalid)}">
+                      Name
+                      <span class="required" aria-required="true"> * </span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <select class="form-control" [(ngModel)]="detasource_uuid" name="detasource_uuid1" [disabled]="mode == 'true'"
+                        #detasource_uuid1="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['detasource_uuid1']?.invalid)}">
+                        <option selected *ngFor="let d of datasource1" [value]="d.uuid">{{d.name}}</option>
+                      </select>
+                      <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['detasource_uuid1']?.invalid)">
+                        <div class="help-block has-error error-msg">
+                          This field is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['applicationType1']?.invalid)}">
+                    Application Type
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['applicationType1']?.invalid)}">
+                      <p-dropdown [options]="applicationType" [(ngModel)]="selectedApplicationType" name="applicationType1"
+                        [style]="{'width':'100%','padding':'3px','border':'none'}" [filter]="false" [disabled]="mode == 'true'"
+                        (ngModelChange)="selectType()" placeholder="-Select-" required #applicationType1="ngModel"
+                        [dropdownIcon]="caretdown">
+                      </p-dropdown>
+                    </div>
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['applicationType1']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['deployPort']?.invalid)}">
+                    Deploy Port
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="application.deployPort"
+                      name="deployPort" required #deployPort="ngModel" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['deployPort']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['deployPort']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['organization']?.invalid)}">
+                    Organization
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="orgName.name" name="organization"
+                    required #organization="ngModel" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['organization']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['organization']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                    <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="x_title">
+                  <button type="Button" [disabled]="mode == 'true'" (click)="removeRow()" class=" btn btn-danger fa fa-minus pull-right"></button>
+                  <button type="button" [disabled]="mode == 'true'" (click)="addRow()" class=" btn btn-success fa fa-plus pull-right"></button>
+                  <h4>
+                    <strong>Parameter Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <br>
+                <div>
+                  <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed">
+                    <thead>
+                      <tr>
+                        <th style="text-align:center;Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute"
+                            (click)="checkAllAttributeRow()" name="selectAll" /></th>
+                        <th style="width:7%;text-align:center">ID</th>
+                        <th class="text-center" style="width:20%;">Name</th>
+                        <th class="text-center" style="width:20%;">Display Name</th>
+                        <th class="text-center" style="width:18%;">Desc</th>
+                        <th class="text-center" style="width:15%;">Type</th>
+                        <th class="text-center" style="width:20%;">Default Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let tabledata of paramtable; let i =index">
+                        <td style="text-align: center; Vertical-align: middle;width:5%;">
+                          <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}"
+                            [disabled]="mode" />
+                        </td>
+                        <td>
+                          <input type="text" [(ngModel)]="tabledata.id" title="id" [disabled]="tabledata.isAttributeEnable || mode"
+                            class="form-control" name="id+{{i}}">
+                        </td>
+                        <td>
+                          <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
+                            class="form-control" name="name{{i}}" required #name="ngModel" 
+                            [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name'+i]?.invalid)}">
+                        </td>
+                        <td>
+                          <input type="text" [(ngModel)]="tabledata.dispName" title="dispName" [disabled]="tabledata.isAttributeEnable || mode"
+                            class="form-control" name="dispName{{i}}" required #name="ngModel" 
+                            [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['dispName'+i]?.invalid)}">
+                        </td>
+                        <td>
+                          <input type="text" [(ngModel)]="tabledata.desc" title="desc" [disabled]="tabledata.isAttributeEnable || mode"
+                            class="form-control" name="desc+{{i}}">
+                        </td>
+                        <td>
+                          <select class="form-control" [(ngModel)]="tabledata.type" name="type{{i}}" [disabled]="mode == 'true'"
+                            (change)="onChangeType(tabledata.type, i)" #type="ngModel" required 
+                            [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['type'+i]?.invalid)}">
+                            <option *ngFor="let app of types" [ngValue]="app.name">{{app.caption}} </option>
+                          </select>
+                        </td>
+                        <td>
+                          <div *ngIf="tabledata.type =='distribution'">
+                            <p-dropdown [options]="typeDistributions" [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}"
+                              dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" placeholder="--Select--" [dropdownIcon]="caretdown">
+                            </p-dropdown>
+                          </div>
+                          <div *ngIf="tabledata.type =='function'">
+                            <p-dropdown [options]="typeFunctions" [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}"
+                              dataKey="uuid" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                              [filter]="true" placeholder="--Select--" [dropdownIcon]="caretdown">
+                            </p-dropdown>
+                          </div>
+                          <div *ngIf="tabledata.type =='date'">
+                            <div class="pcalender-border">
+                              <p-calendar inputStyleClass="form-control" [(ngModel)]="tabledata.doubleType" name="doubleType+{{i}}"
+                                [disabled]="mode == 'true'" [readonlyInput]="true" showButtonBar="true" [showIcon]="true"
+                                icon="fa fa-calendar">
+                              </p-calendar>
+                            </div>
+                          </div>
+                          <div *ngIf="tabledata.type =='array'">
+                            <!-- <tag-input [(ngModel)]="tabledata.doubleType" [disable]="mode == 'true'" name="doubleType+{{i}}"
+                              theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc; border-radius: 5px; padding-left:5px"
+                              secondaryPlaceholder="" placeholder=""></tag-input> -->
+                            <p-chips [(ngModel)]="tabledata.doubleType" styleClass="pchip-height" [disabled]="mode == 'true'"
+                              name="doubleType+{{i}}" [allowDuplicate]="false"></p-chips>
+                          </div>
+                          <div *ngIf="tabledata.type =='double' || tabledata.type =='integer' || tabledata.type =='list' || tabledata.type =='string'">
+                            <input type="text" [(ngModel)]="tabledata.doubleType" title="doubleType" [disabled]="tabledata.isAttributeEnable || mode"
+                              class="form-control" name="doubleType+{{i}}">
+                          </div>
+                          <div class="text-center" *ngIf="['distribution','date','function','array','double','integer','list','string'].indexOf(tabledata.type) == -1">
+                            NA
+                          </div>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </form>
+            </div>
+          </div>
+
 
         </div>
       </div>
