@@ -626,21 +626,64 @@
                   <div class="dataTables_length" id="sample_1_length">
                   </div>
                 </div>
-                <div class="col-md-6 col-sm-6">
+                <div class="col-md-6 col-sm-6" ng-if="isGridView">
                   <div id="dataprofile_filter" class="dataTables_filter" style="float:right;">
-                    <label>Search:</label>
-                    <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataProfile(searchtextDataProfile)"
+                    <div>
+                      <label>Search:</label>
+                      <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataProfile(searchtextDataProfile)"
                       ng-model="$parent.searchtextDataProfile" >
                       <a class="btn btn-primary fa fa-play" tooltip-placement="left" uib-tooltip="Run Profile"
-                      ng-disabled="isMetaSysn" ng-class="isProfileInprogres? 'currentpage':'notcurrentpage'"
+                      ng-class="isProfileInprogres? 'currentpage':'notcurrentpage'"
                       ng-click="runDataprofile()" style="line-height:1;border:none; background-color: green"></a>
+                      <a class="btn btn-primary fa fa-bars" 
+                       ng-class="isProfileInprogres? 'currentpage':'notcurrentpage'"
+                      ng-click="showListOrGrid('list')" style="line-height:1;"></a>
+                    </div>
                   </div>
                 </div>
+                <div class="col-md-6 col-sm-6" ng-if="!isGridView">
+                  <div id="dataprofile_filter" class="dataTables_filter">
+                      <form class="form-horizontal" name="myform8" novalidate="novalidate"> 
+                      <div class="form-group" style="margin-right:0px;">
+                        <div>
+                          <label class="control-label col-md-6 col-sm-6 col-xs-6">Search:</label>
+                          <div class="col-md-5" style="padding-left:0px;">
+                          <select select2 class="form-control"  ng-change="onChangeDPColumn(selectedDPColumn)" 
+                            ng-model="$parent.selectedDPColumn"ng-options="r.dispName as r.dispName for r in attributetable">
+                          </select>
+                          </div>
+                        </div>
+                      <div  class="col-md-1 col-sm-1 col-xs-1" style="float: right;padding-left: 0px;">
+                        <a class="btn btn-primary fa fa-th"
+                          ng-class="isProfileInprogres? 'currentpage':'notcurrentpage'"
+                        ng-click="showListOrGrid('grid')" style="line-height:1.4;"></a>
+                      </div>
+                      </form>
+                    </form>
+                  </div>
+                </div>
+                </div>
               </div>
-              <div ui-grid="gridOptionsDataProfile" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter
+              <div ng-if="isGridView" ui-grid="gridOptionsDataProfile" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter
                 ng-style="getGridStyleDataProfile()">
                 <div class="nodatawatermark_results" style="top:50%;" ng-show="!gridOptionsDataProfile.data.length">No data available</div>
               </div>
+              <div class="row"  ng-if="!isGridView">
+                  <div class="col-md-12">
+                      <table class="table table-bordered dqstats" style="width:50%">
+                         <tbody>
+                            <tr ng-repeat="data in dataProfileAttributesColumn">
+                                <td style="width:40%;text-transform: capitalize !important;">{{data.displayName}}</td>
+                                <td style="width:60%">
+                                  <b ng-if="dataProfileSelectData[data.name] !='null'">{{dataProfileSelectData[data.name]}}</b>
+                                  <b ng-if="dataProfileSelectData[data.name] == 'null'">-NA-</b>
+                                </td>
+                            </tr>
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
+              
             </div>
           </div>
         <!--*****************************************End DataProfile****************************************************************************-->

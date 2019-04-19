@@ -1486,7 +1486,41 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 		$scope.getProfileResult();
 	}/*End showProfile*/
-	
+	 
+    $scope.showListOrGrid=function(type){
+		$scope.dataProfileSelectData=null;
+		$scope.dataProfileAttributesData={};
+		$scope.dataProfileAttributesColumn=[];
+		if(type=="list"){
+			$scope.isGridView=false;
+			if($scope.gridOptionsDataProfile.columnDefs.length){
+				var hidelist=["rule_exec_uuid","rule_exec_version","rule_uuid","rule_version","rule_name","version","datapod_uuid","datapod_version","datapod_name","attribute_id"]
+				var count=0;
+				for(var j=0;j<$scope.gridOptionsDataProfile.columnDefs.length;j++){
+					if(hidelist.indexOf($scope.gridOptionsDataProfile.columnDefs[j].displayName) ==-1){
+						var dpAttrObj={};
+						dpAttrObj.name=$scope.gridOptionsDataProfile.columnDefs[j].name;
+						dpAttrObj.displayName=$scope.gridOptionsDataProfile.columnDefs[j].displayName;
+						$scope.dataProfileAttributesColumn[count]=dpAttrObj;
+						count=count+1;
+					}
+				}
+			}
+			if($scope.gridOptionsDataProfile.data.length >0){
+				$scope.selectedDPColumn=$scope.gridOptionsDataProfile.data[0]["attribute_name"];
+				for(var i=0;i<$scope.gridOptionsDataProfile.data.length;i++){
+					$scope.dataProfileAttributesData[$scope.gridOptionsDataProfile.data[i]["attribute_name"]]=$scope.gridOptionsDataProfile.data[i];
+				}
+				$scope.dataProfileSelectData=$scope.dataProfileAttributesData[$scope.selectedDPColumn];
+			}
+		}else{
+			$scope.isGridView=true;
+		}
+	}
+	$scope.onChangeDPColumn=function(colName){
+		$scope.dataProfileSelectData=$scope.dataProfileAttributesData[colName];
+	}
+
 	$scope.getProfileResult=function(){
 		$scope.isProfileInprogres=true;
 		$scope.isProfileDataError = false;
@@ -1512,6 +1546,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		    $scope.ColumnDetails = respone;
 			$scope.isProfileDataError = false;
 			$scope.isProfileInprogres=false;
+			$scope.isGridView=true;
 			$scope.tableClassDP = "";
 		    if($scope.ColumnDetails && $scope.ColumnDetails.length > 0) {
 				for (var i = 0; i < $scope.ColumnDetails.length; i++) {
