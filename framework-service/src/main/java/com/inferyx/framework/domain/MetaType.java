@@ -25,7 +25,7 @@ public enum MetaType {
 	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec, reportview, batch, batchExec,
 	schedule, batchview, ingest, ingestExec, ingestview, ingestgroup, ingestgroupExec, attribute, applicationview,
 	trainresult, trainresultview, deployExec, trainexecview, processExec, organization, dashboardExec,
-	dashboardExecView, rule2, rule2Exec, domain, dqrecExec;
+	dashboardExecView, rule2, rule2Exec, domain, dqrecExec, sysParams;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,
@@ -47,7 +47,7 @@ public enum MetaType {
 				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec,
 				MetaType.trainresult, MetaType.deployExec, MetaType.processExec,MetaType.organization,
 				MetaType.dashboardExec, MetaType.graphExec ,MetaType.reportExec, MetaType.dashboardExec, MetaType.rule2,
-				MetaType.rule2Exec, MetaType.domain, MetaType.dqrecExec);
+				MetaType.rule2Exec, MetaType.domain, MetaType.dqrecExec, MetaType.sysParams);
 	}
 
 	public static List<MetaType> getMetaExecList() {
