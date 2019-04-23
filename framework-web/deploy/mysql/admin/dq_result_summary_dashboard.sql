@@ -17,7 +17,7 @@ select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_nam
 union all
 select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'DUPLICATE' as check_type,dup_pass_count as check_pass_count,dup_fail_count as check_fail_count,dup_score as score, 'INTEGRITY' as dimension,version from dq_result_summary where dup_pass_count > 0 OR dup_fail_count > 0
 union all
-select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'CUSTOM' as check_type,custom_pass_count as check_pass_count,custom_fail_count as check_fail_count,custom_score as score, 'CUSTOM' as dimension,version from dq_result_summary where custom_pass_count > 0 OR custom_fail_count > 0
+select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'CUSTOM' as check_type,custom_pass_count as check_pass_count,custom_fail_count as check_fail_count,custom_score as score, 'CONFORMITY' as dimension,version from dq_result_summary where custom_pass_count > 0 OR custom_fail_count > 0
 union all
 select rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,'DOMAIN' as check_type,domain_pass_count as check_pass_count,domain_fail_count as check_fail_count,domain_score as score, 'ACCURACY' as dimension,version from dq_result_summary where domain_pass_count > 0 OR domain_fail_count > 0
 union all

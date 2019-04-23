@@ -1,269 +1,272 @@
 {
-	"uuid" : "34d74a4a-7f46-4e5e-b6f1-49dac7da818c",
-	"version" : "1554385157",
-	"name" : "Data Quality Summary",
-	"desc" : null,
-	"createdBy" : {
-		"ref" : {
-			"type" : "user",
-			"uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-			"version" : "1548315952",
-			"name" : "db_admin"
-		},
-		"value" : null
-	},
-	"createdOn" : ISODate("2019-04-16T14:28:15.137Z"),
-	"tags" : [ ],
-	"active" : "Y",
-	"locked" : "N",
-	"published" : "N",
-	"appInfo" : [
-		{
-			"ref" : {
-				"type" : "application",
-				"uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-				"version" : "1552267311",
-				"name" : "Deutsche Admin"
-			},
-			"value" : null
-		}
-	],
-	"publicFlag" : "N",
-	"sectionInfo" : [
-		{
-			"sectionId" : null,
-			"name" : "Accuracy",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "c374e454-075b-4749-8098-247d2fa688fe",
-					"version" : null,
-					"name" : "viz_dq_status_accuracy"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Completeness",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "d3d2cec5-8f75-498e-9f40-349f8143324d",
-					"version" : null,
-					"name" : "viz_dq_status_completeness"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Conformity",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "dfca1a59-3d83-45cc-b244-c844ba1f8eb2",
-					"version" : null,
-					"name" : "viz_dq_status_conformity"
-				},
-				"value" : null
-			},
-			"rowNo" : 1,
-			"colNo" : 3
-		},
-		{
-			"sectionId" : null,
-			"name" : "Consistency",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "99352746-7b88-4f16-86ba-c9554336409c",
-					"version" : null,
-					"name" : "viz_dq_status_consistency"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Integrity",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "bcd66760-4cd1-4813-833c-5e3e3d250a4c",
-					"version" : null,
-					"name" : "viz_dq_status_integrity"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Timeliness",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "7bf6e600-84b6-452e-8a29-6097838218fa",
-					"version" : null,
-					"name" : "viz_dq_status_timeliness"
-				},
-				"value" : null
-			},
-			"rowNo" : 2,
-			"colNo" : 3
-		},
-		{
-			"sectionId" : null,
-			"name" : "Checks By Dimension",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "5572d9ce-bb62-4455-8d43-ab74dc10a5c8",
-					"version" : null,
-					"name" : "viz_dq_checks_by_dimension"
-				},
-				"value" : null
-			},
-			"rowNo" : 3,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Checks By Check Type",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "8a1429a6-83d1-43be-9332-3ea539071c80",
-					"version" : null,
-					"name" : "viz_dq_checks_by_checktype"
-				},
-				"value" : null
-			},
-			"rowNo" : 3,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Checks By Datapod",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "f949c0db-46e9-4fcd-861f-533d70ecbabb",
-					"version" : null,
-					"name" : "viz_dq_checks_by_datapod"
-				},
-				"value" : null
-			},
-			"rowNo" : 3,
-			"colNo" : 3
-		},
-		{
-			"sectionId" : null,
-			"name" : "Status By Dimension",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "b0a79a28-81fe-4725-9f85-3dcf35fb4111",
-					"version" : null,
-					"name" : "viz_status_by_dimension"
-				},
-				"value" : null
-			},
-			"rowNo" : 4,
-			"colNo" : 1
-		},
-		{
-			"sectionId" : null,
-			"name" : "Status By Check Type",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "d7f4adbe-245d-41bf-b939-ec611a5b81c4",
-					"version" : null,
-					"name" : "viz_status_by_checktype"
-				},
-				"value" : null
-			},
-			"rowNo" : 4,
-			"colNo" : 2
-		},
-		{
-			"sectionId" : null,
-			"name" : "Status By Datapod",
-			"vizpodInfo" : {
-				"ref" : {
-					"type" : "vizpod",
-					"uuid" : "78f11eaf-5590-41b2-a2c4-8f87e963a785",
-					"version" : null,
-					"name" : "viz_status_by_datapod"
-				},
-				"value" : null
-			},
-			"rowNo" : 4,
-			"colNo" : 3
-		}
-	],
-	"dependsOn" : {
-		"ref" : {
-			"type" : "datapod",
-			"uuid" : "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-			"version" : null,
-			"name" : "dq_result_dashboard"
-		},
-		"value" : null
-	},
-	"filterInfo" : [
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-				"version" : null,
-				"name" : "dq_result_dashboard"
-			},
-			"value" : null,
-			"attrId" : "2",
-			"attrName" : "rule_name",
-			"attrType" : null,
-			"attrUnitType" : null,
-			"function" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-				"version" : null,
-				"name" : "dq_result_dashboard"
-			},
-			"value" : null,
-			"attrId" : "5",
-			"attrName" : "datapod_name",
-			"attrType" : null,
-			"attrUnitType" : null,
-			"function" : null
-		},
-		{
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-				"version" : null,
-				"name" : "dq_result_dashboard"
-			},
-			"value" : null,
-			"attrId" : "14",
-			"attrName" : "version",
-			"attrType" : null,
-			"attrUnitType" : null,
-			"function" : null
-		}
-	],
-	"saveOnRefresh" : "Y",
-	"displayName" : "Data Quality Summary"
+  "uuid": "34d74a4a-7f46-4e5e-b6f1-49dac7da818c",
+  "version": "1556021826",
+  "name": "Data Quality Summary",
+  "displayName": "Data Quality Summary",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin",
+      "displayName": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Apr 23 08:17:06 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin",
+        "displayName": null
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sectionInfo": [
+    {
+      "sectionId": null,
+      "name": "Accuracy",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "c374e454-075b-4749-8098-247d2fa688fe",
+          "version": null,
+          "name": "viz_dq_status_accuracy",
+          "displayName": "viz_dq_status_accuracy"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Completeness",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "d3d2cec5-8f75-498e-9f40-349f8143324d",
+          "version": null,
+          "name": "viz_dq_status_completeness",
+          "displayName": "viz_dq_status_completeness"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Conformity",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "dfca1a59-3d83-45cc-b244-c844ba1f8eb2",
+          "version": null,
+          "name": "viz_dq_status_conformity",
+          "displayName": "viz_dq_status_conformity"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 3
+    },
+    {
+      "sectionId": null,
+      "name": "Consistency",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "99352746-7b88-4f16-86ba-c9554336409c",
+          "version": null,
+          "name": "viz_dq_status_consistency",
+          "displayName": "viz_dq_status_consistency"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Integrity",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "bcd66760-4cd1-4813-833c-5e3e3d250a4c",
+          "version": null,
+          "name": "viz_dq_status_integrity",
+          "displayName": "viz_dq_status_integrity"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Timeliness",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "7bf6e600-84b6-452e-8a29-6097838218fa",
+          "version": null,
+          "name": "viz_dq_status_timeliness",
+          "displayName": "viz_dq_status_timeliness"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 3
+    },
+    {
+      "sectionId": null,
+      "name": "Checks By Dimension",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "5572d9ce-bb62-4455-8d43-ab74dc10a5c8",
+          "version": null,
+          "name": "viz_dq_checks_by_dimension",
+          "displayName": "viz_dq_checks_by_dimension"
+        },
+        "value": null
+      },
+      "rowNo": 3,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Checks By Check Type",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "8a1429a6-83d1-43be-9332-3ea539071c80",
+          "version": null,
+          "name": "viz_dq_checks_by_checktype",
+          "displayName": "viz_dq_checks_by_checktype"
+        },
+        "value": null
+      },
+      "rowNo": 3,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Checks By Datapod",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "f949c0db-46e9-4fcd-861f-533d70ecbabb",
+          "version": null,
+          "name": "viz_dq_checks_by_datapod",
+          "displayName": "viz_dq_checks_by_datapod"
+        },
+        "value": null
+      },
+      "rowNo": 3,
+      "colNo": 3
+    },
+    {
+      "sectionId": null,
+      "name": "Status By Dimension",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "b0a79a28-81fe-4725-9f85-3dcf35fb4111",
+          "version": null,
+          "name": "viz_status_by_dimension",
+          "displayName": "viz_status_by_dimension"
+        },
+        "value": null
+      },
+      "rowNo": 4,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Status By Check Type",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "d7f4adbe-245d-41bf-b939-ec611a5b81c4",
+          "version": null,
+          "name": "viz_status_by_checktype",
+          "displayName": "viz_status_by_checktype"
+        },
+        "value": null
+      },
+      "rowNo": 4,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Status By Datapod",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "78f11eaf-5590-41b2-a2c4-8f87e963a785",
+          "version": null,
+          "name": "viz_status_by_datapod",
+          "displayName": "viz_status_by_datapod"
+        },
+        "value": null
+      },
+      "rowNo": 4,
+      "colNo": 3
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
+      "version": null,
+      "name": "dq_result_summary_dashboard",
+      "displayName": "dq_result_summary_dashboard"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
+        "version": null,
+        "name": "dq_result_summary_dashboard",
+        "displayName": "dq_result_summary_dashboard"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "rule_name",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fa366ab8-b775-4099-89ee-d48843f4cc90",
+        "version": null,
+        "name": "dq_result_summary_dashboard",
+        "displayName": "dq_result_summary_dashboard"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "datapod_name",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
+  ],
+  "saveOnRefresh": "Y"
 }
