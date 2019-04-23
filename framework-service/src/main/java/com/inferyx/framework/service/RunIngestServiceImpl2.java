@@ -703,9 +703,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			}
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
-//				new Message("300", MessageStatus.FAIL.toString(),"No change in incremental param hence skipping execution.");
-//				ingestExec.setMessageInfo(messageInfo);
-//				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {				
 				logger.info("mode : configuration >> "+ingest.getType()+" : "+sourceDS.getType()+"_2_"+targetDS.getType());
@@ -849,7 +846,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 										ingest.getTargetExtn(), ingest.getTargetFormat());
 								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
 							} catch (Exception e) {
-// TODO: handle exception
+								// TODO: handle exception
+								e.printStackTrace();
 							} finally {
 								String dirPathToBeDeleted = tempDirPath.endsWith("/")
 										? tempDirPath + ingestExec.getUuid()
@@ -1544,12 +1542,35 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							sparkStreamingExecutor.start(sourceDS);							
 						}
 					}).start();
-				}
+				} else if(ingestionType.equals(IngestionType.RESTTOTABLE)) {
+					//this is export block from JSON file to Table
+
+					logger.info("this is export block from local file to Table");
+					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 				
-//				if(latestIncrLastValue != null) {
-//					ingestExec.setLastIncrValue(latestIncrLastValue);
-//					commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
-//				}
+					String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
+					
+					//reading from source
+					ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
+											
+					//map schema to source mappedAttrs	
+					if(colAliaseNames != null) {
+						if(sourceHeader.equalsIgnoreCase("false")) {
+							rsHolder = sparkExecutor.applyIngestDatapodSchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+						}
+						rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+					} 
+					
+					//applying target schema to df
+					rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, null, tableName, true);
+					
+					//setting target table name
+					rsHolder.setTableName(targetDS.getDbname()+"."+targetDp.getName());
+					
+					//writing to target
+					sparkExecutor.persistDataframe(rsHolder, targetDS, targetDp, ingest.getSaveMode().toString());
+					countRows = rsHolder.getCountRows();
+				} 
 
 				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 				MetaIdentifier datapodKey = null;
@@ -1565,7 +1586,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
-//			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -1573,12 +1593,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 
-//			if(message != null && message.toLowerCase().contains("duplicate entry")) {
-//				message = "Duplicate entry/entries found for primary key(s).";
-//			} else if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
-//				message = "No change in incremental param hence skipping execution.";
-//			}
-//			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution FAILED.");
 			throw new RuntimeException((message != null) ? message : "Ingest execution FAILED.");
 		}
 		

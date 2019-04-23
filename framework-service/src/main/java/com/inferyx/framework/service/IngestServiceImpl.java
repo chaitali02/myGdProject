@@ -844,11 +844,14 @@ public class IngestServiceImpl extends RuleTemplate {
 			
 			if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 				fileExt = FileType.PARQUET.toString().toLowerCase();
-			} else {
-				//assigning file extension to csv b'coz as of now we are using this method
-				//to get files from the directory where sqpark have saved the csv files
-				//and spark saves csv files with extension .csv for for all type csv delimetres
+			} else if(fileFormat.equalsIgnoreCase(FileType.CSV.toString())) {
 				fileExt = FileType.CSV.toString().toLowerCase();				
+			} else if(fileFormat.equalsIgnoreCase(FileType.PSV.toString())) {
+				fileExt = FileType.PSV.toString().toLowerCase();				
+			} else if(fileFormat.equalsIgnoreCase(FileType.TSV.toString())) {
+				fileExt = FileType.TSV.toString().toLowerCase();				
+			} else if(fileFormat.equalsIgnoreCase(FileType.JSON.toString())) {
+				fileExt = FileType.JSON.toString().toLowerCase();				
 			}
 			
 			if (file.isFile() && dirFileName.toLowerCase().endsWith("."+fileExt)) {

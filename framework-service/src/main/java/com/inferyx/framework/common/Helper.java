@@ -1595,6 +1595,8 @@ public class Helper {
 				return "|";
 			case "parquet":
 				return "parquet";
+			case "json" : 
+				return "json";
 			}
 		}
 		return null;

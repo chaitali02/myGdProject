@@ -3320,13 +3320,14 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder readAndRegisterFile(String tableName, List<String> filePath, String format, String header, String clientContext, boolean registerTempTable) throws IOException {		
-		logger.info("Inside readAndRegisterFile....");
+		logger.info("Inside readAndRegisterFile ...");
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		
 		//reading file
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
 		Dataset<Row> df = null;
+		String[] pathArray = filePath.toArray(new String[filePath.size()]);
 		if(format == null) {
 			RemoteIterator<LocatedFileStatus> fileStatus = FileSystem.get(sparkSession.sparkContext().hadoopConfiguration()).listFiles(new Path(filePath.get(0)), false);
 			
@@ -3339,12 +3340,14 @@ public class SparkExecutor<T> implements IExecutor {
 				if(!fileName2.contains("_SUCCESS")) {
 					filePaths.add(filePath2);
 				}
-				df = sparkSession.read().option("header", "true").load(filePaths.toArray(new String[filePaths.size()]));			
+				df = sparkSession.read().option("header", "true").load(pathArray);			
 			}
+		} else if(format.equalsIgnoreCase(FileType.JSON.toString())) {
+			df = sparkSession.read().option("multiLine", true).json(pathArray);
 		} else if(!format.equalsIgnoreCase(FileType.PARQUET.toString())) {
-			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(filePath.toArray(new String[filePath.size()]));
+			df = sparkSession.read().format("csv").option("delimiter", format).option("header", header).load(pathArray);
 		} else {
-			df = sparkSession.read().parquet(filePath.toArray(new String[filePath.size()]));
+			df = sparkSession.read().parquet(pathArray);
 		}
 		
 		//creating rsHolder
@@ -3489,6 +3492,8 @@ public class SparkExecutor<T> implements IExecutor {
 			df.coalesce(1).write().mode(saveMode).option("delimiter", "|").option("header", header).csv(targetPath);
 		} else if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
 			rsHolder = registerAndPersistDataframe(rsHolder, datapod, "append", targetPath, tableName, header, false);
+		} else if(fileFormat.equalsIgnoreCase(FileType.JSON.toString())) {
+			df.coalesce(1).write().mode(saveMode).option("multiLine", true).json(targetPath);
 		}
 		return rsHolder;
 	}
