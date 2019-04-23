@@ -33,6 +33,7 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 
 @Service
 public class FrameworkThreadServiceImpl {
@@ -54,6 +55,7 @@ public class FrameworkThreadServiceImpl {
 		MetaIdentifierHolder appInfo = securityServiceImpl.getAppInfo(); 
 		setSession(userName, appInfo);
 	}
+	
 	public void setSession(String userName, MetaIdentifierHolder appInfo) throws JSONException, ParseException, IOException {
 		User userDO = iUserDao.findLatestByUsername(userName, new Sort(Sort.Direction.DESC, "version"));
 		if (userDO != null) {
@@ -98,6 +100,7 @@ public class FrameworkThreadServiceImpl {
 //			sessionDO.setSessionId(RequestContextHolder.currentRequestAttributes().getSessionId());
 
 			// Session savedSession = save(sessionDO);
+			sessionDO.setType(RunMode.BATCH);
 			commonServiceImpl.save(MetaType.session.toString(), sessionDO, appInfo);
 
 			MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session, sessionDO.getUuid(),

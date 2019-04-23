@@ -124,7 +124,7 @@ public class BaseGroupExecTemplate {
 			logger.info("Rules kill COMPLETED >>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
 			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getUuid(), baseGroupExec.getVersion(), groupExecType.toString());
-			Status.Stage latestStatus = Helper.getLatestStatus(baseGroupExec.getStatusList()).getStage();
+//			Status.Stage latestStatus = Helper.getLatestStatus(baseGroupExec.getStatusList()).getStage();
 			Status status=commonServiceImpl.getGroupStatus(baseGroupExec,groupExecType, ruleExecType);
 			synchronized (baseGroupExec.getUuid()) {
 				if(!Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(status.getStage())){

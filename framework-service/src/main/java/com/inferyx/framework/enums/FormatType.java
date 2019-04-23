@@ -8,12 +8,12 @@
  *
  * Written by Yogesh Palrecha <ypalrecha@inferyx.com>
  *******************************************************************************/
-package com.inferyx.framework.domain;
+package com.inferyx.framework.enums;
 
 /**
  * @author Ganesh
  *
  */
-public enum FileType {
-	SCRIPT, LOG, ZIP, CSV, XLS, TSV, PSV, PARQUET, EXCEL, PDF, LOGOIMG, AVTARIMG, VIZPODIMG, JSON 
+public enum FormatType {
+	JSON, CSV, PSV, TSV, XML, EXCEL
 }
