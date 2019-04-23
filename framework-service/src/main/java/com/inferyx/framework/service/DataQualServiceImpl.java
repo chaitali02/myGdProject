@@ -1183,13 +1183,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 			try {
 				DataQual dataQual = new DataQual();
 				// ******************* setting base entity *******************//
-				String attrName = checkType.getAttributeName() != null ? "_"+checkType.getAttributeName().getAttrName() : "";
-				String name = "dq_" + datapod.getPrefix() + attrName;
-				dataQual.setName(name);
-				dataQual.setDisplayName(name);
+				
 				dataQual.setLocked("N");
 				dataQual.setPublished("N");
 				dataQual.setPublicFlag("N");
+				
+				// ******************* setting discription *******************//
 				if(checkType.getCheckType().equals(CheckType.DUPLICATE)) {
 					dataQual.setDesc("Duplication check.");
 				} else if(checkType.getCheckType().equals(CheckType.DOMAIN)) {
@@ -1207,13 +1206,24 @@ public class DataQualServiceImpl extends RuleTemplate {
 				} else {
 					dataQual.setDesc(checkType.getCheckType()+" check.");
 				}
+				
 				dataQual.setBaseEntity();
 				
 				long version = Integer.parseInt(dataQual.getVersion()) + j;
 				dataQual.setVersion(version+"");
+
+				
+				String attrName = checkType.getAttributeName() != null ? "_"+checkType.getAttributeName().getAttrName() : "";
+				
 				if(StringUtils.isBlank(attrName)) {
-					attrName = attrName+"_"+version;
+					if(StringUtils.isBlank(attrName) && checkType.getCheckType().equals(CheckType.DUPLICATE)) {
+						attrName = "_dup_check";
+					}
 				}
+				
+				String name = "dq_" + datapod.getPrefix() + attrName + "_" + version;
+				dataQual.setName(name);
+				dataQual.setDisplayName(name);
 				
 				j++;
 				
