@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -256,6 +257,7 @@ public class SessionServiceImpl {
 			}else
 				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");	
 			//Session savedSession = save(sessionDO);
+			sessionDO.setType(RunMode.ONLINE);
 			commonServiceImpl.save(MetaType.session.toString(), sessionDO);
 			
 			MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session, sessionDO.getUuid(), sessionDO.getVersion());
