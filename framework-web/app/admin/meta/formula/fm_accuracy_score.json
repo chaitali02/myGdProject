@@ -1,8 +1,8 @@
 {
 	"uuid" : "f175128f-a777-4495-903d-4d6667a63641",
 	"version" : "1555401340",
-	"name" : "fm_accuracy_score_db",
-	"displayName" : "fm_accuracy_score_db",
+	"name" : "fm_accuracy_score",
+	"displayName" : "fm_accuracy_score",
 	"desc" : null,
 	"createdBy" : {
 		"ref" : {

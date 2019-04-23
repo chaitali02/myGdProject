@@ -1,8 +1,8 @@
 {
 	"uuid" : "9c413212-1d6d-48cd-84d7-49a3a17417b1",
 	"version" : "1555401326",
-	"name" : "fm_timeliness_score_db",
-	"displayName" : "fm_timeliness_score_db",
+	"name" : "fm_timeliness_score",
+	"displayName" : "fm_timeliness_score",
 	"desc" : null,
 	"createdBy" : {
 		"ref" : {

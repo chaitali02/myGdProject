@@ -1,7 +1,7 @@
 {
-	"uuid": "4bd81d9c-1871-4359-a17b-5c7a53de30b3",
+	"uuid": "4bd81d9c-1871-4359-a17b-5c7a53de30b1",
 	"version": "1555073263",
-	"name": "fm_consistency_score_file",
+	"name": "fm_consistency_score",
 	"desc": null,
 	"createdBy": {
 		"ref": {
@@ -65,6 +65,18 @@
 		},
 		{
 			"ref": {
+				"type": "simple",
+				"uuid": null,
+				"version": null,
+				"name": null
+			},
+			"attributeId": null,
+			"value": "(",
+			"attributeName": null,
+			"attributeType": null
+		},
+		{
+			"ref": {
 				"type": "datapod",
 				"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
 				"version": null,
@@ -107,6 +119,18 @@
 				"name": null
 			},
 			"attributeId": null,
+			"value": ")",
+			"attributeName": null,
+			"attributeType": null
+		},
+		{
+			"ref": {
+				"type": "simple",
+				"uuid": null,
+				"version": null,
+				"name": null
+			},
+			"attributeId": null,
 			"value": "/",
 			"attributeName": null,
 			"attributeType": null
@@ -137,5 +161,5 @@
 		}
 	],
 	"formulaType": "aggr",
-	"displayName" : "fm_consistency_score_file"
+	"displayName" : "fm_consistency_score"
 }

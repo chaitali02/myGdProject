@@ -1326,7 +1326,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		/*if (dpDataSource.getType().equalsIgnoreCase(MetaType.file.toString()))
 				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.file.uuid");
 			else*/
-				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.db.uuid");
+				datasetUuid = Helper.getPropertyValue("framework.dataqual.stats.uuid");
 
 			DataSet dataset = (DataSet) commonServiceImpl.getLatestByUuid(datasetUuid, MetaType.dataset.toString(), "N");
 

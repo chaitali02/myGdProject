@@ -1,7 +1,7 @@
 {
   "uuid": "ebaf51cd-0052-41c7-974d-0e2cbf7c5081",
   "version": "1555320060",
-  "name": "fm_dq_stats_db",
+  "name": "fm_dq_stats",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -115,5 +115,5 @@
     }
   ],
   "formulaType": "custom",
-	"displayName" : "fm_dq_stats_db"
+	"displayName" : "fm_dq_stats"
 }

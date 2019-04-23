@@ -1,8 +1,8 @@
 {
-	"uuid" : "16a26371-b685-44c6-b7b0-1ef93a4b3953",
+	"uuid" : "16a26371-b685-44c6-b7b0-1ef93a4b3951",
 	"version" : "1555401353",
-	"name" : "fm_custom_score_file",
-	"displayName" : "fm_custom_score_file",
+	"name" : "fm_custom_score",
+	"displayName" : "fm_custom_score",
 	"desc" : null,
 	"createdBy" : {
 		"ref" : {
@@ -33,7 +33,7 @@
 	"dependsOn" : {
 		"ref" : {
 			"type" : "datapod",
-			"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+			"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71127",
 			"version" : null,
 			"name" : "dq_result_summary"
 		},
@@ -67,7 +67,7 @@
 		{
 			"ref" : {
 				"type" : "datapod",
-				"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+				"uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71127",
 				"version" : null,
 				"name" : "dq_result_summary"
 			},

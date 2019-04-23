@@ -1,7 +1,7 @@
 {
-  "uuid": "1c5f4355-1c5a-4f10-95ba-09834e2ca0b2",
+  "uuid": "1c5f4355-1c5a-4f10-95ba-09834e2ca0b1",
   "version": "1555073460",
-  "name": "fm_conformity_score_file",
+  "name": "fm_conformity_score",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -50,7 +50,18 @@
       "value": null,
       "attributeName": null,
       "attributeType": null
-    }, 
+    }, {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
      {
       "ref": {
         "type": "simple",
@@ -155,6 +166,18 @@
         "name": null
       },
       "attributeId": null,
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
       "value": "/",
       "attributeName": null,
       "attributeType": null
@@ -185,5 +208,5 @@
     }
   ],
   "formulaType": "aggr",
-	"displayName" : "fm_conformity_score_file"
+	"displayName" : "fm_conformity_score"
 }
